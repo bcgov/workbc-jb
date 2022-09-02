@@ -2,14 +2,11 @@
 
 data "aws_db_subnet_group" "data_subnet" {
   name                   = "data-subnet"
-#  subnet_ids             = module.network.aws_subnet_ids.data.ids
-
-#  tags = var.common_tags
 }
 
 # SQL Server
 resource "aws_db_instance" "mssql" {
-  allocated_storage       = 10
+  allocated_storage       = 20
   max_allocated_storage   = 100
   engine                  = "sqlserver-web"
   instance_class          = "db.t3.small"
