@@ -5,7 +5,7 @@ data "aws_db_subnet_group" "data_subnet" {
 }
 
 # Option Group
-/*resource "aws_db_option_group" "mssql-og" {
+resource "aws_db_option_group" "mssql-og" {
 	name = "ceu-mssql-og"
 	option_group_description = "Option for native backup and restore"
 	engine_name = "sqlserver-web"
@@ -19,8 +19,8 @@ data "aws_db_subnet_group" "data_subnet" {
 			value = aws_iam_role.mssql_native_backup_restore_role.arn
 		}
 	}
-	depends_on = [aws_iam_role.mssql_native_backup_restore_role]
-}*/
+#	depends_on = [aws_iam_role.mssql_native_backup_restore_role]
+}
 
 # SQL Server
 resource "aws_db_instance" "mssql" {
