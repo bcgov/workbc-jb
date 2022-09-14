@@ -38,6 +38,7 @@ resource "aws_db_instance" "mssql" {
   storage_encrypted       = true
   vpc_security_group_ids  = [data.aws_security_group.data.id]
   option_group_name = aws_db_option_group.mssql-og.name
+  depends_on = [aws_db_option_group.mssql-og]
 }
 
 # create this manually
