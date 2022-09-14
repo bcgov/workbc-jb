@@ -26,7 +26,7 @@ resource "aws_db_instance" "mssql" {
   allocated_storage       = 20
   max_allocated_storage   = 100
   engine                  = "sqlserver-web"
-  engine_version		  = "15.00"
+  engine_version	  = "15.00"
   instance_class          = "db.t3.small"
   identifier              = "ceu-mssql"
   username                = local.db_creds.username
@@ -37,7 +37,8 @@ resource "aws_db_instance" "mssql" {
   kms_key_id              = data.aws_kms_key.workbc-jb-kms-key.arn
   storage_encrypted       = true
   vpc_security_group_ids  = [data.aws_security_group.data.id]
-  option_group_name = aws_db_option_group.mssql-og.name
+  option_group_name	  = aws_db_option_group.mssql-og.name
+  apply_immediately	  = true
 }
 
 # create this manually
