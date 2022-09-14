@@ -15,7 +15,7 @@ variable "aws_region" {
 
 variable "ecs_task_execution_role_name" {
   description = "ECS task execution role name"
-  default     = "workbcEcsTaskExecutionRole"
+  default     = "workbcJbEcsTaskExecutionRole"
 }
 
 #variable "ecs_auto_scale_role_name" {
