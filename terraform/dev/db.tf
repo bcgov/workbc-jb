@@ -5,7 +5,7 @@ data "aws_db_subnet_group" "data_subnet" {
 }
 
 # Option Group
-resource "aws_db_option_group" "mssql-og" {
+/*resource "aws_db_option_group" "mssql-og" {
 	name = "ceu-mssql-og"
 	option_group_description = "Option for native backup and restore"
 	engine_name = "sqlserver-web"
@@ -20,7 +20,7 @@ resource "aws_db_option_group" "mssql-og" {
 		}
 	}
 	depends_on = [aws_iam_role.mssql_native_backup_restore_role]
-}
+}*/
 
 # SQL Server
 resource "aws_db_instance" "mssql" {
@@ -38,8 +38,8 @@ resource "aws_db_instance" "mssql" {
   kms_key_id              = data.aws_kms_key.workbc-jb-kms-key.arn
   storage_encrypted       = true
   vpc_security_group_ids  = [data.aws_security_group.data.id]
-  option_group_name = aws_db_option_group.mssql-og.name
-  depends_on = [aws_db_option_group.mssql-og]
+  #option_group_name = aws_db_option_group.mssql-og.name
+  #depends_on = [aws_db_option_group.mssql-og]
 }
 
 # create this manually
