@@ -19,6 +19,7 @@ resource "aws_db_option_group" "mssql-og" {
 			value = aws_iam_role.mssql_native_backup_restore_role.arn
 		}
 	}
+	depends_on = [aws_iam_role.mssql_native_backup_restore_role]
 }
 
 # SQL Server
