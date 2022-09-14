@@ -19,7 +19,6 @@ resource "aws_db_option_group" "mssql-og" {
 			value = aws_iam_role.mssql_native_backup_restore_role.arn
 		}
 	}
-#	depends_on = [aws_iam_role.mssql_native_backup_restore_role]
 }
 
 # SQL Server
@@ -38,8 +37,7 @@ resource "aws_db_instance" "mssql" {
   kms_key_id              = data.aws_kms_key.workbc-jb-kms-key.arn
   storage_encrypted       = true
   vpc_security_group_ids  = [data.aws_security_group.data.id]
-  #option_group_name = aws_db_option_group.mssql-og.name
-  #depends_on = [aws_db_option_group.mssql-og]
+  option_group_name = aws_db_option_group.mssql-og.name
 }
 
 # create this manually

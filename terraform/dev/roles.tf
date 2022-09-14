@@ -221,10 +221,6 @@ resource "aws_iam_role" "mssql_native_backup_restore_role" {
             "Action": "sts:AssumeRole",
             "Condition": {
                 "StringEquals": {
-#                    "aws:SourceArn": [
-#                        "arn:aws:rds:ca-central-1:873424993519:db:*",
-#                        "arn:aws:rds:ca-central-1:873424993519:og:*"
-#                    ]
 					"aws:SourceAccount": "873424993519"
                 }
             }
