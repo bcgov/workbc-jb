@@ -11,6 +11,10 @@ resource "aws_elasticsearch_domain" "workbc-jb-cluster" {
 		enabled = true
 	}
 	
+	encrypt_at_rest {
+		enabled = true
+	}
+	
 	advanced_security_options {
 		enabled = true
 		internal_user_database_enabled = true
