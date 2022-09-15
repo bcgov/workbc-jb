@@ -15,6 +15,10 @@ resource "aws_elasticsearch_domain" "workbc-jb-cluster" {
 		enabled = true
 	}
 	
+	domain_endpoint_options {
+		enforce_https = true
+	}
+	
 	advanced_security_options {
 		enabled = true
 		internal_user_database_enabled = true
@@ -28,3 +32,4 @@ resource "aws_elasticsearch_domain" "workbc-jb-cluster" {
 		Domain = "WorkBCJBCluster"
 	}
 }
+
