@@ -20,6 +20,13 @@ resource "aws_elasticsearch_domain" "workbc-jb-cluster" {
 		tls_security_policy = "Policy-Min-TLS-1-2-2019-07"
 	}
 	
+	ebs_options {
+		ebs_enabled = true
+		volume_size = 10
+		volume_type = gp3
+		throughput = 125
+	}
+	
 	advanced_security_options {
 		enabled = true
 		internal_user_database_enabled = true
