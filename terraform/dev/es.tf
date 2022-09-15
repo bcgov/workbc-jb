@@ -23,7 +23,7 @@ resource "aws_elasticsearch_domain" "workbc-jb-cluster" {
 	ebs_options {
 		ebs_enabled = true
 		volume_size = 10
-		volume_type = gp3
+		volume_type = "gp3"
 		throughput = 125
 	}
 	
