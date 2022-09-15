@@ -5,7 +5,7 @@ resource "aws_elasticsearch_domain" "workbc-jb-cluster" {
 	
 	cluster_config {
 		instance_count = 1
-		instance_type = t3.small.search
+		instance_type = "t3.small.search"
 	}
 	
 	master_user_options {
