@@ -7,6 +7,10 @@ resource "aws_elasticsearch_domain" "workbc-jb-cluster" {
 		instance_type = "t3.small.elasticsearch"
 	}
 	
+	node_to_node_encryption {
+		enabled = true
+	}
+	
 	advanced_security_options {
 		enabled = true
 		internal_user_database_enabled = true
