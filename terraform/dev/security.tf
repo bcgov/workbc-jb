@@ -1,5 +1,9 @@
 # security.tf
 
+data "aws_vpc" "main" {
+	id = module.network.aws_vpc.id
+}
+
 # ALB Security Group: Edit to restrict access to the application
 data "aws_security_group" "web" {
   name = "Web_sg"
