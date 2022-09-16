@@ -1,3 +1,7 @@
+data "aws_region" "current" {}
+
+data "aws_caller_identity" "current" {}
+
 resource "aws_iam_service_linked_role" "es" {
 	aws_service_name = "es.amazonaws.com"
 }
@@ -15,8 +19,7 @@ resource "aws_elasticsearch_domain" "workbc-jb-cluster" {
 	
 	vpc_options {
 		subnet_ids = [
-			data.aws_subnet_ids.sub.ids[0],
-			data.aws_subnet_ids.sub.ids[1]
+			module.network.aws_subnet_ids.app.id
 		]
 		security_group_ids = [aws_security_group.es_security_group.id]
 	}
