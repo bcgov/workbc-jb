@@ -3,6 +3,10 @@
 data "aws_vpc" "main" {
 	id = module.network.aws_vpc.id
 }
+	
+data "aws_subnet_ids" "sub" {
+  vpc_id = data.aws_vpc.main.id
+}
 
 # ALB Security Group: Edit to restrict access to the application
 data "aws_security_group" "web" {
