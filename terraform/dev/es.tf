@@ -1,3 +1,8 @@
+resource "aws_iam_service_linked_role" "es" {
+	aws_service_name = "es.amazonaws.com"
+}
+
+
 resource "aws_elasticsearch_domain" "workbc-jb-cluster" {
 	domain_name	= "workbc-jb-cluster"
 	elasticsearch_version = "OpenSearch_1.3"
@@ -5,7 +10,34 @@ resource "aws_elasticsearch_domain" "workbc-jb-cluster" {
 	cluster_config {
 		instance_count = 1
 		instance_type = "t3.small.elasticsearch"
+		zone_awareness_enabled = true
 	}
+	
+	vpc_options {
+		subnet_ids = [
+			data.aws_subnet_ids.app.ids[0],
+			data.aws_subnet_ids.app.ids[1]
+		]
+		security_group_ids = [aws_security_group.es_security_group.id]
+	}
+	
+	advanced_options {
+		"rest.action.multi.allow_explicit_index" = "true"
+	}
+	
+	access_policies = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "es:*",
+            "Principal": "*",
+            "Effect": "Allow",
+            "Resource": "arn:aws:es:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:domain/workbc-jb-cluster/*"
+        }
+    ]
+}
+EOF
 	
 	node_to_node_encryption {
 		enabled = true
@@ -39,5 +71,7 @@ resource "aws_elasticsearch_domain" "workbc-jb-cluster" {
 	tags = {
 		Domain = "WorkBCJBCluster"
 	}
+	
+	depends_on = [aws_iam_service_linked_role.es]
 }
 
