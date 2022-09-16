@@ -21,9 +21,9 @@ resource "aws_elasticsearch_domain" "workbc-jb-cluster" {
 		security_group_ids = [aws_security_group.es_security_group.id]
 	}
 	
-/*	advanced_options {
-		rest.action.multi.allow_explicit_index = true
-	}*/
+	advanced_options {
+		"rest.action.multi.allow_explicit_index" = "true"
+	}
 	
 	access_policies = <<EOF
 {
