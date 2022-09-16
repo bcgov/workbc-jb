@@ -12,7 +12,7 @@ resource "aws_elasticsearch_domain" "workbc-jb-cluster" {
 	cluster_config {
 		instance_count = 1
 		instance_type = "t3.small.elasticsearch"
-		zone_awareness_enabled = true
+		zone_awareness_enabled = false
 	}
 	
 	vpc_options {
