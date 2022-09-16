@@ -22,7 +22,7 @@ resource "aws_elasticsearch_domain" "workbc-jb-cluster" {
 	}
 	
 	advanced_options {
-		"rest.action.multi.allow_explicit_index" = "true"
+		rest.action.multi.allow_explicit_index = true
 	}
 	
 	access_policies = <<EOF
