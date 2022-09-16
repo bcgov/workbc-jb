@@ -15,8 +15,8 @@ resource "aws_elasticsearch_domain" "workbc-jb-cluster" {
 	
 	vpc_options {
 		subnet_ids = [
-			data.aws_subnet_ids.app.ids[0],
-			data.aws_subnet_ids.app.ids[1]
+			data.aws_subnet_ids.sub.ids[0],
+			data.aws_subnet_ids.sub.ids[1]
 		]
 		security_group_ids = [aws_security_group.es_security_group.id]
 	}
