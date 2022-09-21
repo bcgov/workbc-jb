@@ -15,6 +15,7 @@ resource "aws_elasticache_replication_group" "jb_redis_rg" {
 	}
 	
 	subnet_group_name		=	aws_elasticache_subnet_group.default.name
+	security_group_ids		=	[aws_security_group.redis_security_group.id]
 }
 
 resource "aws_elasticache_cluster" "replica" {
