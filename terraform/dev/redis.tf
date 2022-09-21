@@ -20,3 +20,8 @@ resource "aws_elasticache_cluster" "replica" {
 	cluster_id	=	"jb-rep-group-${count.index}"
 	replication_group_id	=	aws_elasticache_replication_group.jb_redis_rg.id
 }
+
+resource "aws_elasticache_subnet_group" "default" {
+	name		=	"redis-subnet-group"
+	subnet_ids	=	module.network.aws_subnet_ids.app.ids
+}
