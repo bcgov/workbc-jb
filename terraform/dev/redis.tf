@@ -13,6 +13,8 @@ resource "aws_elasticache_replication_group" "jb_redis_rg" {
 	lifecycle {
 		ignore_changes	=	[num_cache_clusters]
 	}
+	
+	subnet_group_name		=	aws_elasticache_subnet_group.default.name
 }
 
 resource "aws_elasticache_cluster" "replica" {
