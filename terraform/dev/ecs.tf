@@ -16,7 +16,7 @@ resource "aws_ecs_task_definition" "admin-app" {
   count                    = local.create_ecs_service
   family                   = "workbc-jb-task"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
-  task_role_arn            = aws_iam_role.workbc_container_role.arn
+  task_role_arn            = aws_iam_role.workbc_jb_container_role.arn
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = var.fargate_cpu
@@ -162,7 +162,7 @@ resource "aws_ecs_service" "admin" {
   count                             = local.create_ecs_service
   name                              = "workbc-service"
   cluster                           = aws_ecs_cluster.admin.id
-  task_definition                   = aws_ecs_task_definition.app[count.index].arn
+  task_definition                   = aws_ecs_task_definition.admin-app[count.index].arn
   desired_count                     = var.app_count
   enable_ecs_managed_tags           = true
   propagate_tags                    = "TASK_DEFINITION"
@@ -189,7 +189,7 @@ resource "aws_ecs_service" "admin" {
     container_port   = var.app_port
   }*/
 
-  depends_on = [data.aws_alb_listener.front_end, aws_iam_role_policy_attachment.ecs_task_execution_role]
+#  depends_on = [data.aws_alb_listener.front_end, aws_iam_role_policy_attachment.ecs_task_execution_role]
 
   tags = var.common_tags
 }
