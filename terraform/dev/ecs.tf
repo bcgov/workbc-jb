@@ -52,9 +52,9 @@ resource "aws_ecs_task_definition" "admin-app" {
 
 		portMappings = [
 			{
-				hostPort = 443
+				hostPort = 8080
 				protocol = "tcp"
-				containerPort = 80
+				containerPort = 8080
 			}
 		]
 		
