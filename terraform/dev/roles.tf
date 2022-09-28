@@ -13,7 +13,7 @@ data "aws_iam_policy_document" "ecs_task_execution_role" {
     }
   }
 }
-/*
+
 # ECS task execution role
 resource "aws_iam_role" "ecs_task_execution_role" {
   name               = var.ecs_task_execution_role_name
@@ -73,8 +73,8 @@ resource "aws_iam_role_policy" "ecs_task_execution_cwlogs" {
 EOF
 }
 
-resource "aws_iam_role" "workbc_container_role" {
-  name = "workbc_container_role"
+resource "aws_iam_role" "workbc_jb_container_role" {
+  name = "workbc_jb_container_role"
 
   assume_role_policy = <<EOF
 {
@@ -95,9 +95,9 @@ EOF
   tags = var.common_tags
 }
 
-resource "aws_iam_role_policy" "workbc_container_cwlogs" {
-  name = "workbc_container_cwlogs"
-  role = aws_iam_role.workbc_container_role.id
+resource "aws_iam_role_policy" "workbc_jb_container_cwlogs" {
+  name = "workbc_jb_container_cwlogs"
+  role = aws_iam_role.workbc_jb_container_role.id
 
   policy = <<-EOF
   {
@@ -120,9 +120,10 @@ resource "aws_iam_role_policy" "workbc_container_cwlogs" {
   EOF
 }
 
-resource "aws_iam_role_policy" "workbc_container_efs" {
-  name   = "workbc_container_efs"
-  role   = aws_iam_role.workbc_container_role.id
+/*
+resource "aws_iam_role_policy" "workbc_jb_container_efs" {
+  name   = "workbc_jb_container_efs"
+  role   = aws_iam_role.workbc_jb_container_role.id
   policy = <<-EOF
   {
       "Version": "2012-10-17",
@@ -140,11 +141,11 @@ resource "aws_iam_role_policy" "workbc_container_efs" {
       ]
   }
   EOF
-}
+}*/
 
-resource "aws_iam_role_policy" "workbc_container_start_task" {
-  name = "workbc_container_start_task"
-  role = aws_iam_role.workbc_container_role.id
+resource "aws_iam_role_policy" "workbc_jb_container_start_task" {
+  name = "workbc_jb_container_start_task"
+  role = aws_iam_role.workbc_jb_container_role.id
 
   policy = <<-EOF
   {
@@ -161,9 +162,9 @@ resource "aws_iam_role_policy" "workbc_container_start_task" {
   EOF  
 }
 
-resource "aws_iam_role_policy" "workbc_container_ssm" {
-  name = "workbc_container_ssm"
-  role = aws_iam_role.workbc_container_role.id
+resource "aws_iam_role_policy" "workbc_jb_container_ssm" {
+  name = "workbc_jb_container_ssm"
+  role = aws_iam_role.workbc_jb_container_role.id
 
   policy = <<-EOF
   {
@@ -184,9 +185,10 @@ resource "aws_iam_role_policy" "workbc_container_ssm" {
   EOF  
 }
 
+/*
 resource "aws_iam_role_policy" "workbc_container_ses" {
   name = "workbc_container_ses"
-  role = aws_iam_role.workbc_container_role.id
+  role = aws_iam_role.workbc_jb_container_role.id
 
   policy = <<-EOF
   {
