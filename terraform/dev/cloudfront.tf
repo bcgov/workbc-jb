@@ -5,7 +5,7 @@ resource "random_integer" "cf_origin_id" {
   max = 100
 }
 
-resource "aws_cloudfront_distribution" "workbc-jb-admin" {
+resource "aws_cloudfront_distribution" "workbc-jb" {
 
   count = var.cloudfront ? 1 : 0
 
