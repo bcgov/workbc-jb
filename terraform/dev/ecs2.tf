@@ -158,7 +158,7 @@ resource "aws_ecs_task_definition" "importer-app" {
   }
 }
 
-resource "aws_ecs_service" "admin" {
+resource "aws_ecs_service" "importer" {
   count                             = local.create_ecs_service
   name                              = "workbc-jb-importer-service"
   cluster                           = aws_ecs_cluster.importer.id
