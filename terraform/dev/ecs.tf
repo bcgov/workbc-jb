@@ -166,7 +166,7 @@ resource "aws_ecs_service" "admin" {
   desired_count                     = var.app_count
   enable_ecs_managed_tags           = true
   propagate_tags                    = "TASK_DEFINITION"
-#  health_check_grace_period_seconds = 60
+  health_check_grace_period_seconds = 60
   wait_for_steady_state             = false
   enable_execute_command            = true
 
@@ -183,13 +183,13 @@ resource "aws_ecs_service" "admin" {
     assign_public_ip = false
   }
 
-/*  load_balancer {
-    target_group_arn = aws_alb_target_group.app.id
-    container_name   = "nginx"
+  load_balancer {
+    target_group_arn = aws_alb_target_group.app-admin.id
+    container_name   = "admin"
     container_port   = var.app_port
-  }*/
+  }
 
-#  depends_on = [data.aws_alb_listener.front_end, aws_iam_role_policy_attachment.ecs_task_execution_role]
+  depends_on = [data.aws_alb_listener.front_end, aws_iam_role_policy_attachment.ecs_task_execution_role]
 
   tags = var.common_tags
 }
