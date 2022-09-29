@@ -35,7 +35,7 @@ resource "aws_ecs_task_definition" "importer-app" {
 
   container_definitions = jsonencode([
 	{
-		essential   = false
+		essential   = true
 		name        = "wanted-importer"
 		image       = "${var.app_repo}/jb-importers-wanted:1.0"
 		networkMode = "awsvpc"
