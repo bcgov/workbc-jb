@@ -1,7 +1,7 @@
 # ecs.tf
 
-resource "aws_ecs_cluster" "admin" {
-  name               = "workbc-jb-admin-cluster"
+resource "aws_ecs_cluster" "importer" {
+  name               = "workbc-jb-importer-cluster"
   capacity_providers = ["FARGATE_SPOT"]
 
   default_capacity_provider_strategy {
@@ -12,9 +12,9 @@ resource "aws_ecs_cluster" "admin" {
   tags = var.common_tags
 }
 
-resource "aws_ecs_task_definition" "admin-app" {
+resource "aws_ecs_task_definition" "importer-app" {
   count                    = local.create_ecs_service
-  family                   = "workbc-jb-task"
+  family                   = "workbc-jb-importer-task"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn            = aws_iam_role.workbc_jb_container_role.arn
   network_mode             = "awsvpc"
@@ -35,9 +35,9 @@ resource "aws_ecs_task_definition" "admin-app" {
 
   container_definitions = jsonencode([
 	{
-		essential   = true
-		name        = "admin"
-		image       = "${var.app_repo}/jb-admin:1.0"
+		essential   = false
+		name        = "wanted-importer"
+		image       = "${var.app_repo}/jb-importers-wanted:1.0"
 		networkMode = "awsvpc"
 		
 		logConfiguration = {
@@ -50,13 +50,13 @@ resource "aws_ecs_task_definition" "admin-app" {
 			}
 		}		
 
-		portMappings = [
+/*		portMappings = [
 			{
 				hostPort = 8080
 				protocol = "tcp"
 				containerPort = 8080
 			}
-		]
+		]*/
 		
 		environment = [
 			{
@@ -160,13 +160,13 @@ resource "aws_ecs_task_definition" "admin-app" {
 
 resource "aws_ecs_service" "admin" {
   count                             = local.create_ecs_service
-  name                              = "workbc-jb-service"
-  cluster                           = aws_ecs_cluster.admin.id
-  task_definition                   = aws_ecs_task_definition.admin-app[count.index].arn
+  name                              = "workbc-jb-importer-service"
+  cluster                           = aws_ecs_cluster.importer.id
+  task_definition                   = aws_ecs_task_definition.importer-app[count.index].arn
   desired_count                     = var.app_count
   enable_ecs_managed_tags           = true
   propagate_tags                    = "TASK_DEFINITION"
-  health_check_grace_period_seconds = 60
+#  health_check_grace_period_seconds = 60
   wait_for_steady_state             = false
   enable_execute_command            = true
 
@@ -183,11 +183,11 @@ resource "aws_ecs_service" "admin" {
     assign_public_ip = false
   }
 
-  load_balancer {
+/*  load_balancer {
     target_group_arn = aws_alb_target_group.app-admin.id
     container_name   = "admin"
     container_port   = var.app_port
-  }
+  }*/
 
   depends_on = [data.aws_alb_listener.front_end, aws_iam_role_policy_attachment.ecs_task_execution_role]
 
