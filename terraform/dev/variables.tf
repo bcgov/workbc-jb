@@ -48,7 +48,7 @@ variable "app_repo" {
 
 variable "app_port" {
   description = "Port exposed by the docker image to redirect traffic to"
-  default     = 443
+  default     = 8080
 }
 
 variable "app_count" {
@@ -62,7 +62,7 @@ variable "app_count" {
 #}
 
 variable "health_check_path" {
-  default = "/index.html"
+  default = "/"
 }
 
 variable "fargate_cpu" {
