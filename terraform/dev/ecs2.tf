@@ -184,11 +184,11 @@ resource "aws_ecs_service" "importer" {
     assign_public_ip = false
   }
 
-/*  load_balancer {
+  load_balancer {
     target_group_arn = aws_alb_target_group.app-admin.id
     container_name   = "admin"
     container_port   = var.app_port
-  }*/
+  }
 
   depends_on = [data.aws_alb_listener.front_end, aws_iam_role_policy_attachment.ecs_task_execution_role]
 
