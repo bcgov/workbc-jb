@@ -196,6 +196,6 @@ resource "aws_ecs_service" "importer" {
 }*/
 
 resource "aws_cloudwatch_event_rule" "cron" {
-	name = "Importer Schedule"
+	name = "importer_schedule"
 	schedule_expression = "rate(6 hours)"
 }
