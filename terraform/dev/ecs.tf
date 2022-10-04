@@ -37,7 +37,7 @@ resource "aws_ecs_task_definition" "admin-app" {
 	{
 		essential   = true
 		name        = "admin"
-		image       = "${var.app_repo}/jb-admin:1.0"
+		image       = "${var.app_repo}/jb-admin:1.1"
 		networkMode = "awsvpc"
 		
 		logConfiguration = {
