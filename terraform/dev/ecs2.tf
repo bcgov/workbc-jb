@@ -1,5 +1,5 @@
-# ecs.tf
-
+# Scheduled Task
+/*
 resource "aws_ecs_cluster" "importer" {
   name               = "workbc-jb-importer-cluster"
   capacity_providers = ["FARGATE_SPOT"]
@@ -10,7 +10,7 @@ resource "aws_ecs_cluster" "importer" {
   }
 
   tags = var.common_tags
-}
+}*/
 
 resource "aws_ecs_task_definition" "importer-app" {
   count                    = local.create_ecs_service
@@ -158,6 +158,7 @@ resource "aws_ecs_task_definition" "importer-app" {
   }
 }
 
+/*
 resource "aws_ecs_service" "importer" {
   count                             = local.create_ecs_service
   name                              = "workbc-jb-importer-service"
@@ -192,4 +193,9 @@ resource "aws_ecs_service" "importer" {
   depends_on = [data.aws_alb_listener.front_end, aws_iam_role_policy_attachment.ecs_task_execution_role]
 
   tags = var.common_tags
+}*/
+
+resource "aws_cloudwatch_event_rule" "cron" {
+	name = "Importer Schedule"
+	schedule_expression = "rate(6 hours)"
 }
