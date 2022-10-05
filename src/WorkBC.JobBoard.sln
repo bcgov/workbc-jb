@@ -33,6 +33,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{9BC4ABED-4B6E-412E-A79B-AB741F8EBA5B}"
 	ProjectSection(SolutionItems) = preProject
 		..\Docs\Elasticsearch-JVM-Options.png = ..\Docs\Elasticsearch-JVM-Options.png
+		..\LICENSE.txt = ..\LICENSE.txt
+		..\README.md = ..\README.md
 		..\Docs\Server_Setup.md = ..\Docs\Server_Setup.md
 		..\Docs\Workstation_Setup.md = ..\Docs\Workstation_Setup.md
 	EndProjectSection
