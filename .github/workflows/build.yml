@@ -49,7 +49,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      # Runs a single command using the runners shell
+      # Push images into ECR
       - name: Tag the Admin docker image
         run: |
           docker tag src_admin:latest 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-admin:latest
