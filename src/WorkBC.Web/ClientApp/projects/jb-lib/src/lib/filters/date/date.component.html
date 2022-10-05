@@ -1,0 +1,77 @@
+<button type="button" class="filter-menu-item" id="dateDropdown" ngbDropdownToggle>
+  Date Posted
+  <i class="fa fa-chevron-down"></i>
+  <div class="toggle-icons pull-right">
+    <lib-svg-icon icon="plus-blue" width="25px" height="25px"></lib-svg-icon>
+    <lib-svg-icon icon="minus-blue" width="25px" height="25px"></lib-svg-icon>
+  </div>
+</button>
+<div ngbDropdownMenu aria-labelledby="dateDropdown" id="dateDropdownMenu">
+  <!-- Date filters -->
+  <div class="container">
+    <button type="button" class="clear-filter pull-right btn-filter-clear" (click)="clear()">
+      <i class="fa fa-close"></i>
+      <span>Clear all</span>
+    </button>
+    <strong class="filter-title">{{datePostedTitle}}</strong>
+    <div class="date-filters">
+      <!-- Date Posted -->
+      <div class="form-group">
+        <div class="select-group range-select">
+          <select aria-label="Dated posted options" class="form-control" [(ngModel)]="vm.rangeSelected"
+                  (change)="changeRange(vm.rangeSelected)">
+            <option value="0">Any date</option>
+            <option value="1">Today</option>
+            <option value="2">Past three days</option>
+            <option value="3">Date range</option>
+          </select>
+          <i class="select-arrow"></i>
+        </div>
+      </div>
+      <!-- Start date -->
+      <div class="form-group">
+        <div class="input-group date-picker" [ngClass]="{'error': invalidStartDate && !vm.isDisabled, 'disabled': vm.isDisabled}">
+          <label for="startDate" class="visuallyhidden">Date range start date</label>
+          <input id="startDate" class="form-control" title="Date range start date" placeholder="Start date (YYYY/MM/DD)"
+                 name="startDate" [disabled]="vm.isDisabled"
+                 [(ngModel)]="vm.startDate" ngbDatepicker #dStartDate="ngbDatepicker" [maxDate]="maxDate"
+                 (dateSelect)="startDateSelect()" [firstDayOfWeek]="7">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="dStartDate.toggle()" type="button">
+              <span class="sr-only">Open start date selector</span>
+            </button>
+          </div>
+        </div>
+        <div aria-live="polite">
+          <div class="text-danger error-block" *ngIf="invalidStartDate && !vm.isDisabled">Start date is missing</div>
+        </div>
+      </div>
+      <!-- End date -->
+      <div class="form-group">
+        <div class="input-group date-picker" [ngClass]="{'error': invalidEndDateBeforeStartDate && !vm.isDisabled || invalidEndDate && !vm.isDisabled, 'disabled': vm.isDisabled}">
+          <label for="endDate" class="visuallyhidden">Date range end date</label>
+          <input id="endDate" class="form-control" title="Date range end date" placeholder="End date (YYYY/MM/DD)"
+                 name="EndDate" [disabled]="vm.isDisabled"
+                 [(ngModel)]="vm.endDate" ngbDatepicker #dEndDate="ngbDatepicker" [maxDate]="maxDate"
+                 (dateSelect)="endDateSelect()" [firstDayOfWeek]="7">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="dEndDate.toggle()" type="button">
+              <span class="sr-only">Open end date selector</span>
+            </button>
+          </div>
+        </div>
+        <div aria-live="polite">
+          <div class="text-danger error-block" *ngIf="invalidEndDate && !vm.isDisabled">End date is missing</div>
+          <div class="text-danger error-block" *ngIf="invalidEndDateBeforeStartDate && !vm.isDisabled">End date is before start date</div>
+        </div>
+      </div>
+      <!-- Apply filter -->
+      <div class="form-group">
+        <button type="button" class="btn filter-date-btn bg-blue" (click)="getJobs('dateDropdownMenu')">
+          Apply filter
+          <lib-svg-icon icon="chev-white" width="25px" height="25px" class="pull-right"></lib-svg-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

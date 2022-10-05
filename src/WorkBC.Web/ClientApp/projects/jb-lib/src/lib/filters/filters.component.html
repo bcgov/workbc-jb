@@ -1,0 +1,79 @@
+<div class="job-search-header" #scrolltarget *ngIf="!inJobAlert">
+  <div class="container">
+    <h1 class="text-upper">Job Search Results</h1>
+    <div class="keyword-contain d-print-none">
+      <!-- Key word filter -->
+      <div class="form-group">
+        <input class="form-control" type="text" [attr.aria-label]="keywordInputPlaceholder" name="keywords" [placeholder]="keywordInputPlaceholder"
+               [(ngModel)]="keyword" (keyup.enter)="getJobs()" />
+      </div>
+      <!-- City / Postal code filter -->
+      <div class="form-group city-postal-group" [ngClass]="{'error': invalidCityOrPostal}">
+        <input class="form-control" type="text" aria-label="City or Postal Code" name="cityOrPostal" placeholder="City or Postal Code" #cityOrPostalInput
+               [(ngModel)]="cityOrPostal" (keyup.enter)="getJobs()" (blur)="validateCityOrPostal()" [matAutocomplete]="auto" id="cityOrPostal"
+               [ngClass]="{'input-danger': invalidCityOrPostal}" (focus)="refreshCityList()" (keyup)="clearIfEmpty($event)" maxlength="50" />
+        <mat-autocomplete #auto="matAutocomplete" panelWidth="auto" (optionSelected)="validateCityOrPostal()">
+          <mat-option *ngFor="let city of cities$ | async" [value]="city">
+            {{city}}
+          </mat-option>
+        </mat-autocomplete>
+        <div class="error-outline"></div>
+        <div aria-live="polite">
+          <div class="text-danger text-danger--cityOrPostal d-print-none error-block" *ngIf="invalidCityOrPostal">
+            <span *ngIf="invalidCity" [innerHTML]="htmlForInvalidCity" class="invalid-city">
+            </span>
+            <span *ngIf="invalidPostal" [innerHTML]="htmlForInvalidPostalCode" class="invalid-postal">
+            </span>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn find-jobs-btn bg-blue text-nowrap" (click)="getJobs()">
+        Find jobs
+        <lib-svg-icon icon="chev-white" width="25px" height="25px" class="pull-right"></lib-svg-icon>
+      </button>
+      <a class="btn find-jobs-btn search-tips d-none d-lg-flex" href="/Jobs-Careers/Find-Jobs/Job-Board-Search-Tips.aspx" target="_blank">
+        Search tips
+      </a>
+      <a class="btn find-jobs-btn search-tips d-lg-none" href="/Jobs-Careers/Find-Jobs/Job-Search-Tips-for-Mobile.aspx">
+        Search tips
+      </a>      
+    </div>
+
+    <div class="keyword-type-contain d-print-none">
+      <lib-search-by #wrapper [searchField]="searchField" (selected)="onSelected($event)"></lib-search-by>
+      <!--<ng-content *ngTemplateOutlet='wrapper?.searchByTemplate'></ng-content>-->
+      <ng-container *ngTemplateOutlet="wrapper?.searchByTemplate"></ng-container>
+
+      <!-- Job Number -->
+      <div class="form-group">
+        <input type="radio" name="KeywordbyJobNumber" id="KeywordbyJobNumber" [(ngModel)]="searchField" value="jobId">
+        <label class="form-check-label" for="KeywordbyJobNumber">Job Number</label>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="job-search-filters d-print-none" [ngClass]="{'job-alert-search-filters': inJobAlert}">
+  <nav class="navbar navbar-expand-lg navbar-divght bg-divght">
+    <div class="container">
+      <button type="button" class="navbar-toggler btn text-left" (click)="isCollapsed = !isCollapsed"
+              [attr.aria-expanded]="!isCollapsed" aria-controls="filterCollapse">
+        Filter By:
+        <div class="toggle-icons pull-right">
+          <lib-svg-icon icon="plus-white" width="25px" height="25px"></lib-svg-icon>
+          <lib-svg-icon icon="minus-white" width="25px" height="25px"></lib-svg-icon>
+        </div>
+      </button>
+      <div class="collapse navbar-collapse" id="filterCollapse" [ngbCollapse]="isCollapsed">
+        <div class="navbar-nav">
+          <app-location class="nav-item" ngbDropdown [inJobAlert]="inJobAlert" (openChange)="onOpenChange($event, 'locationDropdownMenu')"></app-location>
+          <app-job-type class="nav-item" ngbDropdown [inJobAlert]="inJobAlert" (openChange)="onOpenChange($event, 'jobTypeDropdownMenu')"></app-job-type>
+          <app-salary class="nav-item" ngbDropdown [inJobAlert]="inJobAlert" (openChange)="onOpenChange($event, 'salaryDropdownMenu')"></app-salary>
+          <app-industry class="nav-item" ngbDropdown [inJobAlert]="inJobAlert" (openChange)="onOpenChange($event, 'industryDropdownMenu')"></app-industry>
+          <app-education class="nav-item" ngbDropdown [inJobAlert]="inJobAlert" (openChange)="onOpenChange($event, 'educationDropdownMenu')"></app-education>
+          <app-date class="nav-item" ngbDropdown [inJobAlert]="inJobAlert" (openChange)="onOpenChange($event, 'dateDropdownMenu')"></app-date>
+          <app-more class="nav-item" ngbDropdown [inJobAlert]="inJobAlert" (openChange)="onOpenChange($event, 'moreDropdownMenu')"></app-more>
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>

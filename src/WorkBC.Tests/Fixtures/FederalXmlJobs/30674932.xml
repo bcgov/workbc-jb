@@ -1,0 +1,110 @@
+<SolrResponse>
+  <Header>
+    <status>0</status><QTime>0</QTime><numFound>1</numFound>
+  </Header>
+  <Documents>
+    <Document>
+      <jobs_id>30674932</jobs_id><noc_2011>0113</noc_2011><skill_level>0</skill_level><remote_cd>1249927</remote_cd>
+      <title>procurement manager</title><noc>0113</noc><work_period_cd>F</work_period_cd>
+      <employer_type_id>0</employer_type_id><edulevel_cd>M</edulevel_cd><wage_class>B</wage_class>
+      <postal_code>V7M1R5</postal_code><employer_id>132062</employer_id><lang>en</lang>
+      <skill_categories>
+        <skill_category id="195">
+          <name>Education</name>
+          <options>
+            <option_name>Secondary (high) school graduation certificate</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="218">
+          <name>Experience</name>
+          <options>
+            <option_name>3 years to less than 5 years</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="299">
+          <name>Additional Skills</name>
+          <options>
+            <option_name>Plan and control budget and expenditures</option_name>
+            <option_name>Hire, train, direct and motivate staff</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="685">
+          <name>Specific Skills</name>
+          <options>
+            <option_name>Review and process claims against suppliers</option_name>
+            <option_name>Plan, develop and implement purchasing policies and procedures</option_name>
+            <option_name>Oversee the evaluation of the cost and quality of goods or services</option_name>
+            <option_name>Oversee the analysis of data and information</option_name>
+            <option_name>Assign, co-ordinate and review projects and programs</option_name>
+          </options>
+        </skill_category>
+      </skill_categories>
+      <job_source_id>16</job_source_id><work_term_cd>P</work_term_cd><work_lang_cd>E</work_lang_cd>
+      <app_methods>
+        <app_online></app_online><app_email>persiajobs@yahoo.com</app_email>
+        <app_phone>
+          <app_phone_number></app_phone_number><app_phone_ext></app_phone_ext>
+          <app_phone_start_bus_hours></app_phone_start_bus_hours><app_phone_end_bus_hours></app_phone_end_bus_hours>
+        </app_phone>
+        <app_fax></app_fax>
+        <app_person>
+          <app_person_street></app_person_street><app_person_room></app_person_room><app_person_city></app_person_city>
+          <app_person_province></app_person_province><app_person_country></app_person_country>
+          <app_person_pstlcd></app_person_pstlcd><app_person_start_bus_hours></app_person_start_bus_hours>
+          <app_person_end_bus_hours></app_person_end_bus_hours>
+        </app_person>
+        <app_mail>
+          <app_mail_street></app_mail_street><app_mail_room></app_mail_room><app_mail_city></app_mail_city>
+          <app_mail_province></app_mail_province><app_mail_country></app_mail_country>
+          <app_mail_pstlcd></app_mail_pstlcd>
+        </app_mail>
+      </app_methods>
+      <naics_id>26</naics_id><hours>40 hours per week</hours>
+      <employer_name_string>Persia Food Products Inc.</employer_name_string>
+      <employer_name_case>Persia Food Products Inc.</employer_name_case><num_positions>1</num_positions>
+      <job_senior_flag>true</job_senior_flag><various_location_flag>false</various_location_flag>
+      <job_student_flag>false</job_student_flag><job_youth_flag>false</job_youth_flag>
+      <job_apprentice_flag>false</job_apprentice_flag><job_disability_flag>true</job_disability_flag>
+      <job_aboriginal_flag>true</job_aboriginal_flag><program_title>false</program_title>
+      <job_vismin_flag>true</job_vismin_flag><job_newcomer_flag>true</job_newcomer_flag>
+      <job_veteran_flag>true</job_veteran_flag><latlng_variance>1</latlng_variance><los_id>2</los_id>
+      <postal_code_ind>1</postal_code_ind><experience_min>36</experience_min>
+      <file_update_date>2019-08-01T16:19:00Z</file_update_date><date_posted>2019-07-02T10:59:00Z</date_posted>
+      <import_date>2019-08-01T17:04:03Z</import_date><display_until>2019-08-31T23:59:00Z</display_until>
+      <salary_hourly>42.5</salary_hourly><salary_weekly>1700.0</salary_weekly><work_hours>40.0</work_hours>
+      <city_name>
+        <string>North Vancouver</string>
+      </city_name>
+      <lmi_geoarea_cd>
+        <string>25565</string>
+      </lmi_geoarea_cd>
+      <url>
+        <string>https://www.jobbank.gc.ca/jobsearch/jobposting/30674932</string>
+      </url>
+      <latlng_rpt>
+        <string>49.322388,-123.074089</string>
+      </latlng_rpt>
+      <latlng>
+        <string>49.322388,-123.074089</string>
+      </latlng>
+      <city_id>
+        <string>39069</string>
+      </city_id>
+      <noc_jobtitle_concordance_id>
+        <string>14554</string>
+      </noc_jobtitle_concordance_id>
+      <major_city_id>
+        <string>39069</string>
+      </major_city_id>
+      <province_cd>
+        <string>BC</string>
+      </province_cd>
+      <salary>
+        <string>$42.50 hourly</string>
+      </salary>
+      <employer_name>
+        <string>Persia Food Products Inc.</string>
+      </employer_name>
+    </Document>
+  </Documents>
+</SolrResponse>

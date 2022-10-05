@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="head">
+  <title>
+    WorkBC - Job Board
+  </title>
+  <meta charset="UTF-8" />
+
+  <link href="/favicon.ico" type="image/x-icon" rel="shortcut icon" />
+  <link href="/favicon.ico" type="image/x-icon" rel="icon" />
+
+
+  <meta http-equiv="content-language" content="en-CA">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <link type="text/css" rel="stylesheet" href="/assets/kentico/css/critical-workbc.css" />
+
+
+  <script>
+    WebFontConfig = {
+      typekit: { id: 'dee0hsr' }
+    };
+    (function (d) {
+      var wf = d.createElement('script'), s = d.scripts[0];
+      wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js';
+      s.parentNode.insertBefore(wf, s);
+    })(document);
+  </script>
+
+  <script src="/assets/kentico/js/jquery-core.js"></script>
+  <script src="/assets/kentico/js/jquery-ui.js"></script>
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="LTR Safari Chrome Safari75 Chrome75 ENCA ContentBody">
+  <form method="post" id="form">
+    <div class="aspNetHidden">
+      <input type="hidden" name="manScript_HiddenField" id="manScript_HiddenField" value="" />
+      <input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+      <input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+
+    </div>
+
+    <script type="text/javascript">
+      //<![CDATA[
+      var theForm = document.forms['form'];
+      if (!theForm) {
+        theForm = document.form;
+      }
+      function __doPostBack(eventTarget, eventArgument) {
+        if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+          theForm.__EVENTTARGET.value = eventTarget;
+          theForm.__EVENTARGUMENT.value = eventArgument;
+          theForm.submit();
+        }
+      }
+      //]]>
+    </script>
+
+
+    <script src="/assets/kentico/js/WebResource1.js" type="text/javascript"></script>
+
+    <input type="hidden" name="lng" id="lng" value="en-CA" />
+    <script type="text/javascript">
+      //<![CDATA[
+
+      function PM_Postback(param) { if (window.top.HideScreenLockWarningAndSync) { window.top.HideScreenLockWarningAndSync(1080); } if (window.CMSContentManager) { CMSContentManager.allowSubmit = true; }; __doPostBack('m$am', param); }
+      function PM_Callback(param, callback, ctx) { if (window.top.HideScreenLockWarningAndSync) { window.top.HideScreenLockWarningAndSync(1080); } if (window.CMSContentManager) { CMSContentManager.storeContentChangedStatus(); }; WebForm_DoCallback('m$am', param, callback, ctx, null, true); }
+      //]]>
+    </script>
+    <script src="/assets/kentico/js/ScriptResource1.js" type="text/javascript"></script>
+    <script src="/assets/kentico/js/ScriptResource2.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      //<![CDATA[
+
+      var CMS = CMS || {};
+      CMS.Application = {
+        "isRTL": "false",
+        "applicationUrl": "/",
+        "imagesUrl": "/CMSPages/GetResource.ashx?image=%5bImages.zip%5d%2f",
+        "isDialog": false
+      };
+
+      //]]>
+    </script>
+    <div class="aspNetHidden">
+
+      <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="A5343185" />
+      <input type="hidden" name="__SCROLLPOSITIONX" id="__SCROLLPOSITIONX" value="0" />
+      <input type="hidden" name="__SCROLLPOSITIONY" id="__SCROLLPOSITIONY" value="0" />
+    </div>
+    <script type="text/javascript">
+      //<![CDATA[
+      Sys.WebForms.PageRequestManager._initialize('manScript', 'form', ['tctxM', ''], [], [], 90, '');
+      //]]>
+    </script>
+
+    <div id="ctxM">
+
+    </div>
+
+
+    <div class="page">
+      <header class="head-container">
+        <site-header class="site-header preload">
+
+
+          <div class="container container__header-top">
+            <span id="loginNavSectionObject" style="display:none;">
+
+              <div class="container container__header-top">
+                <span id="loginNavSectionObject" style="display:none;">{~LoginMacro~}</span>
+                <div class="header__top">
+                  <div class="site-logos">
+                    <a href="/" id="ctl00_SiteLogoLink" class="site-logo__link" tab-index="0">
+                      <img src="/assets/kentico/images/workbc-header-logo.svg" id="ctl00_SiteLogo" class="site-logo__header-logo" aria-hidden="true" alt="WorkBC" title="WorkBC" />
+                    </a>
+                  </div>
+
+                  <ul class="links-list">
+
+                    <li id="ctl00_DisplayLinks1_rptLinks_ctl01_containerLi" class="links-list__item">
+                      <a id="ctl00_DisplayLinks1_rptLinks_ctl01_hlLink" href="#">About Us</a>
+                    </li>
+                    <span class="links-list__item-separator" aria-hidden="true"></span>
+
+                    <li id="ctl00_DisplayLinks1_rptLinks_ctl02_containerLi" class="links-list__item">
+                      <a id="ctl00_DisplayLinks1_rptLinks_ctl02_hlLink" href="#">Find a WorkBC Centre</a>
+                    </li>
+                    <span class="links-list__item-separator" aria-hidden="true"></span>
+
+                    <li id="ctl00_DisplayLinks1_rptLinks_ctl03_containerLi" class="links-list__item">
+                      <a id="ctl00_DisplayLinks1_rptLinks_ctl03_hlLink" href="#">Publications</a>
+                    </li>
+                    <span class="links-list__item-separator" aria-hidden="true"></span>
+
+                  </ul>
+
+
+
+
+                  <span class="links-list__item-separator" aria-hidden="true"></span>
+
+                  <ul class="links-list">
+                    <li class="links-list__item--loggedin-account">
+                      <button class="login__toggle-btn" role="button" type="button" aria-label="Toggle Menu" aria-expanded="false" data-bind="tap: _toggleLoginNavigation" tabindex="0">My Account<svg focusable="false" class="login-menu__toggle-icon" aria-hidden="true"></svg></button>
+                      <ul class="login-menu" role="menu" aria-expanded="false" aria-hidden="true" aria-labelledby="loginMenu">
+                        <li class="login-menu-item"><a class="login-menu-item-link" href="#">Dashboard</a></li>
+                        <li class="login-menu-item"><a class="login-menu-item-link" href="#">Account Settings</a></li>
+                        <li class="login-menu-item"><a class="login-menu-item-link" href="/" onclick="localStorage.removeItem('currentUser'); document.cookie ='currentUser.username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; Path=/;'; document.cookie ='currentUser.email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; Path=/;'; document.cookie ='currentUser.firstname=; expires=Thu, 01 Jan 1970 00:00:00 UTC; Path=/;'; document.cookie ='currentUser.lastname=; expires=Thu, 01 Jan 1970 00:00:00 UTC; Path=/;'; document.cookie ='currentUser.id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; Path=/;'; document.cookie ='currentUser.token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; Path=/;'; return true;">Sign Out</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+
+                  <search></search>
+                  <button class="menu-toggle-btn" tabindex="0" type="button" aria-label="Toggle Menu" aria-expanded="false">Menu</button>
+                </div>
+              </div>
+            </span>
+            <div class="header__top">
+              <div class="site-logos">
+                <a href="/" id="p_lt_GlobalHeader1_SiteLogoLink" class="site-logo__link" tab-index="0">
+                  <img src="/assets/kentico/images/workbc-header-logo.svg" id="p_lt_GlobalHeader1_SiteLogo" class="site-logo__header-logo" aria-hidden="true" alt="WorkBC" title="WorkBC" />
+                </a>
+              </div>
+
+              <ul class="links-list">
+
+                <li id="p_lt_GlobalHeader1_DisplayLinks1_rptLinks_ctl01_containerLi" class="links-list__item">
+                  <a id="p_lt_GlobalHeader1_DisplayLinks1_rptLinks_ctl01_hlLink" href="#">About Us</a>
+                </li>
+                <span class="links-list__item-separator" aria-hidden="true"></span>
+
+                <li id="p_lt_GlobalHeader1_DisplayLinks1_rptLinks_ctl02_containerLi" class="links-list__item">
+                  <a id="p_lt_GlobalHeader1_DisplayLinks1_rptLinks_ctl02_hlLink" href="#">Find a WorkBC Centre</a>
+                </li>
+                <span class="links-list__item-separator" aria-hidden="true"></span>
+
+                <li id="p_lt_GlobalHeader1_DisplayLinks1_rptLinks_ctl03_containerLi" class="links-list__item">
+                  <a id="p_lt_GlobalHeader1_DisplayLinks1_rptLinks_ctl03_hlLink" href="#">Publications</a>
+                </li>
+                <span class="links-list__item-separator" aria-hidden="true"></span>
+
+                <li id="p_lt_GlobalHeader1_DisplayLinks1_rptLinks_ctl04_containerLi" class="links-list__item--account">
+                  <a id="p_lt_GlobalHeader1_DisplayLinks1_rptLinks_ctl04_hlLink" href="#">Login</a>
+                </li>
+                <span class="links-list__item-separator" aria-hidden="true"></span>
+
+                <li id="p_lt_GlobalHeader1_DisplayLinks1_rptLinks_ctl05_containerLi" class="links-list__item--account">
+                  <a id="p_lt_GlobalHeader1_DisplayLinks1_rptLinks_ctl05_hlLink" href="#">Register</a>
+                </li>
+                <span class="links-list__item-separator" aria-hidden="true"></span>
+
+              </ul>
+
+
+              <search></search>
+              <button class="menu-toggle-btn" tabindex="0" type="button" aria-label="Toggle Menu" aria-expanded="false">Menu</button>
+            </div>
+          </div>
+          <div class="nav-container">
+            <div class="container">
+
+              <site-navigation params="opened: opened" id="site-navigation">
+                <div class="site-navigation__header">
+                  <button class="menu-toggle-btn" tabindex="0" aria-label="Toggle Menu" type="button">Close</button>
+                </div>
+                <search></search>
+                <nav class="navigation navigation__workbc" role="navigation" aria-label="Main menu" id="navigation">
+                  <ul id="navigation__list" class="navigation__list">
+
+                    <li id="p_lt_Navigation1_rptLvlOneNav_ctl01_topLvlLi" class="navigation__item--has-submenu">
+                      <a class="navigation__link" href="#">Jobs & Careers</a>
+
+
+
+                      <button class="navigation__toggle" data-bind="tap: _toggleSubMenu" type="button" role="button" aria-label="Toggle Submenu" aria-expanded="false">
+                        <ko-icon class="navigation__toggle-icon" icon="icons:plus-blue"></ko-icon>
+                        <ko-icon class="navigation__toggle-icon" icon="icons:minus-blue"></ko-icon>
+                      </button>
+
+
+
+                      <ul class="navigation__sub-menu hide" disabled>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl01_rptLvlTwoNav_ctl01_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Find Jobs</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl01_rptLvlTwoNav_ctl02_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Work in British Columbia</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl01_rptLvlTwoNav_ctl03_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Explore Careers</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl01_rptLvlTwoNav_ctl04_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Career Toolkit</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl01_rptLvlTwoNav_ctl05_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Find Your Fit Tour</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl01_rptLvlTwoNav_ctl06_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Success Stories</a>
+                        </li>
+
+                      </ul>
+
+                    </li>
+
+                    <li id="p_lt_Navigation1_rptLvlOneNav_ctl02_topLvlLi" class="navigation__item--has-submenu">
+                      <a class="navigation__link" href="#">Employment Services</a>
+
+
+
+                      <button class="navigation__toggle" data-bind="tap: _toggleSubMenu" type="button" role="button" aria-label="Toggle Submenu" aria-expanded="false">
+                        <ko-icon class="navigation__toggle-icon" icon="icons:plus-blue"></ko-icon>
+                        <ko-icon class="navigation__toggle-icon" icon="icons:minus-blue"></ko-icon>
+                      </button>
+
+
+
+                      <ul class="navigation__sub-menu hide" disabled>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl02_rptLvlTwoNav_ctl01_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">WorkBC Centres</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl02_rptLvlTwoNav_ctl02_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Apprentice Services</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl02_rptLvlTwoNav_ctl03_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Assistive Technology Services</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl02_rptLvlTwoNav_ctl04_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Renseignements sur les services à l’emploi</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl02_rptLvlTwoNav_ctl05_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Community and Employer Partnerships</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl02_rptLvlTwoNav_ctl06_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Labour Market Programs</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl02_rptLvlTwoNav_ctl07_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Community Workforce Response Grant</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl02_rptLvlTwoNav_ctl08_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Publications</a>
+                        </li>
+
+                      </ul>
+
+                    </li>
+
+                    <li id="p_lt_Navigation1_rptLvlOneNav_ctl03_topLvlLi" class="navigation__item--has-submenu">
+                      <a class="navigation__link" href="#">Training & Education</a>
+
+
+
+                      <button class="navigation__toggle" data-bind="tap: _toggleSubMenu" type="button" role="button" aria-label="Toggle Submenu" aria-expanded="false">
+                        <ko-icon class="navigation__toggle-icon" icon="icons:plus-blue"></ko-icon>
+                        <ko-icon class="navigation__toggle-icon" icon="icons:minus-blue"></ko-icon>
+                      </button>
+
+
+
+                      <ul class="navigation__sub-menu hide" disabled>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl03_rptLvlTwoNav_ctl01_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Post-Secondary</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl03_rptLvlTwoNav_ctl02_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Skills Training for Employment Program</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl03_rptLvlTwoNav_ctl03_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Trades Training</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl03_rptLvlTwoNav_ctl04_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Co-operative Education</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl03_rptLvlTwoNav_ctl05_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Trades Success Stories</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl03_rptLvlTwoNav_ctl06_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Finance your Education</a>
+                        </li>
+
+                      </ul>
+
+                    </li>
+
+                    <li id="p_lt_Navigation1_rptLvlOneNav_ctl04_topLvlLi" class="navigation__item--has-submenu">
+                      <a class="navigation__link" href="#">Labour Market & Industry</a>
+
+
+
+                      <button class="navigation__toggle" data-bind="tap: _toggleSubMenu" type="button" role="button" aria-label="Toggle Submenu" aria-expanded="false">
+                        <ko-icon class="navigation__toggle-icon" icon="icons:plus-blue"></ko-icon>
+                        <ko-icon class="navigation__toggle-icon" icon="icons:minus-blue"></ko-icon>
+                      </button>
+
+
+
+                      <ul class="navigation__sub-menu hide" disabled>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl04_rptLvlTwoNav_ctl01_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">B.C.’s Economy</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl04_rptLvlTwoNav_ctl02_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">B.C.’s Labour Market Outlook: 2018 Edition</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl04_rptLvlTwoNav_ctl03_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">High Demand Occupations</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl04_rptLvlTwoNav_ctl04_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Skills for the Future Workforce</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl04_rptLvlTwoNav_ctl05_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Top Demand Trades</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl04_rptLvlTwoNav_ctl06_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Sector Labour Market Partnerships</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl04_rptLvlTwoNav_ctl07_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Industry and Sector Information</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl04_rptLvlTwoNav_ctl08_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">B.C. & Regional Profiles</a>
+                        </li>
+
+                      </ul>
+
+                    </li>
+
+                    <li id="p_lt_Navigation1_rptLvlOneNav_ctl05_topLvlLi" class="navigation__item--has-submenu">
+                      <a class="navigation__link" href="#">Employer Resources</a>
+
+
+
+                      <button class="navigation__toggle" data-bind="tap: _toggleSubMenu" type="button" role="button" aria-label="Toggle Submenu" aria-expanded="false">
+                        <ko-icon class="navigation__toggle-icon" icon="icons:plus-blue"></ko-icon>
+                        <ko-icon class="navigation__toggle-icon" icon="icons:minus-blue"></ko-icon>
+                      </button>
+
+
+
+                      <ul class="navigation__sub-menu hide" disabled>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl05_rptLvlTwoNav_ctl01_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Post Jobs for Free</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl05_rptLvlTwoNav_ctl02_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Your Workforce</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl05_rptLvlTwoNav_ctl03_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Skills Training</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl05_rptLvlTwoNav_ctl04_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Funding & Programs</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl05_rptLvlTwoNav_ctl05_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">B.C. Employer Training Grant</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl05_rptLvlTwoNav_ctl06_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Business Resources</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl05_rptLvlTwoNav_ctl07_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Success Stories</a>
+                        </li>
+
+                      </ul>
+
+                    </li>
+
+                    <li id="p_lt_Navigation1_rptLvlOneNav_ctl06_topLvlLi" class="navigation__item--has-submenu">
+                      <a class="navigation__link" href="#">Resources For</a>
+
+
+
+                      <button class="navigation__toggle" data-bind="tap: _toggleSubMenu" type="button" role="button" aria-label="Toggle Submenu" aria-expanded="false">
+                        <ko-icon class="navigation__toggle-icon" icon="icons:plus-blue"></ko-icon>
+                        <ko-icon class="navigation__toggle-icon" icon="icons:minus-blue"></ko-icon>
+                      </button>
+
+
+
+                      <ul class="navigation__sub-menu hide" disabled>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl06_rptLvlTwoNav_ctl01_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Indigenous people</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl06_rptLvlTwoNav_ctl02_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Counsellors, teachers & parents</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl06_rptLvlTwoNav_ctl03_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Communities & organizations</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl06_rptLvlTwoNav_ctl04_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Mature workers</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl06_rptLvlTwoNav_ctl05_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">New to B.C.</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl06_rptLvlTwoNav_ctl06_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">People with disabilities</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl06_rptLvlTwoNav_ctl07_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Women</a>
+                        </li>
+
+                        <li id="p_lt_Navigation1_rptLvlOneNav_ctl06_rptLvlTwoNav_ctl08_secondLvlLi" class="navigation__sub-menu-item">
+                          <a class="navigation__submenu-link" href="#">Youth</a>
+                        </li>
+
+                      </ul>
+
+                    </li>
+
+                    <div class="navigation__mobile-link-container">
+                      <li class="navigation__item for-mobile">
+                        <div id="p_lt_Navigation1_rptLvlOneNav_ctl07_pnlAboutUsWorkBC">
+
+                          <a class="navigation__link" href="#">About Us</a>
+
+                        </div>
+
+                        <div class="navigation___link-icon dark" role="presentation">
+                          <ko-icon icon="icons:chev-blue" class="btn__icon"></ko-icon>
+                        </div>
+                      </li>
+                      <div id="p_lt_Navigation1_rptLvlOneNav_ctl07_pnlWorkBCCentre">
+
+                        <li class="navigation__item for-mobile">
+                          <a class="navigation__link" href="#">Find a WorkBC Centre</a>
+                          <div class="navigation___link-icon dark" role="presentation">
+                            <ko-icon icon="icons:chev-blue" class="btn__icon"></ko-icon>
+                          </div>
+                        </li>
+
+                      </div>
+                    </div>
+                    <div id="p_lt_Navigation1_rptLvlOneNav_ctl07_pnlLogin">
+
+
+
+                      <div class="navigation userloginmobile">
+                        <span id="loginMobileSectionObject" style="display:none;">
+
+                          <div class="navigation userloginmobile">
+                            <span id="loginMobileSectionObject" style="display:none;">{~LoginMobileMacro~}</span>
+
+
+
+                            <li id="p_lt_Navigation1_rptLvlOneNav_ctl02_topLvlLi" class="navigation__item--has-submenu for-mobile">
+                              <span class="navigation__link" aria-expanded="true">My Account</span>
+                              <button class="navigation__toggle" data-bind="tap: _toggleSubMenu" type="button" role="button" aria-expanded="false" aria-hidden="false" aria-label="Toggle Submenu">
+                                <ko-icon class="navigation__toggle-icon" icon="icons:plus-blue"></ko-icon>
+                                <ko-icon class="navigation__toggle-icon" icon="icons:minus-blue"></ko-icon>
+                              </button>
+                              <ul class="navigation__sub-menu hide" disabled="" style="display: none;">
+                                <li class="navigation__sub-menu-item">
+                                  <a class="navigation__submenu-link" href="#">Dashboard</a>
+                                </li>
+                                <li class="navigation__sub-menu-item">
+                                  <a class="navigation__submenu-link" href="#">Account Settings</a>
+                                </li>
+
+
+                                <li class="navigation__sub-menu-item">
+                                  <a class="navigation__submenu-link" href="#">Job Notifications</a>
+                                </li>
+                                <li class="navigation__sub-menu-item">
+                                  <a class="navigation__submenu-link" href="#">Jobs</a>
+                                </li>
+                                <li class="navigation__sub-menu-item">
+                                  <a class="navigation__submenu-link" href="#">Employers</a>
+                                </li>
+                                <li class="navigation__sub-menu-item">
+                                  <a class="navigation__submenu-link" href="#">Career Profiles</a>
+                                </li>
+                                <li class="navigation__sub-menu-item">
+                                  <a class="navigation__submenu-link" href="#">Industry Profiles</a>
+                                </li>
+                                <li class="navigation__sub-menu-item">
+                                  <a class="navigation__submenu-link" href="#">Apprentice Profile</a>
+                                </li>
+
+
+                                <li class="navigation__sub-menu-item">
+                                  <a class="navigation__submenu-link" href="#">Sign Out</a>
+                                </li>
+                              </ul>
+                            </li>
+
+
+                          </div>
+                        </span>
+
+                        <li class="navigation__item for-mobile">
+                          <a class="navigation__link--account" href="#">Login</a>
+                          <div class="navigation___link-icon" role="presentation">
+                            <ko-icon icon="icons:chev-white" class="btn__icon"></ko-icon>
+                          </div>
+                        </li>
+                        <li class="navigation__item for-mobile">
+                          <a class="navigation__link--account" href="#">Register</a>
+                          <div class="navigation___link-icon" role="presentation">
+                            <ko-icon icon="icons:chev-white" class="btn__icon"></ko-icon>
+                          </div>
+                        </li>
+
+
+
+
+                      </div>
+
+
+                    </div>
+                  </ul>
+                </nav>
+                <!--Global Links-->
+
+              </site-navigation>
+
+            </div>
+          </div>
+        </site-header>
+
+      </header>
+
+
+      <main role="main">
+
+
+
+
+        <div class="layout-container ">
+
+          <!-- BEGIN JOB BOARD CODE -->
+          <link rel="stylesheet" href="/bootstrap/bootstrap.css">
+
+          <app-root>
+            <div class="loading-wheel" style="height:200px"></div>
+            <style type="text/css">
+              footer {
+                display: none;
+              }
+            </style>
+          </app-root>
+
+          <script>
+            // disable the main form on the page. It causes Angular Social sharing widgets to
+            // make a post request because the opensource party plugin didn't use <buttont type="button">
+            (function ($) {
+              $(function () {
+                $("form#form").submit(function (e) {
+                  e.preventDefault();
+                });
+              });
+            })($cmsj);
+          </script>
+          <!-- END JOB BOARD CODE -->
+
+        </div>
+
+      </main>
+
+      <footer role="contentinfo" class="foot-container">
+        <div id="backToTop">
+          <div class="container">
+            <a href="#" style="display: none" class="backToTopBtn" title="Go back to the top of the page">Go back to the top of the page.</a>
+          </div>
+        </div>
+        <script type="text/javascript">
+          (function ($) {
+            // Back to top functionality
+            $(function () {
+              $('.backToTopBtn').on('click', function () {
+                $("html, body").animate({ scrollTop: 0 }, 500);
+                return false;
+              });
+
+              var $backToTopContainer = $('#backToTop');
+              var $backToTop = $('.backToTopBtn');
+              var $homeBanner = $('.promo-banner');
+
+              var $body = document.body,
+                $html = document.documentElement;
+              var $pageHeight = Math.max($body.scrollHeight, $body.offsetHeight,
+                $html.clientHeight, $html.scrollHeight, $html.offsetHeight);
+              var $windowHeight = $(window).height();
+              var $featuredLinksListItems = $('.featured-links__list-item a');
+
+              // console.log($backToTop);
+              // console.log('$windowHeight: ' + $windowHeight);
+              // console.log('$pageHeight: ' + $pageHeight);
+
+              if ($pageHeight > $windowHeight * 2.45) {
+                // console.log('show back to top');
+                $backToTop.fadeIn(200);
+                $backToTopContainer.addClass('show');
+                // need to check if it's a home page and there are 6 items
+                if ($homeBanner.length && $featuredLinksListItems.length > 5) {
+                  $backToTopContainer.addClass('extra-pad');
+                } else if ($featuredLinksListItems.length > 5) {
+                  $backToTopContainer.addClass('extra-pad');
+                }
+              } else {
+                // console.log('page not that tall - do not show back to top');
+              }
+            });
+          })(jQuery);
+        </script>
+
+        <div class="container">
+          <div class="site-footer">
+            <div class="site-footer__links">
+
+              <ul class="links-list">
+
+                <li id="p_lt_DisplayLinks2_rptLinks_ctl01_containerLi" class="links-list__item">
+                  <a id="p_lt_DisplayLinks2_rptLinks_ctl01_hlLink" target="_blank" href="http://www2.gov.bc.ca/gov/content/home/accessibility">Accessibility</a>
+                </li>
+                <span class="links-list__item-separator" aria-hidden="true"></span>
+
+                <li id="p_lt_DisplayLinks2_rptLinks_ctl02_containerLi" class="links-list__item">
+                  <a id="p_lt_DisplayLinks2_rptLinks_ctl02_hlLink" href="#">Browsers</a>
+                </li>
+                <span class="links-list__item-separator" aria-hidden="true"></span>
+
+                <li id="p_lt_DisplayLinks2_rptLinks_ctl03_containerLi" class="links-list__item">
+                  <a id="p_lt_DisplayLinks2_rptLinks_ctl03_hlLink" href="#">Contact Us</a>
+                </li>
+                <span class="links-list__item-separator" aria-hidden="true"></span>
+
+                <li id="p_lt_DisplayLinks2_rptLinks_ctl04_containerLi" class="links-list__item">
+                  <a id="p_lt_DisplayLinks2_rptLinks_ctl04_hlLink" target="_blank" href="http://www2.gov.bc.ca/gov/content/home/disclaimer">Disclaimer</a>
+                </li>
+                <span class="links-list__item-separator" aria-hidden="true"></span>
+
+                <li id="p_lt_DisplayLinks2_rptLinks_ctl05_containerLi" class="links-list__item">
+                  <a id="p_lt_DisplayLinks2_rptLinks_ctl05_hlLink" target="_blank" href="http://www2.gov.bc.ca/gov/content/home/privacy">Privacy</a>
+                </li>
+                <span class="links-list__item-separator" aria-hidden="true"></span>
+
+                <li id="p_lt_DisplayLinks2_rptLinks_ctl06_containerLi" class="links-list__item">
+                  <a id="p_lt_DisplayLinks2_rptLinks_ctl06_hlLink" href="#">Sitemap</a>
+                </li>
+                <span class="links-list__item-separator" aria-hidden="true"></span>
+
+                <li id="p_lt_DisplayLinks2_rptLinks_ctl07_containerLi" class="links-list__item">
+                  <a id="p_lt_DisplayLinks2_rptLinks_ctl07_hlLink" href="#">Contactez-nous</a>
+                </li>
+                <span class="links-list__item-separator" aria-hidden="true"></span>
+
+                <li id="p_lt_DisplayLinks2_rptLinks_ctl08_containerLi" class="links-list__item">
+                  <a id="p_lt_DisplayLinks2_rptLinks_ctl08_hlLink" target="_blank" href="http://www.welcomebc.ca/">Visit WelcomeBC</a>
+                </li>
+                <span class="links-list__item-separator" aria-hidden="true"></span>
+
+              </ul>
+
+
+
+              <ul class="social-links">
+                <li id="p_lt_SocialIcons1_liTwitter" class="social-link__item">
+                  <a href="https://twitter.com/WorkBC" title="Follow Us on Twitter @WorkBC" target="_blank">
+                    <ko-icon icon="icons:twitter" class="social-link__icon"></ko-icon>
+                  </a>
+                </li>
+                <li id="p_lt_SocialIcons1_liFacebook" class="social-link__item">
+                  <a href="https://www.facebook.com/WorkBC" title="Like Us on Facebook" target="_blank">
+                    <ko-icon icon="icons:facebook" class="social-link__icon"></ko-icon>
+                  </a>
+                </li>
+                <li id="p_lt_SocialIcons1_liYouTube" class="social-link__item">
+                  <a href="https://www.youtube.com/user/WorkBC" title="Visit Us on YouTube" target="_blank">
+                    <ko-icon icon="icons:youtube" class="social-link__icon"></ko-icon>
+                  </a>
+                </li>
+                <li id="p_lt_SocialIcons1_liLinkedIn" class="social-link__item">
+                  <a href="https://www.linkedin.com/company/official-workbc" title="Visit Us on LinkedIn" target="_blank">
+                    <ko-icon icon="icons:linkedin" class="social-link__icon"></ko-icon>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <hr class="footer-border">
+            <div class="footer-features">
+              <font-resizer>
+                <span class="font-resizer-desc">Increase Font Size</span>
+                <ko-selector params="selected: _selected">
+                  <button type="button" title="Site Wide Text Size: Normal" class="font-resizer-button__normal">A</button>
+                  <button type="button" title="Site Wide Text Size: Big" class="font-resizer-button__big">A</button>
+                  <button type="button" title="Site Wide Text Size: Bigger" class="font-resizer-button__bigger">A</button>
+                </ko-selector>
+              </font-resizer>
+              <!--Google translate-->
+              <div class="google-translate-container">
+                <span class="google-translate-desc">View in other languages</span>
+                <google-translate></google-translate>
+                <svg class="custom-select__icon" aria-hidden="true"></svg>
+              </div>
+            </div>
+          </div> <!-- / .site-footer -->
+        </div> <!-- / .container -->
+
+        <div class="disclaimer-container">
+          <div class="container">
+            <div class="site-disclaimer">
+              <div class="site-footer__copyright">
+                Copyright &copy; 2019 <a href="https://www2.gov.bc.ca/gov/content/home/copyright" target="_blank"><u>Province of British Columbia. All rights reserved.</u></a>
+              </div>
+              <div class="site-footer__logos">
+                <a href="http://www2.gov.bc.ca/" alt="British Columbia" title="British Columbia" class="site-logo__link" target="_blank">
+                  <img src="/assets/kentico/images/bc-logo.svg" class="site-footer__logo-item--britishcolumbia" />
+
+                </a>
+              </div>
+            </div>
+          </div> <!-- / .container -->
+        </div> <!-- / .disclaimer-container -->
+      </footer>
+    </div>
+
+
+
+    <div class="assets">
+
+
+      <ko-iconset-svg name="icons" path="/assets/kentico/images/iconsets/icons.svg"></ko-iconset-svg>
+
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+      <script>
+        if (!window.jQuery) { document.write('<script src="/bower_components/jquery/dist/jquery.min.js" defer><\/script>'); }
+      </script>
+      <script>$.noConflict();</script>
+
+      <script type="text/javascript" src="/assets/kentico/js/modernizr-custom.js" defer></script>
+
+      <script type="text/javascript" src="/assets/kentico/js/main.js" defer></script>
+
+
+      <link type="text/css" rel="stylesheet" href="/assets/kentico/css/components-workbc.css" />
+      <script type="text/javascript" src="/assets/kentico/js/components.js" defer></script>
+
+
+    </div>
+
+
+
+
+
+    <script type="text/javascript">
+      //<![CDATA[
+      (function () { var fn = function () { $get("manScript_HiddenField").value = ''; Sys.Application.remove_init(fn); }; Sys.Application.add_init(fn); })();//]]>
+    </script>
+
+    <script type="text/javascript">
+      //<![CDATA[
+      if (typeof (Sys.Browser.WebKit) == 'undefined') {
+        Sys.Browser.WebKit = {};
+      }
+      if (navigator.userAgent.indexOf('WebKit/') > -1) {
+        Sys.Browser.agent = Sys.Browser.WebKit;
+        Sys.Browser.version = parseFloat(navigator.userAgent.match(/WebKit\/(\d+(\.\d+)?)/)[1]);
+        Sys.Browser.name = 'WebKit';
+      }
+      //]]>
+    </script>
+    <script type="text/javascript">
+      //<![CDATA[
+
+      var callBackFrameUrl = '/WebResource.axd?d=tUmxcs3sMoeEHz2UO0XsNHL6bKu9EXqYGWvhuF_ryn6Rc89cCFdl8SQt6Cf8tz3lXEACEFsZz2lCEABmwBMENvs-nd81&t=636765211280000000';
+      WebForm_InitCallback();
+      theForm.oldSubmit = theForm.submit;
+      theForm.submit = WebForm_SaveScrollPositionSubmit;
+
+      theForm.oldOnSubmit = theForm.onsubmit;
+      theForm.onsubmit = WebForm_SaveScrollPositionOnSubmit;
+      //]]>
+    </script>
+    <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="" />
+    <script type="text/javascript">
+      //<![CDATA[
+      if (window.WebForm_InitCallback) {
+        __theFormPostData = '';
+        __theFormPostCollection = new Array();
+        window.WebForm_InitCallback();
+      }
+                  //]]>
+    </script>
+  </form>
+</body>
+</html>

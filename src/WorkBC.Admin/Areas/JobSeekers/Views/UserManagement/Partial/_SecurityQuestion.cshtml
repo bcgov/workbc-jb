@@ -1,0 +1,14 @@
+﻿@model UserViewModel
+
+<div class="form-group">
+    <label class="font-weight-bold">Security Question: </label>
+    <select class="form-control" asp-for="SecurityQuestionId" asp-items="SelectLists.SecurityQuestions">
+        <option value="">-- Select Security Question --</option>
+    </select>
+    <span asp-validation-for="SecurityQuestionId" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label class="font-weight-bold">Your Answer: </label>
+    <input class="form-control  uniform-width" type="text" asp-for="SecurityAnswer" maxlength="50"/>
+    <span asp-validation-for="SecurityAnswer" class="text-danger"></span>
+</div>

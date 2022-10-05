@@ -1,0 +1,73 @@
+﻿@model JobSeekersByCityViewModel;
+
+@{
+    var top = 10;
+
+    IOrderedEnumerable<IGrouping<string, JobSeekersByCityResult>> grouped = Model.Results.GroupBy(g => g.Region)
+        .OrderBy(g => g.Key == "N/A")
+        .ThenByDescending(g => g.Take(top).Sum(r => r.Users));
+}
+
+<table class="table one-number-col" id="ResultsTable">
+    <thead>
+    <tr>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    @{
+        // keep track of which rows contained group headers & footers so we can make
+        // them bold with CSS in the print version
+        var groupRows = new List<int>();
+        var bodyRow = 0;
+    }
+
+    @foreach (IGrouping<string, JobSeekersByCityResult> g in grouped)
+    {
+        var users = 0;
+        groupRows.Add(bodyRow);
+
+        <tr class="group-header">
+            <th>@g.Key.ToUpper()</th>
+            <th>&nbsp;</th>
+        </tr>
+
+        <tr>
+            <th>City</th>
+            <th class="text-right">Registered job seekers</th>
+        </tr>
+
+        bodyRow += 2;
+
+        foreach (JobSeekersByCityResult city in g.Take(top))
+        {
+            users += city.Users;
+            bodyRow += 1;
+
+            <tr>
+                <td>@city.City</td>
+                <td class="text-right">@city.Users.ToString("#,##0")</td>
+            </tr>
+        }
+
+        bodyRow++;
+        groupRows.Add(bodyRow);
+
+        <tr class="group-footer">
+            <th>@g.Key.ToUpper() - TOP @top CITIES BY REGISTERED JOB SEEKERS TOTAL</th>
+            <th class="text-right">@users.ToString("#,##0")</th>
+        </tr>
+
+        <tr class="group-space">
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+
+        bodyRow++;
+    }
+    </tbody>
+</table>
+
+<partial name="_GroupedReportCss" model="groupRows.GetGroupCss()"/>

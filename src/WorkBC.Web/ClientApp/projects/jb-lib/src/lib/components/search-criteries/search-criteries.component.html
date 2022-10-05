@@ -1,0 +1,26 @@
+<!--<ng-template #searchCriteriesTemplate>-->
+<div class="current-filters" *ngIf="activeTags.length > 0">
+  <strong class="your-search" *ngIf="!inJobAlert">Your Search: </strong>
+  <strong class="your-search" *ngIf="inJobAlert">Your filters: </strong>
+  <ul [ngClass]="{'show-more': showMore}">
+    <li class="filter-tag" *ngFor="let tag of activeTags" [ngClass]="{'job-alert': inJobAlert}">
+      <span>{{tag}}</span>
+      <button type="button" class="inline-text-button" (click)="removeFilter(tag)">
+        <span class="sr-only">Remove filter {{tag}}</span>
+        <div class="icon-wrap gray extra-small">
+          <lib-svg-icon icon="close" width="12px" height="12px"></lib-svg-icon>
+        </div>
+      </button>
+    </li>
+    <li>
+      <button *ngIf="activeTags.length > 3" type="button" class="inline-text-button btn-show-more-less" (click)="showMore = !showMore">
+        <strong *ngIf="!showMore"><b>+ </b><u>Show more</u></strong>
+        <strong *ngIf="showMore"><b>- </b><u>Show less</u></strong>
+      </button>
+      <button type="button" class="inline-text-button" (click)="clearAll()">
+        <strong><u>Clear all</u></strong>
+      </button>
+    </li>
+  </ul>
+</div>
+<!--</ng-template>-->

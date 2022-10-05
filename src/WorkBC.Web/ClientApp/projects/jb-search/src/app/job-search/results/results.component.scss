@@ -1,0 +1,166 @@
+@import "../../../variables.scss";
+
+::ng-deep app-results {
+  .results {
+    margin-top: 10px;
+
+    .col-results-actions {
+      display: flex;
+      align-items: flex-start;
+      @media (min-width: 940px) {
+        padding-left: 0;
+      }
+    }
+
+    .job-listings {
+      border-top: solid 1px #d5d6da;
+
+      .job-item {
+        a.disabled {
+          .icon-wrap.blue {
+            background-color: #bbbbbb;
+            color: #f2f2f2;
+          }
+
+          strong {
+            color: #aaaaaa;
+          }
+        }
+      }
+    }
+
+    & > .container {
+      // gutter reset to match layout width
+      @media (min-width: 940px) {
+        padding: 0px;
+      }
+
+      & > .row > div {
+        margin-top: 10px;
+      }
+    }
+
+    .results-count,
+    .job-alert,
+    .map-view,
+    .sort-by-contain {
+      line-height: 40px;
+    }
+
+    .results-count {
+      @media (max-width: 939px) {
+        padding-top: 8px;
+        line-height: 32px;
+      }
+    }
+
+    .job-alert,
+    .map-view {
+      @media (min-width: 360px) {
+        display: inline;
+      }
+
+      lib-svg-icon {
+        margin-right: 5px;
+      }
+    }
+
+    .map-view {
+      margin-left: 40px;
+
+      @media (min-width: 940px) {
+        margin-left: auto;
+      }
+    }
+
+    .map-loader {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 250px;
+    }
+
+    .google-map {
+      width: 100%;
+      height: 0px;
+
+      &.loaded {
+        height: 500px;
+        margin-top: 20px !important;
+      }
+    }
+
+    .sort-by-contain {
+      margin-bottom: 20px;
+
+      @media (min-width: 940px) {
+        display: flex;
+
+        & > label {
+            margin-bottom: 0;
+            strong {
+              margin-left: auto;
+            }
+        }
+
+        .select-group {
+          @media (min-width: 940px) {
+            width: 245px;
+            margin-left: 15px;
+          }
+        }
+      }
+    }
+
+    .gm-style-iw {
+      width: 300px;
+      max-width: 80%;
+
+      b.externalJob, a {
+        text-transform: capitalize;
+        cursor: pointer;
+        text-decoration: underline;
+        font-weight: bold;
+      }
+    }
+  }
+
+  div.alert {
+    margin: 20px 0 0 0;
+    display: flex;
+
+    i.fa-exclamation-triangle {
+      padding-top: 4px;
+      padding-right: 14px;
+      font-size: 1.1em;
+    }
+  }
+
+  div#jobNo {
+    font-weight: bold;
+    padding: 2px;
+    cursor: pointer;
+
+    img {
+      max-height: 14px;
+      margin-top: -3px;
+      margin-left: -3px;
+    }
+  }
+}
+
+button.inline-text-button {
+  border: none;
+  background: none;
+  margin-right: -2px;
+
+  @media (max-width: 400px) {
+    margin-left: 0;
+    padding-left: 0;
+    padding-right: 16px;
+
+    &.map-view {
+        padding-right: 0;
+    }
+  }
+}

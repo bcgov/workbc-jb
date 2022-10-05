@@ -1,0 +1,21 @@
+﻿@model Top20NocCodesViewModel
+@{
+    // Builds messages and titles that are added to the DataTables.net plugin
+    // see: https://datatables.net/extensions/buttons/examples/html5/titleMessage.html
+
+    // Date Posted parameter
+    string exportMessage = Model.GetDateImportedHeader();
+
+    // Job Source parameter
+    exportMessage += Model.GetJobSourceHeader();
+
+    // Parameters header
+    string paramsHeader = exportMessage + HeaderExtensions.GetReportDateHeader();
+}
+
+@Html.Raw(paramsHeader)
+
+<script>
+    window.datatablesExportMessageExcel = '@Html.Raw(exportMessage.ToExcelParams())';
+    window.datatablesExportTitleExcel = '@ViewBag.ReportName: @DateTime.Now';
+</script>

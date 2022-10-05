@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Authors>OXD</Authors>
+    <Company>WorkBC</Company>
+    <Product>WorkBC Job Board</Product>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\jobs_index.json" />
+    <None Remove="Resources\synonym_file.json" />
+    <None Remove="Resources\synonym_predefined.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\jobs_index.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\synonym_file.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\synonym_predefined.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WorkBC.Data\WorkBC.Data.csproj" />
+    <ProjectReference Include="..\WorkBC.ElasticSearch.Models\WorkBC.ElasticSearch.Models.csproj" />
+    <ProjectReference Include="..\WorkBC.Shared\WorkBC.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

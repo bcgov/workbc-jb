@@ -1,0 +1,21 @@
+﻿@model JobsByIndustryViewModel
+@{
+    // Builds messages and titles that are added to the DataTables.net plugin
+    // see: https://datatables.net/extensions/buttons/examples/html5/titleMessage.html
+
+    // Region parameter
+    string exportMessage = SelectLists.GetRegionHeader(Model.RegionId);
+
+    // Date posted parameter
+    exportMessage += Model.GetDateImportedHeader();
+
+    // Parameters header
+    string paramsHeader = exportMessage + HeaderExtensions.GetReportDateHeader();
+}
+
+@Html.Raw(paramsHeader)
+
+<script>
+    window.datatablesExportMessageExcel = '@Html.Raw(exportMessage.ToExcelParams() + " / *Job Bank industry groups differ from NAICS")';
+    window.datatablesExportTitleExcel = '@ViewBag.ReportName: @DateTime.Now';
+</script>

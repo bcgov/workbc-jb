@@ -1,0 +1,168 @@
+@import "../../../variables";
+
+.saved-careers {
+  padding: 0.8rem 0 0;
+
+  @media (min-width: 940px) {
+    padding-bottom: 4rem;
+  }
+
+  & > .container {
+    @media (min-width: 940px) {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+  h2 {
+    /*text-transform: capitalize;*/
+    font-weight: 500;
+  }
+
+  .no-saved-careers {
+    color: $link-color;
+    margin-bottom: 25px;
+
+    h2 {
+      font-weight: normal;
+      margin-bottom: 15px;
+    }
+  }
+
+  &-inner {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+
+    @media(max-width: 600px) {
+      .profile-info {
+        order: 2;
+        margin-top: 25px;
+      }
+    }
+  }
+
+  .info-box {
+    background: #cdecf7;
+    border: 1px solid #cdcfd4;
+    margin-bottom: 15px;
+
+    p {
+      padding: 15px 20px;
+      margin: 0px;
+      border-bottom: 1px solid #cdcfd4;
+      font-weight: 500;
+      min-height: 90px;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      font-weight: bold;
+      color: $link-color;
+
+      span {
+        width: 100%;
+      }
+    }
+  }
+
+  .profile-list {
+    hr {
+      margin: 1rem 0;
+    }
+  }
+
+  .profile-item {
+    & + .profile-item {
+      border-top: 1px solid #c9d0dd;
+      padding-top: 15px;
+    }
+
+    .row {
+      & + .row {
+        margin-top: 10px;
+      }
+    }
+
+    .profile-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+      vertical-align: middle;
+      display: block;
+
+      lib-svg-icon {
+        transform: rotate(-90deg);
+        min-width: 12px;
+        min-height: 12px;
+        margin: 0 0 0 10px;
+      }
+    }
+
+    .available {
+      color: #7d9a01;
+
+      lib-svg-icon {
+        transform: rotate(-90deg);
+        margin-left: 10px;
+      }
+    }
+
+    .delete-profile {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 15px;
+
+      .icon-wrap.blue.extra-small {
+        margin-right: 4px;
+      }
+
+      strong {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  .footer-info {
+    display: flex;
+    align-content: center;
+    margin-top: 25px;
+
+    lib-svg-icon {
+      align-items: center;
+      min-width: 20px;
+    }
+
+    span {
+      margin-left: 10px;
+    }
+  }
+
+  .sort-by {
+    > div {
+      display: block;
+      margin-top: 20px;
+
+      @media(min-width: 600px) {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+
+      strong {
+        margin-right: 10px;
+      }
+
+      .select-group {
+        margin-top: 8px;
+
+        @media(min-width: 600px) {
+          margin-top: 0;
+        }
+      }
+    }
+  }
+}

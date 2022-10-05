@@ -1,0 +1,18 @@
+<div class="header-banner">
+  <div class="header-banner__container container">
+    <div class="header-banner__title">
+      <h1>Account Registration</h1>
+    </div>
+  </div>
+</div>
+
+<div class="header-banner--mobile">
+  <div class="container">
+    <div class="header-banner__title">
+      <h1>Account Registration</h1>
+    </div>
+  </div>
+</div>
+
+<app-job-seeker *ngIf="showJobSeeker" (registered)="onRegistered($event)"></app-job-seeker>
+<app-thank-you *ngIf="showThankYou" [email]="email"></app-thank-you>

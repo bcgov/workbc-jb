@@ -1,0 +1,211 @@
+@using WorkBC.Admin.Helpers
+@model UserViewModel
+@{
+    ViewBag.Title = "Manage Profile";
+
+    // get the full name
+    string fullname = $"{Model.FirstName} {Model.LastName}";
+    fullname = fullname.Trim() == "" ? "No Name" : fullname;
+
+    string statusToggleAction = Model.AccountStatus == AccountStatus.Active ? "Deactivate" : "Activate";
+
+    string cssClass = Model.AccountStatus.ToString().ToLower();
+
+    if (Model.ReadOnlyMode)
+    {
+        cssClass += " read-only-mode";
+    }
+}
+
+<div id="page-edit-user" class="@Model.AccountStatus.ToString()">
+
+    <a asp-area="JobSeekers" asp-controller="UserManagement" asp-action="BackToList" asp-route-id="@Model.UserId" class="btn btn-inline back-link">
+        <i class="fa fa-chevron-left fa-left"></i>Back to job seeker accounts
+    </a>
+
+    <div class="row">
+        <div class="col col-12 col-md-9">
+            <form asp-area="JobSeekers" asp-controller="UserManagement" asp-action="UpdateUser" method="post" role="form">
+                <input type="hidden" asp-for="UserId"/>
+                <input type="hidden" asp-for="LocationId"/>
+                <input type="hidden" asp-for="City"/>
+                <input type="hidden" asp-for="RegionId"/>
+                <input type="hidden" asp-for="IsDuplicateLocation"/>
+                <input type="hidden" asp-for="UserName"/>
+                <input type="hidden" asp-for="AccountStatus"/>
+
+                <h1 class="page-title has-breadcrumb">@ViewBag.Title:</h1>
+                <div class="@cssClass">
+                    <div class="user-subheader">
+                        <h3>
+                            @fullname <span class="user-status">(@Model.AccountStatus.GetLabel())</span>
+                        </h3>
+                        @if (Model.AccountStatus != AccountStatus.Deleted && !Model.ReadOnlyMode)
+                        {
+                            <p>
+                                <a href="#impersonateModal" data-toggle="modal" class="btn btn-inline btn-edit-user">
+                                    <i class="fa fa-pencil fa-left"></i>Edit account as
+                                    <span>@fullname </span>
+                                </a>
+                            </p>
+                        }
+                    </div>
+
+                    <p class="required-asterisk">All fields marked with an asterisk (*) are mandatory.</p>
+                    @if (ViewData.ModelState["error"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            <span class="text-danger">@ViewContext.ViewData.ModelState["error"].Errors.Select(x => x.ErrorMessage).FirstOrDefault()</span>
+                        </div>
+                    }
+
+                    <h2 class="pb-3 pt-2">Personal Information</h2>
+                    <partial name="Partial/_PersonalInfo" model="Model" />
+
+                    <h2 class="pb-3 pt-4">Do you identify as:</h2>
+                    <partial name="Partial/_IdentifyAs" model="Model" />
+                    
+                    @if (Model.AccountStatus != AccountStatus.Deleted)
+                    {
+                        <h2 class="pb-3 pt-4">Security Question:</h2>
+                        <partial name="Partial/_SecurityQuestion" model="Model"/>
+                    }
+
+                    <h2 class="pb-3 pt-4">Your Location</h2>
+                    <partial name="Partial/_Location" model="Model" />
+
+
+                    @if (!Model.ReadOnlyMode && Model.AccountStatus != AccountStatus.Deleted)
+                    {
+                        <div class="row pt-4 button-row">
+                            <button type="submit" class="btn btn-primary" disabled="@Model.ReadOnlyMode">
+                                Save
+                            </button>
+                            <a asp-area="JobSeekers" asp-controller="UserManagement" asp-action="BackToList" asp-route-id="@Model.UserId" class="btn btn-clear">
+                                Cancel
+                            </a>
+                        </div>
+                    }
+                </div>
+
+            </form>
+        </div>
+
+        <div class="col col-12 col-md-3">
+            <div class="action-sidebar">
+                <h4>Actions</h4>
+                <ul>
+                    @if (Model.AccountStatus != AccountStatus.Deleted && !Model.ReadOnlyMode)
+                    {
+                        <li class="@cssClass">
+                            <button type="button" class="btn btn-inline" data-toggle="modal" data-target="#statusModal">
+                                @if (Model.AccountStatus == AccountStatus.Active)
+                                {
+                                    <i class="fa fa-times-circle-o fa-left"></i>
+                                }
+                                else
+                                {
+                                    <i class="fa fa-check-circle-o fa-left"></i>
+                                }
+                                @statusToggleAction
+                            </button>
+                        </li>
+                        <li class="@cssClass">
+                            <button type="button" class="btn btn-inline" data-toggle="modal" data-target="#deleteModal">
+                                <i class="fa fa-trash fa-left"></i>
+                                Delete
+                            </button>
+                        </li>
+                    }
+                    <li>
+                        <a asp-action="ViewProfileHistory" asp-route-userId="@Model.UserId" class="btn btn-inline">
+                            <i class="fa fa-clock-o fa-left"></i>
+                            View profile history
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="ViewProfileComments" asp-route-userId="@Model.UserId" class="btn btn-inline">
+                            <i class="fa fa-comments-o fa-left"></i>
+                            View/add comments
+                        </a>
+                    </li>
+                    <li>
+                        <hr/>
+                    </li>
+                </ul>
+                <div class="action-sidebar__timestamps timestamp-last-updated">
+                    <h4>Last Updated</h4>
+                    <p>@Model.LastModified.ToString("yyyy-MM-dd HH:mm") PST</p>
+                </div>
+                <div class="action-sidebar__timestamps timestamp-registered-date">
+                    <h4>Registered Date</h4>
+                    <p>@Model.DateRegistered.ToString("yyyy-MM-dd HH:mm") PST</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="_DeleteUserModal" for="UserId"/>
+
+<div id="statusModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">@statusToggleAction Confirmation</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to @statusToggleAction.ToLower() this user? </p>
+            </div>
+            <div class="modal-footer">
+                <a data-dismiss="modal" class="btn btn-clear">Cancel</a>
+                @if (Model.AccountStatus == AccountStatus.Active)
+                {
+                    <form asp-area="JobSeekers" asp-controller="UserManagement" asp-action="DeactivateUser" method="post" role="form">
+                        <input type="hidden" asp-for="UserId" id="DeactivateUserId" />
+                        <button type="submit" class="btn btn-primary">Yes, deactivate this user</button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-area="JobSeekers" asp-controller="UserManagement" asp-action="ActivateUser" method="post" role="form">
+                        <input type="hidden" asp-for="UserId" id="ActivateUserId"/>
+                        <button type="submit" class="btn btn-primary">Yes, activate this user</button>
+                    </form>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="impersonateModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Job Seeker Impersonation</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to log into the job board as this user?</p>
+                <p>
+                    A record of this action will be logged in the profile history. If you are already
+                    logged in to the job board with another account, you will be logged out.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <a data-dismiss="modal" class="btn btn-clear">Cancel</a>
+                <form asp-area="JobSeekers" asp-controller="UserManagement" asp-action="ImpersonateUser" method="get" role="form">
+                    <input type="hidden" asp-for="UserId"/>
+                    <button type="submit" class="btn btn-primary">Yes, impersonate this user</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,94 @@
+<SolrResponse>
+  <Header>
+    <status>0</status><QTime>0</QTime><numFound>1</numFound>
+  </Header>
+  <Documents>
+    <Document>
+      <jobs_id>31242715</jobs_id><noc_2011>1221</noc_2011><skill_level>X</skill_level><remote_cd>1311068</remote_cd>
+      <title>administrative co-ordinator</title><noc>1221</noc><work_period_cd>F</work_period_cd>
+      <employer_type_id>3</employer_type_id><edulevel_cd>X</edulevel_cd><wage_class>D</wage_class>
+      <postal_code>V1G2E2</postal_code><employer_id>21352</employer_id><lang>en</lang>
+      <skill_categories>
+        <skill_category id="195">
+          <name>Education</name>
+          <options>
+            <option_name>Secondary (high) school graduation certificate</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="218">
+          <name>Experience</name>
+          <options>
+            <option_name>2 years to less than 3 years</option_name>
+          </options>
+        </skill_category>
+      </skill_categories>
+      <job_source_id>16</job_source_id><work_term_cd>P</work_term_cd><work_lang_cd>E</work_lang_cd>
+      <app_methods>
+        <app_online>https://bcpublicservice.hua.hrsmart.com/hr/ats/Posting/view/64259</app_online>
+        <app_email></app_email>
+        <app_phone>
+          <app_phone_number></app_phone_number><app_phone_ext></app_phone_ext>
+          <app_phone_start_bus_hours></app_phone_start_bus_hours><app_phone_end_bus_hours></app_phone_end_bus_hours>
+        </app_phone>
+        <app_fax></app_fax>
+        <app_person>
+          <app_person_street></app_person_street><app_person_room></app_person_room><app_person_city></app_person_city>
+          <app_person_province></app_person_province><app_person_country></app_person_country>
+          <app_person_pstlcd></app_person_pstlcd><app_person_start_bus_hours></app_person_start_bus_hours>
+          <app_person_end_bus_hours></app_person_end_bus_hours>
+        </app_person>
+        <app_mail>
+          <app_mail_street></app_mail_street><app_mail_room></app_mail_room><app_mail_city></app_mail_city>
+          <app_mail_province></app_mail_province><app_mail_country></app_mail_country>
+          <app_mail_pstlcd></app_mail_pstlcd>
+        </app_mail>
+      </app_methods>
+      <naics_id>39</naics_id><hours>35 hours per week</hours>
+      <employer_name_case>BC Public Service </employer_name_case>
+      <employer_name_string>BC Public Service </employer_name_string><num_positions>1</num_positions>
+      <job_senior_flag>false</job_senior_flag><various_location_flag>false</various_location_flag>
+      <job_student_flag>false</job_student_flag><job_youth_flag>false</job_youth_flag>
+      <job_apprentice_flag>false</job_apprentice_flag><job_disability_flag>false</job_disability_flag>
+      <job_aboriginal_flag>false</job_aboriginal_flag><program_title>false</program_title>
+      <job_vismin_flag>false</job_vismin_flag><job_newcomer_flag>false</job_newcomer_flag>
+      <job_veteran_flag>false</job_veteran_flag><latlng_variance>1</latlng_variance><los_id>2</los_id>
+      <postal_code_ind>1</postal_code_ind><experience_min>24</experience_min>
+      <date_posted>2019-09-17T10:59:00Z</date_posted><file_update_date>2019-09-17T09:51:00Z</file_update_date>
+      <import_date>2019-09-17T10:05:29Z</import_date><display_until>2019-10-05T23:59:00Z</display_until>
+      <salary_hourly>29.591572</salary_hourly><salary_weekly>1035.705</salary_weekly><work_hours>35.0</work_hours>
+      <city_name>
+        <string>Dawson Creek</string>
+      </city_name>
+      <lmi_geoarea_cd>
+        <string>29306</string>
+      </lmi_geoarea_cd>
+      <url>
+        <string>https://www.jobbank.gc.ca/jobsearch/jobposting/31242715</string>
+      </url>
+      <latlng_rpt>
+        <string>55.759857,-120.245216</string>
+      </latlng_rpt>
+      <latlng>
+        <string>55.759857,-120.245216</string>
+      </latlng>
+      <city_id>
+        <string>22334</string>
+      </city_id>
+      <noc_jobtitle_concordance_id>
+        <string>12500</string>
+      </noc_jobtitle_concordance_id>
+      <major_city_id>
+        <string>22334</string>
+      </major_city_id>
+      <province_cd>
+        <string>BC</string>
+      </province_cd>
+      <salary>
+        <string>$53,856.66 to $61,096.97 annually (to be negotiated)</string>
+      </salary>
+      <employer_name>
+        <string>BC Public Service </string>
+      </employer_name>
+    </Document>
+  </Documents>
+</SolrResponse>

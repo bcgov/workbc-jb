@@ -1,0 +1,15 @@
+::ng-deep app-education {
+  .education-filter {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+  }
+
+  .education-note {
+    font-size: 0.875rem;
+
+    @media (min-width: 940px) {
+        max-width: 760px;
+    }
+  }
+}

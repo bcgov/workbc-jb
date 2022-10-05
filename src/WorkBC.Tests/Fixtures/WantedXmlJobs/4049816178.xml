@@ -1,0 +1,32 @@
+<job id="4049816178" hash="1608659786" refnumber="1323895" isstaffing="false" isanonymous="false" isthirdparty="false"
+     isinappropriate="false" isbulk="false" isaggregator="false" isfree="true" isclassifiedoccupation="true"
+     isclassifiedindustry="false" iscurrent="true">
+  <dates firstseen="2017-08-29" posted="2017-08-29" refreshed="2019-10-03" />
+  <title value="RESTAURANT COOK" titleid="174961" cleantitleid="12095582" semicleantitleid="113685" />
+  <description
+    value="Job requirements Languages English Education Secondary (high) school graduation certificate Credentials (certificates, licences, memberships, courses, etc.) Not required Experience 2 years to less than 3 years Specific Skills Train staff in..." />
+  <occupation>
+    <noc code="6322" label="Cooks" revision="2011" />
+  </occupation>
+  <industry code="0" label="Unspecified" /><function id="4" label="Hospitality / Services" />
+  <employer id="84506" name="Denny's Restaurants" superaliasid="10199" superalias="Denny's" />
+  <education id="1" label="Less than high school" />
+  <locations>
+    <location>
+      <city code="5915022" label="Vancouver" /><state code="59" label="BC" />
+      <county code="5915" label="Greater Vancouver County" /><wib id="0" code="00000" label="Unavailable" />
+      <msa code="59933" label="Vancouver" /><position latitude="49.25429916381836" longitude="-123.11100006103516" />
+    </location>
+  </locations>
+  <salaries>
+    <salary id="1" type="Posted" value="33280" />
+  </salaries>
+  <jobtypes>
+    <jobtype id="4" label="Full-Time" /><jobtype id="1" label="Permanent" />
+  </jobtypes>
+  <tags />
+  <sources>
+    <source id="659" jobid="4049816178" tags="" type="Free" name="Government of Canada"
+            url="https://www.jobbank.gc.ca/jobsearch/jobposting/31348661?source=searchresults" validlink="true" />
+  </sources>
+</job>

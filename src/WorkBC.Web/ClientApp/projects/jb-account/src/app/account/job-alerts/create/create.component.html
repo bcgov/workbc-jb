@@ -1,0 +1,113 @@
+<app-account activeMenu="jobs"></app-account>
+<div class="job-alerts">
+  <div class="container">
+    <div class="job-alerts-header" id="jobAlertHeader">
+      <h1>{{ creatingJobAlert ? 'Create' : 'Edit' }} Job Alert</h1>
+      <p *ngIf="creatingJobAlert">A Job Alert is a tool you can use to find jobs that match your preferences. Set it once and see the results by choosing the keywords and filters that matter most to you.</p>
+      <p *ngIf="!creatingJobAlert">To edit your Job Alert, make changes to your preferences below.</p>
+      <strong>All fields are mandatory unless otherwise noted.</strong>
+    </div>
+
+    <div class="job-alerts-inner">
+      <h2>Search by keyword (optional)</h2>
+      <!--Info-->
+      <div class="form-group row">
+        <label class="col-lg-3 col-form-label" for="keywords">Keyword(s):</label>
+        <div class="col-lg-3">
+          <input class="form-control" type="text" id="keywords" name="keywords" [(ngModel)]="vm.keyword">
+        </div>
+        <div class="col-lg-3">
+          <a class="btn find-jobs-btn search-tips d-none d-lg-inline-block" href="/Jobs-Careers/Find-Jobs/Job-Board-Search-Tips.aspx" target="_blank">
+            Search tips
+          </a>
+          <a class="btn find-jobs-btn search-tips d-lg-none" href="/Jobs-Careers/Find-Jobs/Job-Search-Tips-for-Mobile.aspx">
+            Search tips
+          </a>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-lg-2 col-form-label">Search by:</label>
+        <div class="col-lg-6 offset-lg-1">
+          <lib-search-by #wrapper [searchField]="vm.searchField" (selected)="onSelected($event)" [inJobAlert]="true"></lib-search-by>
+          <ng-container *ngTemplateOutlet="wrapper?.searchByTemplate"></ng-container>
+        </div>
+      </div>
+    </div>
+
+    <hr role="presentation">
+    <h2>Add filters (optional)</h2>
+  </div>
+
+  <app-filter [inJobAlert]="true" (openChanged)="onOpenChanged($event)"></app-filter>
+
+  <div id="searchScrollAnchor" class="d-inline d-md-none"></div>
+  <div class="container" id="underFilterSection" [style.margin-top.px]="marginTopPx">
+    <div class="job-alerts-inner py-2">
+      <lib-search-criteries [inJobAlert]="true" [filterTags]="vm.filterTags"
+                            (deleted)="onDeleted($event)" (deletedAll)="onDeletedAll()"
+                            (cleared)="onCleared()">
+      </lib-search-criteries>
+      <!--<pre>{{ jobAlertVm | json }}</pre>-->
+    </div>
+
+    <hr role="presentation">
+    <div class="job-alerts-inner">
+      <h2>Alert name and frequency</h2>
+      <!--Info-->
+      <div class="form-group row">
+        <label class="col-lg-3 col-form-label" for="jobAlertTitle">Job alert title:</label>
+        <div class="col-lg-3">
+          <input class="form-control" type="text" id="jobAlertTitle" name="jobAlert"
+                 [(ngModel)]="vm.title" (ngModelChange)="onTitleChanged()" required [style.box-shadow]="'none'"
+                 maxlength="50">
+        </div>
+      </div>
+      <div class="form-group row" style="margin-top: -1rem;" aria-live="polite">
+        <div [hidden]="(vm.title && vm.title.trim().length > 0) || !submitted"
+             class="text-danger offset-lg-3" style="padding-left: 20px;">
+          {{ MessageForRequiredJobAlertTitle }}
+        </div>
+        <div *ngIf="error && submitted" class="text-danger offset-lg-3" style="padding-left: 20px;">
+          {{ error }}
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-lg-3 col-form-label" for="alertFrequency">Email alert frequency:</label>
+        <div class="col-lg-3">
+          <div class="select-group">
+            <select id="alertFrequency" class="form-control" [(ngModel)]="vm.alertFrequency">
+              <option value="1">Daily</option>
+              <option value="2">Weekly</option>
+              <option value="3">Biweekly</option>
+              <option value="4">Monthly</option>
+              <option value="5">Never</option>
+            </select>
+            <i class="select-arrow"></i>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <button type="button" id="emailNotifications" class="col offset-lg-3 btn smoothCollapse"
+                (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="emailNotificationsInfo">
+          <lib-svg-icon icon="caret" width="15px" height="12px"></lib-svg-icon>
+          <span>
+            {{noEmailHelpQuestion}}
+          </span>
+        </button>
+      </div>
+      <div class="col offset-lg-3" style="width: auto;" [innerHTML]="noEmailHelpAnswer"
+           id="emailNotificationsInfo" [@smoothCollapse]="isCollapsed?'initial':'final'">
+      </div>
+    </div>
+
+    <hr role="presentation">
+    <div class="job-alerts-inner">
+      <button type="button" class="btn bg-blue" id="save" (click)="save()">
+        Save
+      </button>
+      <button type="button" class="btn" id="cancel" (click)="cancel()">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

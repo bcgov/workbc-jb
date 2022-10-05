@@ -1,0 +1,24 @@
+/* Shared styles to override workbc default placeholder styles */
+app-root, .cdk-overlay-container {
+  input {
+    &::-webkit-input-placeholder {
+      color: #757575 !important;
+      font-style: italic;
+    }
+
+    &:-ms-input-placeholder {
+      color: #757575 !important;
+      font-style: italic;
+    }
+
+    &::-moz-placeholder {
+      color: #757575 !important;
+      font-style: italic;
+    }
+
+    &::placeholder {
+      color: #757575 !important;
+      font-style: italic;
+    }
+  }
+}

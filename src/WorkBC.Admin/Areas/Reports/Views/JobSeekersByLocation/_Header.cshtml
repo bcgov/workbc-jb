@@ -1,0 +1,27 @@
+﻿@model JobSeekersByLocationViewModel
+@{
+    // Builds messages and titles that are added to the DataTables.net plugin
+    // see: https://datatables.net/extensions/buttons/examples/html5/titleMessage.html
+
+    // Reporting period parameter
+    string exportMessage = Model.GetReportingPeriodHeader();
+
+    // Report date
+    string paramsHeader = exportMessage + HeaderExtensions.GetReportDateHeader(Model.PersistentDataTimestamp ?? DateTime.Now);
+    string refreshHeader = HeaderExtensions.GetPersistenceRefreshHeader(Model.PersistentDataTimestamp ?? DateTime.Now);
+
+    string totalHeader = Model.IsPeriodToDate 
+        ? "Total registered users as of report date"
+        : "Total registered users at end of reporting period";
+
+    totalHeader = $"<strong>{totalHeader}:</strong> {@Model.TotalJobSeekerCount:#,###}<br>";
+}
+
+@Html.Raw(paramsHeader + " " + refreshHeader + "<br>")
+<br>
+@Html.Raw(totalHeader)
+
+<script>
+    window.datatablesExportMessageExcel = '@Html.Raw((exportMessage + totalHeader).ToExcelParams())';
+    window.datatablesExportTitleExcel = '@ViewBag.ReportName: @Model.PersistentDataTimestamp';
+</script>

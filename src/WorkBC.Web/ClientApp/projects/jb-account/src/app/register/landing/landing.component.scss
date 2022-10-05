@@ -1,0 +1,113 @@
+::ng-deep app-landing {
+
+  .account-select {
+    background: #ffffff;
+
+    .sub-header {
+      font-size: 1.5rem;
+      font-weight: 400;
+    }
+
+    .select-title {
+      margin: 0 0 30px;
+
+      @media(min-width: 940px) {
+        margin: 40px 0;
+      }
+
+      .sub-header {
+        text-align: left;
+
+        @media(min-width: 940px) {
+          text-align: center;
+        }
+      }
+    }
+
+    .account-options {
+      margin-bottom: 40px;
+
+      .card {
+        margin-bottom: 30px;
+
+        @media(min-width: 940px) {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .register-options {
+      margin-bottom: 60px;
+
+      .sub-header {
+        padding-bottom: 0.5rem;
+        border-bottom: solid 1px #234075;
+        margin: 0 0 1rem 0;
+      }
+
+      .register-options__col {
+        margin-bottom: 2.5rem;
+
+        @media(min-width: 940px) {
+          margin-bottom: 0;
+        }
+
+        .btn-inline {
+            .icon--chevron {
+                display: block;
+            }
+        }
+      }
+
+      a {
+        display: flex;
+
+        &:hover {
+          color: #234075;
+          text-decoration: underline;
+        }
+      }
+
+      .btn-inline {
+        display: flex;
+      }
+    }
+
+    .card {
+      background-color: #caebf7;
+      border-color: #d5d6da;
+      border-radius: 0;
+
+      .card-header {
+        background: #234075;
+        color: #fff;
+        border-radius: 0;
+
+        h2 {
+          margin-top: 0.5rem;
+          text-transform: uppercase;
+        }
+      }
+
+      .card-body {
+          &__text {
+              margin-bottom: 0;
+          }
+      }
+
+      .btn {
+        width: 100%;
+        font-size: 1rem;
+        font-weight: 700;
+        text-align: left;
+        padding: 11px 15px 9px;
+        border-top: solid 1px #d5d6da;
+        background: #caebf7;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}

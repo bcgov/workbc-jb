@@ -1,0 +1,163 @@
+<SolrResponse>
+  <Header>
+    <status>0</status><QTime>0</QTime><numFound>1</numFound>
+  </Header>
+  <Documents>
+    <Document>
+      <jobs_id>31382167</jobs_id><noc_2011>7511</noc_2011><skill_level>X</skill_level><remote_cd>1328501</remote_cd>
+      <title>long haul truck driver</title><noc>7511</noc><work_period_cd>F</work_period_cd>
+      <employer_type_id>0</employer_type_id><edulevel_cd>X</edulevel_cd><wage_class>C</wage_class>
+      <postal_code>V3R8X2</postal_code><employer_id>106613</employer_id><lang>en</lang>
+      <skill_categories>
+        <skill_category id="195">
+          <name>Education</name>
+          <options>
+            <option_name>Secondary (high) school graduation certificate</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="164">
+          <name>Credentials (certificates, licences, memberships, courses, etc.)</name>
+          <options>
+            <option_name>Driver's License (Class 1 or A)</option_name><option_name>Air Brakes Endorsement</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="187">
+          <name>Documentation Knowledge</name>
+          <options>
+            <option_name>Accident or incident reports</option_name><option_name>Trip reports</option_name>
+            <option_name>Trans-border documentation</option_name>
+            <option_name>Inspection report (pre-trip, en-route, post-trip)</option_name>
+            <option_name>Driver logbook</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="218">
+          <name>Experience</name>
+          <options>
+            <option_name>7 months to less than 1 year</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="279">
+          <name>Communication Systems Experience</name>
+          <options>
+            <option_name>Operate GPS (Global Positioning System) and other navigation equipment</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="685">
+          <name>Specific Skills</name>
+          <options>
+            <option_name>Perform preventive maintenance</option_name>
+            <option_name>Perform emergency roadside repairs</option_name>
+            <option_name>Tarping and ensuring safety and security of cargo</option_name>
+            <option_name>Oversee condition of vehicle and inspect tires, lights, brakes, cold storage and other equipment</option_name>
+            <option_name>Arrange travel, related itineraries and make reservations</option_name>
+            <option_name>Obtain special permits and other documents required to transport cargo on international routes</option_name>
+            <option_name>Record cargo information, hours of service, distance travelled and fuel consumption</option_name>
+            <option_name>Perform pre-trip, en route and post-trip inspection and oversee all aspects of vehicle</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="786">
+          <name>Transportation/Travel Information</name>
+          <options>
+            <option_name>Willing to travel cross-border</option_name>
+            <option_name>Willing to travel for extended periods</option_name>
+            <option_name>Willing to travel overnight</option_name><option_name>Valid driver's licence</option_name>
+            <option_name>Willing to travel internationally</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="788">
+          <name>Work Conditions and Physical Capabilities</name>
+          <options>
+            <option_name>Handling heavy loads</option_name><option_name>Physically demanding</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="1339">
+          <name>Transportation/Travel Experience</name>
+          <options>
+            <option_name>National</option_name><option_name>International</option_name>
+            <option_name>Long-haul</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="1497">
+          <name>Personal Suitability</name>
+          <options>
+            <option_name>Flexibility</option_name><option_name>Team player</option_name>
+          </options>
+        </skill_category>
+      </skill_categories>
+      <job_source_id>16</job_source_id><work_term_cd>P</work_term_cd><work_lang_cd>E</work_lang_cd>
+      <app_methods>
+        <app_online></app_online><app_email>triplejmanagement2017@gmail.com</app_email>
+        <app_phone>
+          <app_phone_number></app_phone_number><app_phone_ext></app_phone_ext>
+          <app_phone_start_bus_hours></app_phone_start_bus_hours><app_phone_end_bus_hours></app_phone_end_bus_hours>
+        </app_phone>
+        <app_fax></app_fax>
+        <app_person>
+          <app_person_street></app_person_street><app_person_room></app_person_room><app_person_city></app_person_city>
+          <app_person_province></app_person_province><app_person_country></app_person_country>
+          <app_person_pstlcd></app_person_pstlcd><app_person_start_bus_hours></app_person_start_bus_hours>
+          <app_person_end_bus_hours></app_person_end_bus_hours>
+        </app_person>
+        <app_mail>
+          <app_mail_street></app_mail_street><app_mail_room></app_mail_room><app_mail_city></app_mail_city>
+          <app_mail_province></app_mail_province><app_mail_country></app_mail_country>
+          <app_mail_pstlcd></app_mail_pstlcd>
+        </app_mail>
+      </app_methods>
+      <naics_id>27</naics_id><hours>50 to 55 hours per week</hours>
+      <employer_name_case>Triple J Management Inc.</employer_name_case>
+      <employer_name_string>Triple J Management Inc.</employer_name_string><num_positions>10</num_positions>
+      <start_date /><job_senior_flag>false</job_senior_flag><various_location_flag>false</various_location_flag>
+      <job_student_flag>false</job_student_flag><job_youth_flag>false</job_youth_flag>
+      <job_apprentice_flag>false</job_apprentice_flag><job_disability_flag>false</job_disability_flag>
+      <job_aboriginal_flag>true</job_aboriginal_flag><program_title>false</program_title>
+      <job_vismin_flag>true</job_vismin_flag><job_newcomer_flag>true</job_newcomer_flag>
+      <job_veteran_flag>false</job_veteran_flag><latlng_variance>1</latlng_variance><los_id>2</los_id>
+      <postal_code_ind>1</postal_code_ind><experience_min>7</experience_min>
+      <file_update_date>2019-10-09T10:29:00Z</file_update_date><date_posted>2019-10-09T11:59:00Z</date_posted>
+      <import_date>2019-10-09T11:09:46Z</import_date><display_until>2019-10-23T23:59:00Z</display_until>
+      <salary_hourly>24.0</salary_hourly><salary_weekly>1200.0</salary_weekly><work_hours>50.0</work_hours>
+      <city_name>
+        <string>Surrey</string>
+      </city_name>
+      <lmi_geoarea_cd>
+        <string>25565</string>
+      </lmi_geoarea_cd>
+      <url>
+        <string>https://www.jobbank.gc.ca/jobsearch/jobposting/31382167</string>
+      </url>
+      <latlng>
+        <string>49.18444,-122.79879</string>
+      </latlng>
+      <latlng_rpt>
+        <string>49.18444,-122.79879</string>
+      </latlng_rpt>
+      <city_id>
+        <string>22361</string>
+      </city_id>
+      <noc_jobtitle_concordance_id>
+        <string>10540</string>
+      </noc_jobtitle_concordance_id>
+      <major_city_id>
+        <string>22361</string>
+      </major_city_id>
+      <employment_terms>
+        <string>Day</string><string>Evening</string><string>Night</string><string>Weekend</string>
+        <string>Overtime</string><string>Early Morning</string><string>Morning</string>
+      </employment_terms>
+      <work_hour_term>
+        <string>T</string><string>M</string><string>D</string><string>E</string><string>N</string><string>W</string>
+        <string>O</string>
+      </work_hour_term>
+      <province_cd>
+        <string>BC</string>
+      </province_cd>
+      <salary>
+        <string>$24.00 hourly</string>
+      </salary>
+      <employer_name>
+        <string>Triple J Management Inc.</string>
+      </employer_name>
+    </Document>
+  </Documents>
+</SolrResponse>

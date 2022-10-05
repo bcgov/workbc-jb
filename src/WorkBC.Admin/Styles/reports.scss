@@ -1,0 +1,513 @@
+﻿/*
+* Reports area styles
+*/
+
+// Import partial stylesheets
+@import 'variables';
+@import 'breakpoints';
+@import 'datatables';
+@import 'select2';
+
+.container {
+    @media (max-width: 374px) {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}
+
+// general/shared styles for report parameters
+.report-parameters {
+    border: 1px solid $grey-light;
+    background-color: lighten($grey-light-bg, 2%);
+    padding: 20px;
+
+    &__selection {
+        justify-content: space-between;
+
+        .form-check {
+            padding-left: 0px;
+
+            @media (min-width: $breakpoint-sm) {
+                padding-left: 15px;
+
+                .form-check-panel {
+                    padding-left: 22px;
+                }
+            }
+
+            .form-check-panel {
+                padding-bottom: 6px;
+            }
+
+            .form-check-input {
+                margin-left: 0;
+            }
+
+            @media (max-width: 413px) {
+                padding-left: 0;
+            }
+
+            .form-check-label {
+                margin-bottom: 0.25em;
+                font-weight: 700;
+                display: inline-block;
+                margin-left: 1.4rem;
+            }
+
+            .form.d-flex .form-group:first-of-type {
+                margin-right: 3em;
+            }
+
+            .form-control {
+                color: #6c757d;
+
+                &.uniform-width {
+                    min-width: 288px;
+                    width: 288px;
+
+                    @media (max-width: 414px) {
+                        max-width: 100%;
+                        min-width: inherit;
+                    }
+                }
+            }
+        }
+    }
+
+    &__button {
+        justify-content: flex-start;
+
+        @media (min-width: $breakpoint-sm) {
+            padding-left: 15px;
+        }
+    }
+
+    fieldset {
+        padding: 0;
+
+        &.date-range {
+            margin-top: 12px;
+            max-width: 100%;
+
+            select {
+                margin-bottom: 6px;
+            }
+
+            label {
+                width: 2.8em;
+            }
+        }
+
+        label {
+            text-align: right;
+            display: inline-block;
+            font-size: 0.9em;
+            min-width: 2em;
+        }
+    }
+}
+
+// general/share styles for report results
+.report-results {
+    #results {
+        margin-top: -70px;
+        padding-top: 120px;
+        margin-bottom: 0;
+    }
+    // datatables buttons (Excel/Print)
+    div.dt-buttons {
+
+        @media (max-width: $breakpoint-md) {
+            visibility: hidden;
+        }
+
+        float: right;
+
+        .buttons-excel, .buttons-copy, .buttons-print-dialog, .buttons-epplus {
+            border: none;
+            background: none;
+            outline: none;
+            padding: 0;
+            border: 0;
+            font-weight: 400;
+            background-color: transparent;
+            color: $blue-link;
+            font-size: 1.0em;
+
+            &.disabled {
+                color: #CCC;
+                text-decoration: none;
+
+                &:hover {
+                    text-decoration: none;
+                    cursor: not-allowed;
+                    color: #CCC;
+                }
+            }
+
+            &:hover {
+                color: $blue-link-hover;
+                text-decoration: underline;
+            }
+
+            &:before {
+                content: "";
+                font-family: FontAwesome;
+                margin-right: 8px;
+            }
+        }
+
+        .buttons-copy {
+            margin-right: 18px;
+
+            &:before {
+                content: "\f0c5";
+            }
+        }
+
+        .buttons-print-dialog {
+            margin-right: 18px;
+
+            &:before {
+                content: "\f02f";
+            }
+        }
+
+        .buttons-excel, .buttons-epplus {
+            &:before {
+                content: "\f1c3";
+            }
+        }
+    }
+
+    table.dataTable thead {
+        th, td {
+            padding-left: 10px;
+        }
+    }
+
+    padding-left: 0.75rem;
+
+    table {
+        margin-left: -0.75rem;
+    }
+
+    a.back-to-top {
+        float: right;
+        font-weight: normal;
+        font-size: 0.89em;
+
+        span {
+            text-decoration: underline;
+        }
+    }
+}
+
+table.dataTable {
+    thead, tfoot {
+        th, td {
+            padding-left: 10px;
+        }
+    }
+
+    tfoot {
+        th, td {
+            padding-right: 10px;
+        }
+    }
+}
+
+table.table.matrixTable tfoot tr {
+    td, th {
+        border-top: 2px solid #dee2e6;
+        border-bottom: 1px solid #dee2e6;
+    }
+}
+
+table.table.dataTable tr,
+table.table.matrixTable tr {
+    td, th {
+        text-align: right;
+    }
+}
+
+table.table.dataTable tr,
+table.table.matrixTable tr {
+    td, th {
+        &:first-child {
+            text-align: left;
+        }
+    }
+}
+
+table.table.dataTable.twoLabelCols tr,
+table.table.matrixTable.twoLabelCols tr {
+    td, th {
+        &:nth-child(2) {
+            text-align: left;
+        }
+    }
+}
+
+// styles for paramter partials
+#NocCategoryPartial {
+    select.form-control {
+        width: 95%;
+        max-width: 800px;
+    }
+
+    .select2-container {
+        max-width: 800px;
+        width: 95% !important;
+    }
+}
+
+#showZeroesPanel {
+    .form-check-label {
+        font-weight: normal;
+    }
+}
+
+#DateRangePickerPartial {
+
+    @media (min-width: 768px) {
+        display: flex;
+        flex-direction: row
+    }
+
+
+    .input-group {
+        max-width: 145px;
+
+        input {
+            border-right: none;
+            background-color: white;
+        }
+
+        label {
+            background-color: white;
+            box-shadow: none;
+            border: 1px solid #ced4da;
+            height: 100%;
+            max-height: 38px;
+            padding: 4px 0 0 2px;
+            margin-bottom: -2px;
+            width: 1.4rem;
+
+
+            &:focus {
+                outline: none;
+            }
+        }
+
+        .input-group-append {
+            button i.fa {
+                font-size: 12px;
+                font-stretch: condensed;
+                border-left: none;
+                color: #6c757d;
+            }
+        }
+
+        input.input-validation-error {
+            border: 1px solid red;
+            border-right: none;
+        }
+
+        input.input-validation-error + div {
+
+            border: 1px solid red;
+            height: 38px;
+            border-left: none;
+
+            label {
+                border: none;
+            }
+        }
+
+        span.field-validation-error {
+            font-size: 0.9em;
+        }
+    }
+
+    small {
+        padding: 10px 10px 0 10px;
+        font-weight: bold;
+    }
+}
+
+#MatrixDateRangePartial {
+
+    #yearlyPanel {
+        fieldset {
+            @media (max-width: $breakpoint-sm) {
+                max-width: 250px;
+            }
+        }
+    }
+
+    #weeklyPanel {
+        p {
+            margin-bottom: 4px;
+        }
+    }
+
+    label.fy-from, label.fy-to {
+        font-weight: bold;
+    }
+
+    @media (min-width: $breakpoint-sm) {
+        label.fy-from, label.fy-to {
+            font-size: 0.8em;
+        }
+    }
+
+    .form-check-panel {
+        @media (min-width: 414px) and (max-width: $breakpoint-sm) {
+            padding-left: 15px;
+
+            select {
+                max-width: 338px;
+                padding-left: 4px;
+                padding-right: 0;
+                font-size: 16px;
+            }
+        }
+    }
+}
+
+// styles for specific reports
+#page-Report-Index {
+
+    #reports-table {
+        width: 100%;
+
+        th {
+            opacity: 0.8;
+        }
+
+        tr {
+
+            td:first-child {
+                @media (min-width: 768px) {
+                    white-space: nowrap;
+                }
+
+                a {
+                    &:hover, &:active {
+                        outline: none;
+                    }
+                }
+            }
+
+            td:last-child {
+
+                @media (min-width: 768px) {
+                    width: 50%;
+                }
+
+                a {
+                    white-space: nowrap;
+                }
+
+                vertical-align: top;
+            }
+
+            a i {
+                margin-right: 4px;
+            }
+        }
+    }
+}
+
+
+#page-Job-Seeker-Detail {
+    table.table.dataTable tr {
+        td, th {
+            text-align: left;
+        }
+    }
+
+    div.alert-warning {
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+}
+
+
+// print styles
+@media print {
+
+    h3 {
+        font-size: 1.7em;
+        margin-bottom: 25px;
+    }
+
+    h4, h1, header, footer, .dt-buttons, a, a.back-link, div.report-parameters, em {
+        display: none;
+    }
+
+    main {
+        margin-top: 0;
+    }
+
+    .print-logo {
+        margin-left: 0;
+        margin-bottom: 24px;
+    }
+
+    .report-results #results {
+        padding-top: 60px;
+    }
+
+    .report-results table {
+        margin-left: -0.5rem;
+    }
+
+    .dataTables_wrapper {
+        margin-top: 30px;
+    }
+
+    .dataTables_wrapper table.dataTable thead .sort {
+        padding-right: 0!important;
+
+        &:after {
+            content: "";
+        }
+    }
+
+    table tfoot {
+        display: table-row-group;
+    }
+
+    table.table.dataTable {
+        tr {
+            td, th {
+                border-color: #777 !important;
+            }
+        }
+    }
+
+    table.table.matrixTable {
+        tr {
+            td, th {
+                padding-left: 7px;
+                padding-right: 7px;
+
+                &:first-child {
+                    white-space: nowrap;
+                }
+            }
+        }
+    }
+}
+
+div.datepicker.datepicker-dropdown.dropdown-menu {
+    margin-top: 65px;
+}
+
+@media (min-width: 768px) {
+    div.datepicker.datepicker-dropdown.dropdown-menu {
+        margin-top: 105px;
+    }
+}

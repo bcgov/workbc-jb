@@ -1,0 +1,303 @@
+<button type="button" class="filter-menu-item" id="jobTypeDropdown" ngbDropdownToggle>
+  Job Type
+  <i class="fa fa-chevron-down"></i>
+  <div class="toggle-icons pull-right">
+    <lib-svg-icon icon="plus-blue" width="25px" height="25px"></lib-svg-icon>
+    <lib-svg-icon icon="minus-blue" width="25px" height="25px"></lib-svg-icon>
+  </div>
+</button>
+<div ngbDropdownMenu aria-labelledby="jobTypeDropdown" id="jobTypeDropdownMenu">
+  <!-- Job type filters -->
+  <div class="container">
+    <button type="button" class="clear-filter pull-right btn-filter-clear" (click)="clear()">
+      <i class="fa fa-close"></i>
+      <span>Clear all</span>
+    </button>
+    <strong class="filter-title filter-title--jobtype">{{jobTypeTitle}}</strong>
+    <p class="filter-title__below">Select all that apply</p>
+    <div class="job-type-filters">
+      <div class="flex-three-cols-row">
+        <!-- Hours of Work -->
+      <div class="flex-col">
+        <div class="hours-of-work">
+          <strong class="filter-title sub">Hours of work:</strong>
+          <!-- Full-time -->
+          <div class="check-group">
+            <input type="checkbox" name="FullTime" id="FullTime" [(ngModel)]="vm.fullTime">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="FullTime">Full-time</label>
+          </div>
+          <!-- Part-time -->
+          <div class="check-group">
+            <input type="checkbox" name="PartTime" id="PartTime" [(ngModel)]="vm.partTime">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="PartTime">Part-time</label>
+          </div>
+          <!-- Part-time leading to full-time -->
+          <div class="check-group">
+            <input type="checkbox" name="PartTimeLeadingToFullTime" id="PartTimeLeadingToFullTime"
+                   [(ngModel)]="vm.partTimeLeadingToFullTime">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="PartTimeLeadingToFullTime">Part-time leading to full-time</label>
+          </div>
+        </div>
+
+        <div class="workplace-type">
+          <strong class="filter-title sub mt-4">Workplace type:</strong>
+          <!-- On-site only -->
+          <div class="check-group">
+            <input type="checkbox" name="OnSite" id="OnSite" [(ngModel)]="vm.onSite">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="OnSite">On-site only</label>
+            <button type="button" class="tooltip-icon" placement="bottom" (click)="onSiteTip.toggle()"
+                    [autoClose]="'outside'" [ngbPopover]="OnSitePopContent" [triggers]="getPopoverTriggers()" #onSiteTip="ngbPopover">
+              <lib-svg-icon icon="info-blue" width="20px" height="20px" class="info"></lib-svg-icon>
+              <span class="sr-only">
+                {{onSiteTooltip}}
+              </span>
+              <ng-template #OnSitePopContent>
+                {{onSiteTooltip}}
+                <!-- empty link fixes mobile issue requiring double-tab -->
+                <a href="#" tabindex="-1" aria-hidden="true"></a>
+              </ng-template>
+            </button>
+          </div>
+          <!-- On-site or remote work -->
+          <div class="check-group">
+            <input type="checkbox" name="Hybrid" id="Hybrid" [(ngModel)]="vm.hybrid">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="Hybrid">On-site or remote work</label>
+            <button type="button" class="tooltip-icon" placement="bottom" (click)="hybridTip.toggle()"
+                    [autoClose]="'outside'" [ngbPopover]="HybridPopContent" [triggers]="getPopoverTriggers()" #hybridTip="ngbPopover">
+              <lib-svg-icon icon="info-blue" width="20px" height="20px" class="info"></lib-svg-icon>
+              <span class="sr-only">
+                {{hybridTooltip}}
+              </span>
+              <ng-template #HybridPopContent>
+                {{hybridTooltip}}
+                <!-- empty link fixes mobile issue requiring double-tab -->
+                <a href="#" tabindex="-1" aria-hidden="true"></a>
+              </ng-template>
+            </button>
+          </div>
+          <!-- Work location varies -->
+          <div class="check-group">
+            <input type="checkbox" name="Travelling" id="Travelling"
+                   [(ngModel)]="vm.travelling">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="Travelling">Work location varies</label>
+            <button type="button" class="tooltip-icon" placement="bottom" (click)="travellingTip.toggle()"
+                    [autoClose]="'outside'" [ngbPopover]="TravellingPopContent" [triggers]="getPopoverTriggers()" #travellingTip="ngbPopover">
+              <lib-svg-icon icon="info-blue" width="20px" height="20px" class="info"></lib-svg-icon>
+              <span class="sr-only">
+                {{travellingTooltip}}
+              </span>
+              <ng-template #TravellingPopContent>
+                {{travellingTooltip}}
+                <!-- empty link fixes mobile issue requiring double-tab -->
+                <a href="#" tabindex="-1" aria-hidden="true"></a>
+              </ng-template>
+            </button>
+          </div>
+          <!-- Virtual job -->
+          <div class="check-group">
+            <input type="checkbox" name="Virtual" id="Virtual"
+                   [(ngModel)]="vm.virtual">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="Virtual">Virtual job</label>
+            <button type="button" class="tooltip-icon" placement="bottom" (click)="virtualTip.toggle()"
+                    [autoClose]="'outside'" [ngbPopover]="VirtualPopContent" [triggers]="getPopoverTriggers()" #virtualTip="ngbPopover">
+              <lib-svg-icon icon="info-blue" width="20px" height="20px" class="info"></lib-svg-icon>
+              <span class="sr-only">
+                {{virtualTooltip}}
+              </span>
+              <ng-template #VirtualPopContent>
+                {{virtualTooltip}}
+                <!-- empty link fixes mobile issue requiring double-tab -->
+                <a href="#" tabindex="-1" aria-hidden="true"></a>
+              </ng-template>
+            </button>
+          </div>
+        </div>
+      </div>
+          <!-- Period of Employment -->
+        <div class="flex-col">
+          <strong class="filter-title sub">Period of employment:</strong>
+          <!-- Permanent -->
+          <div class="check-group">
+            <input type="checkbox" name="Permanent" id="Permanent" [(ngModel)]="vm.permanent">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="Permanent">Permanent</label>
+          </div>
+          <!-- Temporary -->
+          <div class="check-group">
+            <input type="checkbox" name="Temporary" id="Temporary" [(ngModel)]="vm.temporary">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="Temporary">Temporary</label>
+          </div>
+          <!-- Casual -->
+          <div class="check-group">
+            <input type="checkbox" name="Casual" id="Casual" [(ngModel)]="vm.casual">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="Casual">Casual</label>
+          </div>
+          <!-- Seasonal -->
+          <div class="check-group">
+            <input type="checkbox" name="Seasonal" id="Seasonal" [(ngModel)]="vm.seasonal">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="Seasonal">Seasonal</label>
+          </div>
+        </div>
+        <!-- Employment Terms -->
+        <div class="flex-col">
+          <strong class="filter-title sub">Work schedule:</strong>
+          <div class="flex-two-cols-row">
+            <div class="flex-col">
+              <!-- Day -->
+              <div class="check-group">
+                <input type="checkbox" name="Day" id="Day" [(ngModel)]="vm.day">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="Day">Day</label>
+              </div>
+              <!-- Early -->
+              <div class="check-group">
+                <input type="checkbox" name="Early" id="Early" [(ngModel)]="vm.early">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="Early">Early morning</label>
+              </div>
+              <!-- Evening -->
+              <div class="check-group">
+                <input type="checkbox" name="Evening" id="Evening" [(ngModel)]="vm.evening">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="Evening">Evening</label>
+              </div>
+              <!-- Flexible -->
+              <div class="check-group">
+                <input type="checkbox" name="Flexible" id="Flexible" [(ngModel)]="vm.flexible">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="Flexible">Flexible hours</label>
+              </div>
+              <!-- Morning -->
+              <div class="check-group">
+                <input type="checkbox" name="Morning" id="Morning" [(ngModel)]="vm.morning">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="Morning">Morning</label>
+              </div>
+              <!-- Night -->
+              <div class="check-group">
+                <input type="checkbox" name="Night" id="Night" [(ngModel)]="vm.night">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="Night">Night</label>
+              </div>
+            </div>
+            <div class="flex-col">
+              <!-- On Call -->
+              <div class="check-group not-first-of-type">
+                <input type="checkbox" name="OnCall" id="OnCall" [(ngModel)]="vm.onCall">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="OnCall">On call</label>
+              </div>
+              <!-- Overtime -->
+              <div class="check-group">
+                <input type="checkbox" name="Overtime" id="Overtime" [(ngModel)]="vm.overtime">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="Overtime">Overtime</label>
+              </div>
+              <!-- Shift -->
+              <div class="check-group">
+                <input type="checkbox" name="Shift" id="Shift" [(ngModel)]="vm.shift">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="Shift">Shift</label>
+              </div>
+              <!-- To be determined -->
+              <div class="check-group">
+                <input type="checkbox" name="ToBeDetermined" id="ToBeDetermined" [(ngModel)]="vm.toBeDetermined">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="ToBeDetermined">To be determined</label>
+              </div>
+              <!-- Weekend -->
+              <div class="check-group">
+                <input type="checkbox" name="Weekend" id="Weekend" [(ngModel)]="vm.weekend">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="Weekend">Weekend</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Apply Filter -->
+    <div class="form-group">
+      <button type="button" class="btn filter-job-type-btn bg-blue" (click)="getJobs('jobTypeDropdownMenu')">
+        Apply filter
+        <lib-svg-icon icon="chev-white" width="25px" height="25px" class="pull-right"></lib-svg-icon>
+      </button>
+    </div>
+  </div>
+</div>

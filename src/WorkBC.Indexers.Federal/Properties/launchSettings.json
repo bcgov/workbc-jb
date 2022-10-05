@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WorkBC.Indexers.Federal": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

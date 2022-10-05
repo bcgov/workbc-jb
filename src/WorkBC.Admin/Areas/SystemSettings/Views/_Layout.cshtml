@@ -1,0 +1,17 @@
+﻿@using WorkBC.Admin.Common
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.NavArea = NavArea.SYSTEMSETTINGS;
+}
+
+@RenderBody()
+
+@section Scripts {
+    @RenderSection("Scripts", false)
+    <script src="~/js/systemSettings.js" asp-append-version="true"></script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/dist/css/systemSettings.css" asp-append-version="true" />
+    @RenderSection("Styles", false)
+}

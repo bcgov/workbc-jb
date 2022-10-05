@@ -1,0 +1,161 @@
+@font-face {
+    src: url("/print/fonts/BCSans-Regular.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+    font-family: 'BCSans'
+}
+
+@font-face {
+    src: url("/print/fonts/BCSans-BoldItalic.woff") format("woff");
+    font-weight: 700;
+    font-style: italic;
+    font-family: 'BCSans'
+}
+
+@font-face {
+    src: url("/print/fonts/BCSans-Italic.woff") format("woff");
+    font-weight: 400;
+    font-style: italic;
+    font-family: 'BCSans'
+}
+
+@font-face {
+    src: url("/print/fonts/BCSans-Bold.woff") format("woff");
+    font-weight: 700;
+    font-style: normal;
+    font-family: 'BCSans'
+}
+
+html {
+    margin: 0;
+    padding: 0;
+}
+
+@page {
+    margin: 1cm 0.5cm;
+}
+
+body {
+    font-family: BCSans,Calibri,Candara,Segoe,Optima,sans serif;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+h1 {
+    font-size: 24px;
+    line-height: 29px;
+    margin: 12px 0 10px 0;
+}
+
+h2 {
+    font-size: 18px;
+    line-height: 23px;
+    margin: 12px 0 2px 0;
+}
+
+h3 {
+    font-size: 16px;
+    line-height: 21px;
+    margin: 12px 0 10px 0;
+}
+
+h4 {
+    font-size: 14px;
+    line-height: 19px;
+    margin: 12px 0 10px 0;
+}
+
+p {
+    margin: 0 0 9px 0;
+    padding: 0;
+    page-break-inside: avoid;
+}
+
+ul {
+    margin: 0 0 12px 0;
+}
+
+ul.multi {
+    max-width: 1000px;
+    -webkit-columns: 2;
+    -moz-columns: 2;
+    columns: 2;
+    -webkit-column-gap: 2rem;
+    -moz-column-gap: 2rem;
+    column-gap: 2rem;
+}
+
+a {
+    color: black;
+    text-decoration: underline;
+}
+
+hr {
+    border-width : 1px 0 0 0;
+    border-style: solid;
+    border-color: #EEE;
+    margin: 24px 0;
+}
+
+.requirements-container div {
+    border-bottom: 1px solid #EEE;
+    margin-bottom: 16px;
+    page-break-inside: avoid;
+}
+
+.apply-container {
+    margin-top: 15px;
+}
+
+.apply-container div {
+    margin-bottom: 16px;
+    page-break-inside: avoid;
+}
+
+.workbc-logo {
+    margin: 0 0 16px 0;
+    padding: 0;
+}
+
+.workbc-logo img { display: block; }
+
+.expiresIn {
+    margin-top: 20px;
+    color: #D8292F;
+}
+
+.section-start {
+    margin-top: 24px;
+}
+
+.job-detail-field {
+    display: flex;
+    margin: 0 0 9px 0;
+    padding: 0;
+    page-break-inside: avoid;
+}
+
+.job-detail-field strong {
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.en .job-detail-field strong {
+    width: 145px;
+}
+
+.fr .job-detail-field strong {
+    width: 210px;
+}
+
+.section {
+    page-break-inside: avoid;
+}
+
+h2, h3 {
+    page-break-after: avoid;
+}
+
+address {
+    font-style: normal;
+}

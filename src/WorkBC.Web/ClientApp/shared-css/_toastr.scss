@@ -1,0 +1,29 @@
+/* toastr colors */
+.toast-success {
+  background-color: #2E8540 !important;
+}
+
+.toast-error {
+  background-color: #D8292F !important;
+}
+
+.toast-info {
+  background-color: #38598A !important;
+}
+
+.toast-warning {
+  background-color: #D8292F !important;
+}
+
+/* Overriding toastr styles */
+#toast-container:hover, .toast-container .ngx-toastr:hover {
+  cursor: default !important;
+}
+
+.toast-close-button {
+  margin-right: 12px;
+
+  &:hover, &:focus {
+    color: #f2f2f2 !important;
+  }
+}

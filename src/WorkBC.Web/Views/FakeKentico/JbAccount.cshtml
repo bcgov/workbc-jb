@@ -1,0 +1,38 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
+@using Microsoft.Extensions.Hosting
+
+<link rel="stylesheet" href="~/bootstrap/bootstrap.css" asp-append-version="true">
+<link rel="stylesheet" href="~/dist/jb-account/styles.css" asp-append-version="true"/>
+
+<base href="/Test/JbAccount" />
+
+<app-root api="/" jbsearch="/Test/JbSearch" jbaccount="/Test/JbAccount">
+    <div class="loading-wheel" style="height:200px"></div>
+    <style type="text/css">
+        footer { display: none; }
+    </style>
+</app-root>
+
+<script src="~/dist/jb-account/runtime-es2017.js" type="module" asp-append-version="true"></script>
+<script src="~/dist/jb-account/runtime-es5.js" nomodule defer asp-append-version="true"></script>
+<script src="~/dist/jb-account/polyfills-es5.js" nomodule defer asp-append-version="true"></script>
+<script src="~/dist/jb-account/polyfills-es2017.js" type="module" asp-append-version="true"></script>
+@if (env.IsDevelopment())
+{
+    <script src="~/dist/jb-account/vendor-es2017.js" type="module" asp-append-version="true"></script>
+    <script src="~/dist/jb-account/vendor-es5.js" nomodule defer asp-append-version="true"></script>
+}
+<script src="~/dist/jb-account/main-es2017.js" type="module" asp-append-version="true"></script>
+<script src="~/dist/jb-account/main-es5.js" nomodule defer asp-append-version="true"></script>
+
+<script>
+    // disable the main form on the page.
+    (function ($) {
+        $(function () {
+            $("form#form").submit(function (e) {
+                e.preventDefault();
+            });
+        });
+    })($cmsj);
+</script>
+

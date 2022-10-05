@@ -1,0 +1,57 @@
+::ng-deep app-breadcrumb {
+  .breadcrumbs {
+    margin-top: 23px;
+
+    &.mobile-hidden {
+        @media (max-width: 939px) {
+            margin-top: 0;
+        }
+    }
+
+    > .container {
+      padding: 0;
+    }
+
+    .breadcrumb {
+      padding: 0;
+      margin: 0;
+      line-height: 1.5;
+
+      .breadcrum-item {
+        display: inline;
+
+        & + .breadcrum-item:before {
+          content: " ";
+          display: inline-block;
+          height: 14px;
+          width: 14px;
+          //background-image: url('/assets/icons/arrow-right.svg');
+          background-repeat: no-repeat;
+          background-size: 100%;
+          position: relative;
+          top: 3px;
+          margin-left: 4px;
+          margin-right: 4px;
+        }
+      }
+    }
+
+    .back-link {
+      font-size: 0.875rem;
+      padding: 0;
+      line-height: 1.75;
+      text-align: left;
+      background: 0 0;
+
+      a {
+        display: flex;
+        align-items: center;
+      }
+
+      lib-svg-icon {
+        margin-right: 7px;
+        transform: rotate(180deg);
+      }
+    }
+  }
+}

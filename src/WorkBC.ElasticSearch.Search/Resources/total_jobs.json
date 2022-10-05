@@ -1,0 +1,14 @@
+{
+  "query": {
+    "bool": {
+      "filter": {
+        "range": {
+          "ExpireDate": {
+            "gte": "now",
+            "time_zone": "America/Vancouver"
+          }
+        }
+      }
+    }
+  }
+}

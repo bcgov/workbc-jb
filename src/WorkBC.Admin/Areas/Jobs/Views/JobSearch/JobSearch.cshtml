@@ -1,0 +1,130 @@
+﻿@model JobSearchViewModel
+
+@{
+    ViewBag.Title = "Manage Job Postings";
+}
+
+<div id="page-job-postings">
+    <h1 class="page-title">@ViewBag.Title</h1>
+    <div class="row row-search">
+        <div class="col col-md-4">
+            <div class="input-group search">
+                <input type="text" class="form-control search__input" placeholder="Search by job posting URL or job ID">
+                <div class="input-group-btn search__btn" tabindex="-1">
+                    <button class="btn btn-secondary" type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row row-search-filters">
+        <button type="button" class="btn btn-search-filter btn-secondary btn-all active">
+            <span>All</span>
+            <span class="number" id="spAll"></span>
+        </button>
+        <button type="button" class="btn btn-search-filter btn-federal btn-secondary">
+            <span>Federal XML Feed</span>
+            <span class="number" id="spFederal"></span>
+        </button>
+        <button type="button" class="btn btn-search-filter btn-external btn-secondary">
+            <span>External Job Posting API</span>
+            <span class="number" id="spExternal"></span>
+        </button>
+        <button type="button" id="btn-reset" class="btn btn-inline">
+            <span>Reset search</span>
+        </button>
+    </div>
+    <div class="row row-results">
+        <div class="col">
+            <label id="lblShowing"></label>
+        </div>
+        <div class="col form-group d-flex justify-content-end">
+            <label for="inputResultsCount">Results per page: </label>
+            <select id="inputResultsCount" class="form-control">
+                <option selected="">50</option>
+                <option>75</option>
+                <option>100</option>
+                <option>125</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="datatable-container">
+        <table class="table table-wbc-responsive table-job-postings" id="dtJobs">
+            <thead>
+                <tr>
+                    <th class="sort">
+                        <a><span>Source</span></a>
+                    </th>
+                    <th class="sort">
+                        <a><span>Origin</span></a>
+                    </th>
+                    <th class="sort">
+                        <a><span>Job ID</span></a>
+                    </th>
+                    <th class="sort">
+                        <a><span>Job Title</span></a>
+                    </th>
+                    <th class="sort">
+                        <a><span>Job Location</span></a>
+                    </th>
+                    <th class="sort">
+                        <a><span>Last Updated</span></a>
+                    </th>
+                    <th class="sort">
+                        <a><span>Posted Date</span></a>
+                    </th>
+                    <th class="sort">
+                        <a><span>Expiry Date</span></a>
+                    </th>
+                    <th>
+                        <a>URL</a>
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row row-back-to-top">
+    <div id="back-to-top">
+        <i class="fa fa-chevron-up fa-left"></i>
+        Back to top
+    </div>
+</div>
+
+<div id="deleteModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete Confirmation</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this job?</p>
+                <p class="warning">WARNING: This action can't be reversed!</p>
+            </div>
+            <div class="modal-footer">
+                <a data-dismiss="modal" class="btn btn-clear">Cancel</a>
+                <form asp-area="Jobs" asp-controller="JobManagement" asp-action="DeleteJob" method="post" role="form">
+                    <input type="hidden" id="jobId" name="jobId" />
+                    <button type="submit" class="btn btn-primary">Delete</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/dist/lib/jquery.dataTables.min.js" asp-append-version="true"></script>
+    <script src="~/dist/lib/dataTables.bootstrap.min.js" asp-append-version="true"></script>
+    <script src="~/lib/dataTables-fullNumbers/full_numbers_no_ellipses.js" asp-append-version="true"></script>
+}

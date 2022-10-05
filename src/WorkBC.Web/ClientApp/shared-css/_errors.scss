@@ -1,0 +1,27 @@
+/* Styles for form errors */
+
+.input-danger {
+  outline: 1px solid #d8292f !important;
+  border: 2px solid #d8292f !important;
+}
+
+.text-danger {
+  color: #d8292f !important;
+
+  &.error-block {
+    background-color: #ffffff !important;
+    margin: 0 1px 0 1px;
+    padding: 3px 10px 5px 10px;
+  }
+}
+
+.error {
+  ::placeholder {
+    opacity: 1; /* Firefox */
+  }
+
+  input {
+    border: 2px solid #d8292f !important;
+    outline: 1px solid #d8292f !important;
+  }
+}

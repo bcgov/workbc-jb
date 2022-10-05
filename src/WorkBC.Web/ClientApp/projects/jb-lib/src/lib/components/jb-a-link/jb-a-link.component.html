@@ -1,0 +1,8 @@
+<a (click)="saveJob(jobId,$event)"
+   [class.disabled]="isDisabled ? true : null"
+   [attr.href]="isDisabled ? null : '#'">
+  <span class="icon-wrap blue small">
+    <lib-svg-icon icon="save" width="12px" height="12px"></lib-svg-icon>
+  </span>
+  <strong>{{saveLabel}}</strong>
+</a>

@@ -1,0 +1,21 @@
+<div class="external-job">
+  <div class="modal-header">
+    <p>
+      This job posting is on another organization’s job board. By continuing, you will be directed to the original posting at <strong>{{jobOrigin}}</strong>.
+    </p>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close('Close click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+  </div>
+  <div class="modal-footer">
+    <div class="form-group">
+      <a class="btn continue-btn bg-blue" href="{{jobUrl}}" target="_blank" (click)="activeModal.close('Close click')">
+        Continue
+        <lib-svg-icon icon="chev-white" width="25px" height="25px" class="pull-right"></lib-svg-icon>
+      </a>
+      <button type="button" class="inline-text-button" (click)="activeModal.close('Close click')">Cancel</button>
+    </div>
+  </div>
+</div>

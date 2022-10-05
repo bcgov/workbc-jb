@@ -1,0 +1,27 @@
+{
+  "extends": "../../.eslintrc.json",
+  "ignorePatterns": [
+    "!**/*",
+    "*.html"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "projects/jb-lib/tsconfig.lib.json",
+          "projects/jb-lib/tsconfig.spec.json"
+        ],
+        "createDefaultProgram": true
+      }
+    },
+    {
+      "files": [
+        "*.html"
+      ],
+      "rules": {}
+    }
+  ]
+}

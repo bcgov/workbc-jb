@@ -1,0 +1,60 @@
+::ng-deep app-job-type {
+  .job-type-filters {
+    margin-bottom: 15px;
+  }
+
+  label[for=Telework] {
+    margin-right: -20px;
+  }
+
+  .flex-three-cols-row {
+    & > .flex-col:not(:first-of-type) .filter-title {
+      margin-top: 1rem;
+    }
+  }
+
+  .workplace-type {
+    .check-group {
+        padding-bottom: 0!important;
+    }
+  }
+
+  @media(min-width: 940px) {
+
+    .flex-three-cols-row {
+      display: flex;
+      justify-content: space-between;
+      margin-right: 0;
+      margin-left: 0;
+
+      .flex-col {
+        width: auto;
+        padding: 0;
+      }
+
+      & > .flex-col:not(:first-of-type) .filter-title {
+        margin-top: 0;
+      }
+    }
+
+    .flex-two-cols-row {
+      display: flex;
+      margin-right: 0;
+      margin-left: 0;
+
+      .flex-col {
+        &:first-of-type {
+          margin-right: 10px;
+        }
+
+        &:last-of-type {
+          margin-left: 10px;
+        }
+      }
+    }
+
+    .check-group {
+      min-width: 182px;
+    }
+  }
+}

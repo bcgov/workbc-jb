@@ -1,0 +1,116 @@
+@model WorkBC.Admin.Areas.SystemSettings.Models.SystemSettingViewModel
+@{
+    ViewBag.Title = "Edit System Setting";
+}
+
+<div id="page-edit-system-settings">
+
+    <a asp-area="SystemSettings" asp-controller="Settings" asp-action="Index" class="btn btn-inline back-link"><i class="fa fa-chevron-left fa-left"></i>Back to system settings</a>
+
+    <div class="row">
+        <div class="col col-12 col-md-9">
+            <h1 class="page-title has-breadcrumb">Edit System Setting</h1>
+            <div class="alert alert-warning">
+                Modifying these settings can cause the production job board to stop working correctly.
+                Any experimentation should be conducted on the test server. Only apply changes to production
+                after thorough quality assurance testing has been completed on the test server.
+            </div>
+            <form asp-area="SystemSettings" asp-controller="Settings" asp-action="Update" method="post" role="form">
+                <input type="hidden" asp-for="FieldType" />
+                <input type="hidden" asp-for="Name" />
+                <input type="hidden" asp-for="Description" />
+
+                @if (ViewData.ModelState["error"] != null)
+                {
+                    <div class="alert alert-danger">
+                        <span class="text-danger">@ViewContext.ViewData.ModelState["error"].Errors.Select(x => x.ErrorMessage).FirstOrDefault()</span>
+                    </div>
+                }
+
+                <div class="form-group">
+                    <label class="font-weight-bold">Name:</label>
+                    <div>
+                        <label>@Model.Name</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="font-weight-bold">Description:</label>
+                    <div>
+                        <p>@Model.Description</p>
+                    </div>
+                </div>
+                @if (Model.FieldType == SystemSettingFieldType.Html || Model.FieldType == SystemSettingFieldType.MultiLineText || Model.FieldType == SystemSettingFieldType.SingleLineText)
+                {
+            <div class="form-group">
+                @if (Model.FieldType == SystemSettingFieldType.Html)
+                {
+                    <label class="font-weight-bold">HTML is allowed</label>
+                }
+                else
+                {
+                    <label class="font-weight-bold">HTML is not allowed</label>
+                }
+            </div>
+                }
+
+                <div class="form-group">
+                    <label class="font-weight-bold">Value:</label>
+                    <div>
+                        @switch (Model.FieldType)
+                        {
+                            case SystemSettingFieldType.Boolean:
+                                @Html.RadioButtonFor(m => m.ValueBoolean, "1") @:Yes
+                                <span>&nbsp;&nbsp;</span>
+                                @Html.RadioButtonFor(m => m.ValueBoolean, "0") @:No
+                                <span asp-validation-for="ValueBoolean" class="text-danger"></span>
+                                break;
+                            case SystemSettingFieldType.MultiLineText:
+                                <textarea rows="16" cols="80" asp-for="ValueMultiLine" class="multi-line"></textarea>
+                                <span asp-validation-for="ValueMultiLine" class="text-danger"></span>
+                                break;
+                            case SystemSettingFieldType.Number:
+                                <input type="number" asp-for="ValueNumber" value="@Model.ValueNumber" />
+                                <span asp-validation-for="ValueNumber" class="text-danger"></span>
+                                break;
+                            case SystemSettingFieldType.SingleLineText:
+                                <input type="text" asp-for="ValueSingleLine" value="@Model.ValueSingleLine" />
+                                <span asp-validation-for="ValueSingleLine" class="text-danger"></span>
+                                break;
+                            case SystemSettingFieldType.Html:
+                                <textarea rows="30" cols="80" asp-for="ValueHtml"></textarea>
+                                <span asp-validation-for="ValueHtml" class="text-danger"></span>
+                                break;
+                        }
+                    </div>
+                </div>
+                <div class="row pt-5 button-row">
+                    <button type="submit" class="btn btn-primary">
+                        Save
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "Settings")'">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="/dist/lib/codemirror.js" asp-append-version="true"></script>
+    <script src="/dist/lib/codemirror-htmlmixed.js" asp-append-version="true"></script>
+    <script src="/dist/lib/codemirror-xml.js" asp-append-version="true"></script>
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="/dist/css/codemirror.css" asp-append-version="true" />
+}
+
+<!--
+Database migration code (copy/paste):
+
+migrationBuilder.Sql(@@"UPDATE SystemSettings SET [Value] = '@Html.Raw(Model.Value.Replace("\"","\"\"").Replace("'", "''"))',
+[DefaultValue] = '@Html.Raw(Model.Value.Replace("\"","\"\"").Replace("'", "''"))'
+WHERE [Name] = '@Model.Name'");
+-->

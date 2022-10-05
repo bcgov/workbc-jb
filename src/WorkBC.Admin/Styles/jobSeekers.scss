@@ -1,0 +1,272 @@
+﻿/*
+* JobSeekers area styles
+*/
+
+// Import partial stylesheets
+@import 'variables';
+@import 'breakpoints';
+@import 'datatables';
+@import 'select2';
+
+.user-status {
+  font-weight: 400;
+}
+
+span.select2-container {
+    display: block;
+}
+
+.sticky{
+    cursor:pointer;
+}
+
+#page-job-seeker-accounts {
+    @include breakpoint(mobile) {
+        .table-users-search {
+            td:nth-of-type(1):before {
+                content: "Status";
+            }
+
+            td:nth-of-type(2):before {
+                content: "First Name";
+            }
+
+            td:nth-of-type(3):before {
+                content: "Last Name";
+            }
+
+            td:nth-of-type(4):before {
+                content: "Email Address";
+            }
+
+            td:nth-of-type(5):before {
+                content: "Location";
+            }
+
+            td:nth-of-type(6):before {
+                content: "Last Updated";
+            }
+
+            td:nth-of-type(7):before {
+                content: "Registered Date";
+            }
+        }
+    }
+
+    th {
+        opacity: 0.8;
+
+        &:hover {
+            opacity: 0.9;
+
+            &:after {
+                opacity: 1;
+            }
+        }
+
+        &.sorting_asc, &.sorting_desc {
+            &:after {
+                opacity: 1;
+            }
+        }
+    }
+
+    td {
+        a.btn {
+            height: auto;
+        }
+    }
+
+    .dataTables_filter {
+        display: none !important;
+    }
+
+    .dataTables_length {
+        display: none !important;
+    }
+
+    #dtJobSeekers_info {
+        display: none !important;
+    }
+}
+
+#page-edit-user {
+    .user-subheader {
+        margin-top: -25px;
+
+        @include breakpoint(mobile) {
+            display: block;
+        }
+
+        .btn-inline {
+
+            @include breakpoint(mobile) {
+                margin: 0;
+            }
+        }
+    }
+
+    .deleted, .read-only-mode {
+
+        .form-group {
+            input, select {
+                border: none;
+                pointer-events: none;
+                padding-left: 0;
+            }
+
+            .select2-container {
+                border: none;
+                pointer-events: none;
+            }
+
+            .form-check-label {
+                border: none;
+                pointer-events: none;
+            }
+
+            .select2-selection__rendered {
+                padding-left: 0;
+            }
+
+            select {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+            }
+
+            select::-ms-expand {
+                display: none;
+            }
+        }
+
+        .button-row .btn-primary {
+            pointer-events: none;
+        }
+
+        .select2-selection {
+            border: none;
+
+            .select2-selection__arrow {
+                display: none;
+            }
+        }
+
+        button {
+            pointer-events: none;
+        }
+
+        input[type=checkbox] {
+            opacity: 0.4;
+        }
+    }
+
+    .deleted .required-asterisk {
+        display: none;
+    }
+
+    .identification {
+
+        i.fa-question-circle {
+            color: $blue-active;
+        }
+
+        @include breakpoint(mobile) {
+            flex-direction: column;
+        }
+
+        &__infobox {
+            border: 1px solid $grey-light;
+            position: relative;
+            margin-top: 20px;
+
+            @include breakpoint(md) {
+                margin-top: 0;
+                margin-left: 120px;
+                width: 300px;
+                max-width: 300px;
+            }
+
+            &__content {
+                padding: 20px;
+
+                p:last-of-type {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+
+    .bc-region-map {
+        padding: 20px 10px;
+
+        &__image {
+            max-width: 100%;
+
+            @include breakpoint(lg) {
+                max-width: 540px;
+            }
+        }
+    }
+}
+
+#page-profile-history {
+  @include breakpoint(mobile) {
+    .table-profile-history {
+      td:nth-of-type(1):before {
+        content: "Date/Time";
+      }
+      td:nth-of-type(2):before {
+        content: "Activity";
+      }
+      td:nth-of-type(3):before {
+        content: "From What?";
+      }
+      td:nth-of-type(4):before {
+        content: "To What?";
+      }
+      td:nth-of-type(5):before {
+        content: "Editor";
+      }
+    }
+  }
+}
+
+#page-profile-comments {
+    @include breakpoint(mobile) {
+        .table-profile-comments {
+            td:nth-of-type(1):before {
+                content: "";
+            }
+
+            td:nth-of-type(2):before {
+                content: "Date/Time";
+            }
+
+            td:nth-of-type(3):before {
+                content: "Activity";
+            }
+
+            td:nth-of-type(4):before {
+                content: "From What?";
+            }
+
+            td:nth-of-type(5):before {
+                content: "To What?";
+            }
+
+            td:nth-of-type(6):before {
+                content: "Editor";
+            }
+        }
+    }
+
+    .deleted a {
+        pointer-events: none;
+    }
+}
+
+#page-add-comments {
+  textarea.form-control {
+    width: 100%;
+  }
+}

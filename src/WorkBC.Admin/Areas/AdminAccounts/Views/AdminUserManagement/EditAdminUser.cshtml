@@ -1,0 +1,91 @@
+@model WorkBC.Admin.Areas.AdminAccounts.Models.AdminUserViewModel
+@{
+    ViewBag.Title = "Edit Admin User";
+}
+
+<div id="page-edit-admin-user">
+
+    <a asp-area="AdminAccounts" asp-controller="AdminUserManagement" asp-action="BackToList" asp-route-id="@Model.Id" class="btn btn-inline back-link"><i class="fa fa-chevron-left fa-left"></i>Back to admin accounts</a>
+
+    <div class="row">
+        <div class="col col-12 col-md-9">
+            <h1 class="page-title has-breadcrumb">Edit Administrator Account</h1>
+
+            <form asp-area="AdminAccounts" asp-controller="AdminUserManagement" asp-action="UpdateAdminUser" method="post" role="form">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="DisplayName" />
+                <input type="hidden" asp-for="SamAccountName" />
+
+                @if (ViewData.ModelState["error"] != null)
+                {
+                    <div class="alert alert-danger">
+                        <span asp-validation-summary="All"></span>
+                    </div>
+                }
+
+                <div class="form-group">
+                    <label asp-for="SamAccountName" class="font-weight-bold"></label>
+                    <div>
+                        <label>@Model.SamAccountName</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DisplayName" class="font-weight-bold"></label>
+                    <div>
+                        <label>@Model.DisplayName</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AdminLevel" class="font-weight-bold"></label>
+                    <select class="form-control uniform-width" asp-for="AdminLevel" disabled="@Model.ReadOnlyMode" asp-items="SelectLists.AdminLevels">
+                    </select>
+                    <span asp-validation-for="AdminLevel" class="text-danger"></span>
+                </div>
+
+                <div class="row pt-5 button-row">
+                    <button type="submit" class="btn btn-primary" disabled="@Model.ReadOnlyMode">
+                        Save
+                    </button>
+                    &nbsp;
+                    <a asp-area="AdminAccounts" asp-controller="AdminUserManagement" asp-action="BackToList" asp-route-id="@Model.Id" class="btn btn-clear">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="col col-12 col-md-3">
+            <div class="action-sidebar">
+                @if (!Model.ReadOnlyMode)
+                {
+                    <h4>Actions</h4>
+                    <ul>
+                        <li>
+                            <button type="button" class="btn btn-inline" data-toggle="modal" data-target="#deleteModal">
+                                <i class="fa fa-trash fa-left"></i>
+                                Delete
+                            </button>
+                        </li>
+                        <li>
+                            <hr/>
+                        </li>
+                    </ul>
+                }
+                <div class="action-sidebar__timestamps timestamp-registered-date">
+                    <h4>Last Login</h4>
+                    <p>@(Model.DateLastLogin.HasValue ? $"{Model.DateLastLogin.Value:yyyy-MM-dd HH:mm} PST" : "-")</p>
+                </div>
+                <div class="action-sidebar__timestamps timestamp-last-updated">
+                    <h4>Last Updated</h4>
+                    <p>@Model.DateUpdated.ToString("yyyy-MM-dd HH:mm") PST</p>
+                </div>
+                <div class="action-sidebar__timestamps timestamp-registered-date">
+                    <h4>Date Created</h4>
+                    <p>@Model.DateCreated.ToString("yyyy-MM-dd HH:mm") PST</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="_DeleteUserModal" model="Model.Id.ToString()" />

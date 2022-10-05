@@ -1,0 +1,125 @@
+@model JobSeekerAccountViewModel
+@{
+    ViewBag.ReportName = "Job Seeker Account Report";
+    ViewBag.Title = $"{ViewBag.ReportName}";
+}
+
+<div id="page-Job-Seeker-Account">
+    <h1 class="page-title has-breadcrumb">@ViewBag.Title</h1>
+    <div class="report-parameters">
+        <form method="get" asp-action="Results">
+
+            <div class="report-parameters__selection">
+                <h3 class="pb-2">Report Type:</h3>
+                <partial name="_ReportTypePartial" model="Model"/>
+
+                <h3 class="pb-2">Region:</h3>
+                <partial name="_RegionPartial" model="Model"/>
+
+                <h3 class="pb-2">Reporting Period:</h3>
+                <partial name="Parameters/_MatrixDateRangePartial" model="Model"/>
+                <div class="form-check pt-4">
+                    <div class="form-group">
+                        <em>
+                            Note: Data for this report is refreshed every 12 hours.
+                        </em>
+                    </div>
+                </div>
+
+            </div>
+
+            <partial name="_RunButton"/>
+
+        </form>
+    </div>
+
+    @if (Model.Users != null)
+    {
+        ViewBag.HasResults = true;
+
+        <div class="report-results">
+
+            <h4 class="pb-3" id="results">
+            </h4>
+            @if (Model.ReportType != "ALL")
+            {
+                <h3 class="pb-1">@ViewBag.ReportName @Html.Raw(Model.GetJsAccountReportTypeHeader())</h3>
+            }
+            else
+            {
+                <h3 class="pb-1">@ViewBag.ReportName</h3>
+            }
+
+            <partial name="_Header" model="Model"/>
+
+            <div class="table-responsive-sm">
+                <table class="table matrixTable" id="ResultsTable">
+                    <thead>
+                    <partial name="MatrixReports/Header" model="Model"/>
+                    </thead>
+                    <tbody>
+
+                    @if (Model.ReportType == "ALL")
+                    {
+                        <tr>
+                            <th>ACCOUNTS BY STATUS</th>
+                            @foreach (HtmlString cell in Model.TableHeadings)
+                            {
+                                <td></td>
+                            }
+                            <td></td>
+                        </tr>
+                    }
+
+                    @if (Model.ReportType == "STATUS" || Model.ReportType == "ALL")
+                    {
+                        <partial name="MatrixReports/Body" model='Model.Users.HasGroupKey("STATUS")'/>
+                    }
+
+                    @if (Model.ReportType == "ALL")
+                    {
+                        <partial name="MatrixReports/Space" model='Model'/>
+                        <tr>
+                            <th>JOB SEEKER EMPLOYMENT GROUPS</th>
+                            @foreach (HtmlString cell in Model.TableHeadings)
+                            {
+                                <td></td>
+                            }
+                            <td></td>
+                        </tr>
+                    }
+
+                    @if (Model.ReportType == "GROUPS" || Model.ReportType == "ALL")
+                    {
+                        <partial name="MatrixReports/Body" model='Model.Users.HasGroupKey("GROUPS")'/>
+                    }
+
+                    @if (Model.ReportType == "ALL")
+                    {
+                        <partial name="MatrixReports/Space" model='Model'/>
+                        <tr>
+                            <th>ACCOUNT ACTIVITY</th>
+                            @foreach (HtmlString cell in Model.TableHeadings)
+                            {
+                                <td></td>
+                            }
+                            <td></td>
+                        </tr>
+                    }
+
+                    @if (Model.ReportType == "ACTIVITY" || Model.ReportType == "ALL")
+                    {
+                        <partial name="MatrixReports/Body" model='Model.Users.HasGroupKey("ACTIVITY")'/>
+                    }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <script>
+            window.datatablesDisableSorting = true;
+            location.hash = "#results";
+        </script>
+    }
+</div>

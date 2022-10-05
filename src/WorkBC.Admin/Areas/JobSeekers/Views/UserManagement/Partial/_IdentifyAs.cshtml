@@ -1,0 +1,50 @@
+﻿@model UserViewModel
+
+<div class="identification d-flex">
+    <div class="identification-col">
+        <div class="form-group form-check">
+            <input class="form-check-input" type="checkbox" asp-for="JobSeekerFlags.IsApprentice" id="chkIsApprentice">
+            <label class="form-check-label" for="chkIsApprentice">Apprentice</label>
+        </div>
+        <div class="form-group form-check">
+            <input class="form-check-input" type="checkbox" asp-for="JobSeekerFlags.IsIndigenousPerson" id="chkIsIndigenousPerson">
+            <label class="form-check-label" for="chkIsIndigenousPerson">Indigenous</label>
+        </div>
+        <div class="form-group form-check">
+            <input class="form-check-input" type="checkbox" asp-for="JobSeekerFlags.IsMatureWorker" id="chkIsMatureWorker">
+            <label class="form-check-label" for="chkIsMatureWorker">Mature</label>
+        </div>
+        <div class="form-group form-check">
+            <input class="form-check-input" type="checkbox" asp-for="JobSeekerFlags.IsNewImmigrant" id="chkIsNewImmigrant">
+            <label class="form-check-label" for="chkIsNewImmigrant">Newcomer to B.C.</label>
+        </div>
+        <div class="form-group form-check">
+            <input class="form-check-input" type="checkbox" asp-for="JobSeekerFlags.IsPersonWithDisability" id="chkPersonWithDisability">
+            <label class="form-check-label" for="chkPersonWithDisability">Person with a disability</label>
+        </div>
+        <div class="form-group form-check">
+            <input class="form-check-input" type="checkbox" asp-for="JobSeekerFlags.IsStudent" id="chkIsStudent">
+            <label class="form-check-label" for="chkIsStudent">Student</label>
+        </div>
+        <div class="form-group form-check">
+            <input class="form-check-input" type="checkbox" asp-for="JobSeekerFlags.IsVeteran" id="chkIsVeteran">
+            <label class="form-check-label" for="chkIsVeteran">Veteran of the Canadian Armed Forces</label>
+        </div>
+        <div class="form-group form-check">
+            <input class="form-check-input" type="checkbox" asp-for="JobSeekerFlags.IsVisibleMinority" id="chkIsVisibleMinority">
+            <label class="form-check-label" for="chkIsVisibleMinority">Visible minority</label>
+        </div>
+        <div class="form-group form-check">
+            <input class="form-check-input" type="checkbox" asp-for="JobSeekerFlags.IsYouth" id="chkIsYouth">
+            <label class="form-check-label" for="chkIsYouth">Youth</label>
+        </div>
+    </div>
+    <div class="identification-col">
+        <div class="infobox identification__infobox">
+            <div class="identification__infobox__content">
+                <h4>Why identify?</h4>
+                <p>Some employers encourage applications from select groups. Choose the boxes that describe how you identify. You will receive an alert when matching jobs are posted.</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+<ng-template #searchByTemplate>
+  <!-- All -->
+  <div class="form-group">
+    <input type="radio" name="KeywordbyAll" id="KeywordbyAll"
+           [(ngModel)]="searchField" (ngModelChange)="searchFieldChange()" value="all">
+    <label class="form-check-label" for="KeywordbyAll">{{ inJobAlert ? 'All' : 'Search All' }} </label>
+  </div>
+  <!-- Job Title -->
+  <div class="form-group">
+    <input type="radio" name="KeywordbyJobTitle" id="KeywordbyJobTitle"
+           [(ngModel)]="searchField" (ngModelChange)="searchFieldChange()" value="title">
+    <label class="form-check-label" for="KeywordbyJobTitle">Job title only</label>
+  </div>
+  <!-- Employer -->
+  <div class="form-group">
+    <input type="radio" name="KeywordbyEmployer" id="KeywordbyEmployer"
+           [(ngModel)]="searchField" (ngModelChange)="searchFieldChange()" value="employer">
+    <label class="form-check-label" for="KeywordbyEmployer">Employer name only</label>
+  </div>
+</ng-template>

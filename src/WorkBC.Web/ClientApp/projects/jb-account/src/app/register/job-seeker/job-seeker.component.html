@@ -1,0 +1,327 @@
+<form class="job-seeker-account-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <div class="job-seeker-account">
+    <div class="account-ribbon">
+      <div class="container">
+        Create an <strong>account</strong> below. Already have one?
+        <a href="#/login" class="text-nowrap"><strong>Log in</strong></a>
+      </div>
+    </div>
+    <div class="container">
+      <div class="job-seeker-form">
+        <p>All fields are mandatory unless otherwise noted.</p>
+        <h3 id="PersonalInfo">Personal Information</h3>
+        <div class="form-group flex-form-group">
+          <label for="firstName">First name:</label>
+          <div class="form-input">
+            <input type="text" [ngClass]="{'input-danger': !isValid(vm.firstName) }" class="form-control w-252" name="firstName" id="firstName" formControlName="firstName"
+                   required #firstName maxlength="50" />
+            <div aria-live="polite">
+              <div [hidden]="isValid(vm.firstName)" class="text-danger">
+                Please provide a first name
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group flex-form-group">
+          <label for="lastName">Last name:</label>
+          <div class="form-input">
+            <input type="text" [ngClass]="{'input-danger': !isValid(vm.lastName) }" class="form-control w-252" name="lastName" id="lastName" formControlName="lastName"
+                   required maxlength="50" />
+            <div aria-live="polite">
+              <div [hidden]="isValid(vm.lastName)" class="text-danger">
+                Please provide a last name
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group flex-form-group">
+          <label for="email">Email address:</label>
+          <div class="form-input">
+            <input type="email" [ngClass]="{'input-danger': !isValid(vm.email) || !noEmailRelatedError }" class="form-control w-252"
+                   name="email" id="email" formControlName="email" required maxlength="256" />
+            <div aria-live="polite">
+              <div [hidden]="isValid(vm.email)" class="text-danger">
+                Please enter a valid email address.
+              </div>
+              <div [hidden]="noEmailRelatedError || !isValid(vm.email)" class="text-danger">
+                This email address already exists, please provide a different one.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group flex-form-group">
+          <label for="password">Password:</label>
+          <div class="form-input">
+            <input type="password"
+                   [ngClass]="{'input-danger': !isValid(vm.password) || (invalidPassword(vm.password) && !passwordRequired(vm.password)) }"
+                   class="form-control w-252" name="password" id="password" formControlName="password"
+                   required />
+            <div aria-live="polite">
+              <div [hidden]="isValid(vm.password)" class="text-danger">
+                <div *ngIf="passwordRequired(vm.password)">
+                  Please provide the password
+                </div>
+                <div *ngIf="invalidPassword(vm.password) && !passwordRequired(vm.password)">
+                  The password you entered is invalid.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="empty-left-180">
+          <i>{{passwordComplexity}}</i>
+        </p>
+        <div class="form-group flex-form-group">
+          <label for="confirmPassword">Confirm password:</label>
+          <div class="form-input">
+            <input type="password" [ngClass]="{'input-danger': !isValid(vm.confirmPassword) || passwordNotMatch(registerForm) }"
+                   class="form-control w-252" name="confirmPassword" id="confirmPassword"
+                   formControlName="confirmPassword" required />
+          </div>
+        </div>
+        <div aria-live="polite">
+          <div [hidden]="isValid(vm.confirmPassword)" class="text-danger empty-left-180" style="margin-top: -1rem;">
+            <div *ngIf="passwordRequired(vm.confirmPassword)">
+              Please confirm your password by typing it again
+            </div>
+          </div>
+          <div *ngIf="passwordNotMatch(registerForm)" class="text-danger empty-left-180" style="margin-top: -1rem;">
+            Password confirmation does not match
+          </div>
+        </div>
+
+        <div class="identity-row mt-5">
+          <label class="identity-label w-180">How do you identify? (optional):</label>
+          <div class="identity-list">
+            <div class="check-group">
+              <input type="checkbox" name="JobSeekerIsApprenticeship" id="JobSeekerIsApprenticeship"
+                     formControlName="isApprentice">
+              <div class="checkbox-icons">
+                <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              </div>
+              <label class="form-check-label" for="JobSeekerIsApprenticeship">Apprentice</label>
+            </div>
+            <div class="check-group">
+              <input type="checkbox" name="JobSeekerIndigenousPerson" id="JobSeekerIndigenousPerson"
+                     formControlName="isIndigenousPerson">
+              <div class="checkbox-icons">
+                <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              </div>
+              <label class="form-check-label" for="JobSeekerIndigenousPerson">Indigenous</label>
+            </div>
+            <div class="check-group">
+              <input type="checkbox" name="JobSeekerMatureWorker" id="JobSeekerMatureWorker"
+                     formControlName="isMatureWorker">
+              <div class="checkbox-icons">
+                <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              </div>
+              <label class="form-check-label" for="JobSeekerMatureWorker">Mature</label>
+            </div>
+            <div class="check-group">
+              <input type="checkbox" id="isNewImmigrant" formControlName="isNewImmigrant">
+              <div class="checkbox-icons">
+                <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              </div>
+              <label class="form-check-label" for="isNewImmigrant">Newcomer to B.C.</label>
+            </div>
+            <div class="check-group">
+              <input type="checkbox" name="JobSeekerDisabledPerson" id="JobSeekerDisabledPerson"
+                     formControlName="isPersonWithDisability">
+              <div class="checkbox-icons">
+                <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              </div>
+              <label class="form-check-label" for="JobSeekerDisabledPerson">Person with a disability</label>
+            </div>
+            <div class="check-group">
+              <input type="checkbox" id="isStudent" formControlName="isStudent">
+              <div class="checkbox-icons">
+                <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              </div>
+              <label class="form-check-label" for="isStudent">Student</label>
+            </div>
+            <div class="check-group">
+              <input type="checkbox" id="isVeteran" formControlName="isVeteran">
+              <div class="checkbox-icons">
+                <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              </div>
+              <label class="form-check-label" for="isVeteran">Veteran of the Canadian Armed Forces</label>
+            </div>
+            <div class="check-group">
+              <input type="checkbox" id="isVisibleMinority" formControlName="isVisibleMinority">
+              <div class="checkbox-icons">
+                <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              </div>
+              <label class="form-check-label" for="isVisibleMinority">Visible minority</label>
+            </div>
+            <div class="check-group">
+              <input type="checkbox" id="isYouth" formControlName="isYouth">
+              <div class="checkbox-icons">
+                <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              </div>
+              <label class="form-check-label" for="isYouth" title="">Youth</label>
+            </div>
+          </div>
+          <div class="identity-infobox" [innerHTML]="whyIdentify">
+          </div>
+        </div>
+
+        <h3 id="SecurityQuestion">Security Question</h3>
+        <div class="form-group flex-form-group">
+          <label for="securityQuestionId">Security question:</label>
+          <div class="form-input">
+            <div class="select-group w-252 select-group-bg">
+              <select id="securityQuestionId" [ngClass]="{'input-danger': !isValid(vm.securityQuestionId) }" class="form-control" formControlName="securityQuestionId">
+                <option value="0">-- Select security question --</option>
+                <option *ngFor="let securityQuestion of securityQuestions$ | async" [value]="securityQuestion.id">
+                  {{securityQuestion.questionText}}
+                </option>
+              </select>
+              <i class="select-arrow"></i>
+            </div>
+            <div aria-live="polite">
+              <div [hidden]="isValid(vm.securityQuestionId)" class="text-danger">
+                Please select a security question
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group flex-form-group">
+          <label for="securityAnswer">Your answer:</label>
+          <div class="form-input">
+            <input type="text" [ngClass]="{'input-danger': !isValid(vm.securityAnswer) }" class="form-control w-252" name="securityAnswer" id="securityAnswer"
+                   formControlName="securityAnswer" maxlength="50" />
+            <div aria-live="polite">
+              <div [hidden]="isValid(vm.securityAnswer)" class="text-danger">
+                Please provide your answer
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3>Your Location</h3>
+        <div class="form-group flex-form-group">
+          <label for="JobSeekerCountry">Country:</label>
+          <div class="select-group w-252 select-group-bg">
+            <select id="JobSeekerCountry" class="form-control" formControlName="countryId">
+              <option *ngFor="let country of countries$ | async" [value]="country.id">{{country.name}}</option>
+            </select>
+            <i class="select-arrow"></i>
+          </div>
+        </div>
+        <div class="form-group flex-form-group" *ngIf="!isNotCanada">
+          <label for="JobSeekerProvince">Province:</label>
+          <div class="select-group w-252 select-group-bg" [style.background-color]="isNotCanada ? '#e9ecef' : ''">
+            <select id="JobSeekerProvince" class="form-control" formControlName="provinceId">
+              <option *ngFor="let province of provinces$ | async" [value]="province.provinceId">
+                {{province.name}}
+              </option>
+            </select>
+            <i class="select-arrow"></i>
+          </div>
+        </div>
+        <div class="form-group flex-form-group" [hidden]="isNotBC">
+          <label for="JobSeekerCity">City:</label>
+          <div class="form-input">
+            <input type="text" [ngClass]="{'input-danger': !hideCityErrors && (submitted && !!registerForm.errors?.invalidCity) || isInvalidCity(vm.city.value) }" class="form-control w-252" name="JobSeekerCity" id="JobSeekerCity" formControlName="city"
+                   placeholder="Enter city name" [matAutocomplete]="auto" autocomplete="new-city" (keyup)="hideCityErrors = false" />
+
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let city of cities$ | async" [value]="city">
+                {{city}}
+              </mat-option>
+            </mat-autocomplete>
+
+            <div *ngIf="!hideCityErrors && submitted && !!registerForm.errors?.invalidCity" class="text-danger">
+              Please specify the city name
+            </div>
+            <div aria-live="polite">
+              <div class="text-danger" *ngIf="isInvalidCity(vm.city.value)">
+                The city <strong>{{vm.city.value}}</strong> could not be found. Please ensure the spelling is correct.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group flex-form-group" *ngIf="!isNotBC && currentRegions?.length > 1">
+          <label for="locationId">Region:</label>
+          <div>
+            <div class="select-group w-252 select-group-bg"
+                 [ngClass]="{'input-danger': !hideRegionErrors && submitted && !isValidRegion(vm)}"
+                 [style.background-color]="isNotBC ? '#e9ecef' : ''">
+              <select id="locationId" class="form-control" formControlName="locationId"
+                      title="The selected city falls under various regions in B.C. Please specify the correct region.">
+                <option value="0">Select a region</option>
+                <option *ngFor="let region of regions$ | async" [value]="region.locationId">
+                  {{region.locationName}}
+                </option>
+              </select>
+              <i class="select-arrow"></i>
+            </div>
+            <div aria-live="polite">
+              <div *ngIf="!hideRegionErrors && submitted && !isValidRegion(vm)" class="text-danger w-252">
+                The selected city falls under various regions in B.C. Please specify the correct region.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bc-region-map" *ngIf="!isNotBC && currentRegions?.length > 1">
+          <img class="bc-region-map__image" [src]="mapUrl" alt="BC Region Map" />
+        </div>
+        <div class="captcha mt-5">
+          <div class="empty-left-180" #recaptcha></div>
+        </div>
+        <div class="check-group agree-terms empty-left-180">
+          <input type="checkbox" name="JobSeekerTerms" id="JobSeekerTerms" formControlName="agreed">
+          <div class="checkbox-icons">
+            <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+          </div>
+          <label class="form-check-label" for="JobSeekerTerms">
+            I agree to the WorkBC.ca
+          </label>
+          <a href="#" (click)="showTermsOfUse($event)">
+            <strong> Terms of Use.</strong>
+          </a>
+        </div>
+        <div aria-live="polite">
+          <div [hidden]="isValid(vm.agreed)" class="text-danger empty-left-180">
+            {{ termsOfUseRequired }}
+          </div>
+        </div>
+      </div>
+      <div class="register-row">
+        <div class="form-group empty-left-180">
+          <button type="submit" class="btn job-seeker-register-btn bg-blue" id="submitBtn" [disabled]="!isNotRobot">
+            Register
+            <lib-svg-icon icon="chev-white" width="25px" height="25px" class="pull-right"></lib-svg-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--<p>
+    Form Value: {{ registerForm.value | json }}
+  </p>
+  <p>
+    Form Status: {{ registerForm.status }}
+  </p>
+  <p>
+    Form Errors: {{ registerForm.errors | json }}
+  </p>
+  <p>
+    Email Errors: {{ vm.email.errors | json }}
+  </p>-->
+</form>

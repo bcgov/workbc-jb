@@ -1,0 +1,88 @@
+<app-account [totalSavedIndustryProfiles]="profileCount" activeMenu="careers"></app-account>
+<div class="saved-careers">
+  <div class="container">
+    <h1>
+      Saved Industry Profiles <ng-container *ngIf="profileCount">[{{ profileCount }}]</ng-container>
+    </h1>
+    <div class="no-saved-careers" *ngIf="!profileCount">
+      <h2>You have not saved any industry profiles yet.</h2>
+    </div>
+    <div class="saved-careers-inner">
+      <div class="row profile-info">
+
+        <div class="col-lg-6 col-sm-6">
+          <div class="info-box">
+            <p>
+              {{callToAction1BodyText}}
+            </p>
+            <a href="{{callToAction1LinkUrl}}">
+              <span>{{callToAction1LinkText}}</span>
+              <lib-svg-icon icon="chev-blue" width="20px" height="20px" class="pull-right"></lib-svg-icon>
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-sm-6">
+          <div class="info-box">
+            <p>
+              {{callToAction2BodyText}}
+            </p>
+            <a href="{{callToAction2LinkUrl}}">
+              <span>{{callToAction2LinkText}}</span>
+              <lib-svg-icon icon="chev-blue" width="20px" height="20px" class="pull-right"></lib-svg-icon>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="sort-by" *ngIf="profileCount">
+        <div class="form-group mb-0"></div>
+        <div class="form-group form-inline mb-0">
+          <label class="mb-0" for="sortBy"><strong>Sort by:</strong></label>
+          <div class="select-group job-source-select">
+            <select id="sortBy" class="form-control" [(ngModel)]="sortBy" (ngModelChange)="sortByChange()">
+              <option [value]="3">Industry Profile Title (A-Z)</option>
+              <option [value]="4">Industry Profile Title (Z-A)</option>
+            </select>
+            <i class="select-arrow"></i>
+          </div>
+        </div>
+      </div>
+
+      <div [hidden]="!profileCount" class="profile-list">
+        <hr role="presentation">
+        <div class="profile-item" *ngFor="let profile of profiles">
+          <div class="row">
+            <div class="col-lg-10">
+              <a href="/Labour-Market-Information/Industry-Information/Industry-Profiles/{{profile.profileId}}" class="profile-title">
+                <span>
+                  {{profile.title}}
+                </span>
+                <lib-svg-icon icon="chevron-thick" width="12px" height="8px"></lib-svg-icon>
+              </a>
+            </div>
+            <div class="col-lg-2 text-right">
+              <!--<strong [ngClass]="{'available': profile.count > 0}" class="available">
+              [{{profile.count | number}}] job(s) available
+              <lib-svg-icon icon="chevron-thick-green" width="12px" height="8px"></lib-svg-icon>
+                </strong>-->
+              <a href="#" class="delete-profile" (click)="delete(profile.id)">
+                <div class="icon-wrap blue extra-small">
+                  <lib-svg-icon icon="close" width="12px" height="12px"></lib-svg-icon>
+                </div>
+                <strong>Delete</strong>
+              </a>
+            </div>
+          </div>
+        </div>
+        <hr role="presentation" />
+        <div class="pagination mb-3" [style.display]="profileCount ? 'flex' : 'none'">
+          <app-pagination #pagination [style.visibility]="loading ? 'hidden': 'visible'" [vm]="paginationModel"
+            [updateUrl]="false" [maxPageSize]="20">
+          </app-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

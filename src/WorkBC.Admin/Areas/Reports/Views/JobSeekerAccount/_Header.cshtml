@@ -1,0 +1,25 @@
+﻿@model JobSeekerAccountViewModel
+@{
+    // Builds messages and titles that are added to the DataTables.net plugin
+    // see: https://datatables.net/extensions/buttons/examples/html5/titleMessage.html
+
+    // Report Type parameter
+    string reportTypeHeader = Model.GetJsAccountReportTypeHeader();
+
+    // Region parameter
+    string exportMessage = SelectLists.GetRegionHeader(Model.RegionId);
+    
+    // Reporting period parameter
+    exportMessage += Model.GetReportingPeriodHeader();
+
+    // Report date
+    string paramsHeader = exportMessage + HeaderExtensions.GetReportDateHeader(Model.PersistentDataTimestamp ?? DateTime.Now);
+    string refreshHeader = HeaderExtensions.GetPersistenceRefreshHeader(Model.PersistentDataTimestamp ?? DateTime.Now);
+}
+
+@Html.Raw(paramsHeader + " " + refreshHeader + "<br>")
+
+<script>
+    window.datatablesExportMessageExcel = '@Html.Raw(exportMessage.ToExcelParams())';
+    window.datatablesExportTitleExcel = '@(ViewBag.ReportName + reportTypeHeader): @Model.PersistentDataTimestamp';
+</script>

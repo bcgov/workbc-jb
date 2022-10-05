@@ -1,0 +1,73 @@
+<button type="button" class="filter-menu-item" id="educationDropdown" ngbDropdownToggle>
+  Education
+  <i class="fa fa-chevron-down"></i>
+  <div class="toggle-icons pull-right">
+    <lib-svg-icon icon="plus-blue" width="25px" height="25px"></lib-svg-icon>
+    <lib-svg-icon icon="minus-blue" width="25px" height="25px"></lib-svg-icon>
+  </div>
+</button>
+<div ngbDropdownMenu aria-labelledby="educationDropdown" id="educationDropdownMenu">
+  <!-- Education filters -->
+  <div class="container">
+    <button type="button" class="clear-filter pull-right btn-filter-clear" (click)="clear()">
+      <i class="fa fa-close"></i>
+      <span>Clear all</span>
+    </button>
+    <strong class="filter-title filter-title--education">{{educationTitle}}</strong>
+    <p class="filter-title__below">Select all that apply:</p>
+    <div class="education-filter">
+      <!-- University -->
+      <div class="check-group">
+        <input type="checkbox" name="University" id="University" [(ngModel)]="vm.university">
+        <div class="checkbox-icons">
+          <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+          <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        </div>
+        <label class="form-check-label" for="University">University</label>
+      </div>
+      <!-- College or apprenticeship -->
+      <div class="check-group">
+        <input type="checkbox" name="CollegeOrApprenticeship " id="CollegeOrApprenticeship"
+               [(ngModel)]="vm.collegeOrApprenticeship">
+        <div class="checkbox-icons">
+          <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+          <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        </div>
+        <label class="form-check-label" for="CollegeOrApprenticeship">College or apprenticeship</label>
+      </div>
+      <!-- Secondary school or job-specific training -->
+      <div class="check-group">
+        <input type="checkbox" name="SecondarSchoolOrJobSpecificTraining" id="SecondarSchoolOrJobSpecificTraining"
+               [(ngModel)]="vm.secondarSchoolOrJobSpecificTraining">
+        <div class="checkbox-icons">
+          <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+          <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        </div>
+        <label class="form-check-label" for="SecondarSchoolOrJobSpecificTraining">
+          Secondary school or job-specific
+          training
+        </label>
+      </div>
+      <!-- No education required -->
+      <div class="check-group">
+        <input type="checkbox" name="NoEducationRequired " id="NoEducationRequired" [(ngModel)]="vm.noEducationRequired">
+        <div class="checkbox-icons">
+          <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+          <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        </div>
+        <label class="form-check-label" for="NoEducationRequired">No education</label>
+      </div>
+    </div>
+    <!-- Apply Filter -->
+    <div class="form-group">
+      <button type="button" class="btn filter-education-btn bg-blue" (click)="getJobs('educationDropdownMenu')">
+        Apply filter
+        <lib-svg-icon icon="chev-white" width="25px" height="25px" class="pull-right"></lib-svg-icon>
+      </button>
+    </div>
+    <div class="note">
+      <p class="education-note" [innerHTML]="educationNote">
+      </p>
+    </div>
+  </div>
+</div>

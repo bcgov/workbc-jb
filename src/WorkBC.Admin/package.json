@@ -1,0 +1,52 @@
+{
+  "name": "workbc-admin",
+  "version": "1.0.0",
+  "description": "Admin Site for the WorkBC JobBoard",
+  "author": "OXD",
+  "license": "UNLICENSED",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/oxdworkbc/workbc-jobbank.git"
+  },
+  "scripts": {
+    "dev": "cross-env ASPNETCORE_ENVIRONMENT=Development NODE_ENV=development dotnet run --mode development",
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules --mode production",
+    "install": "webpack --config webpack.config.vendor.js --mode none",
+    "watch": "webpack -w"
+  },
+  "devDependencies": {
+    "bootstrap": "^4.6.0",
+    "bootstrap-datepicker": "^1.9.0",
+    "copy-webpack-plugin": "^6.4.1",
+    "css-loader": "^3.6.0",
+    "css-minimizer-webpack-plugin": "^3.1.1",
+    "csso-webpack-plugin": "^2.0.0-beta.3",
+    "datatables.net-bs": "^1.11.3",
+    "file-loader": "^6.2.0",
+    "jquery": "^3.6.0",
+    "mini-css-extract-plugin": "^2.4.2",
+    "node-sass": "^6.0.1",
+    "popper.js": "^1.16.1",
+    "postcss": "^8.3.9",
+    "remove-files-webpack-plugin": "^1.4.5",
+    "sass-loader": "^10.2.0",
+    "select2": "^4.0.13",
+    "select2-bootstrap-theme": "0.1.0-beta.10",
+    "style-loader": "^3.3.0",
+    "tunnel-agent": "^0.6.0",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.58.2",
+    "webpack-cli": "^4.9.0"
+  },
+  "dependencies": {
+    "@bcgov/bc-sans": "^1.0.1",
+    "codemirror": "^5.63.3",
+    "datatables.net-buttons": "^1.7.1",
+    "datatables.net-buttons-dt": "^1.7.1",
+    "datatables.net-dt": "^1.11.3",
+    "daterangepicker": "^3.1.0",
+    "font-awesome": "^4.7.0",
+    "jszip": "^3.7.1"
+  }
+}

@@ -1,0 +1,63 @@
+<div class="page-of" *ngIf="(showDropdownPage || showPaging) && !(this.vm.currentPage == pageCount && vm.totalResults > cappedResultCount())">
+  Page {{vm.currentPage}} of {{vm.totalResults}} results
+</div>
+
+<div class="alert alert-warning print-no-break mb-4" *ngIf="this.vm.currentPage == pageCount && this.vm.currentPage >= 200 && vm.totalResults > cappedResultCount()">
+  <i class="fa fa-exclamation-triangle"></i>
+  {{ cappedResultsWarning }}
+</div>
+
+<div class="paging" *ngIf="showPaging">
+  <div class="first-previous-arrows" [ngClass]="{'arrows-disabled':vm.currentPage == 1}">
+    <div class="first-page" *ngIf="vm.currentPage > 2">
+      <button type="button" (click)="goToFirst()" [disabled]="vm.currentPage == 1">
+        <span class="sr-only">Go to first page</span>
+        <lib-svg-icon icon="caret" width="15px" height="15px" class="rotate-left-90"></lib-svg-icon>
+        <lib-svg-icon icon="caret" width="15px" height="15px" class="rotate-left-90"></lib-svg-icon>
+      </button>
+    </div>
+    <div class="prev-page" [ngClass]="{'no-first-page' : vm.currentPage < 3}" *ngIf="vm.currentPage >= 1">
+      <button type="button" (click)="goToPrevious()" [disabled]="vm.currentPage == 1">
+        <span class="sr-only">Go to previous page</span>
+        <lib-svg-icon icon="caret" width="15px" height="15px" class="rotate-left-90"></lib-svg-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="page" *ngFor="let page of pages">
+    <button type="button" [ngClass]="{'current':vm.currentPage == page}" (click)="changePage(page);">
+      <span class="sr-only">Go page {{ page }}</span>
+      <strong aria-hidden="true">{{page}}</strong>
+    </button>
+  </div>
+
+  <div class="last-next-arrows" [ngClass]="{'arrows-disabled':vm.currentPage == pageCount}">
+    <div class="next-page" [ngClass]="{'no-last-page' : vm.currentPage + 2 > pageCount}" *ngIf="vm.currentPage <= pageCount">
+      <button type="button" (click)="goToNext()" [disabled]="vm.currentPage == pageCount">
+        <span class="sr-only">Go to next page</span>
+        <lib-svg-icon icon="caret" width="15px" height="15px" class="rotate-right-90"></lib-svg-icon>
+      </button>
+    </div>
+    <div class="last-page" *ngIf="vm.currentPage + 2 <= pageCount">
+      <button type="button" (click)="goToLast()" [disabled]="vm.currentPage == pageCount">
+        <span class="sr-only">Go to last page</span>
+        <lib-svg-icon icon="caret" width="15px" height="15px" class="rotate-right-90"></lib-svg-icon>
+        <lib-svg-icon icon="caret" width="15px" height="15px" class="rotate-right-90"></lib-svg-icon>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="results-per-page-contain form-group" *ngIf="showDropdownPage">
+  <label class="mb-0" for="resultsPerPage"><strong>Results per page: </strong></label>
+  <div class="select-group">
+    <select id="resultsPerPage" class="form-control" (ngModelChange)="onChangeResultsPerPage($event)" [(ngModel)]="vm.resultsPerPage">
+      <option [value]="10" *ngIf="maxSize(10)">10</option>
+      <option [value]="20" *ngIf="maxSize(20)">20</option>
+      <option [value]="30" *ngIf="maxSize(30)">30</option>
+      <option [value]="40" *ngIf="maxSize(40)">40</option>
+      <option [value]="50" *ngIf="maxSize(50)">50</option>
+    </select>
+    <i class="select-arrow"></i>
+  </div>
+</div>

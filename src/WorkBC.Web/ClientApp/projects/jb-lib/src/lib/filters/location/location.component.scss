@@ -1,0 +1,159 @@
+::ng-deep app-location {
+  .location-filters {
+    @media(min-width: 940px) {
+      margin-bottom: 15px;
+    }
+
+    > .row > .col-lg-5 {
+      border-right: 1px solid #ccc;
+    }
+
+    .map-contain {
+      position: relative;
+
+      #location_tooltip {
+        position: absolute;
+        z-index: 1;
+
+        span {
+          display: block;
+          background: #e9ebf0;
+          padding: 2px;
+          color: #234075;
+        }
+      }
+
+      @media(min-width: 600px) {
+        .col-lg-5 {
+          padding-right: 0px;
+        }
+      }
+    }
+
+    #region-map {
+      .mapArea {
+        fill: #234075;
+        transition: all 0.2s ease;
+        cursor: pointer;
+
+        &:hover, &.hovered {
+          @media (hover: hover) and (pointer: fine) {
+            fill: #537ca4;
+          }
+        }
+
+        &.active {
+          fill: #6b9abc;
+          /*&:hover, &.hovered {
+            fill: #6b9abc;
+          }*/
+        }
+      }
+    }
+
+    .check-group {
+      label.hovered {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .selected-locations {
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #ccc;
+    padding-top: 20px;
+
+    @media (min-width: 940px) {
+      margin-top: 25px;
+      margin-bottom: 20px;
+    }
+
+    ul {
+      padding: 0px;
+      margin: 0px;
+
+      li {
+        display: inline-block;
+        margin-bottom: 10px;
+
+        & + li {
+          margin-left: 10px;
+        }
+
+        &.filter-tag {
+          background: #fff;
+          font-size: 0.875rem;
+          padding: 7px 8px;
+          color: #234075;
+
+          a {
+            margin-left: 10px;
+            cursor: pointer;
+          }
+        }
+      }
+
+      &.show-more {
+        .filter-tag {
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+  .location-radius {
+    margin-bottom: 25px;
+
+    .job-radius-select {
+      width: 200px;
+      margin-bottom: 15px;
+    }
+
+    > i {
+      font-size: 0.875rem;
+    }
+  }
+
+  button.btn.disabled {
+    opacity: 0.5;
+    color: #234075 !important;
+  }
+
+  button.filter-location-add-btn {
+    height: 38px;
+    display: flex;
+
+    .pull-right {
+      margin-left: auto;
+    }
+  }
+
+  button.filter-locations-btn {
+    @media (max-width:939px) {
+      margin-top: 20px;
+    }
+  }
+
+  .search-radius-msg {
+    max-width: 470px;
+  }
+
+  div.text-danger {
+    margin-top: -6px;
+  }
+
+  @media (min-width: 940px) {
+      svg#region-map {
+          margin-bottom: -22px;
+      }
+
+      .region-map-container {
+          margin-bottom: 0;
+      }
+
+      .location-filters {
+          margin-bottom: 0;
+      }
+  }
+}

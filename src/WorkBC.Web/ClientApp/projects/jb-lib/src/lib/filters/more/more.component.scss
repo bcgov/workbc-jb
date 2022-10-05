@@ -1,0 +1,47 @@
+::ng-deep app-more {
+  .more-filters {
+    margin-bottom: 15px;
+
+    .info {
+      margin-left: 6px;
+    }
+
+    #NOCcodes {
+      @media(min-width: 940px) {
+        width: 260px;
+      }
+    }
+
+    .job-source-select {
+      @media(min-width: 940px) {
+        width: 260px;
+      }
+    }
+
+    input[type=radio] + label {
+      font-size: 0.875rem;
+      line-height: 1.75;
+      background-position-y: 0 !important;
+    }
+
+    input[type=radio]:checked + label {
+      line-height: 1.75;
+    }
+
+    #PostingLanguage {
+      .form-group {
+        margin-bottom: 0.75rem;
+      }
+    }
+  }
+
+  @media (min-width: 940px) {
+    .error-block {
+        width: 258px;
+    }
+  }
+
+  span a {
+    text-decoration: underline;
+  }
+}

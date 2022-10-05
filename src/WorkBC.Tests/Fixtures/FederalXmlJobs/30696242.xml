@@ -1,0 +1,162 @@
+<SolrResponse>
+  <Header>
+    <status>0</status><QTime>0</QTime><numFound>1</numFound>
+  </Header>
+  <Documents>
+    <Document>
+      <jobs_id>30696242</jobs_id><noc_2011>1123</noc_2011><skill_level>X</skill_level><remote_cd>1251624</remote_cd>
+      <title>public relations officer</title><noc>1123</noc><work_period_cd>F</work_period_cd>
+      <employer_type_id>1</employer_type_id><edulevel_cd>X</edulevel_cd><wage_class>D</wage_class>
+      <postal_code>V3W1A4</postal_code><employer_id>114958</employer_id><lang>en</lang>
+      <skill_categories>
+        <skill_category id="195">
+          <name>Education</name>
+          <options>
+            <option_name>College, CEGEP or other non-university certificate or diploma from a program of 1 year to 2 years</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="218">
+          <name>Experience</name>
+          <options>
+            <option_name>1 year to less than 2 years</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="259">
+          <name>Business Equipment and Computer Applications</name>
+          <options>
+            <option_name>MS Access</option_name><option_name>MS Excel</option_name>
+            <option_name>MS PowerPoint</option_name><option_name>MS Word</option_name>
+            <option_name>MS Outlook</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="392">
+          <name>Work Setting</name>
+          <options>
+            <option_name>Business</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="685">
+          <name>Specific Skills</name>
+          <options>
+            <option_name>Act as spokesperson for an organization</option_name>
+            <option_name>Initiate and maintain contact with the media</option_name>
+            <option_name>Answer written and oral inquiries</option_name>
+            <option_name>Develop and organize workshops, meetings, ceremonies and other events for publicity, fundraising and information purposes</option_name>
+            <option_name>Develop, implement and evaluate communication strategies and programs</option_name>
+            <option_name>Gather, research and prepare communications material</option_name>
+            <option_name>Co-ordinate special publicity events and promotions</option_name>
+            <option_name>Conduct public opinion and attitude surveys</option_name>
+            <option_name>Assist in the preparation of brochures, reports, newsletters and other material</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="786">
+          <name>Transportation/Travel Information</name>
+          <options>
+            <option_name>Own vehicle</option_name><option_name>Willing to travel regularly</option_name>
+            <option_name>Valid driver's licence</option_name>
+            <option_name>Travel expenses paid by employer</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="788">
+          <name>Work Conditions and Physical Capabilities</name>
+          <options>
+            <option_name>Work under pressure</option_name><option_name>Attention to detail</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="789">
+          <name>Ability to Supervise</name>
+          <options>
+            <option_name>Staff in various areas of responsibility</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="791">
+          <name>Work Location Information</name>
+          <options>
+            <option_name>Relocation costs covered by employer</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="1497">
+          <name>Personal Suitability</name>
+          <options>
+            <option_name>Effective interpersonal skills</option_name><option_name>Team player</option_name>
+            <option_name>Excellent oral communication</option_name>
+            <option_name>Excellent written communication</option_name><option_name>Client focus</option_name>
+            <option_name>Organized</option_name>
+          </options>
+        </skill_category>
+      </skill_categories>
+      <job_source_id>16</job_source_id><work_term_cd>P</work_term_cd><work_lang_cd>E</work_lang_cd>
+      <app_methods>
+        <app_online></app_online><app_email>goodfriendhrcompanyltd@gmail.com</app_email>
+        <app_phone>
+          <app_phone_number></app_phone_number><app_phone_ext></app_phone_ext>
+          <app_phone_start_bus_hours></app_phone_start_bus_hours><app_phone_end_bus_hours></app_phone_end_bus_hours>
+        </app_phone>
+        <app_fax></app_fax>
+        <app_person>
+          <app_person_street></app_person_street><app_person_room></app_person_room><app_person_city></app_person_city>
+          <app_person_province></app_person_province><app_person_country></app_person_country>
+          <app_person_pstlcd></app_person_pstlcd><app_person_start_bus_hours></app_person_start_bus_hours>
+          <app_person_end_bus_hours></app_person_end_bus_hours>
+        </app_person>
+        <app_mail>
+          <app_mail_street></app_mail_street><app_mail_room></app_mail_room><app_mail_city></app_mail_city>
+          <app_mail_province></app_mail_province><app_mail_country></app_mail_country>
+          <app_mail_pstlcd></app_mail_pstlcd>
+        </app_mail>
+      </app_methods>
+      <naics_id>31</naics_id><hours>30 hours per week</hours>
+      <employer_name_string>Good Friend HR Company Ltd</employer_name_string>
+      <employer_name_case>Good Friend HR Company Ltd</employer_name_case><num_positions>1</num_positions>
+      <job_senior_flag>true</job_senior_flag><various_location_flag>false</various_location_flag>
+      <job_student_flag>true</job_student_flag><job_youth_flag>true</job_youth_flag>
+      <job_apprentice_flag>true</job_apprentice_flag><job_disability_flag>true</job_disability_flag>
+      <job_aboriginal_flag>true</job_aboriginal_flag><program_title>false</program_title>
+      <job_vismin_flag>true</job_vismin_flag><job_newcomer_flag>true</job_newcomer_flag>
+      <job_veteran_flag>true</job_veteran_flag><latlng_variance>1</latlng_variance><los_id>6</los_id>
+      <postal_code_ind>1</postal_code_ind><experience_min>12</experience_min>
+      <date_posted>2019-07-03T13:59:00Z</date_posted><file_update_date>2019-09-23T13:52:00Z</file_update_date>
+      <import_date>2019-09-23T14:06:20Z</import_date><display_until>2019-10-23T23:59:00Z</display_until>
+      <salary_hourly>27.25</salary_hourly><salary_weekly>817.5</salary_weekly><work_hours>30.0</work_hours>
+      <city_name>
+        <string>Surrey</string>
+      </city_name>
+      <lmi_geoarea_cd>
+        <string>25565</string>
+      </lmi_geoarea_cd>
+      <url>
+        <string>https://www.jobbank.gc.ca/jobsearch/jobposting/30696242</string>
+      </url>
+      <latlng>
+        <string>49.13426,-122.843285</string>
+      </latlng>
+      <latlng_rpt>
+        <string>49.13426,-122.843285</string>
+      </latlng_rpt>
+      <city_id>
+        <string>22361</string>
+      </city_id>
+      <noc_jobtitle_concordance_id>
+        <string>20968</string>
+      </noc_jobtitle_concordance_id>
+      <major_city_id>
+        <string>22361</string>
+      </major_city_id>
+      <employment_terms>
+        <string>Day</string><string>Morning</string>
+      </employment_terms>
+      <work_hour_term>
+        <string>M</string><string>D</string>
+      </work_hour_term>
+      <province_cd>
+        <string>BC</string>
+      </province_cd>
+      <salary>
+        <string>$27.25 hourly</string>
+      </salary>
+      <employer_name>
+        <string>Good Friend HR Company Ltd</string>
+      </employer_name>
+    </Document>
+  </Documents>
+</SolrResponse>

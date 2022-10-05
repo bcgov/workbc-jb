@@ -1,0 +1,35 @@
+.recommended-jobs__filters {
+  background-color: #f2f2f2;
+  padding: 15px 30px;
+  margin-bottom: 15px;
+
+  td {
+    background-color: transparent;
+  }
+
+  .btn-link {
+    color: #006adb;
+
+    &:hover, &:focus {
+      color: #0056b3;
+    }
+
+    &:focus {
+      outline: dotted thin;
+    }
+  }
+
+  .btn-primary {
+    background-color: #006adb;
+    border-color: #006adb;
+
+    &:hover, &:focus {
+      background-color: #0056b3;
+      border-color: #0056b3;
+    }
+  }
+
+  input[type=checkbox]:focus + .checkbox-icons + label {
+    outline: -webkit-focus-ring-color auto 1px;
+  }
+}

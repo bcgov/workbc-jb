@@ -1,0 +1,77 @@
+/*
+* Bootstrap overrides styles
+*/
+.container {
+  max-width: none;
+
+  @include breakpoint(lg) {
+    max-width: 1140px;
+  }
+}
+
+.breadcrumb {
+  background: none;
+  padding-left: 0;
+  padding-right: 0;
+  margin-bottom: 0;
+}
+
+.form-control {
+  width: initial;
+
+  &.uniform-width {
+    width: 300px;
+    min-width: 300px;
+  }
+}
+
+.form-group.form-check {
+  margin-bottom: 0.5rem;
+}
+
+.row {
+  margin-right: 0;
+  margin-left: 0;
+
+  @include breakpoint(mobile) {
+    flex-direction: column;
+
+    & > .col {
+      margin-bottom: 20px;
+
+      &.justify-content-end {
+        justify-content: flex-start !important;
+      }
+    }
+  }
+}
+
+.col {
+  padding-right: 0;
+  padding-left: 0;
+
+  & > p, label {
+    margin-bottom: 0;
+  }
+}
+
+label {
+  white-space: nowrap;
+}
+
+.pagination {
+  margin-top: 1em;
+
+  .page-item.active .page-link {
+    background-color: $blue-active;
+    border-color: $blue-active;
+  }
+
+  .page-item.disabled .page-link {
+    color: lighten($grey-text, 15%);
+  }
+}
+
+.modal-footer{
+    flex-direction: row-reverse;
+}

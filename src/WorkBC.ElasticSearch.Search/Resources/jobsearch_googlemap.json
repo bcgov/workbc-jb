@@ -1,0 +1,36 @@
+{
+  "_source": [ "Location", "JobId", "City", "Region" ],
+  ##SORT##
+  "size": 5000,
+  "query": {
+    "bool": {
+      "filter": {
+        "bool": {
+          "must": [
+            ##QUERY_MUST##
+          ],
+          "must_not": [
+            ##QUERY_MUST_NOT##
+          ],
+          "filter": {
+            "bool": {
+              "should": {
+                "range": {
+                  "ExpireDate": {
+                    "gte": "now",
+                    "time_zone": "America/Vancouver"
+                  }
+                }
+              },
+              "must": {
+                "exists": {
+                  "field": "LocationGeo"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

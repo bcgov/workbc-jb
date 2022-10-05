@@ -1,0 +1,24 @@
+<div class="social-sharing">
+  <div class="modal-header">
+    <h2>SHARE JOB</h2>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="max-height: 392px; overflow-y: auto;">
+
+    <share-buttons [include]="['facebook','linkedin','email']"
+                   [showText]="true"
+                   [showIcon]="false"
+                   [url]="'https://api-jobboard.workbc.ca/Share/Job?jobid=' + jobId"
+                   [title]="'Job posting from WorkBC.ca'"
+                   [description]="'A job posting has been shared with you. If you’re interested in the position, be sure to apply soon.'">
+    </share-buttons>
+
+  </div>
+  <div class="modal-footer">
+    <div class="form-group">
+      <button type="button" class="btn-cancel inline-text-button" (click)="close()">Cancel</button>
+    </div>
+  </div>
+</div>

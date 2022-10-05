@@ -1,0 +1,46 @@
+/** Breakpoints **/
+
+// Use the following syntax to create your media queries
+// @include breakpoint(sm) { ... }
+// @include breakpoint(md) { ... }
+// @include breakpoint(lg) { ... }
+// @include breakpoint(xl) { ... }
+// @include breakpoint(mobile) { ... }
+
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+@mixin breakpoint($media) {
+    @if $media == sm {
+        @media only screen and (min-width: $breakpoint-sm) {
+            @content;
+        }
+    }
+    @else if $media == md {
+        @media only screen and (min-width: $breakpoint-md) {
+            @content;
+        }
+    }
+    @else if $media == lg {
+        @media only screen and (min-width: $breakpoint-lg) {
+            @content;
+        }
+    }
+    @else if $media == xl {
+        @media only screen and (min-width: $breakpoint-xl) {
+            @content;
+        }
+    }
+    @else if $media == xxl {
+        @media only screen and (min-width: $breakpoint-xxl) {
+            @content;
+        }
+    }
+    @else if $media == mobile {
+        @media only screen and (max-width: $breakpoint-md) {
+            @content;
+        }
+    }
+}

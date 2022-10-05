@@ -1,0 +1,23 @@
+{
+  "size": 0,
+  "aggs": {
+    "industries": {
+      "terms": {
+        "size": 100,
+        "field": "NaicsId"
+      }
+    }
+  },
+  "query": {
+    "bool": {
+      "filter": {
+        "range": {
+          "ExpireDate": {
+            "gte": "now",
+            "time_zone": "America/Vancouver"
+          }
+        }
+      }
+    }
+  }
+}

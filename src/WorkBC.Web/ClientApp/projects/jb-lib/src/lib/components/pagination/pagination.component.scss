@@ -1,0 +1,137 @@
+@import "../../../variables.scss";
+
+::ng-deep app-pagination {
+  width: 100%;
+  margin-top: 40px;
+
+  .alert.alert-warning {
+      margin-top: -1.2em;
+  }
+
+  .page-of {
+    font-size: 0.875rem;
+    display: block;
+    text-align: center;
+    margin-bottom: 15px;
+
+    @media (min-width: 568px) {
+      display: none;
+    }
+  }
+
+  .paging {
+    display: flex;
+
+    @media (min-width: 568px) {
+      display: block;
+    }
+
+    .page {
+      display: none;
+
+      @media (min-width: 568px) {
+        display: inline-flex;
+      }
+
+      &:first-child {
+        margin-left: 0px;
+      }
+    }
+
+    .arrows-disabled {
+      @media (min-width: 568px) {
+        display: none;
+      }
+    }
+
+    button {
+      display: inline-block;
+      line-height: 46px;
+      height: 50px;
+      min-width: 50px;
+      background-color: #ced2d9;
+      text-align: center;
+      border: none;
+
+      &[disabled] {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+
+      &.current {
+        background: $seconday-color;
+      }
+    }
+
+    div {
+      display: inline-block;
+
+      margin: 0 9px;
+      @media (max-width: 568px) {
+        margin: 0 4px;
+      }
+
+      &.next-page.no-last-page,
+      &.last-page {
+        margin-right: 0px;
+      }
+
+      &.prev-page.no-first-page,
+      &.first-page {
+        margin-left: 0px;
+      }
+
+      &.last-page, &.first-page {
+        button {
+          display: inline-block;
+        }
+      }
+
+      lib-svg-icon + lib-svg-icon {
+        margin-left: -12px;
+      }
+    }
+
+    .first-previous-arrows, .last-next-arrows {
+      margin: 0;
+    }
+
+    @media (max-width: 939px) {
+      .last-next-arrows {
+        margin-left: auto;
+      }
+    }
+
+    .last-next-arrows .rotate-right-90 {
+      padding-left: 4px;
+    }
+
+    .first-previous-arrows .rotate-left-90 {
+      padding-right: 4px;
+    }
+  }
+
+  .results-per-page-contain {
+    margin-top: 25px;
+    display: flex;
+    align-items: center;
+
+    & > span {
+      font-size: 0.875rem;
+      margin-right: 10px;
+    }
+
+    .select-group {
+      width: 148px;
+      margin-left: 15px;
+    }
+  }
+
+  .rotate-right-90 {
+    transform: rotate(90deg);
+  }
+
+  .rotate-left-90 {
+    transform: rotate(-90deg);
+  }
+}

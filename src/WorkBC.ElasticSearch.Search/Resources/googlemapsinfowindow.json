@@ -1,0 +1,26 @@
+{
+  "_source": [
+    "Location",
+    "JobId",
+    "City",
+    "HoursOfWork",
+    "PeriodOfEmployment",
+    "Title",
+    "SalarySummary",
+    "DatePosted",
+    "EmployerName",
+    "ExpireDate",
+    "IsFederalJob",
+    "ExternalSource",
+    "WorkplaceType"
+  ],
+  "size": 5000,
+  "from": 0,
+  "query": {
+    "bool": {
+      "should": [
+        ##JOBROWS##
+      ]
+    }
+  }
+}

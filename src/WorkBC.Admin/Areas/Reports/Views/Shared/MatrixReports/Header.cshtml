@@ -1,0 +1,10 @@
+@model IMatrixReportViewModel
+
+<tr class="group-header">
+    <th></th>
+    @foreach (HtmlString cell in Model.TableHeadings)
+    {
+        <th class="text-right">@cell</th>
+    }
+    <th class="text-right">@Model.GetHeaderTotalLabel()</th>
+</tr>

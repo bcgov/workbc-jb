@@ -1,0 +1,300 @@
+<button type="button" class="filter-menu-item" id="salaryDropdown" ngbDropdownToggle>
+  {{salaryTitle}}
+  <i class="fa fa-chevron-down"></i>
+  <div class="toggle-icons pull-right">
+    <lib-svg-icon icon="plus-blue" width="25px" height="25px"></lib-svg-icon>
+    <lib-svg-icon icon="minus-blue" width="25px" height="25px"></lib-svg-icon>
+  </div>
+</button>
+<div ngbDropdownMenu aria-labelledby="salaryDropdown" id="salaryDropdownMenu">
+  <!-- Salary filters -->
+  <div class="container">
+    <button type="button" class="clear-filter pull-right btn-filter-clear" (click)="clear()">
+      <i class="fa fa-close"></i>
+      <span>Clear all</span>
+    </button>
+    <strong class="filter-title filter-title--salary">{{salaryTitle}}</strong>
+    <p class="filter-title__below">Select all that apply</p>
+    <div class="row">
+      <div class="col-lg-5">
+        <div class="salary-filters">
+          <!-- Earning interval -->
+          <div class="form-group">
+            <label for="salaryEarningInterval"><strong>View salary ranges:</strong></label>
+            <div class="select-group Earning-Interval-select">
+              <select id="salaryEarningInterval" class="form-control" [(ngModel)]="vm.salaryEarningInterval">
+                <option value="0">Hourly</option>
+                <option value="1">Weekly</option>
+                <option value="2">Biweekly</option>
+                <option value="3">Monthly</option>
+                <option value="4">Annually</option>
+              </select>
+              <i class="select-arrow"></i>
+            </div>
+          </div>
+        </div>
+        <div class="salary-ranges">
+          <div class="check-group">
+            <input type="checkbox" [(ngModel)]="vm.amountRange1" name="amountRange1" id="amountRange1" />
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="amountRange1">{{vm.amountRange1Text}}</label>
+          </div>
+          <div class="check-group">
+            <input type="checkbox" [(ngModel)]="vm.amountRange2" name="amountRange2" id="amountRange2" />
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="amountRange2">{{vm.amountRange2Text}}</label>
+          </div>
+          <div class="check-group">
+            <input type="checkbox" [(ngModel)]="vm.amountRange3" name="amountRange3" id="amountRange3" />
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="amountRange3">{{vm.amountRange3Text}}</label>
+          </div>
+          <div class="check-group">
+            <input type="checkbox" [(ngModel)]="vm.amountRange4" name="amountRange4" id="amountRange4" />
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="amountRange4">{{vm.amountRange4Text}}</label>
+          </div>
+          <div class="check-group">
+            <input type="checkbox" [(ngModel)]="vm.amountRange5" name="amountRange5" id="amountRange5" />
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="amountRange5">{{vm.amountRange5Text}}</label>
+          </div>
+          <div class="check-group">
+            <input type="checkbox" [(ngModel)]="vm.amountRange6" name="amountRange6" id="amountRange6"
+                   (change)="customChanged()" />
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="amountRange6">{{vm.amountRange6Text}}</label>
+          </div>
+        </div>
+        <!-- Custom salary range -->
+        <div class="custom-ranges">
+          <input type="text" class="form-control" aria-label="Custom salary range minimum amount" placeholder="0" [(ngModel)]="vm.minAmount"
+                 (keyup)="onMinAmountChange($event.target.value)" [disabled]="!vm.amountRange6" />
+          <span>to</span>
+          <input type="text" class="form-control" aria-label="Custom salary range maximum amount" placeholder="unlimited" [(ngModel)]="vm.maxAmount"
+                 (keyup)="onMaxAmountChange($event.target.value)" [disabled]="!vm.amountRange6" />
+        </div>
+        <div class="salary-ranges above-tooltip">
+          <div class="check-group">
+            <input type="checkbox" [(ngModel)]="vm.searchSalaryUnknown" name="searchSalaryUnknown"
+                   id="searchSalaryUnknown" />
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="searchSalaryUnknown">Unknown salaries</label>
+            <button type="button" class="tooltip-icon" placement="bottom" (click)="salaryTip.toggle()"
+                    [autoClose]="'outside'" [ngbPopover]="SalaryUnknownPopContent" [triggers]="getPopoverTriggers()" #salaryTip="ngbPopover">
+              <lib-svg-icon icon="info-blue" width="20px" height="20px" class="info"></lib-svg-icon>
+              <span class="sr-only">
+                {{unknownSalaries}}
+              </span>
+              <ng-template #SalaryUnknownPopContent>
+                {{unknownSalaries}}
+                <!-- empty link fixes mobile issue requiring double-tab -->
+                <a href="#" tabindex="-1" aria-hidden="true"></a>
+              </ng-template>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="salary-filter-types">
+          <!-- Other Types of Pay -->
+          <strong class="filter-title sub sub--benefits">Benefits:</strong>
+          <div class="row">
+            <div class="col-lg-6">
+              <!-- As per collective agreement -->
+              <div class="check-group">
+                <input type="checkbox" name="asPerCollectiveAgreement" id="asPerCollectiveAgreement"
+                       [(ngModel)]="vm.asPerCollectiveAgreement">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="asPerCollectiveAgreement">As per collective agreement</label>
+              </div>
+              <!-- Bonus -->
+              <div class="check-group">
+                <input type="checkbox" name="bonus" id="bonus" [(ngModel)]="vm.bonus">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="bonus">Bonus</label>
+              </div>
+              <!-- Commission -->
+              <div class="check-group">
+                <input type="checkbox" name="commissionPay" id="SalaryCommissionPay" [(ngModel)]="vm.commission">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="SalaryCommissionPay">Commission</label>
+              </div>
+              <!-- Dental benefits -->
+              <div class="check-group">
+                <input type="checkbox" name="dentalBenefits" id="dentalBenefits" [(ngModel)]="vm.dentalBenefits">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="dentalBenefits">Dental benefits</label>
+              </div>
+              <!-- Disability benefits -->
+              <div class="check-group">
+                <input type="checkbox" name="disabilityBenefits" id="disabilityBenefits"
+                       [(ngModel)]="vm.disabilityBenefits">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="disabilityBenefits">Disability benefits</label>
+              </div>
+              <!-- Gratuities -->
+              <div class="check-group">
+                <input type="checkbox" name="gratuities" id="gratuities" [(ngModel)]="vm.gratuities">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="gratuities">Gratuities</label>
+              </div>
+              <!-- Group insurance benefits -->
+              <div class="check-group">
+                <input type="checkbox" name="groupInsuranceBenefits" id="groupInsuranceBenefits"
+                       [(ngModel)]="vm.groupInsuranceBenefits">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="groupInsuranceBenefits">Group insurance benefits</label>
+              </div>
+              <!-- Life insurance benefits -->
+              <div class="check-group">
+                <input type="checkbox" name="lifeInsuranceBenefits" id="lifeInsuranceBenefits"
+                       [(ngModel)]="vm.lifeInsuranceBenefits">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="lifeInsuranceBenefits">Life insurance benefits</label>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <!-- Medical Benefits -->
+              <div class="check-group not-first-of-type">
+                <input type="checkbox" name="medicalBenefits" id="medicalBenefits" [(ngModel)]="vm.medicalBenefits">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="medicalBenefits">Medical benefits</label>
+              </div>
+              <!-- Mileage paid -->
+              <div class="check-group">
+                <input type="checkbox" name="mileagePaid" id="mileagePaid" [(ngModel)]="vm.mileagePaid">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="mileagePaid">Mileage paid</label>
+              </div>
+              <!-- Pension plan benefits -->
+              <div class="check-group">
+                <input type="checkbox" name="pensionPlanBenefits" id="pensionPlanBenefits"
+                       [(ngModel)]="vm.pensionPlanBenefits">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="pensionPlanBenefits">Pension plan benefits</label>
+              </div>
+              <!-- Piece work -->
+              <div class="check-group">
+                <input type="checkbox" name="pieceWork" id="pieceWork" [(ngModel)]="vm.pieceWork">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="pieceWork">Piece work</label>
+              </div>
+              <!-- RESP benefits -->
+              <div class="check-group">
+                <input type="checkbox" name="respBenefits" id="respBenefits" [(ngModel)]="vm.respBenefits">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="respBenefits">RESP benefits</label>
+              </div>
+              <!-- RRSP benefits -->
+              <div class="check-group">
+                <input type="checkbox" name="rrspBenefits" id="rrspBenefits" [(ngModel)]="vm.rrspBenefits">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="rrspBenefits">RRSP benefits</label>
+              </div>
+              <!-- Vision care benefits -->
+              <div class="check-group">
+                <input type="checkbox" name="visionCareBenefits" id="visionCareBenefits"
+                       [(ngModel)]="vm.visionCareBenefits">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="visionCareBenefits">Vision care benefits</label>
+              </div>
+              <!-- Other benefits -->
+              <div class="check-group">
+                <input type="checkbox" name="otherBenefits" id="otherBenefits" [(ngModel)]="vm.otherBenefits">
+                <div class="checkbox-icons">
+                  <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                  <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                </div>
+                <label class="form-check-label" for="otherBenefits">Other benefits</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- How is salary calculated -->
+    <div class="form-group">
+      <button type="button" id="showSalaryInfo" class="btn smoothCollapse caret-left"
+              (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="salaryInfo">
+        {{howIsSalaryCalculatedTitle}}
+      </button>
+    </div>
+    <div id="salaryInfo" [innerHTML]="howIsSalaryCalculatedBody" [@smoothCollapse]="isCollapsed?'initial':'final'">
+    </div>
+    <!-- Apply filter -->
+    <div class="form-group">
+      <button type="button" class="btn filter-salary-btn bg-blue"
+              (click)="submitSalarySearch('salaryDropdownMenu')">
+        Apply filter
+        <lib-svg-icon icon="chev-white" width="25px" height="25px" class="pull-right"></lib-svg-icon>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,134 @@
+﻿/*
+* Jobs area styles
+*/
+
+// Import partial stylesheets
+@import 'variables';
+@import 'breakpoints';
+@import 'datatables';
+@import 'select2';
+
+#page-job-postings {
+
+    @include breakpoint(mobile) {
+        .table-job-postings {
+            td:nth-of-type(1):before {
+                content: "Source";
+            }
+
+            td:nth-of-type(2):before {
+                content: "Origin";
+            }
+
+            td:nth-of-type(3):before {
+                content: "Job ID";
+            }
+
+            td:nth-of-type(4):before {
+                content: "Job Title";
+            }
+
+            td:nth-of-type(5):before {
+                content: "Job Location";
+            }
+
+            td:nth-of-type(6):before {
+                content: "Last Updated";
+            }
+
+            td:nth-of-type(7):before {
+                content: "Expiry Date";
+            }
+
+            td:nth-of-type(8):before {
+                content: "URL";
+            }
+        }
+    }
+
+    @include breakpoint(md) {
+
+        td:nth-of-type(1) {
+            width: 12%;
+        }
+
+        td:nth-of-type(2) {
+            width: 17%;
+        }
+
+        td:nth-of-type(3) {
+            width: 14%;
+        }
+
+        td:nth-of-type(4) {
+            width: 28%;
+        }
+
+        td:nth-of-type(5) {
+            width: 10%;
+        }
+
+        td:nth-of-type(6) {
+            width: 10%;
+        }
+
+        td:nth-of-type(7) {
+            width: 10%;
+        }
+
+        td:nth-of-type(8) {
+            width: 10%;
+        }
+
+        td:nth-of-type(9) {
+            width: 10%;
+        }
+    }
+
+    .dataTables_filter {
+        display: none !important;
+    }
+
+    .dataTables_length {
+        display: none !important;
+    }
+
+    #dtJobs_info {
+        display: none !important;
+    }
+
+    th {
+        opacity: 0.8;
+
+        &:hover {
+            opacity: 0.9;
+
+            &:after {
+                opacity: 1;
+            }
+        }
+
+        &.sorting_asc, &.sorting_desc {
+            &:after {
+                opacity: 1;
+            }
+        }
+    }
+
+    td {
+        a.btn {
+            height: auto;
+        }
+
+        &.job-title-col {
+            text-transform: capitalize;
+        }
+    }
+}
+
+#deleteModal {
+    .warning {
+        color: red;
+        font-weight: bold;
+    }
+}

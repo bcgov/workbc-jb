@@ -1,0 +1,108 @@
+<button type="button" class="filter-menu-item" id="workProgramsDropdown" ngbDropdownToggle>
+  Work Programs
+  <lib-svg-icon icon="chevron-thick" width="10px" height="6.66px"></lib-svg-icon>
+  <div class="toggle-icons pull-right">
+    <lib-svg-icon icon="plus-blue" width="25px" height="25px"></lib-svg-icon>
+    <lib-svg-icon icon="minus-blue" width="25px" height="25px"></lib-svg-icon>
+  </div>
+</button>
+<div ngbDropdownMenu aria-labelledby="workProgramsDropdown">
+  <!-- Additional job filters -->
+  <div class="container">
+    <a href="javascript:;" class="clear-filter pull-right">
+      <lib-svg-icon icon="close" width="15px" height="15px"></lib-svg-icon>
+      <span>Clear all</span>
+    </a>
+    <strong class="filter-title">Government-Sponsored Jobs (select as many as apply):</strong>
+    <!-- Government-Sponsored Work Program -->
+    <div class="work-programs-filters">
+      <!-- All government-sponsored jobs -->
+      <div class="check-group">
+        <input type="checkbox" name="AllGovernmentSponsoredJobs" id="AllGovernmentSponsoredJobs"
+               [(ngModel)]="AllGovernmentSponsoredJobs">
+        <div class="checkbox-icons">
+          <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+          <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        </div>
+        <label class="form-check-label" for="AllGovernmentSponsoredJobs">
+          All government-sponsored jobs
+        </label>
+      </div>
+      <!-- Career focus-youth employment Strategy -->
+      <div class="check-group padding-left-20--md">
+        <input type="checkbox" name="CareerFocusYouthEmploymentStrategy" id="CareerFocusYouthEmploymentStrategy"
+               [(ngModel)]="CareerFocusYouthEmploymentStrategy">
+        <div class="checkbox-icons">
+          <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+          <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        </div>
+        <label class="form-check-label" for="CareerFocusYouthEmploymentStrategy">
+          Career focus-youth employment strategy
+        </label>
+      </div>
+      <!-- Digital skills for youth -->
+      <div class="check-group padding-left-20--md">
+        <input type="checkbox" name="DigitalSkillsForYouth" id="DigitalSkillsForYouth"
+               [(ngModel)]="DigitalSkillsForYouth">
+        <div class="checkbox-icons">
+          <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+          <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        </div>
+        <label class="form-check-label" for="DigitalSkillsForYouth">Digital skills for youth</label>
+      </div>
+      <!-- International youth internship -->
+      <div class="check-group padding-left-20--md">
+        <input type="checkbox" name="InternationalYouthInternship" id="InternationalYouthInternship"
+               [(ngModel)]="InternationalYouthInternship">
+        <div class="checkbox-icons">
+          <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+          <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        </div>
+        <label class="form-check-label" for="InternationalYouthInternship">
+          International youth
+          internship
+        </label>
+      </div>
+      <!-- Skills Link-Youth Employment Strategy -->
+      <div class="check-group padding-left-20--md">
+        <input type="checkbox" name="SkillsLinkYouthEmploymentStrategy" id="SkillsLinkYouthEmploymentStrategy"
+               [(ngModel)]="SkillsLinkYouthEmploymentStrategy">
+        <div class="checkbox-icons">
+          <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+          <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        </div>
+        <label class="form-check-label" for="SkillsLinkYouthEmploymentStrategy">
+          Skills link-youth employment strategy
+        </label>
+      </div>
+      <!-- Studentwork Integrated Learning Program -->
+      <div class="check-group padding-left-20--md">
+        <input type="checkbox" name="StudentWorkIntegratedLearningProgram"
+               id="StudentWorkIntegratedLearningProgram" [(ngModel)]="StudentWorkIntegratedLearningProgram">
+        <div class="checkbox-icons">
+          <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+          <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        </div>
+        <label class="form-check-label" for="StudentWorkIntegratedLearningProgram">
+          Studentwork integrated learning program
+        </label>
+      </div>
+      <!-- Young Canada Works -->
+      <div class="check-group padding-left-20--md">
+        <input type="checkbox" name="YoungCanadaWorks" id="YoungCanadaWorks" [(ngModel)]="YoungCanadaWorks">
+        <div class="checkbox-icons">
+          <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+          <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        </div>
+        <label class="form-check-label" for="YoungCanadaWorks">Young Canada works</label>
+      </div>
+    </div>
+    <!-- Apply Filter -->
+    <div class="form-group">
+      <button type="button" class="btn filter-work-programs-btn bg-blue">
+        Apply filter
+        <lib-svg-icon icon="chev-white" width="25px" height="25px" class="pull-right"></lib-svg-icon>
+      </button>
+    </div>
+  </div>
+</div>

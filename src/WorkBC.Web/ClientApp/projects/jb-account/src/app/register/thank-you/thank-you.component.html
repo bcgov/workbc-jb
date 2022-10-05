@@ -1,0 +1,18 @@
+<div class="thank-you">
+  <div class="container">
+    <p class="sub-header">
+      {{confirmationTitle}}
+    </p>
+    <div [innerHTML]="confirmationBody">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="container">
+      <a class="btn resend-register-link-btn bg-blue" (click)="resendEmail()">
+        Resend activation email
+        <lib-svg-icon icon="chev-white" width="25px" height="25px" class="pull-right"></lib-svg-icon>
+      </a>
+    </div>
+  </div>
+</div>

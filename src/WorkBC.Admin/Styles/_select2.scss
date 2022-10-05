@@ -1,0 +1,23 @@
+/*
+* Select2 styles
+*/
+
+// Import partial stylesheets
+@import 'variables';
+
+.select2-container {
+
+    .select2-selection {
+        min-height: 38px;
+        padding-top: 5px;
+        border: 1px solid #ced4da;
+
+        .select2-selection__arrow {
+            margin-top: 5px;
+        }
+
+        .select2-selection__rendered {
+            color: #495057;
+        }
+    }
+}

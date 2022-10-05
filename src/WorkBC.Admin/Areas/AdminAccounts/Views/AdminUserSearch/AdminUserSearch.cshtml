@@ -1,0 +1,246 @@
+﻿@model AdminUserSearchViewModel
+
+@{
+    ViewBag.Title = "Manage Admin Accounts";
+}
+
+<link rel="stylesheet" type="text/css" href="~/dist/css/dataTables.bootstrap.css" asp-append-version="true" />
+
+<div id="page-admin-accounts">
+    <h1 class="page-title">@ViewBag.Title</h1>
+    <div class="row row-search">
+        <div class="col col-md-4">
+            <div class="input-group search">
+                <input type="text" class="form-control search__input" placeholder="Search by name or IDIR">
+                <div class="input-group-btn search__btn">
+                    <button class="btn btn-secondary" type="submit" tabindex="-1">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col col--create-new-account">
+            <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("AddAdminUser", "AdminUserManagement")'">
+                <i class="fa fa-plus fa-left"></i>
+                Add new administrator account
+            </button>
+        </div>
+    </div>
+    <div class="row row-search-filters">
+        <button type="button" class="btn btn-search-filter btn-secondary btn-all active">
+            <span>All</span>
+            <span class="number" id="spTotal"></span>
+        </button>
+        <button type="button" class="btn btn-search-filter btn-secondary btn-super-user">
+            <span>Super administrator</span>
+            <span class="number" id="spSuperUser"></span>
+        </button>
+        <button type="button" class="btn btn-search-filter btn-secondary btn-admin">
+            <span>Regular administrator</span>
+            <span class="number" id="spAdmin"></span>
+        </button>
+        <button type="button" class="btn btn-search-filter btn-secondary btn-reporting">
+            <span>Reporting</span>
+            <span class="number" id="spReporting"></span>
+        </button>
+        <button type="button" id="btn-reset" class="btn btn-inline">
+            <span>Reset search</span>
+        </button>
+    </div>
+    <div class="row row-results">
+        <div class="col">
+            <label id="lblShowing"></label>
+        </div>
+        <div class="col form-group d-flex justify-content-end">
+            <label for="inputResultsCount">Results per page: </label>
+            <select id="inputResultsCount" class="form-control">
+                <option selected="">50</option>
+                <option>75</option>
+                <option>100</option>
+                <option>125</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="datatable-container">
+        <table class="table table-wbc-responsive table-admin-accounts-search" id="dtAdminUsers">
+            <thead>
+                <tr>
+                    <th class="sort">
+                        <a><span>Status</span></a>
+                    </th>
+                    <th class="sort">
+                        <a><span>IDIR Name</span></a>
+                    </th>
+                    <th class="sort">
+                        <a><span>IDIR Username</span></a>
+                    </th>
+                    <th class="sort">
+                        <a><span>Account Type</span></a>
+                    </th>
+                    <th class="sort">
+                        <a><span>Last Login</span></a>
+                    </th>
+                    <th class="no-sort">
+                        <a><span>Actions</span></a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Results)
+                {
+                    <tr class="@((user.AdminUser.LockedByAdminUserId > 0 ? "locked" : user.AdminUser.Deleted ? "deleted" : ""))">
+                        <td class="status"><span> @(user.AdminUser.Deleted ? "Deleted" : "Active")</span></td>
+                        <td>@user.AdminUser.DisplayName</td>
+                        <td>@user.AdminUser.SamAccountName</td>
+                        <td>
+                            @switch (user.AdminUser.AdminLevel.ToString())
+                            {
+                                case Roles.Reporting:
+                                    @:Reporting
+                                    break;
+                                case Roles.Admin:
+                                    @:Regular administrator
+                                    break;
+                                case Roles.SuperAdmin:
+                                    @:Super administrator
+                                    break;
+                            }
+                        </td>
+                        <td>@(user.AdminUser.DateLastLogin.HasValue ? $"{user.AdminUser.DateLastLogin.Value:yyyy-MM-dd}" : "-")</td>
+                        <td class="actions">
+                            @if (!user.AdminUser.Deleted)
+                            {
+                                <div class="actions__btn-group">
+                                    @if (!user.AdminUser.DateLocked.HasValue)
+                                    {
+                                        <a asp-area="AdminAccounts" asp-controller="AdminUserManagement" asp-action="EditAdminUser" asp-route-id="@user.AdminUser.Id" class="btn btn-inline action-btn">
+                                            <i class="fa fa-pencil fa-left"></i>
+                                            Edit
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-inline edit-locked-button"
+                                                data-toggle="modal"
+                                                data-target="#lockedModal"
+                                                data-userId="@user.AdminUser.Id"
+                                                data-date-locked="@user.AdminUser.DateLocked.Value.ToString("MMM. dd, yyyy")"
+                                                data-time-locked="@user.AdminUser.DateLocked.Value.ToString("HH:mm")"
+                                                data-user-locked-displayname="@user.AdminUser.LockedByAdminUser.DisplayName"
+                                                data-continue-editing="@user.ContinueEditing">
+                                            <i class="fa fa-pencil fa-left"></i>
+                                            Edit
+                                        </button>
+                                    }
+                                    <button type="button" class="btn btn-inline delete-button" data-toggle="modal" data-target="#deleteModal" data-userId="@user.AdminUser.Id">
+                                        <i class="fa fa-trash fa-left"></i>
+                                        Delete
+                                    </button>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row row-back-to-top">
+    <div id="back-to-top">
+        <i class="fa fa-chevron-up fa-left"></i>
+        Back to top
+    </div>
+</div>
+
+<partial name="_DeleteUserModal" model="string.Empty"/>
+
+<div id="lockedModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">User Locked</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    This user was locked by <span class="text-nowrap" id="currentUserLockedDisplayName"></span> 
+                    on <span class="text-nowrap" id="currentUserDateLocked"></span> 
+                    at <span class="text-nowrap" id="currentUserTimeLocked"></span>.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <a data-dismiss="modal" class="btn btn-clear">Cancel</a>
+                <a href="@Url.Action("EditAdminUser", "AdminUserManagement", new { Area = "AdminAccounts" })" class="btn btn-secondary no-margin" id="lnkViewAsReadonly">
+                    View as read-only
+                </a>
+                <form asp-area="AdminAccounts" asp-controller="AdminUserManagement" asp-action="UnlockAdminUser" method="post" role="form">
+                    <input type="hidden" id="currentUserId" name="currentUserId" />
+                    <button type="submit" class="btn btn-primary">
+                        Unlock
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- hidden shadow table for getting filter button counts -->
+<table id="dtAdminUsersShadow" style="display: none">
+    <thead>
+    <tr>
+        <th>Status</th>
+        <th>IDIR Name</th>
+        <th>IDIR Username</th>
+        <th>Account Type</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (AdminUserRowViewModel user in Model.Results)
+    {
+        <tr>
+            <td></td>
+            <td>@user.AdminUser.DisplayName</td>
+            <td>@user.AdminUser.SamAccountName</td>
+            <td>@user.AdminUser.AdminLevel.ToString()</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<!-- This is to hide the datatable filter at the top-->
+<!-- Styles -->
+<style>
+    .dataTables_filter {
+        display: none !important;
+    }
+
+    .dataTables_length {
+        display: none !important;
+    }
+
+    #dtAdminUsers_info {
+        display: none !important;
+    }
+
+    .paginate_button {
+        font-size: 18px;
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+        padding: 2px;
+        margin: 0 10px;
+        border-bottom: solid 1px transparent;
+        color: blue;
+    }
+</style>
+
+@section Scripts {
+    <script src="~/dist/lib/jquery.dataTables.min.js" asp-append-version="true"></script>
+    <script src="~/dist/lib/dataTables.bootstrap.min.js" asp-append-version="true"></script>
+    <script src="~/lib/dataTables-fullNumbers/full_numbers_no_ellipses.js" asp-append-version="true"></script>
+}

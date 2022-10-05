@@ -1,0 +1,42 @@
+::ng-deep app-register {
+
+  .account-select {
+    margin-bottom: 100px;
+
+    .select-title {
+      margin: 40px 0 25px;
+      font-size: 1.125em;
+      font-weight: 600;
+    }
+
+    .employer, .job-seeker {
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      min-height: 280px;
+      position: relative;
+      cursor: pointer;
+
+      .content {
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        padding: 0 20px;
+        margin-bottom: 25px;
+        color: #fff;
+
+        h3 {
+          margin: 0px;
+        }
+
+        > div {
+          font-weight: 600;
+
+          svg path {
+            fill: #fff;
+          }
+        }
+      }
+    }
+  }
+}

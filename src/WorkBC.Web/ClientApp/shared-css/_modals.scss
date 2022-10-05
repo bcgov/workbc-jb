@@ -1,0 +1,139 @@
+/* Shared styles to override modals  */
+
+/* Angular Material modals */
+.mat-dialog-container {
+  position: relative;
+  border-radius: 0 !important;
+  font-family: myriad-pro,Calibri,Candara,Segoe,Optima,sans serif;
+  background-color: #f9f9f9;
+  padding: 24px;
+
+  .modal-header {
+    padding: 0;
+    margin-bottom: 20px;
+
+    & > h2 {
+      margin-right: 20px;
+      color: #234075;
+    }
+  }
+
+  .modal-body {
+    color: #234075;
+  }
+}
+
+.personal-settings-dialog-modal {
+    overflow: auto;
+}
+
+.personal-settings-dialog-modal > .mat-dialog-container {
+    padding: 0;
+}
+
+.mat-dialog-content {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.mat-dialog-actions {
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: auto !important;
+}
+
+/* Bootstrap modals */
+      @keyframes modal-b-fade {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 0.5;
+        }
+      }
+
+      @keyframes modal-fade {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+        }
+      }
+
+      .modal-backdrop {
+        opacity: 0.5;
+        // animation-fill-mode: forwards;
+        animation: ease-in-out 0.3s modal-b-fade;
+        transition: all 0.3s ease-in-out;
+      }
+
+      .modal {
+        // animation-fill-mode: forwards;
+        animation: ease-in-out 0.3s modal-fade;
+        //transition: all .5s ease-in-out;
+        &.fade {
+          opacity: 1;
+        }
+
+        &.show {
+          //top: 0;
+        }
+
+        .modal-dialog {
+          width: 85%;
+          margin: 0 auto;
+
+          @media (min-wdith: 939px) {
+            width: 660px;
+          }
+        }
+
+
+        .modal-content {
+          font-family: myriad-pro,Calibri,Candara,Segoe,Optima,sans serif;
+          border-radius: 0px;
+          border: 0px;
+          box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
+          padding: 24px;
+          background-color: #f9f9f9;
+
+          .modal-header, modal-body, .modal-footer {
+            padding: 0;
+          }
+
+          .modal-header {
+            border: 0px;
+
+            h2 {
+              color: #444;
+              font-weight: bold;
+              margin-right: 12px;
+              text-transform: uppercase;
+            }
+
+            button {
+              opacity: 1;
+              position: absolute;
+              top: 16px;
+              right: 16px;
+              padding: 12px 18px;
+            }
+          }
+
+
+          .modal-header, .modal-body, .modal-footer {
+            padding: 0;
+          }
+
+          .modal-footer {
+            border: 0px;
+
+            .form-group {
+              margin-bottom: 0;
+            }
+          }
+        }
+      }

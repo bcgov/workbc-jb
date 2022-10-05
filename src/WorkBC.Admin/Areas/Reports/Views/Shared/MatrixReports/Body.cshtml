@@ -1,0 +1,14 @@
+@model MatrixReport
+
+@foreach (MatrixRow row in Model.TableData.OrderBy(t => t.SortOrder).ThenByDescending(t => t.Total))
+{
+    <tr>
+        <th>@row.Label</th>
+        @foreach (int cell in row.Values)
+        {
+            <td class="text-right">@cell.ToString("#,##0")</td>
+        }
+        <th class="text-right">@row.Total.ToString("#,##0")</th>
+
+    </tr>
+}

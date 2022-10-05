@@ -1,0 +1,30 @@
+<div class="header-banner">
+  <div class="header-banner__container container">
+    <div class="header-banner__title">
+      <h1>Account Activation</h1>
+    </div>
+  </div>
+</div>
+
+<div class="header-banner--mobile">
+  <div class="container">
+    <div class="header-banner__title">
+      <h1>Account Activation</h1>
+    </div>
+  </div>
+</div>
+
+<div class="account-confirm-email">
+  <div *ngIf="!loading" class="container">
+    <p *ngIf="!isEmailAlreadyConfirmed" class="sub-header">
+      {{activationTitle}}
+    </p>
+
+    <p *ngIf="!isEmailAlreadyConfirmed" [innerHTML]="activationBody">
+    </p>
+
+    <p *ngIf="isEmailAlreadyConfirmed" class="text-danger">
+      This account has already been activated. Please log in with your account details.
+    </p>
+  </div>
+</div>
