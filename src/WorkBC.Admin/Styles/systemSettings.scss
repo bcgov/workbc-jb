@@ -1,0 +1,87 @@
+﻿/*
+* SystemSettings area styles
+*/
+
+// Import partial stylesheets
+@import 'variables';
+@import 'breakpoints';
+@import 'datatables';
+
+div.alert.alert-warning {
+    margin-top: -20px;
+    margin-bottom: 30px;
+}
+
+#page-system-settings {
+
+    table.table {
+        td {
+            vertical-align: top;
+            text-align: left;
+        }
+    }
+
+    .dataTables_info {
+        color: silver;
+    }
+
+    @media (min-width: 1000px) and (max-width: 1200px) {
+        td:nth-of-type(1) {
+            max-width: 450px;
+            overflow: hidden;
+        }
+    }
+
+    @media (max-width: 1000px) {
+        td:nth-of-type(1) {
+            max-width: 300px;
+            overflow-wrap: break-word;
+        }
+
+        td:nth-of-type(2) {
+            max-width: 320px;
+        }
+    }
+
+    @media (max-width: 800px) {
+        td:nth-of-type(1) {
+            max-width: 240px;
+        }
+
+        td:nth-of-type(2) {
+            max-width: 280px;
+            overflow-wrap: break-word;
+        }
+    }
+}
+
+#page-edit-system-settings {
+
+    textarea {
+        width: 100%;
+        font-family: monospace;
+        font-size: 0.9em;
+
+        &.multi-line {
+            max-width: 800px;
+        }
+    }
+
+    input[type=radio] {
+        margin-right: 6px;
+    }
+
+    input[type=number] {
+        max-width: 110px;
+    }
+
+    input[type=text] {
+        width: 100%;
+        max-width: 800px;
+    }
+
+    .CodeMirror {
+        height: auto;
+        border: 1px solid silver;
+    }
+}

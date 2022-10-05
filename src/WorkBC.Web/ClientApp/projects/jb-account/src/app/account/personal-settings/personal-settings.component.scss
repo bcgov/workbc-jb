@@ -1,0 +1,181 @@
+.personal-settings {
+    padding-bottom: 4rem;
+
+  & > .container {
+    @media (min-width: 940px) {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+  .personal-settings-header {
+    margin-bottom: 25px;
+
+    h1 {
+      margin-bottom: 5px;
+    }
+  }
+
+  h2 {
+    font-weight: 600;
+    text-transform: capitalize;
+    margin-bottom: 15px;
+  }
+
+  .personal-settings-inner {
+
+    .btn {
+      &.delete {
+        padding: 10px 0;
+
+        strong {
+            margin-left: 7px;
+            font-weight: 700;
+        }
+      }
+
+      &.cancel:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .col-identity-list {
+      margin-bottom: 25px;
+
+      @media(min-width: 940px) {
+        margin-bottom: 0;
+      }
+    }
+
+    .why-identify {
+      border: 1px solid #c9d0dd;
+      padding: 8px;
+
+      p {
+        margin: 8px 0 0;
+      }
+    }
+
+    .optional-checks {
+      .check-group {
+        @media (max-width: 450px) {
+          width: 100%;
+        }
+
+        .form-check-label {
+          max-width: 90%;
+          overflow-wrap: break-word;
+          display: inline-flex;
+        }
+      }
+    }
+
+    .check-group {
+      .info {
+        margin-left: 10px;
+      }
+    }
+  }
+
+  .delete-account {
+      margin-top: 30px;
+      hr {
+          margin-left: 0;
+          margin-right: 0;
+      }
+  }
+
+  .sort-by {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    .form-group {
+      display: flex;
+      align-items: center;
+
+      strong {
+        margin-right: 8px;
+        line-height: 40px;
+
+        @media (min-width: 940px) {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+
+  .check-group {
+    z-index: 0;
+  }
+
+  .col-form-label {
+    @media (min-width: 940px) {
+      padding-right: 0;
+    }
+  }
+
+  .bc-region-map {
+    max-width: 540px;
+    padding-top: 20px;
+    padding-bottom: 30px;
+  }
+
+  label {
+    font-weight: 700;
+  }
+
+  .col-identity-list label {
+    font-weight: normal;
+  }
+
+  .identification-form {
+    .col-form-label {
+      padding-top: 0;
+    }
+  }
+
+  input[type=checkbox]:focus + .checkbox-icons + label {
+    outline: -webkit-focus-ring-color auto 1px;
+  }
+
+  button:focus {
+    outline: dotted thin;
+  }
+
+  .below-tooltip {
+    position: initial !important;
+  }
+
+  .select-group {
+      background: #fff;
+      position: relative;
+      z-index: 0;
+
+      select {
+        cursor: pointer;
+        background: transparent;
+        padding-right: 50px;
+        position: relative;
+        z-index: 2;
+        -moz-appearance: none;
+        appearance: none;
+        -webkit-appearance: none;
+
+        & + i {
+          height: 42px;
+          width: 42px;
+          position: absolute;
+          right: 0px;
+          top: 0px;
+          margin: 0px;
+          z-index: 1;
+          background-image: url(data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMzIwIiBoZWlnaHQ9IjMyMCIgdmlld0JveD0iMCAwIDMyMCAzMjAiPjxzdHlsZT4uc3Qwe2ZpbGw6IzVCQzJFNzt9IC5zdDF7ZmlsbDojMUMxRDFGO308L3N0eWxlPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0zMjAgMHYzMjBIMFYwaDMyMHoiLz48cGF0aCBjbGFzcz0ic3QxIiBkPSJNMjAyIDEzNmwtNDQgNDgtNDAtNDhoODR6Ii8+PC9zdmc+);
+          background-repeat: no-repeat;
+          background-size: 100%;
+          background-color: #5bc2e7;
+          background-position-y: 50%;
+        }
+      }
+    }
+}

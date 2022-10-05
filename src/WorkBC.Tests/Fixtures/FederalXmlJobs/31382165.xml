@@ -1,0 +1,118 @@
+<SolrResponse>
+  <Header>
+    <status>0</status><QTime>0</QTime><numFound>1</numFound>
+  </Header>
+  <Documents>
+    <Document>
+      <jobs_id>31382165</jobs_id><noc_2011>6322</noc_2011><skill_level>X</skill_level><remote_cd>1328533</remote_cd>
+      <title>cook</title><noc>6322</noc><work_period_cd>F</work_period_cd><employer_type_id>0</employer_type_id>
+      <edulevel_cd>X</edulevel_cd><wage_class>E</wage_class><postal_code>V5B2Y1</postal_code>
+      <employer_id>104857</employer_id><lang>en</lang>
+      <skill_categories>
+        <skill_category id="195">
+          <name>Education</name>
+          <options>
+            <option_name>Secondary (high) school graduation certificate</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="151">
+          <name>Cook Categories</name>
+          <options>
+            <option_name>Cook (general)</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="218">
+          <name>Experience</name>
+          <options>
+            <option_name>2 years to less than 3 years</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="392">
+          <name>Work Setting</name>
+          <options>
+            <option_name>Restaurant</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="685">
+          <name>Specific Skills</name>
+          <options>
+            <option_name>Train staff in preparation, cooking and handling of food</option_name>
+            <option_name>Supervise kitchen staff and helpers</option_name>
+            <option_name>Recruit and hire staff</option_name><option_name>Order supplies and equipment</option_name>
+            <option_name>Manage kitchen operations</option_name>
+            <option_name>Inspect kitchens and food service areas</option_name>
+            <option_name>Clean kitchen and work areas</option_name>
+            <option_name>Maintain inventory and records of food, supplies and equipment</option_name>
+            <option_name>Prepare and cook complete meals or individual dishes and foods</option_name>
+            <option_name>Plan menus, determine size of food portions, estimate food requirements and costs, and monitor and order supplies</option_name>
+          </options>
+        </skill_category>
+      </skill_categories>
+      <job_source_id>16</job_source_id><work_term_cd>P</work_term_cd><work_lang_cd>E</work_lang_cd>
+      <app_methods>
+        <app_online></app_online><app_email>sushiu@mail.com</app_email>
+        <app_phone>
+          <app_phone_number></app_phone_number><app_phone_ext></app_phone_ext>
+          <app_phone_start_bus_hours></app_phone_start_bus_hours><app_phone_end_bus_hours></app_phone_end_bus_hours>
+        </app_phone>
+        <app_fax></app_fax>
+        <app_person>
+          <app_person_street></app_person_street><app_person_room></app_person_room><app_person_city></app_person_city>
+          <app_person_province></app_person_province><app_person_country></app_person_country>
+          <app_person_pstlcd></app_person_pstlcd><app_person_start_bus_hours></app_person_start_bus_hours>
+          <app_person_end_bus_hours></app_person_end_bus_hours>
+        </app_person>
+        <app_mail>
+          <app_mail_street></app_mail_street><app_mail_room></app_mail_room><app_mail_city></app_mail_city>
+          <app_mail_province></app_mail_province><app_mail_country></app_mail_country>
+          <app_mail_pstlcd></app_mail_pstlcd>
+        </app_mail>
+      </app_methods>
+      <naics_id>37</naics_id><hours>30 to 40 hours per week</hours><employer_name_case>Sushi U</employer_name_case>
+      <employer_name_string>Sushi U</employer_name_string><num_positions>2</num_positions><start_date />
+      <job_senior_flag>false</job_senior_flag><various_location_flag>false</various_location_flag>
+      <job_student_flag>false</job_student_flag><job_youth_flag>false</job_youth_flag>
+      <job_apprentice_flag>false</job_apprentice_flag><job_disability_flag>false</job_disability_flag>
+      <job_aboriginal_flag>false</job_aboriginal_flag><program_title>false</program_title>
+      <job_vismin_flag>false</job_vismin_flag><job_newcomer_flag>false</job_newcomer_flag>
+      <job_veteran_flag>false</job_veteran_flag><latlng_variance>1</latlng_variance><los_id>2</los_id>
+      <postal_code_ind>1</postal_code_ind><experience_min>24</experience_min>
+      <file_update_date>2019-10-09T10:32:00Z</file_update_date><date_posted>2019-10-09T11:59:00Z</date_posted>
+      <import_date>2019-10-09T11:09:45Z</import_date><display_until>2019-11-08T23:59:00Z</display_until>
+      <salary_hourly>14.0</salary_hourly><salary_weekly>420.0</salary_weekly><work_hours>30.0</work_hours>
+      <city_name>
+        <string>Burnaby</string>
+      </city_name>
+      <lmi_geoarea_cd>
+        <string>25565</string>
+      </lmi_geoarea_cd>
+      <url>
+        <string>https://www.jobbank.gc.ca/jobsearch/jobposting/31382165</string>
+      </url>
+      <latlng>
+        <string>49.265363,-122.977885</string>
+      </latlng>
+      <latlng_rpt>
+        <string>49.265363,-122.977885</string>
+      </latlng_rpt>
+      <city_id>
+        <string>22327</string>
+      </city_id>
+      <noc_jobtitle_concordance_id>
+        <string>6225</string>
+      </noc_jobtitle_concordance_id>
+      <major_city_id>
+        <string>22327</string>
+      </major_city_id>
+      <province_cd>
+        <string>BC</string>
+      </province_cd>
+      <salary>
+        <string>$14.00 to $18.00 hourly (to be negotiated)</string>
+      </salary>
+      <employer_name>
+        <string>Sushi U</string>
+      </employer_name>
+    </Document>
+  </Documents>
+</SolrResponse>

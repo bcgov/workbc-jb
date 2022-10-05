@@ -1,0 +1,62 @@
+﻿@model NocCodeSummaryViewModel
+
+    <div id="NocCategoryPartial">
+        <div class="form-check">
+            <input class="form-check-input" type="radio" value="@NocCategoryLevel.UnitGroup" asp-for="NocCategoryLevel" id="NocCategoryLevelUnit">
+            <label class="form-check-label" for="NocCategoryLevelUnit">
+                Unit group (4-digit)
+            </label>
+            <div class="form-group form-check-panel" id="UnitGroupPanel"
+                 style="display: @(Model.NocCategoryLevel == NocCategoryLevel.UnitGroup ? "block" : "none");">
+                <select class="form-control" asp-for="UnitGroup" asp-items="SelectLists.UnitGroups">
+                    <option value="">-- Select Unit Group --</option>
+                </select>
+                <br><span class="text-danger" asp-validation-for="UnitGroup"></span>
+            </div>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" value="@NocCategoryLevel.MinorGroup" asp-for="NocCategoryLevel" id="NocCategoryLevelMinor">
+            <label class="form-check-label" for="NocCategoryLevelMinor">
+                Minor group (3-digit)
+            </label>
+            <div class="form-group form-check-panel" id="MinorGroupPanel"
+                 style="display: @(Model.NocCategoryLevel == NocCategoryLevel.MinorGroup ? "block" : "none");">
+                <select class="form-control" asp-for="MinorGroup" asp-items="SelectLists.MinorGroups">
+                    <option value="">-- Select Minor Group --</option>
+                </select>
+                <br><span class="text-danger" asp-validation-for="MinorGroup"></span>
+            </div>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" value="@NocCategoryLevel.MajorGroup" asp-for="NocCategoryLevel" id="NocCategoryLevelMajor">
+            <label class="form-check-label" for="NocCategoryLevelMajor">
+                Major group (2-digit)
+            </label>
+            <div class="form-group form-check-panel" id="MajorGroupPanel"
+                 style="display: @(Model.NocCategoryLevel == NocCategoryLevel.MajorGroup ? "block" : "none");">
+                <select class="form-control" asp-for="MajorGroup" asp-items="SelectLists.MajorGroups">
+                    <option value="">-- Select Major Group --</option>
+                </select>
+                <br><span class="text-danger" asp-validation-for="MajorGroup"></span>
+            </div>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" value="@NocCategoryLevel.BroadOccupationalCategory" asp-for="NocCategoryLevel" id="NocCategoryLevelBroad">
+            <label class="form-check-label" for="NocCategoryLevelBroad">
+                Broad occupational category (1-digit)
+            </label>
+            <div class="form-group form-check-panel" id="BroadOccupationalCategoryPanel"
+                 style="display: @(Model.NocCategoryLevel == NocCategoryLevel.BroadOccupationalCategory ? "block" : "none");">
+                <select class="form-control" asp-for="BroadCategory" asp-items="SelectLists.BroadOccupationalCategories">
+                    <option value="">-- Select Broad Occupational Category --</option>
+                </select>
+                <br><span class="text-danger" asp-validation-for="BroadCategory"></span>
+            </div>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" value="@NocCategoryLevel.All" asp-for="NocCategoryLevel" id="NocCategoryLevelAll">
+            <label class="form-check-label" for="NocCategoryLevelAll">
+                All 4-digit NOC Codes
+            </label>
+        </div>
+    </div>

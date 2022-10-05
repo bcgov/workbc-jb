@@ -1,0 +1,73 @@
+.textarea-full-width {
+  width: 100%;
+}
+
+h2 {
+  color: #444;
+  font-weight: 700;
+  margin-right: 36px;
+  margin-bottom: 8px;
+  font-family: myriad-pro,Calibri,Candara,Segoe,Optima,sans serif;
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.btn-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: auto;
+  padding: 12px 18px;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+}
+
+  .btn-close:not(:disabled):hover, .btn-close:not(:disabled):focus {
+    opacity: .75;
+  }
+
+  .btn-close:not(:disabled):focus {
+    outline: -webkit-focus-ring-color auto 1px;
+    outline-color: -webkit-focus-ring-color;
+    outline-style: auto;
+    outline-width: 1px;
+  }
+
+.btn-continue {
+  width: auto;
+  background: #5bc2e7;
+  margin-right: 15px;
+  text-align: center;
+  font-size: 0.875rem;
+  padding: 6px 15px;
+  color: #234075;
+  font-weight: 700;
+
+  @media (min-width: 939px) {
+    width: 120px;
+  }
+
+  .chev-white {
+    height: 25px;
+  }
+}
+
+.btn-cancel {
+  border: none;
+  background: none;
+  color: #234075;
+  font-weight: 700;
+
+  &:hover {
+    color: #0056b3;
+    text-decoration: underline;
+  }
+}
+
+.btn-delete {
+  color: #494949;
+  background: #d3d3d3;
+}

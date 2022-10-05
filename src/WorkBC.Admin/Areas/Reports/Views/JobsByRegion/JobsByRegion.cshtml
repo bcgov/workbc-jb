@@ -1,0 +1,94 @@
+@model JobsByRegionViewModel
+@{
+    ViewBag.ReportName = "Jobs by Region";
+    ViewBag.Title = $"{ViewBag.ReportName} Report";
+}
+
+<div id="page-Jobs-By-Industry">
+    <h1 class="page-title has-breadcrumb">@ViewBag.Title</h1>
+    <div class="report-parameters">
+        <form method="get" asp-action="Results">
+
+            <div class="report-parameters__selection">
+                <h3 class="pb-2">Reporting Period:</h3>
+                <partial name="Parameters/_MatrixDateRangePartial" model="Model"/>
+
+                <h3 class="pb-2 pt-4">Job Source:</h3>
+                <partial name="Parameters/_JobSourcePartial" model="Model"/>
+
+            </div>
+
+            <partial name="_RunButton"/>
+
+        </form>
+    </div>
+
+    @if (Model.Postings != null)
+    {
+        ViewBag.HasResults = true;
+
+        <div class="report-results">
+
+            <h3 class="pb-3" id="results">
+                @ViewBag.ReportName
+            </h3>
+
+            <partial name="_Header" model="Model"/>
+
+            <div class="table-responsive-sm">
+                <table class="table matrixTable" id="ResultsTable">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        @foreach (HtmlString cell in Model.TableHeadings)
+                        {
+                            <th></th>
+                        }
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr class="group-title">
+                        <th>POSTINGS</th>
+                        @foreach (HtmlString cell in Model.TableHeadings)
+                        {
+                            <th></th>
+                        }
+                        <th></th>
+                    </tr>
+
+                    <partial name="MatrixReports/Header" model="Model"/>
+                    <partial name="MatrixReports/Body" model="Model.Postings"/>
+                    <partial name="MatrixReports/Footer" model="Model.Postings"/>
+                    <partial name="MatrixReports/Space" model="Model"/>
+
+                    <tr class="group-title">
+                        <th>VACANCIES</th>
+                        @foreach (HtmlString cell in Model.TableHeadings)
+                        {
+                            <th></th>
+                        }
+                        <th></th>
+                    </tr>
+
+                    <partial name="MatrixReports/Header" model="Model"/>
+                    <partial name="MatrixReports/Body" model="Model.Vacancies"/>
+                    <partial name="MatrixReports/Footer" model="Model.Vacancies"/>
+                    <partial name="MatrixReports/Space" model="Model"/>
+
+
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+
+        <script>
+            location.hash = "#results";
+        </script>
+
+        <partial name="_GroupedReportCss" model="Model.Postings.GetGroupCss()"/>
+    }
+</div>

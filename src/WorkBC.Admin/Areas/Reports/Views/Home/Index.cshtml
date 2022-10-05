@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "Reporting";
+    ViewBag.HideBreadcrumb = true;
+}
+
+<div id="page-Report-Index">
+    <h1 class="page-title">@ViewBag.Title</h1>
+
+    <table class="table" id="reports-table">
+        <thead>
+        <tr>
+            <th>Report Title</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <a asp-controller="JobsByRegion" asp-action="Index">Jobs by Region Report</a>
+            </td>
+            <td>
+                <a asp-controller="JobsByRegion" asp-action="Index">
+                    <i class="fa fa-table"></i> View
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a asp-controller="JobsByCity" asp-action="Index">Jobs by City Report</a>
+            </td>
+            <td>
+
+                <a asp-controller="JobsByCity" asp-action="Index">
+                    <i class="fa fa-table"></i> View
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a asp-controller="NocCodeSummary" asp-action="Index">NOC Code Summary Report</a>
+            </td>
+            <td>
+                <a asp-controller="NocCodeSummary" asp-action="Index">
+                    <i class="fa fa-table"></i> View
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a asp-controller="Top20NocCodes" asp-action="Index">Top 20 NOC Codes Report</a>
+            </td>
+            <td>
+                <a asp-controller="Top20NocCodes" asp-action="Index">
+                    <i class="fa fa-table"></i> View
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a asp-controller="JobsByIndustry" asp-action="Index">Jobs by Industry Report</a>
+            </td>
+            <td>
+                <a asp-controller="JobsByIndustry" asp-action="Index">
+                    <i class="fa fa-table"></i> View
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a asp-controller="JobSeekersByLocation" asp-action="Index">Registered Job Seekers by Location Report</a>
+            </td>
+            <td>
+                <a asp-controller="JobSeekersByLocation" asp-action="Index">
+                    <i class="fa fa-table"></i> View
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a asp-controller="JobSeekersByCity" asp-action="Index">Registered Job Seekers by City Report</a>
+            </td>
+            <td>
+                <a asp-controller="JobSeekersByCity" asp-action="Index">
+                    <i class="fa fa-table"></i> View
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a asp-controller="JobSeekerAccount" asp-action="Index">Job Seeker Account Report</a>
+            </td>
+            <td>
+                <a asp-controller="JobSeekerAccount" asp-action="Index">
+                    <i class="fa fa-table"></i> View
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a asp-controller="JobSeekerDetail" asp-action="Index">Job Seeker Detail Report</a>
+            </td>
+            <td>
+                <a asp-controller="JobSeekerDetail" asp-action="Index">
+                    <i class="fa fa-table"></i> View
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a asp-controller="JobsBySource" asp-action="Index">Jobs by Source Report</a>
+            </td>
+            <td>
+                <a asp-controller="JobsBySource" asp-action="Index">
+                    <i class="fa fa-table"></i> View
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

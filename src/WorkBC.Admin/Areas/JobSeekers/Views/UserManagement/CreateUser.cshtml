@@ -1,0 +1,57 @@
+@model UserViewModel
+
+@{
+    ViewBag.Title = "Create Profile";
+}
+
+<div id="page-edit-user">
+
+    <a asp-area="JobSeekers" asp-controller="UserSearch" asp-action="Index" class="btn btn-inline back-link"><i class="fa fa-chevron-left fa-left"></i>Back to job seeker accounts</a>
+
+    <div class="row">
+        <div class="col col-12 col-md-9">
+            <form asp-area="JobSeekers" asp-controller="UserManagement" asp-action="AddUser" method="post" role="form">
+                <input type="hidden" asp-for="LocationId" />
+                <input type="hidden" asp-for="RegionId" />
+                <input type="hidden" asp-for="City" />
+                <input type="hidden" asp-for="IsDuplicateLocation" />
+
+                <h1 class="page-title has-breadcrumb">@ViewBag.Title:</h1>
+
+                <p>All fields marked with an asterisk (*) are mandatory.</p>
+                @if (ViewData.ModelState["error"] != null)
+                {
+                    <div class="alert alert-danger">
+                        <span class="text-danger">@ViewContext.ViewData.ModelState["error"].Errors.Select(x => x.ErrorMessage).FirstOrDefault()</span>
+                    </div>
+                }
+
+                <h2 class="pb-3 pt-2">Personal Information</h2>
+                <partial name="Partial/_PersonalInfo" model="Model" />
+                <div class="form-group">
+                    <label class="font-weight-bold">Password: <span class="required-asterisk">*</span></label>
+                    <input class="form-control  uniform-width" type="text" asp-for="Password">
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <h2 class="pb-3 pt-4">Do you identify as:</h2>
+                <partial name="Partial/_IdentifyAs" model="Model" />
+
+                <h2 class="pb-3 pt-4">Security Question:</h2>
+                <partial name="Partial/_SecurityQuestion" model="Model" />
+
+                <h2 class="pb-3 pt-4">Your Location</h2>
+                <partial name="Partial/_Location" model="Model" />
+
+                <div class="row pt-4 button-row">
+                    <button type="submit" class="btn btn-primary">
+                        Create
+                    </button>
+                    <a href="@Url.Action("Index", "UserSearch")" class="btn btn-clear">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

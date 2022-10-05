@@ -1,0 +1,40 @@
+@model JobPostingHistoryViewModel
+@{
+    ViewBag.Title = "Job Posting History";
+}
+
+<div id="page-posting-history">
+
+    <a asp-area="Jobs" asp-controller="JobSearch" asp-action="Index" class="btn btn-inline back-link"><i class="fa fa-chevron-left fa-left"></i>Back to job postings</a>
+
+    <h1 class="page-title has-breadcrumb">Job Posting History:</h1>
+    <h3 class="pb-5">
+        <span style="text-transform: capitalize">@Model.JobTitle</span>
+        in @Model.City, Job ID: @Model.JobId
+    </h3>
+
+    <table class="table table-wbc-responsive table-profile-history">
+        <thead>
+        <tr>
+            <th>Date/Time</th>
+            <th>Activity</th>
+            <th>From What?</th>
+            <th>To What?</th>
+            <th>Editor</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (JobPostingHistoryItem row in Model.History.OrderByDescending(h => h.TimeStamp))
+        {
+            <tr>
+                <td>@row.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss") PST</td>
+                <td>@row.Activity</td>
+                <td>@(row.OldValue == string.Empty ? "-" : row.OldValue)</td>
+                <td>@(row.NewValue == string.Empty ? "-" : row.NewValue)</td>
+                <td>@row.Editor</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+</div>

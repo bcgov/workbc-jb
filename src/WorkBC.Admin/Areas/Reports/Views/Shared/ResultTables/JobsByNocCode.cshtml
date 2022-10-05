@@ -1,0 +1,44 @@
+﻿@model IJobsByNocCodeViewModel;
+
+<table class="table twoLabelCols" id="ResultsTable">
+    <thead>
+    <tr>
+        <th class="sort">NOC code</th>
+        <th class="sort">NOC title</th>
+        <th class="sort text-right">Job vacancies</th>
+        <th class="sort text-right">Job postings</th>
+    </tr>
+    </thead>
+    <tbody>
+    @{
+        var postings = 0;
+        var vacancies = 0;
+    }
+
+    @foreach (JobsByNocCodeResult noc in Model.Results)
+    {
+        postings += noc.Postings;
+        vacancies += noc.Vacancies;
+
+        <tr>
+            <td>@noc.NocCode</td>
+            <td>@noc.NocTitle</td>
+            <td class="text-right">@noc.Vacancies.ToString("#,##0")</td>
+            <td class="text-right">@noc.Postings.ToString("#,##0")</td>
+        </tr>
+    }
+    </tbody>
+
+    @if (Model.Results.Any())
+    {
+        <tfoot>
+        <tr>
+            <th>TOTAL</th>
+            <th>&nbsp;</th>
+            <th class="text-right">@vacancies.ToString("#,##0")</th>
+            <th class="text-right">@postings.ToString("#,##0")</th>
+        </tr>
+        </tfoot>
+    }
+
+</table>

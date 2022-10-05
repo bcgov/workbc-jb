@@ -1,0 +1,13 @@
+﻿@model IDateRangePicker
+@{
+    DateTime startDate = Model.StartDate ?? DateTime.Now;
+    DateTime endDate = Model.EndDate ?? DateTime.Now;
+}
+
+<div id="SimpleDateRangePartial">
+    <div class="form-check">
+        <div class="form">
+            <partial name="Parameters/_DateRangePickerPartial" model="Model"/>
+        </div>
+    </div>
+</div>

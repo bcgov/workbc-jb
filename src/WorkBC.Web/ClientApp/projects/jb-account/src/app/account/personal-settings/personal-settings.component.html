@@ -1,0 +1,369 @@
+<app-account activeMenu="account"></app-account>
+<form [formGroup]="personalSettingsFormGroup" (ngSubmit)="onSubmit()">
+  <div class="personal-settings">
+    <div class="container">
+      <div class="personal-settings-header">
+        <h1>{{pageTitle}}</h1>
+        <em *ngIf="!forPasswordReset">All fields are mandatory unless otherwise noted.</em>
+      </div>
+      <div class="personal-settings-inner">
+        <h2 id="PersonalInfo" *ngIf="!forPasswordReset">
+          Personal Information
+        </h2>
+        <!--Info-->
+        <div class="form-group row" [hidden]="forPasswordReset">
+          <label for="firstName" class="col-lg-2 col-form-label">First name:</label>
+          <div class="col-lg-4">
+            <input class="form-control" [ngClass]="{'input-danger': !isValid(vm.firstName) }" type="text" id="firstName" name="firstName" required
+              formControlName="firstName" maxlength="50" />
+            <div aria-live="polite">
+              <div class="text-danger" [hidden]="isValid(vm.firstName)">
+                Please provide a first name
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" [hidden]="forPasswordReset">
+          <label for="lastName" class="col-lg-2 col-form-label">Last name:</label>
+          <div class="col-lg-4">
+            <input class="form-control" [ngClass]="{'input-danger': !isValid(vm.lastName) }" type="text" id="lastName" name="lastName" required formControlName="lastName" maxlength="50" />
+            <div aria-live="polite">
+              <div class="text-danger" [hidden]="isValid(vm.lastName)">
+                Please provide a last name
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" [hidden]="forPasswordReset">
+          <label for="email" class="col-lg-2 col-form-label">Email:</label>
+          <div class="col-lg-4">
+            <input class="form-control"  [ngClass]="{'input-danger': !isValid(vm.email) || !noEmailRelatedError }"
+                   type="email" id="email" name="email" required formControlName="email" (change)="clearError()" maxlength="256"/>
+            <div aria-live="polite">
+              <div class="text-danger" [hidden]="isValid(vm.email)">
+                Please enter a valid email address.
+              </div>
+              <div class="text-danger" [hidden]="noEmailRelatedError">
+                This email address already exists, please provide a different one.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row" [hidden]="!forPasswordReset">
+          <label for="oldPassword" class="col-lg-2 col-form-label">Old Password:</label>
+          <div class="col-lg-4">
+            <input class="form-control" [ngClass]="{'input-danger': !isValid(vm.oldPassword) || (error && submitted) }" type="password" name="oldPassword" id="oldPassword"
+              formControlName="oldPassword" />
+            <div aria-live="polite">
+              <div [hidden]="isValid(vm.oldPassword)" class="text-danger">
+                <div *ngIf="vm.oldPassword.errors?.required">
+                  Please provide the old password
+                </div>
+                <div *ngIf="invalidPassword(vm.oldPassword) && !vm.oldPassword.errors?.required">
+                  The password you entered is invalid.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" [hidden]="!forPasswordReset">
+          <label for="password" class="col-lg-2 col-form-label">New Password:</label>
+          <div class="col-lg-4">
+            <input class="form-control" [ngClass]="{'input-danger': !isValid(vm.password) }" type="password" name="password" id="password" formControlName="password" />
+            <div aria-live="polite">
+              <div [hidden]="isValid(vm.password)" class="text-danger">
+                <div *ngIf="passwordRequired(vm.password)">
+                  Please provide the new password
+                </div>
+                <div *ngIf="invalidPassword(vm.password) && !passwordRequired(vm.password)">
+                  The password you entered is invalid.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" [hidden]="!forPasswordReset">
+          <div class="col-lg-9 offset-lg-2">
+            <i>{{passwordComplexity}}</i>
+          </div>
+        </div>
+        <div class="form-group row" [hidden]="!forPasswordReset">
+          <label for="confirmPassword" class="col-lg-2 col-form-label">
+            Confirm Password:
+          </label>
+          <div class="col-lg-4">
+            <input class="form-control"
+                   [ngClass]="{'input-danger': forPasswordReset && (!isValid(vm.confirmPassword) || passwordNotMatch(personalSettingsFormGroup)) }"
+                   type="password" name="confirmPassword" id="confirmPassword"
+                   formControlName="confirmPassword" />
+            <div aria-live="polite">
+              <div [hidden]="isValid(vm.confirmPassword)" class="text-danger">
+                <div *ngIf="passwordRequired(vm.confirmPassword)">
+                  Please confirm your password by typing it again
+                </div>
+                <div *ngIf="invalidPassword(vm.confirmPassword) && !passwordRequired(vm.confirmPassword)">
+                  Please enter a valid password, see help text above.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div aria-live="polite">
+          <div class="form-group row" *ngIf="forPasswordReset">
+            <div *ngIf="passwordNotMatch(personalSettingsFormGroup)" class="text-danger col-lg-9 offset-lg-2">
+              Password confirmation does not match
+            </div>
+            <div *ngIf="error && submitted" class="text-danger col-lg-9 offset-lg-2">
+              {{ error }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row" [hidden]="forPasswordReset">
+          <div class="col-lg-3 offset-lg-2">
+            <button type="button" class="btn bg-blue" tabindex="-1" (click)="resetPassword()">
+              Reset password
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group row identification-form" [hidden]="forPasswordReset">
+          <strong class="col-lg-2 col-form-label">How do you identify?<br />(optional):</strong>
+          <div class="col-lg-5 col-identity-list">
+            <div class="check-group">
+              <input type="checkbox" name="JobSeekerIsApprenticeship" id="JobSeekerIsApprenticeship"
+                formControlName="isApprentice">
+              <div class="checkbox-icons">
+                <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              </div>
+              <label class="form-check-label" for="JobSeekerIsApprenticeship">Apprentice</label>
+            </div>
+            <div class="check-group">
+              <input type="checkbox" name="JobSeekerIndigenousPerson" id="JobSeekerIndigenousPerson"
+                formControlName="isIndigenousPerson">
+              <div class="checkbox-icons">
+                <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              </div>
+              <label class="form-check-label" for="JobSeekerIndigenousPerson">Indigenous</label>
+            </div>
+            <div class="check-group">
+              <input type="checkbox" name="JobSeekerMatureWorker" id="JobSeekerMatureWorker"
+                formControlName="isMatureWorker">
+              <div class="checkbox-icons">
+                <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              </div>
+              <label class="form-check-label" for="JobSeekerMatureWorker">Mature</label>
+            </div>
+            <div class="check-group">
+              <input type="checkbox" id="isNewImmigrant" formControlName="isNewImmigrant">
+              <div class="checkbox-icons">
+                <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              </div>
+              <label class="form-check-label" for="isNewImmigrant">Newcomer to B.C.</label>
+            </div>
+            <div class="check-group">
+              <input type="checkbox" name="JobSeekerDisabledPerson" id="JobSeekerDisabledPerson"
+                formControlName="isPersonWithDisability">
+              <div class="checkbox-icons">
+                <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              </div>
+              <label class="form-check-label" for="JobSeekerDisabledPerson">Person with a disability</label>
+            </div>
+            <div class="check-group">
+              <input type="checkbox" id="isStudent" formControlName="isStudent">
+              <div class="checkbox-icons">
+                <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              </div>
+              <label class="form-check-label" for="isStudent">Student</label>
+            </div>
+            <div class="check-group">
+              <input type="checkbox" id="isVeteran" formControlName="isVeteran">
+              <div class="checkbox-icons">
+                <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              </div>
+              <label class="form-check-label" for="isVeteran">Veteran of the Canadian Armed Forces</label>
+            </div>
+            <div class="check-group">
+              <input type="checkbox" id="isVisibleMinority" formControlName="isVisibleMinority">
+              <div class="checkbox-icons">
+                <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              </div>
+              <label class="form-check-label" for="isVisibleMinority">Visible minority</label>
+            </div>
+            <div class="check-group">
+              <input type="checkbox" id="isYouth" formControlName="isYouth">
+              <div class="checkbox-icons">
+                <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+                <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              </div>
+              <label class="form-check-label" for="isYouth">Youth</label>
+            </div>
+          </div>
+          <div class="col-lg-4 below-tooltip">
+            <div class="why-identify" [innerHTML]="whyIdentify">
+            </div>
+          </div>
+        </div>
+        <!--Below add Similar Display as Saved Jobs for Consistency-->
+      </div>
+      <div class="personal-settings-inner below-tooltip" [hidden]="forPasswordReset">
+        <h2 id="SecurityQuestion">Security Question</h2>
+        <div class="form-group row">
+          <label for="securityQuestionId" class="col-lg-2 col-form-label">Security Question:</label>
+          <div class="col-lg-4">
+            <div class="select-group select-group-bg">
+              <select id="securityQuestionId" [ngClass]="{'input-danger': !isValid(vm.securityQuestionId) }" class="form-control" formControlName="securityQuestionId">
+                <option value="0">-- Select security question --</option>
+                <option *ngFor="let securityQuestion of securityQuestions$ | async" [value]="securityQuestion.id">
+                  {{securityQuestion.questionText}}</option>
+              </select>
+              <i class="select-arrow"></i>
+            </div>
+            <div aria-live="polite">
+              <div [hidden]="isValid(vm.securityQuestionId)" class="text-danger">
+                Please select a security question
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="securityAnswer" class="col-lg-2 col-form-label">Your Answer:</label>
+          <div class="col-lg-4">
+            <input type="text" [ngClass]="{'input-danger': !isValid(vm.securityAnswer) }"
+                   class="form-control w-252" name="securityAnswer" id="securityAnswer"
+              formControlName="securityAnswer" maxlength="50" />
+            <div aria-live="polite">
+              <div [hidden]="isValid(vm.securityAnswer)" class="text-danger">
+                Please provide your answer
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="location" class="personal-settings-inner" [hidden]="forPasswordReset">
+        <h2>Your Location</h2>
+        <!--Info-->
+        <div class="form-group row">
+          <label for="JobSeekerCountry" class="col-lg-2 col-form-label">Country:</label>
+          <div class="col-lg-4">
+            <div class="select-group select-group-bg">
+              <select id="JobSeekerCountry" class="form-control" formControlName="countryId">
+                <option *ngFor="let country of countries$ | async" [value]="country.id">{{country.name}}</option>
+              </select>
+              <i class="select-arrow"></i>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="!isNotCanada">
+          <label for="JobSeekerProvince" class="col-lg-2 col-form-label">Province:</label>
+          <div class="col-lg-4">
+            <div class="select-group select-group-bg" [style.background-color]="isNotCanada ? '#e9ecef' : ''">
+              <select id="JobSeekerProvince" class="form-control" formControlName="provinceId">
+                <!--[attr.disabled]="isNotCanada"-->
+                <option *ngFor="let province of provinces$ | async" [value]="province.provinceId">{{province.name}}
+                </option>
+              </select>
+              <i class="select-arrow"></i>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" [hidden]="isNotBC">
+          <label for="JobSeekerCity" class="col-lg-2 col-form-label">City:</label>
+          <div class="col-lg-4">
+            <div class="form-input">
+              <input type="text" [ngClass]="{'input-danger': !hideCityErrors && ((submitted || vm.city.touched || !vm.city.pristine) && !!personalSettingsFormGroup.errors?.invalidCity) || isInvalidCity(vm.city.value) }" class="form-control w-252" name="JobSeekerCity" id="JobSeekerCity"
+                formControlName="city" placeholder="Enter city name" [matAutocomplete]="auto" autocomplete="new-city" />
+
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let city of cities$ | async" [value]="city">
+                  {{city}}
+                </mat-option>
+              </mat-autocomplete>
+
+              <div aria-live="polite">
+                <div
+                  *ngIf="!hideCityErrors && (submitted || vm.city.touched || !vm.city.pristine) && !!personalSettingsFormGroup.errors?.invalidCity"
+                  class="text-danger">
+                  Please specify the city name
+                </div>
+                <div class="text-danger" *ngIf="isInvalidCity(vm.city.value)">
+                  The city <strong>{{vm.city.value}}</strong> could not be found. Please ensure the spelling is correct.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row" *ngIf="!isNotBC && currentRegions?.length > 1">
+          <strong class="col-lg-2 col-form-label">Region:</strong>
+          <div class="col-lg-4">
+            <div class="select-group w-252"
+                 [ngClass]="{'input-danger': !hideRegionErrors && submitted && !isValidRegion(vm)}"
+                 [style.background-color]="isNotBC ? '#e9ecef' : ''">
+              <select id="locationId" class="form-control" formControlName="locationId"
+                title="The selected city falls under various regions in B.C. Please specify the correct region.">
+                <option value="0">Select a region</option>
+                <option *ngFor="let region of regions$ | async" [value]="region.locationId">
+                  {{region.locationName}}
+                </option>
+              </select>
+              <i class="select-arrow"></i>
+            </div>
+            <div aria-live="polite">
+              <div *ngIf="!hideRegionErrors && submitted && !isValidRegion(vm)" class="text-danger w-252">
+                The selected city falls under various regions in B.C. Please specify the correct region.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bc-region-map" *ngIf="!isNotBC && currentRegions?.length > 1">
+          <img class="bc-region-map__image" [src]="mapUrl" alt="BC Region Map" />
+        </div>
+      </div>
+      <div class="personal-settings-inner my-1">
+        <button type="submit" class="btn bg-blue save">
+          Save
+        </button>
+        <button type="button" class="btn cancel" (click)="cancel()">
+          Cancel
+        </button>
+      </div>
+      <div class="delete-account" *ngIf="!forPasswordReset">
+        <hr role="presentation" />
+        <div class="personal-settings-inner">
+          <h2>Delete Account</h2>
+          <p class="m-0">Permanently delete your account and all of your saved information.</p>
+          <button type="button" class="btn delete" (click)="deleteAccount()">
+            <div class="icon-wrap blue small">
+              <lib-svg-icon icon="close" width="12px" height="12px"></lib-svg-icon>
+            </div>
+            <strong>Delete</strong>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--<p>
+    Form Value: {{ personalSettingsFormGroup.value | json }}
+  </p>
+  <p>
+    Form Status: {{ personalSettingsFormGroup.status }}
+  </p>
+  <p>
+    Form Errors: {{ personalSettingsFormGroup.errors | json }}
+  </p>
+  <p>
+    Email Errors: {{ vm.email.errors | json }}
+  </p>-->
+</form>

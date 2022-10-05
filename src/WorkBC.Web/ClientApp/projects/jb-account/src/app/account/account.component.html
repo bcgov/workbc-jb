@@ -1,0 +1,121 @@
+<lib-impersonation-header></lib-impersonation-header>
+<div class="dashboard-nav">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4 user-info-container">
+        <div class="user-info">
+          <span class="user-info-lbl">Hello, </span>
+          <span class="user-info-name">{{ currentUser }}</span>
+        </div>
+      </div>
+      <div class="col-lg-8 p-0">
+        <nav class="navbar navbar-expand-lg">
+          <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#accountNav"
+                  aria-controls="accountNav" aria-expanded="false" aria-label="Toggle navigation" (click)="mobileCollapsed = !mobileCollapsed">
+            My Account
+            <!--<lib-svg-icon icon="plus-white" width="25px" height="25px" class="d-block d-sm-none"></lib-svg-icon>-->
+
+            <div class="toggle-icons pull-right">
+              <lib-svg-icon icon="plus-white" width="25px" height="25px" *ngIf="mobileCollapsed" class="d-block d-lg-none"></lib-svg-icon>
+              <lib-svg-icon icon="minus-white" width="25px" height="25px" *ngIf="!mobileCollapsed" class="d-block d-lg-none"></lib-svg-icon>
+            </div>
+
+          </button>
+          <div class="collapse navbar-collapse" [ngClass]="{'collapse navbar-collapse': true, 'show': !mobileCollapsed }" id="accountNav">
+            <ul class="navbar-nav">
+              <li class="nav-item no-dropdown">
+                <a class="nav-link" href="#/dashboard" [ngClass]="{'active' : activeMenu == 'dashboard'}">
+                  Account Profile
+                  <div class="pull-right d-lg-none">
+                    <lib-svg-icon icon="chev-blue" width="25px" height="25px"></lib-svg-icon>
+                  </div>
+                </a>
+              </li>
+
+              <li ngbDropdown class="nav-item dropdown" [autoClose]="true">
+                <button type="button" class="nav-link dropdown-toggle" id="navbarDropdown1" ngbDropdownToggle
+                        [ngClass]="{'active' : activeMenu == 'jobs'}">
+                  Jobs
+                  <div class="toggle-icons pull-right">
+                    <lib-svg-icon icon="plus-blue" width="25px" height="25px" class="d-lg-none icon-plus"></lib-svg-icon>
+                    <lib-svg-icon icon="minus-white" width="25px" height="25px" class="d-lg-none icon-minus"></lib-svg-icon>
+                  </div>
+                </button>
+                <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu">
+                  <a class="dropdown-item" href="#/saved-jobs" (click)="clearSavedJobsPageState()">
+                    Saved Jobs [{{ totalSavedJobs }}]
+                    <div class="pull-right d-lg-none">
+                      <lib-svg-icon icon="chev-blue" width="25px" height="25px"></lib-svg-icon>
+                    </div>
+                  </a>
+                  <a class="dropdown-item" href="#/recommended-jobs" (click)="clearRecommendedJobsState()">
+                    Recommended Jobs [{{ totalRecommendedJobs | number }}]
+                    <div class="pull-right d-lg-none">
+                      <lib-svg-icon icon="chev-blue" width="25px" height="25px"></lib-svg-icon>
+                    </div>
+                  </a>
+                  <a class="dropdown-item" routerLink="../job-alerts">
+                    Job Alerts [{{ jobAlerts }}]
+                    <div class="pull-right d-lg-none">
+                      <lib-svg-icon icon="chev-blue" width="25px" height="25px"></lib-svg-icon>
+                    </div>
+                  </a>
+                </div>
+              </li>
+              <li ngbDropdown class="nav-item dropdown" [autoClose]="true">
+                <button type="button" class="nav-link dropdown-toggle" id="navbarDropdown2" ngbDropdownToggle
+                        [ngClass]="{'active' : activeMenu == 'careers'}">
+                  Careers &amp; Industries
+                  <div class="toggle-icons pull-right">
+                    <lib-svg-icon icon="plus-blue" width="25px" height="25px" class="d-lg-none icon-plus"></lib-svg-icon>
+                    <lib-svg-icon icon="minus-blue" width="25px" height="25px" class="d-lg-none icon-minus"></lib-svg-icon>
+                  </div>
+                </button>
+                <div ngbDropdownMenu aria-labelledby="navbarDropdown2" class="dropdown-menu">
+                  <a class="dropdown-item" href="#/saved-career-profiles">
+                    Saved Career Profiles [{{ totalSavedCareerProfiles }}]
+                    <div class="pull-right d-lg-none">
+                      <lib-svg-icon icon="chev-blue" width="25px" height="25px"></lib-svg-icon>
+                    </div>
+                  </a>
+                  <a class="dropdown-item" href="#/saved-industry-profiles">
+                    Saved Industry Profiles [{{ totalSavedIndustryProfiles }}]
+                    <div class="pull-right d-lg-none">
+                      <lib-svg-icon icon="chev-blue" width="25px" height="25px"></lib-svg-icon>
+                    </div>
+                  </a>
+                </div>
+              </li>
+              <li ngbDropdown class="nav-item dropdown" [autoClose]="true">
+                <button type="button" class="nav-link dropdown-toggle" id="navbarDropdown3" ngbDropdownToggle
+                        [ngClass]="{'active' : activeMenu == 'account'}">
+                  Manage Account
+                  <div class="toggle-icons pull-right">
+                    <lib-svg-icon icon="plus-blue" width="25px" height="25px" class="d-lg-none icon-plus"></lib-svg-icon>
+                    <lib-svg-icon icon="minus-blue" width="25px" height="25px" class="d-lg-none icon-minus"></lib-svg-icon>
+                  </div>
+                </button>
+                <div ngbDropdownMenu aria-labelledby="navbarDropdown3" class="dropdown-menu">
+                  <a class="dropdown-item" href="#/personal-settings">
+                    Personal Settings
+                    <div class="pull-right d-lg-none">
+                      <lib-svg-icon icon="chev-blue" width="25px" height="25px"></lib-svg-icon>
+                    </div>
+                  </a>
+                </div>
+              </li>
+              <li class="nav-item no-dropdown d-lg-none">
+                <a class="nav-link" href="#/personal-settings">
+                  Personal Settings
+                  <div class="pull-right d-lg-none">
+                    <lib-svg-icon icon="chev-blue" width="25px" height="25px"></lib-svg-icon>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

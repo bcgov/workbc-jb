@@ -1,0 +1,34 @@
+﻿@using System.Linq.Expressions
+@model UserViewModel
+
+<div class="form-group">
+    <label class="font-weight-bold">Country: <span class="required-asterisk">*</span></label>
+    <select asp-for="CountryId" asp-items="SelectLists.Countries" class="form-control ddlCountries"></select>
+</div>
+
+<div class="form-group" style="display:@(Model.CountryId == 37 ? "block" : "none");" id="SelectProvinces">
+    <label class="font-weight-bold">Province: <span class="required-asterisk">*</span></label>
+    <select asp-for="ProvinceId" asp-items="SelectLists.Provinces" class="form-control ddlProvinces"></select>
+</div>
+
+<div class="form-group dvCities">
+    <label class="font-weight-bold">City: <span class="required-asterisk">*</span></label>
+    <select class="ddlCities form-control uniform-width" asp-for="LocationId">
+        <option value=""></option>
+    </select>
+    <span asp-validation-for="LocationId" class="text-danger"></span>
+</div>
+
+<!-- This should only display for cities where there multiple cities with the same name-->
+<div style="display:none;" id="dvRegion">
+    <p class="region-option-explanation pt-3">The selected city above falls under multiple regions in B.C. Please specify the correct region below:</p>
+    <div class="form-group">
+        <label class="font-weight-bold">Region: <span class="required-asterisk">*</span></label>
+        <select class="form-control uniform-width region">
+        </select>
+        <span asp-validation-for="RegionId" class="text-danger"></span>
+    </div>
+    <div class="bc-region-map">
+        <img class="bc-region-map__image" src="/img/bc-region-map2x.png" alt="BC Region Map" />
+    </div>
+</div>

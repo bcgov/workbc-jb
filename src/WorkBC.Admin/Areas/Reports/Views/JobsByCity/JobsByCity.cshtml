@@ -1,0 +1,82 @@
+@model JobsByCityViewModel
+@{
+    ViewBag.ReportName = "Jobs by City";
+    ViewBag.Title = $"{ViewBag.ReportName} Report";
+}
+
+<div id="page-Jobs-By-City">
+    <h1 class="page-title has-breadcrumb">@ViewBag.Title</h1>
+    <div class="report-parameters">
+        <form method="get" asp-action="Results">
+
+            <div class="report-parameters__selection">
+                <h3 class="pb-2">Report Type:</h3>
+                <partial name="Parameters/_CityReportTypePartial" model="Model"/>
+
+                <h3 class="pb-2 pt-4">Jobs First Imported Between:</h3>
+                <partial name="Parameters/_SimpleDateRangePartial" model="Model"/>
+
+                <h3 class="pb-2 pt-4">Job Source:</h3>
+                <partial name="Parameters/_JobSourcePartial" model="Model"/>
+            </div>
+
+            <partial name="_RunButton"/>
+
+        </form>
+    </div>
+
+    @if (Model.Results != null)
+    {
+        ViewBag.HasResults = true;
+
+        <div class="report-results">
+            @if (Model.ReportType == "top20" && Model.Results.Count() == 20)
+            {
+                <h3 class="pb-3" id="results">
+                    @ViewBag.ReportName &ndash; Top 20 cities
+                </h3>
+            }
+            else
+            {
+                <h4 class="pb-3" id="results">
+                    @if (Model.ReportType == "top10byRegion")
+                    {
+                        IEnumerable<IGrouping<string, JobsByCityResult>> grouped = Model.Results.GroupBy(g => g.Region);
+                        @grouped.Sum(g => g.Count() > 10 ? 10 : g.Count())
+                    }
+                    else
+                    {
+                        @Model.Results.Count()
+                    }
+                    total returned
+                </h4>
+                <h3 class="pb-1">@ViewBag.ReportName &ndash; @Html.Raw(Model.GetCityReportTypeHeader(SelectLists))</h3>
+            }
+
+            <partial name="_Header" model="Model"/>
+
+            <div class="table-responsive-sm">
+                @if (Model.ReportType == "top20")
+                {
+                    <partial name="ResultsTables/ThreeColumn" model="Model"/>
+                }
+                else if (Model.ReportType == "region")
+                {
+                    <partial name="ResultsTables/ThreeColumn" model="Model"/>
+                }
+                else if (Model.ReportType == "top10byRegion")
+                {
+                    <partial name="ResultsTables/Top10ByRegion" model="Model"/>
+                }
+                else
+                {
+                    <partial name="ResultsTables/FourColumn" model="Model"/>
+                }
+            </div>
+
+            <script>
+        location.hash = "#results";
+    </script>
+        </div>
+    }
+</div>

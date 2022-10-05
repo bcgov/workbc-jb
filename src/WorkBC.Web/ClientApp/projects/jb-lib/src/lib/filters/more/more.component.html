@@ -1,0 +1,215 @@
+<button type="button" class="filter-menu-item" id="moreDropdown" ngbDropdownToggle>
+  More Filters
+  <i class="fa fa-chevron-down"></i>
+  <div class="toggle-icons pull-right">
+    <lib-svg-icon icon="plus-blue" width="25px" height="25px"></lib-svg-icon>
+    <lib-svg-icon icon="minus-blue" width="25px" height="25px"></lib-svg-icon>
+  </div>
+</button>
+<div ngbDropdownMenu aria-labelledby="moreDropdown" id="moreDropdownMenu">
+  <!-- Additional job filters -->
+  <div class="container">
+    <button type="button" class="clear-filter pull-right btn-filter-clear" (click)="clear()">
+      <i class="fa fa-close"></i>
+      <span>Clear all</span>
+    </button>
+    <strong class="filter-title filter-title--more">{{moreFiltersTitle}}</strong>
+    <p class="filter-title__below">Select all that apply</p>
+    <div class="more-filters">
+      <div class="row">
+        <div class="col-lg-4">
+          <strong class="filter-title sub employment-groups">Employment groups:</strong>
+          <!-- Apprentices -->
+          <div class="check-group">
+            <input type="checkbox" name="Apprentices" id="Apprentices" [(ngModel)]="vm.isApprentice">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="Apprentices">Apprentice</label>
+          </div>
+          <!-- Indigenous people -->
+          <div class="check-group">
+            <input type="checkbox" name="IndigenousPeople" id="IndigenousPeople" [(ngModel)]="vm.isIndigenous">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="IndigenousPeople">Indigenous person</label>
+          </div>
+          <!-- Mature workers -->
+          <div class="check-group">
+            <input type="checkbox" name="MatureWorkers" id="MatureWorkers" [(ngModel)]="vm.isMatureWorkers">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="MatureWorkers">Mature worker</label>
+          </div>
+          <!-- Newcomers -->
+          <div class="check-group">
+            <input type="checkbox" name="Newcomers" id="Newcomers" [(ngModel)]="vm.isNewcomers">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="Newcomers">Newcomer to B.C.</label>
+          </div>
+          <!-- People with disabilities -->
+          <div class="check-group">
+            <input type="checkbox" name="PeopleWithDisabilities" id="PeopleWithDisabilities"
+                   [(ngModel)]="vm.isPeopleWithDisabilities">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="PeopleWithDisabilities">Person with a disability</label>
+          </div>
+          <!-- Students -->
+          <div class="check-group">
+            <input type="checkbox" name="Students" id="Students" [(ngModel)]="vm.isStudents">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="Students">Student</label>
+          </div>
+          <!-- Veterans -->
+          <div class="check-group">
+            <input type="checkbox" name="Veterans" id="Veterans" [(ngModel)]="vm.isVeterans">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="Veterans">Veteran of the Canadian Armed Forces</label>
+          </div>
+          <!-- Visible Minority -->
+          <div class="check-group">
+            <input type="checkbox" name="VisibleMinority" id="VisibleMinority" [(ngModel)]="vm.isVisibleMinority">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="VisibleMinority">Visible minority</label>
+          </div>
+          <!-- Youth -->
+          <div class="check-group">
+            <input type="checkbox" name="Youth" id="Youth" [(ngModel)]="vm.isYouth">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="Youth">Youth</label>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <!-- 2016 NOC codes -->
+          <div (mouseleave)="nocTip.close()">
+            <div class="form-group form-group-with-icon">
+              <label for="NOCcodes">
+                <strong>2016 NOC code:</strong>
+              </label>
+              <button type="button" class="tooltip-icon" placement="bottom" (click)="nocTip.toggle()"
+                      [autoClose]="'outside'" [ngbPopover]="NOCcodesPopContent" [triggers]="getNocTriggers()" #nocTip="ngbPopover">
+                <lib-svg-icon icon="info-blue" width="20px" height="20px" class="info"></lib-svg-icon>
+                <span class="sr-only" [innerHTML]="nocCodeTooltip"></span>
+                <ng-template #NOCcodesPopContent>
+                  <span [innerHTML]="nocCodeTooltip">
+                  </span>
+                </ng-template>
+              </button>
+            </div>
+            <div class="form-group" [ngClass]="{'error': invalidNoc }">
+              <input class="form-control" type="text" id="NOCcodes" name="NOCcode" placeholder="4-digit NOC code or name"
+                     [(ngModel)]="vm.nocCode" [matAutocomplete]="auto" (keydown.enter)="stopPropagation($event)"
+                     (keydown.space)="handleSpace($event)" (blur)="checkNoc()" (keyup)="setDirtyNoc()" />
+
+              <mat-autocomplete #auto="matAutocomplete" panelWidth="auto" (optionSelected)="selectNoc($event)">
+                <mat-option *ngFor="let item of nocCodes$ | async" [value]="item.name" (click)="stopPropagation($event)">
+                  {{ item.name }}
+                  <!-- class="noc-code" | titlecase-->
+                </mat-option>
+              </mat-autocomplete>
+              <div aria-live="polite">
+                <div class="text-danger error-block" *ngIf="invalidNoc">
+                  Please select a NOC code or name from the drop-down list.
+                </div> 
+              </div>
+            </div>
+            
+          </div>
+          <!-- Job Source -->
+          <div class="form-group form-group-with-icon">
+            <label for="jobSource">
+              <strong>Job source:</strong>
+            </label>
+            <button type="button" class="tooltip-icon" placement="bottom" (click)="sourceTip.toggle()"
+                    [autoClose]="'outside'" [ngbPopover]="JobSourcePopContent" [triggers]="getPopoverTriggers()" #sourceTip="ngbPopover">
+              <lib-svg-icon icon="info-blue" width="20px" height="20px" class="info"></lib-svg-icon>
+              <span class="sr-only">
+                {{jobSourceTooltip}}
+              </span>
+              <ng-template #JobSourcePopContent>
+                {{jobSourceTooltip}}
+                <!-- empty link fixes mobile issue where tooltip disappears -->
+                <a href="#" tabindex="-1" aria-hidden="true"></a>
+              </ng-template>
+            </button>
+          </div>
+          <div class="form-group">
+            <div class="select-group job-source-select">
+              <select id="jobSource" class="form-control" [(ngModel)]="vm.jobSource">
+                <option value="0">All sources</option>
+                <option value="1">WorkBC</option>
+                <!-- 2020-MAR-06:  temporarily disabling these options until the federal job bank fixes the data feed
+                <option value="5">BC Public Service</option>
+                <option value="4">Municipal government</option>
+                <option value="3">Federal government</option>
+                -->
+                <option value="2">External (other job boards)</option>
+              </select>
+              <i class="select-arrow"></i>
+            </div>
+          </div>
+          <!-- Exclude placement agency jobs -->
+          <div class="check-group">
+            <input type="checkbox" name="ExcludePlacementAgencyJobs" id="excludePlacementAgencyJobs"
+              [(ngModel)]="vm.excludePlacementAgencyJobs">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="excludePlacementAgencyJobs">Exclude placement agency jobs</label>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <!-- Job Posting Language -->
+          <div class="form-group">
+            <strong class="sub">
+              Job posting language:
+            </strong>
+          </div>
+          <div id="PostingLanguage">
+            <!-- Job postings written in English only (Federal and Wanted jobs)-->
+            <div class="form-group">
+              <input type="radio" name="postingEnglish" id="postingEnglish" [(ngModel)]="postLanguage" value="1">
+              <label class="form-check-label" for="postingEnglish">English</label>
+            </div>
+            <!-- Job postings written in both English and French (ONLY Federal jobs) -->
+            <div class="form-group">
+              <input type="radio" name="postingFrench" id="postingFrench" [(ngModel)]="postLanguage" value="2">
+              <label class="form-check-label" for="postingFrench">English and French</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Apply Filter -->
+    <div class="form-group">
+      <button type="button" class="btn filter-work-programs-btn bg-blue" (click)="getJobs('moreDropdownMenu')">
+        Apply filter
+        <lib-svg-icon icon="chev-white" width="25px" height="25px" class="pull-right"></lib-svg-icon>
+      </button>
+    </div>
+  </div>
+</div>

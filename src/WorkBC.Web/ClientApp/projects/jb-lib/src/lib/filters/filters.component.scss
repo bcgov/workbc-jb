@@ -1,0 +1,477 @@
+@import "../../variables.scss";
+
+::ng-deep app-filter {
+  .job-search-header {
+    margin-top: 20px;
+
+    > .container {
+      @media (min-width: 940px) {
+        padding: 0px;
+      }
+    }
+
+    h1 {
+      font-size: 1.375rem;
+      text-transform: uppercase;
+      font-weight: 700;
+
+      @media (min-width: 600px) {
+        font-size: 2rem;
+      }
+    }
+
+    .keyword-contain {
+      margin-top: 30px;
+
+      @media (min-width: 940px) {
+        display: flex;
+      }
+
+      .form-group {
+        margin-bottom: 24px;
+
+        input {
+          min-width: 200px;
+        }
+
+        @media (min-width: 940px) {
+          margin-bottom: 15px;
+          display: inline-block;
+          margin-right: 20px;
+
+          input[name="keywords"], input[name="cityOrPostal"] {
+            width: 300px;
+          }
+
+          input[name="postalCode"] {
+            width: 200px;
+          }
+        }
+      }
+
+      .find-jobs-btn {
+        width: 100%;
+        text-align: left;
+        height: 42px;
+        display: flex;
+        align-items: center;
+
+        @media (min-width: 940px) {
+          width: auto;
+        }
+
+        lib-svg-icon {
+          padding-left: 20px;
+          margin-left: auto;
+        }
+      }
+    }
+
+    .keyword-type-contain {
+      margin-bottom: 0;
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      margin-top: 15px;
+      margin-bottom: 15px;
+
+      @media (min-width: 576px) {
+        flex-direction: row;
+      }
+
+      @media (min-width: 768px) {
+        margin-bottom: 0;
+      }
+
+      .form-group {
+        display: flex;
+        align-items: center;
+        flex: auto 0;
+        margin-bottom: 20px;
+
+        @media (min-width: 576px) {
+          flex: 50%;
+        }
+
+        @media (min-width: 768px) {
+          margin-right: 20px;
+          flex: auto 0;
+        }
+
+        .form-check-label {
+          padding-left: 25px;
+        }
+
+        a {
+          display: flex;
+          align-items: center;
+        }
+      }
+
+      label {
+        cursor: pointer;
+      }
+      //Johann please have a look here, my attempt but not working.
+      input[disabled] + label {
+        opacity: 0.5;
+      }
+
+      input + label {
+        opacity: 1.0;
+      }
+      //Johann please have a look here, my attempt but not working.
+    }
+  }
+
+  .job-search-filters {
+
+    input[type="checkbox"], input[type="radio"] {
+      &:focus ~ label {
+        outline: thin dotted #fff;
+      }
+    }
+
+    margin-top: 5px;
+
+    .navbar {
+      padding: 0 20px;
+
+      @media (min-width: 940px) {
+        padding: 0px;
+        background: $seconday-color;
+      }
+
+      .container {
+        @media (min-width: 940px) {
+          font-size: 16px;
+          padding: 0px;
+        }
+      }
+
+      .navbar-toggler {
+        width: 100%;
+        background: $seconday-color;
+        font-size: 1rem;
+        height: 40px;
+        line-height: 20px;
+        vertical-align: middle;
+        padding-right: 12px;
+        padding-left: 12px;
+      }
+
+      .navbar-nav {
+        @media (min-width: 940px) {
+          &:before {
+            content: "Filter By:";
+            line-height: 50px;
+            background: $seconday-color;
+            font-weight: bold;
+            margin-right: 5px;
+            margin-left: 5px;
+          }
+        }
+
+        .nav-item {
+          border-bottom: 1px solid #fff;
+
+          @media (min-width: 940px) {
+            border: 0px;
+          }
+
+          .dropdown-toggle {
+            width: 100%;
+            text-align: left;
+            font-weight: bold;
+            border: 0px;
+            background: $primary-color;
+            color: #fff;
+            height: 50px;
+            padding: 0 10px;
+
+            i.fa-chevron-down {
+              display: none;
+              margin-left: 6px;
+            }
+
+            @media (min-width: 940px) {
+              background: $seconday-color;
+              color: $link-color;
+              font-weight: normal;
+              text-align: center;
+              display: flex;
+              align-items: center;
+
+              & > i.fa-chevron-down {
+                display: inline;
+              }
+
+              .toggle-icons {
+                display: none;
+              }
+            }
+
+            &:after {
+              display: none;
+            }
+          }
+
+          & > .dropdown-menu {
+            width: 100%;
+            padding: 20px 12px;
+            margin: 0;
+            border: 0px;
+            border-radius: 0px;
+            background: $primary-color;
+            color: #fff;
+
+            @media (max-width: 939px) {
+                position: relative;
+            }
+
+            .container {
+              padding: 0px;
+              display: block;
+            }
+
+            .btn:not(.bg-blue):hover {
+              color: inherit;
+            }
+          }
+
+          &.show {
+            background: $primary-color;
+
+            button.bg-blue, button.btn-filter-clear {
+              &:focus {
+                outline: #fff dotted thin;
+              }
+            }
+
+            .dropdown-toggle {
+              background: $primary-color;
+              color: #fff;
+            }
+          }
+
+          .check-group {
+            padding-bottom: 8px;
+          }
+
+          .form-control {
+            border: 0px;
+            outline: none;
+            box-shadow: none;
+
+            &:focus {
+              outline: -webkit-focus-ring-color auto 1px;
+            }
+          }
+
+          button.filter-menu-item {
+            i.fa-chevron-down {
+              font-size: 11px;
+              margin-left: 6px;
+            }
+          }
+
+          button.filter-menu-item:focus {
+            outline: #fff auto 1px;
+            margin-right: -1px;
+            margin-left: -1px;
+          }
+
+          &.show {
+            button.filter-menu-item:focus {
+              border: inherit;
+              margin-right: inherit;
+              margin-left: inherit;
+            }
+          }
+        }
+      }
+    }
+
+    .check-group {
+      position: static;
+
+      @media (max-width: 939px) {
+        display: flex;
+
+        &:not(:first-of-type), &.not-first-of-type {
+          border-top: 1px solid #898989;
+        }
+
+        input[type=checkbox] + .checkbox-icons {
+          margin-top: 10px;
+
+          & + label.form-check-label {
+            margin-top: 10px;
+
+            & + .tooltip-icon {
+              margin-top: 10px;
+            }
+          }
+        }
+      }
+
+      label {
+        cursor: pointer;
+      }
+    }
+
+    .industry-filters .col-lg-5 .check-group {
+      @media (max-width: 939px) {
+        border-top: 1px solid #898989;
+      }
+    }
+
+    .btn.bg-blue {
+      width: 100%;
+      text-align: left;
+
+      @media (min-width: 940px) {
+        width: 200px;
+      }
+    }
+
+    .filter-title {
+      display: block;
+      margin-bottom: 20px;
+      font-size: 1rem;
+
+      &--jobtype, &--industry, &--location, &--salary, &--education, &--more {
+        margin-bottom: 0;
+      }
+
+      &__below {
+        font-size: 0.875rem;
+        font-style: italic;
+      }
+
+      &.sub {
+        font-size: 1rem;
+
+        @media(max-width: 939px) {
+          margin-bottom: 8px;
+        }
+      }
+    }
+
+    .clear-filter {
+      color: #fff;
+
+      span {
+        text-decoration: underline;
+      }
+
+      span {
+        font-size: 0.875rem;
+      }
+    }
+
+    .smoothCollapse {
+      color: #fff;
+    }
+
+    .btn-filter-clear {
+      display: flex;
+      align-items: center;
+      background-color: transparent;
+      border: none;
+
+      i.fa-close {
+        margin-right: 6px;
+      }
+    }
+
+    .filter-location-add-btn.btn.bg-blue {
+      min-width: 105px;
+      width: 105px;
+
+      .icon {
+        min-height: 25px;
+        height: 25px;
+      }
+    }
+
+    button.tooltip-icon {
+      padding: 0 8px 0 0;
+      outline: none;
+      border: none;
+      background-color: transparent;
+      margin-left: 0 !important;
+
+      &:focus {
+        outline: 1px dotted silver;
+      }
+    }
+  }
+
+  .job-alert-search-filters {
+    @media (min-width: 940px) {
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+
+      .navbar {
+        padding: 0 10px;
+      }
+    }
+  }
+
+  .text-danger.text-danger--cityOrPostal {
+    @media (min-width: 940px) {
+      width: 298px;
+      margin-bottom: -10px !important;
+    }
+
+    margin-top: 4px;
+    padding-top: 1px !important;
+    box-shadow: 0 -4px 0 #fff;
+  }
+
+  .error input:focus ~ .error-outline {
+    width: 100%;
+    height: 4px;
+    background-color: rgba(0, 123, 255, 0.1);
+  }
+
+  .error input:focus ~ div.text-danger.error-block {
+    span {
+      display: block;
+      margin-top: -4px;
+    }
+  }
+
+  .below-tooltip {
+    position: relative;
+    z-index: -1;
+  }
+
+  .above-tooltip {
+    position: relative;
+    z-index: 1;
+  }
+
+  .flex-align {
+    display: flex;
+    align-items: center;
+  }
+
+  .form-group {
+
+    &.form-group-with-icon {
+      display: flex;
+      align-items: center;
+    }
+
+    input[type="radio"] {
+      width: 0 !important;
+    }
+  }
+
+  a.btn.search-tips {
+    text-decoration: underline;
+    font-weight: normal;
+  }
+}

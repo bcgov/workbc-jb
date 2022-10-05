@@ -1,0 +1,130 @@
+<SolrResponse>
+  <Header>
+    <status>0</status><QTime>0</QTime><numFound>1</numFound>
+  </Header>
+  <Documents>
+    <Document>
+      <jobs_id>30929001</jobs_id><noc_2011>1454</noc_2011><skill_level>C</skill_level><remote_cd>1247549</remote_cd>
+      <title>enumerator</title><noc>1454</noc><work_period_cd>F</work_period_cd><employer_type_id>4</employer_type_id>
+      <edulevel_cd>S</edulevel_cd><wage_class>E</wage_class><postal_code>V6E4M3</postal_code>
+      <employer_id>159868</employer_id><lang>en</lang>
+      <skill_categories>
+        <skill_category id="195">
+          <name>Education</name>
+          <options>
+            <option_name>Secondary (high) school graduation certificate or equivalent experience</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="218">
+          <name>Experience</name>
+          <options>
+            <option_name>7 months to less than 1 year</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="685">
+          <name>Specific Skills</name>
+          <options>
+            <option_name>Establish contact for interview by telephone or in person</option_name>
+            <option_name>Conduct interview following the outlines of questionnaires and survey</option_name>
+            <option_name>Compile interview and other data into reports and lists</option_name>
+            <option_name>Check information gathered for completeness and accuracy</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="782">
+          <name>Security and Safety</name>
+          <options>
+            <option_name>Enhanced reliability security clearance</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="783">
+          <name>Own Tools/Equipment</name>
+          <options>
+            <option_name>Internet access</option_name><option_name>Cellular phone</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="788">
+          <name>Work Conditions and Physical Capabilities</name>
+          <options>
+            <option_name>Fast-paced environment</option_name><option_name>Attention to detail</option_name>
+            <option_name>Tight deadlines</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="1497">
+          <name>Personal Suitability</name>
+          <options>
+            <option_name>Effective interpersonal skills</option_name><option_name>Accurate</option_name>
+            <option_name>Excellent oral communication</option_name><option_name>Organized</option_name>
+          </options>
+        </skill_category>
+      </skill_categories>
+      <job_source_id>16</job_source_id><work_term_cd>C</work_term_cd><work_lang_cd>E</work_lang_cd>
+      <app_methods>
+        <app_online>https://careers.cmhc-schl.gc.ca/job/Vancouver-Enumerator-%28Vancouver%29-BC/535293417/</app_online>
+        <app_email></app_email>
+        <app_phone>
+          <app_phone_number></app_phone_number><app_phone_ext></app_phone_ext>
+          <app_phone_start_bus_hours></app_phone_start_bus_hours><app_phone_end_bus_hours></app_phone_end_bus_hours>
+        </app_phone>
+        <app_fax></app_fax>
+        <app_person>
+          <app_person_street></app_person_street><app_person_room></app_person_room><app_person_city></app_person_city>
+          <app_person_province></app_person_province><app_person_country></app_person_country>
+          <app_person_pstlcd></app_person_pstlcd><app_person_start_bus_hours></app_person_start_bus_hours>
+          <app_person_end_bus_hours></app_person_end_bus_hours>
+        </app_person>
+        <app_mail>
+          <app_mail_street></app_mail_street><app_mail_room></app_mail_room><app_mail_city></app_mail_city>
+          <app_mail_province></app_mail_province><app_mail_country></app_mail_country>
+          <app_mail_pstlcd></app_mail_pstlcd>
+        </app_mail>
+      </app_methods>
+      <naics_id>39</naics_id><hours>37.5 hours per week</hours>
+      <employer_name_string>Canadian Mortgage and Housing Corporation (CMHC)</employer_name_string>
+      <employer_name_case>Canadian Mortgage and Housing Corporation (CMHC)</employer_name_case>
+      <num_positions>10</num_positions><job_senior_flag>false</job_senior_flag>
+      <various_location_flag>false</various_location_flag><job_student_flag>false</job_student_flag>
+      <job_youth_flag>false</job_youth_flag><job_apprentice_flag>false</job_apprentice_flag>
+      <job_disability_flag>false</job_disability_flag><job_aboriginal_flag>false</job_aboriginal_flag>
+      <program_title>false</program_title><job_vismin_flag>false</job_vismin_flag>
+      <job_newcomer_flag>false</job_newcomer_flag><job_veteran_flag>false</job_veteran_flag>
+      <latlng_variance>1</latlng_variance><los_id>2</los_id><postal_code_ind>1</postal_code_ind>
+      <experience_min>7</experience_min><file_update_date>2019-08-14T15:42:00Z</file_update_date>
+      <date_posted>2019-07-03T12:59:00Z</date_posted><import_date>2019-08-14T16:04:42Z</import_date>
+      <display_until>2019-09-01T23:59:00Z</display_until><salary_hourly>18.94</salary_hourly>
+      <salary_weekly>710.25</salary_weekly><work_hours>37.5</work_hours>
+      <city_name>
+        <string>Vancouver</string>
+      </city_name>
+      <lmi_geoarea_cd>
+        <string>25565</string>
+      </lmi_geoarea_cd>
+      <url>
+        <string>https://www.jobbank.gc.ca/jobsearch/jobposting/30929552</string>
+      </url>
+      <latlng_rpt>
+        <string>49.286316,-123.123371</string>
+      </latlng_rpt>
+      <latlng>
+        <string>49.286316,-123.123371</string>
+      </latlng>
+      <city_id>
+        <string>39070</string>
+      </city_id>
+      <noc_jobtitle_concordance_id>
+        <string>2381</string>
+      </noc_jobtitle_concordance_id>
+      <major_city_id>
+        <string>39070</string>
+      </major_city_id>
+      <province_cd>
+        <string>BC</string>
+      </province_cd>
+      <salary>
+        <string>$18.94 to $23.67 hourly (to be negotiated)</string>
+      </salary>
+      <employer_name>
+        <string>Canadian Mortgage and Housing Corporation (CMHC)</string>
+      </employer_name>
+    </Document>
+  </Documents>
+</SolrResponse>

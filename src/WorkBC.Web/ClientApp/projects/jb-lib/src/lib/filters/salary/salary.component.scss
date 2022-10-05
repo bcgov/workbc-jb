@@ -1,0 +1,60 @@
+::ng-deep app-salary {
+
+  .info {
+    margin-left: 6px;
+  }
+
+  .salary-filters {
+    > div {
+      @media (min-width: 939px) {
+        display: flex;
+        align-items: center;
+      }
+
+      label {
+        margin-right: 15px;
+      }
+    }
+
+    > div + div {
+      margin-left: 15px;
+    }
+  }
+
+  .salary-filter-types {
+    &.col-lg-7 {
+      padding: 0px;
+    }
+
+    @media (max-width:939px) {
+      margin-bottom: 15px;
+    }
+  }
+
+  .custom-ranges {
+    margin-bottom: 30px;
+
+    @media(min-width: 940px) {
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+
+      span {
+        margin: 0 15px;
+      }
+    }
+
+    input[disabled] {
+      opacity: 0.5;
+    }
+  }
+
+  .filter-title {
+    &.sub--benefits {
+      @media (min-width: 940px) {
+        margin-top: 5px;
+        margin-bottom: 29px;
+      }
+    }
+  }
+}

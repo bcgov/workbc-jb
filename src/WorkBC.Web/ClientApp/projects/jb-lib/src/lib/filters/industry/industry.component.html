@@ -1,0 +1,325 @@
+<button type="button" class="filter-menu-item" id="IndustryDropdown" ngbDropdownToggle>
+  Industry
+  <i class="fa fa-chevron-down"></i>
+  <div class="toggle-icons pull-right">
+    <lib-svg-icon icon="plus-blue" width="25px" height="25px"></lib-svg-icon>
+    <lib-svg-icon icon="minus-blue" width="25px" height="25px"></lib-svg-icon>
+  </div>
+</button>
+<div ngbDropdownMenu aria-labelledby="IndustryDropdown" id="industryDropdownMenu">
+  <!-- Industry -->
+  <div class="container">
+    <button type="button" class="clear-filter pull-right btn-filter-clear" (click)="clear()">
+      <i class="fa fa-close"></i>
+      <span>Clear all</span>
+    </button>
+    <strong class="filter-title filter-title--industry">{{industryTitle}}</strong>
+    <p class="filter-title__below">Select all that apply:</p>
+    <div class="industry-filters">
+      <div class="row">
+        <div class="col-lg-6">
+          <!-- Accommodation and Food Services -->
+          <div class="check-group">
+            <input type="checkbox" name="AccommodationAndFoodServices" id="AccommodationAndFoodServices"
+                   [(ngModel)]="vm.accommodationAndFoodServices">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="AccommodationAndFoodServices">
+              Accommodation and food services
+            </label>
+          </div>
+          <!-- Administrative and support, waste management and remediation services) -->
+          <div class="check-group">
+            <input type="checkbox" name="AdministrativeAndSupport" id="AdministrativeAndSupport"
+                   [(ngModel)]="vm.administrativeAndSupport">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="AdministrativeAndSupport">
+              Administrative and support services
+            </label>
+          </div>
+          <!-- Agriculture, forestry, fishing and hunting -->
+          <div class="check-group">
+            <input type="checkbox" name="AgricultureAndFishing" id="AgricultureAndFishing"
+                   [(ngModel)]="vm.agricultureAndFishing">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="AgricultureAndFishing">
+              Agriculture, forestry, fishing and hunting
+            </label>
+          </div>
+
+          <!-- Arts, entertainment and recreation -->
+          <div class="check-group">
+            <input type="checkbox" name="ArtsEntertainmentRecreation"
+                   id="ArtsEntertainmentRecreation" [(ngModel)]="vm.artsEntertainmentRecreation">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="ArtsEntertainmentRecreation">
+              Arts, entertainment and recreation
+            </label>
+          </div>
+          <!-- Construction -->
+          <div class="check-group">
+            <input type="checkbox" name="Construction" id="Construction" [(ngModel)]="vm.construction">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="Construction">
+              Construction
+            </label>
+          </div>
+          <!-- Educational Services -->
+          <div class="check-group">
+            <input type="checkbox" name="EducationalServices" id="EducationalServices"
+                   [(ngModel)]="vm.educationalServices">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="EducationalServices">
+              Educational services
+            </label>
+          </div>
+          <!-- Employment services -->
+          <div class="check-group">
+            <input type="checkbox" name="EmploymentServices" id="EmploymentServices"
+                   [(ngModel)]="vm.employmentServices">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="EmploymentServices">
+              Employment services
+            </label>
+          </div>
+          <!-- Finance and insurance -->
+          <div class="check-group">
+            <input type="checkbox" name="FinanceInsurance" id="FinanceInsurance"
+                   [(ngModel)]="vm.financeInsurance">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="FinanceInsurance">
+              Finance and insurance
+            </label>
+          </div>
+          <!-- Health Care and Social Assistance -->
+          <div class="check-group">
+            <input type="checkbox" name="HealthCareAndSocialAssistance" id="HealthCareAndSocialAssistance"
+                   [(ngModel)]="vm.healthCareAndSocialAssistance">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="HealthCareAndSocialAssistance">
+              Health care and social assistance
+            </label>
+          </div>
+          <!-- Information and cultural industries -->
+          <div class="check-group">
+            <input type="checkbox" name="InformationAndCulturalIndustries" id="InformationAndCulturalIndustries"
+                   [(ngModel)]="vm.informationAndCulturalIndustries">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="InformationAndCulturalIndustries">
+              Information and cultural industries
+            </label>
+          </div>
+          <!-- Management of Companies and Enterprises -->
+          <div class="check-group">
+            <input type="checkbox" name="ManagementOfCompaniesAndEnterprises" id="ManagementOfCompaniesAndEnterprises"
+                   [(ngModel)]="vm.managementOfCompaniesAndEnterprises">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="ManagementOfCompaniesAndEnterprises">
+              Management of companies and enterprises
+            </label>
+          </div>
+          <!-- Manufacturing -->
+          <div class="check-group">
+            <input type="checkbox" name="Manufacturing" id="Manufacturing" [(ngModel)]="vm.manufacturing">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="Manufacturing">
+              Manufacturing
+            </label>
+          </div>
+          <!-- Mining and Oil and Gas Extraction -->
+          <div class="check-group">
+            <input type="checkbox" name="MiningAndOilAndGasExtraction" id="MiningAndOilAndGasExtraction"
+                   [(ngModel)]="vm.miningAndOilAndGasExtraction">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="MiningAndOilAndGasExtraction">
+              Mining and oil and gas extraction
+            </label>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <!-- Personal and laundry services -->
+          <div class="check-group not-first-of-type">
+            <input type="checkbox" name="PersonalAndLaundry" id="PersonalAndLaundry" [(ngModel)]="vm.personalAndLaundry">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="PersonalAndLaundry">
+              Personal and laundry services
+            </label>
+          </div>
+          <!-- Private households -->
+          <div class="check-group">
+            <input type="checkbox" name="PrivateHouseholds" id="PrivateHouseholds" [(ngModel)]="vm.privateHouseholds">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="PrivateHouseholds">
+              Private households
+            </label>
+          </div>
+          <!-- Professional, Scientific and Technical Services -->
+          <div class="check-group">
+            <input type="checkbox" name="ProfessionalScientificAndTechnicalServices"
+                   id="ProfessionalScientificAndTechnicalServices" [(ngModel)]="vm.professionalScientificAndTechnicalServices">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="ProfessionalScientificAndTechnicalServices">
+              Professional, scientific and technical services
+            </label>
+          </div>
+          <!-- Public Administration -->
+          <div class="check-group">
+            <input type="checkbox" name="PublicAdministration" id="PublicAdministration"
+                   [(ngModel)]="vm.publicAdministration">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="PublicAdministration">
+              Public administration
+            </label>
+          </div>
+          <!-- Real estate and rental and leasing -->
+          <div class="check-group">
+            <input type="checkbox" name="RealEstateAndRental" id="RealEstateAndRental" [(ngModel)]="vm.realEstateAndRental">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="RealEstateAndRental">
+              Real estate and rental and leasing
+            </label>
+          </div>
+          <!-- Religious, grant-making, civic, and professional and similar organizations -->
+          <div class="check-group">
+            <input type="checkbox" name="ReligiousGrantMaking" id="ReligiousGrantMaking" [(ngModel)]="vm.religiousGrantMaking">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="ReligiousGrantMaking">
+              Religious, grant-making, civic, and professional and similar organizations
+            </label>
+          </div>
+          <!-- Repair and maintenance -->
+          <div class="check-group">
+            <input type="checkbox" name="RepairAndMaintenance" id="RepairAndMaintenance" [(ngModel)]="vm.repairAndMaintenance">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="RepairAndMaintenance">
+              Repair and maintenance
+            </label>
+          </div>
+          <!-- Retail Trade -->
+          <div class="check-group">
+            <input type="checkbox" name="RetailTrade" id="RetailTrade" [(ngModel)]="vm.retailTrade">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="RetailTrade">
+              Retail trade
+            </label>
+          </div>
+          <!-- Transportation and Warehousing -->
+          <div class="check-group">
+            <input type="checkbox" name="TransportationAndWarehousing" id="TransportationAndWarehousing"
+                   [(ngModel)]="vm.transportationAndWarehousing">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="TransportationAndWarehousing">
+              Transportation and warehousing
+            </label>
+          </div>
+          <!-- Utilities -->
+          <div class="check-group">
+            <input type="checkbox" name="Utilities" id="Utilities" [(ngModel)]="vm.utilities">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="Utilities">
+              Utilities
+            </label>
+          </div>
+          <!-- Waste management and remediation services -->
+          <div class="check-group">
+            <input type="checkbox" name="WasteManagement" id="WasteManagement" [(ngModel)]="vm.wasteManagement">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="WasteManagement">
+              Waste management and remediation services
+            </label>
+          </div>
+          <!-- Wholesale Trade -->
+          <div class="check-group">
+            <input type="checkbox" name="WholesaleTrade" id="WholesaleTrade" [(ngModel)]="vm.wholesaleTrade">
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="WholesaleTrade">
+              Wholesale trade
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Apply Filter -->
+    <div class="form-group">
+      <button type="button" class="btn filter-industry-btn bg-blue" (click)="getJobs('industryDropdownMenu')">
+        Apply filter
+        <lib-svg-icon icon="chev-white" width="25px" height="25px" class="pull-right"></lib-svg-icon>
+      </button>
+    </div>
+  </div>
+</div>

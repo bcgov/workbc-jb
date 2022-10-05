@@ -1,0 +1,66 @@
+<div class="job-alert" style="margin-bottom: -24px">
+  <div class="modal-header">
+    <h2>CREATE JOB ALERTS</h2>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body pb-5">
+    <div style="max-width: 95%">
+      <p>Receive alerts for new jobs that match this search criteria in your profile.</p>
+      <div class="form-group" *ngIf="activeFilters.length > 0">
+        <label><strong>Your search criteria:</strong></label>
+        <div class="current-filters">
+          <ul [ngClass]="{'show-more': showMore}">
+            <li class="filter-tag" *ngFor="let tag of activeFilters">
+              <span>{{tag}}</span>
+            </li>
+            <li>
+              <button *ngIf="activeFilters.length > 3" type="button" class="inline-text-button btn-show-more-less" (click)="showMore = !showMore">
+                <strong *ngIf="!showMore"><b>+ </b><u>Show more</u></strong>
+                <strong *ngIf="showMore"><b>- </b><u>Show less</u></strong>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="alertTitle"><strong>Name this alert:</strong></label>
+        <input class="form-control" type="text" id="alertTitle" (ngModelChange)="onTitleChanged()"
+               placeholder="Enter alert title" [(ngModel)]="title" required [style.box-shadow]="'none'"
+               maxlength="50"/>
+        <div aria-live="polite">
+          <div [hidden]="(title && title.trim().length > 0) || !submitted" class="text-danger">
+            {{ MessageForRequiredJobAlertTitle }}
+          </div>
+          <div *ngIf="error && submitted" class="text-danger">
+            {{ error }}
+          </div>
+        </div>
+      </div>
+      <div>
+        <p>How often would you like us to notify you via email?</p>
+        <div class="alert-interval-contain">
+          <div class="select-group">
+            <select aria-label="Alert frequency" id="alertFrequency" class="form-control" [(ngModel)]="alertFrequency">
+              <option value="1">Daily</option>
+              <option value="2">Weekly</option>
+              <option value="3">Biweekly</option>
+              <option value="4">Monthly</option>
+              <option value="5">Never</option>
+            </select>
+            <i class="select-arrow"></i>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <a [href]="jbAccountUrl" class="btn create-alert-btn bg-blue" (click)="createAlert($event)">
+          Create alert
+          <lib-svg-icon icon="chev-white" width="25px" height="25px" class="pull-right"></lib-svg-icon>
+        </a>
+        <button type="button" class="btn-cancel inline-text-button" (click)="close()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+</div>

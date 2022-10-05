@@ -1,0 +1,8 @@
+a.disabled strong {
+  color: #aaaaaa;
+}
+
+a.disabled .icon-wrap.blue {
+  background-color: #bbbbbb;
+  color: #f2f2f2;
+}

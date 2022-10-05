@@ -1,0 +1,9 @@
+{
+  "size": 1,
+  "from": 0,
+  "query": {
+    "terms": {
+      "_id": [ "##JOBID##" ]
+    }
+  }
+}

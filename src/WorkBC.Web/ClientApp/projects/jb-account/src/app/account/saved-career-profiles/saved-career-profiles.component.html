@@ -1,0 +1,89 @@
+<app-account #account [totalSavedCareerProfiles]="allProfiles.length" activeMenu="careers"></app-account>
+<div class="saved-careers">
+  <div class="container" [hidden]="loading">
+    <h1>Saved Career Profiles <ng-container *ngIf="hasProfiles">[{{ allProfiles.length }}]</ng-container>
+    </h1>
+    <div class="no-saved-careers" *ngIf="!hasProfiles">
+      <h2>You have not saved any career profiles yet.</h2>
+    </div>
+    <div class="saved-careers-inner">
+      <div class="row profile-info">
+        <div class="col-lg-6 col-sm-6">
+          <div class="info-box">
+            <p>
+              {{callToAction1BodyText}}
+            </p>
+            <a href="{{callToAction1LinkUrl}}">
+              <span>{{callToAction1LinkText}}</span>
+              <lib-svg-icon icon="chev-blue" width="20px" height="20px" class="pull-right"></lib-svg-icon>
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-6 col-sm-6">
+          <div class="info-box">
+            <p>
+              {{callToAction2BodyText}}
+            </p>
+            <a href="{{callToAction2LinkUrl}}">
+              <span>{{callToAction2LinkText}}</span>
+              <lib-svg-icon icon="chev-blue" width="20px" height="20px" class="pull-right"></lib-svg-icon>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="sort-by" *ngIf="hasProfiles">
+        <div class="form-group mb-0"></div>
+        <div class="form-group form-inline mb-0">
+          <label class="mb-0" for="sortBy"><strong>Sort by:</strong></label>
+          <div class="select-group job-source-select">
+            <select id="sortBy" class="form-control" [(ngModel)]="sortBy" (ngModelChange)="sortByChange()">
+              <option [value]="3">Career Profile Title (A-Z)</option>
+              <option [value]="4">Career Profile Title (Z-A)</option>
+            </select>
+            <i class="select-arrow"></i>
+          </div>
+        </div>
+      </div>
+
+      <div [hidden]="!hasProfiles" class="profile-list">
+        <hr role="presentation">
+        <div class="profile-item" *ngFor="let profile of profiles">
+          <div class="row">
+            <div class="col-lg-10">
+              <a href="/Jobs-Careers/Explore-Careers/Browse-Career-Profile/{{profile.nocCode}}" class="profile-title">
+                <span>
+                  {{profile.title}}
+                </span>
+                <lib-svg-icon icon="chevron-thick" width="12px" height="8px"></lib-svg-icon>
+              </a>
+              <p>NOC {{profile.nocCode}}</p>
+            </div>
+            <div class="col-lg-2">
+              <a href="#" class="delete-profile" (click)="delete(profile.id)">
+                <div class="icon-wrap blue extra-small">
+                  <lib-svg-icon icon="close" width="12px" height="12px"></lib-svg-icon>
+                </div>
+                <strong>Delete</strong>
+              </a>
+            </div>
+          </div>
+        </div>
+        <hr role="presentation" />
+        <div class="pagination mb-3" [style.display]="hasProfiles ? 'flex' : 'none'">
+          <app-pagination #pagination [style.visibility]="loading ? 'hidden': 'visible'" [vm]="paginationModel"
+            [updateUrl]="false" (currentPageChanged)="onCurrentPageChanged()">
+          </app-pagination>
+        </div>
+        <div class="footer-info">
+          <span>
+            Note: Career profiles are based on the
+            <a href="https://noc.esdc.gc.ca/Home/Welcome/439be342db624865ab6e0b4bebb053ae?GoCTemplateCulture=en-CA">
+              <u>National Occupational Classification</u>
+            </a> (NOC) system. The NOC describes all occupations in Canada.
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

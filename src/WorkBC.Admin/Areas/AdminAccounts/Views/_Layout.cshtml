@@ -1,0 +1,17 @@
+﻿@using WorkBC.Admin.Common
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.NavArea = NavArea.ADMIN_USERS;
+}
+
+@RenderBody()
+
+@section Scripts {
+    @RenderSection("Scripts", false)
+    <script src="~/js/adminAccounts.js" asp-append-version="true"></script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/dist/css/adminAccounts.css" asp-append-version="true" />
+    @RenderSection("Styles", false)
+}

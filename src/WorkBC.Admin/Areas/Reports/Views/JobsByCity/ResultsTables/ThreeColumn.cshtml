@@ -1,0 +1,42 @@
+﻿@model JobsByCityViewModel;
+
+<table class="table" id="ResultsTable">
+    <thead>
+    <tr>
+        <th class="sort">City</th>
+        <th class="sort text-right">Job vacancies</th>
+        <th class="sort text-right">Job postings</th>
+    </tr>
+    </thead>
+    <tbody>
+    @{
+        var postings = 0;
+        var vacancies = 0;
+    }
+
+    @foreach (JobsByCityResult city in Model.Results)
+    {
+        postings += city.Postings;
+        vacancies += city.Vacancies;
+
+        <tr>
+            <td>@city.City</td>
+            <td class="text-right">@city.Vacancies.ToString("#,##0")</td>
+            <td class="text-right">@city.Postings.ToString("#,##0")</td>
+        </tr>
+    }
+
+    </tbody>
+
+    @if (Model.Results.Any())
+    {
+        <tfoot>
+        <tr>
+            <th>TOTAL</th>
+            <th class="text-right">@vacancies.ToString("#,##0")</th>
+            <th class="text-right">@postings.ToString("#,##0")</th>
+        </tr>
+        </tfoot>
+    }
+
+</table>

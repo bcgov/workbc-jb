@@ -1,0 +1,65 @@
+@model JobSeekersByLocationViewModel
+@{
+    ViewBag.ReportName = "Registered Job Seekers by Location";
+    ViewBag.Title = $"{ViewBag.ReportName} Report";
+}
+
+<div id="page-Job-Seekers-By-Location">
+    <h1 class="page-title has-breadcrumb">@ViewBag.Title</h1>
+    <div class="report-parameters">
+        <form method="get" asp-action="Results">
+
+            <div class="report-parameters__selection">
+                <h3 class="pb-2">Reporting Period:</h3>
+                <partial name="Parameters/_MatrixDateRangePartial" model="Model"/>
+                <div class="form-check pt-4">
+                    <div class="form-group">
+                        <em>
+                            Note: Data for this report is refreshed every 12 hours.
+                        </em>
+                    </div>
+                </div>
+
+            </div>
+
+            <partial name="_RunButton"/>
+
+        </form>
+    </div>
+
+    @if (Model.Users != null)
+    {
+        ViewBag.HasResults = true;
+
+        <div class="report-results">
+
+            <h3 class="pb-3" id="results">
+                @ViewBag.ReportName
+            </h3>
+
+            <partial name="_Header" model="Model"/>
+
+            <div class="table-responsive-sm">
+                <table class="table matrixTable" id="ResultsTable">
+                    <thead>
+                    <partial name="MatrixReports/Header" model="Model"/>
+                    </thead>
+                    <tbody>
+                    <partial name="MatrixReports/Body" model='Model.Users.DoesNotStartWith("Outside")'/>
+                    <partial name="MatrixReports/Body" model='Model.Users.StartsWith("Outside BC")'/>
+                    <partial name="MatrixReports/Body" model='Model.Users.StartsWith("Outside Canada")'/>
+                    </tbody>
+                    <tfoot>
+                    <partial name="MatrixReports/Footer" model="Model.Users"/>
+                    </tfoot>
+                </table>
+            </div>
+
+        </div>
+
+        <script>
+            window.datatablesDisableSorting = true;
+            location.hash = "#results";
+        </script>
+    }
+</div>

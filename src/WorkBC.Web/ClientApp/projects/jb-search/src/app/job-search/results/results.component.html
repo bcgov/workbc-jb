@@ -1,0 +1,100 @@
+<div class="results">
+  <div class="container">
+    <div id="searchScrollAnchor" class="d-inline d-md-none"></div>
+    <lib-search-criteries [filterTags]="vm.getFilterTags()"
+                          (cleared)="onCleared()">
+    </lib-search-criteries>
+    <!--<ng-container *ngTemplateOutlet="searchCriteriesWrapper?.searchCriteriesTemplate"></ng-container> [filterTags]="filterTags"-->
+
+    <div class="row" *ngIf="!loading">
+      <div class="col-lg-3">
+        <div class="results-count">
+          Found
+          <strong>
+            {{resultsCount.toLocaleString('en')}}
+          </strong>
+          <span *ngIf="resultsCount === 1">Result</span>
+          <span *ngIf="resultsCount !== 1">Results</span>
+        </div>
+      </div>
+      <div class="col-lg-4 col-results-actions d-print-none">
+        <button type="button" class="job-alert inline-text-button" (click)="open()" *ngIf="!isJobNumberSearch">
+          <span class="icon-wrap blue">
+            <lib-svg-icon icon="alert" width="16px" height="20px"></lib-svg-icon>
+          </span>
+          <strong>Create Job Alerts</strong>
+        </button>
+        <button type="button" class="map-view inline-text-button" (click)="renderMap(false)" *ngIf="results && resultsCount > 0">
+          <span class="icon-wrap blue">
+            <lib-svg-icon icon="map-pin" width="22.5px" height="28px"></lib-svg-icon>
+          </span>
+          <strong *ngIf="!showMap">View Map</strong>
+          <strong *ngIf="showMap">Hide Map</strong>
+        </button>
+      </div>
+      <div class="col-lg-5 d-print-none" *ngIf="resultsCount > 0 && !showMap">
+        <div class="sort-by-contain">
+          <label for="sortBy"><strong>Sort By:</strong></label>
+          <div class="select-group">
+            <select id="sortBy" class="form-control" [(ngModel)]="vm.sortOrder" (ngModelChange)="sortByChange()">
+              <option [value]="11">Relevance</option>
+              <option [value]="1">Date Posted: Newest First</option>
+              <option [value]="2">Date Posted: Oldest First</option>
+              <option [value]="3">Job Title (A-Z)</option>
+              <option [value]="4">Job Title (Z-A)</option>
+              <option [value]="5">Location (A-Z)</option>
+              <option [value]="6">Location (Z-A)</option>
+              <option [value]="7">Employer (A-Z)</option>
+              <option [value]="8">Employer (Z-A)</option>
+            </select>
+            <i class="select-arrow"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No map pins returned -->
+    <div class="alert alert-warning print-no-break" *ngIf="resultsCount > 0 && markersCount === 0 && showMap && mapLoaded && !showMapLoader">
+      <i class="fa fa-exclamation-triangle"></i>
+      {{noMapPins}}
+    </div>
+
+    <!-- Over 5000 results warning -->
+    <div class="alert alert-warning print-no-break" *ngIf="resultsCount > 5000 && showMap && mapLoaded && !showMapLoader">
+      <i class="fa fa-exclamation-triangle"></i>
+      {{tooManyMapPins}}
+    </div>
+
+    <!-- More results than map pins -->
+    <div class="alert alert-warning print-no-break" *ngIf="resultsCount > mappedJobCount && resultsCount <= 5000 && markersCount > 0 && showMap && mapLoaded && !showMapLoader">
+      <i class="fa fa-exclamation-triangle"></i>
+      {{missingMapPins}}
+    </div>
+
+    <!-- Map loader -->
+    <div *ngIf="showMapLoader">
+      <div class="map-loader d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading map...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map View -->
+    <div #map class="google-map print-no-break" [ngClass]="{'loaded': showMap && mapLoaded && results && resultsCount > 0}"></div>
+    <!-- Results -->
+    <div class="job-listings" *ngIf="results && resultsCount && !loading && !showMap">
+      <app-item *ngFor="let job of results" [item]="job"></app-item>
+    </div>
+    <div class="pagination d-print-none" [style.display]="results && resultsCount > 0 && !showMap ? 'flex' : 'none'">
+      <app-pagination #pagination [style.visibility]="loading ? 'hidden': 'visible'" [maxResultCount]="10000"></app-pagination>
+    </div>
+    <div class="no-results text-center" *ngIf="loading">
+      <h3>Loading...</h3>
+    </div>
+    <div class="no-results-container" tabindex="-1" aria-live="polite">
+      <div class="no-results" *ngIf="(!results || resultsCount == 0) && !loading" [innerHTML]="htmlForNoResultsFound">
+      </div>
+    </div>
+  </div>
+</div>

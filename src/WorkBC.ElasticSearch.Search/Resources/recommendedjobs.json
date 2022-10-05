@@ -1,0 +1,73 @@
+{
+  "track_total_hits": true,
+  "size": ##PAGESIZE##,
+  "from": ##SKIP##,
+    ##SORT##
+  "_source": [
+    "City",
+    "EmployerName",
+    "JobId",
+    "SalarySummary",
+    "Title",
+    "Noc",
+    "ExternalSource",
+    "HoursOfWork",
+    "PeriodOfEmployment",
+    "IsFederalJob",
+    "DatePosted",
+    "ExpireDate",
+    "LastUpdated",
+    "IsAboriginal",
+    "IsApprentice",
+    "IsDisability",
+    "IsNewcomer",
+    "IsStudent",
+    "IsVeteran",
+    "IsVismin",
+    "IsYouth",
+    "IsMatureWorker",
+    "WorkplaceType"
+  ],
+  "query": {
+    "function_score": {
+      "query": {
+        "bool": {
+          "should": [
+            ##SHOULD##
+          ],
+          "minimum_should_match": ##MINIMUM_SHOULD_MATCH##,
+          "filter": {
+            "bool": {
+              "must": [
+                {
+                  "bool": {
+                    "should": [
+                      ##CITYFILTER##
+                    ]
+                  }
+                }
+                ##FILTER##,
+                {
+                  "range": {
+                    "ExpireDate": {
+                      "gte": "now",
+                      "time_zone": "America/Vancouver"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "must_not": [
+            {
+              "terms": {
+                "_id": [ ##IGNOREJOBS## ]
+              }
+            }
+          ]
+        }
+      },
+      "boost_mode":  "sum"
+    }
+  }
+ }

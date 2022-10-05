@@ -1,0 +1,21 @@
+::ng-deep app-work-programs {
+  .work-programs-filters {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+
+    .check-group {
+      &:hover {
+        z-index: 1;
+      }
+
+      .info {
+        margin-left: 6px;
+      }
+
+      .popover {
+        z-index: 1;
+      }
+    }
+  }
+}

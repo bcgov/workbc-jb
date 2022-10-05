@@ -1,0 +1,69 @@
+@import "../../../variables";
+
+.saved-jobs {
+  padding: 0.8rem 0 0;
+
+  @media (min-width: 940px) {
+    padding-bottom: 4rem;
+  }
+
+  & > .container {
+    @media (min-width: 940px) {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+  h2 {
+    text-transform: none;
+    font-weight: 500;
+  }
+
+  .no-saved-jobs {
+    color: $link-color;
+    margin-bottom: 25px;
+
+    h2 {
+      font-weight: normal;
+      margin-bottom: 15px;
+    }
+  }
+
+  .find-jobs-btn {
+    width: 250px;
+    text-align: left;
+
+    @media(max-width: 600px) {
+      width: 100%;
+    }
+  }
+
+  h1 span {
+    display: inline;
+  }
+
+  .sort-by {
+    > div {
+      display: block;
+      margin-top: 20px;
+
+      @media(min-width: 600px) {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+
+      strong {
+        margin-right: 10px;
+      }
+
+      .select-group {
+        margin-top: 8px;
+
+        @media(min-width: 600px) {
+          margin-top: 0;
+        }
+      }
+    }
+  }
+}

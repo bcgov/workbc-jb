@@ -1,0 +1,132 @@
+<div class="recommended-jobs__filters" *ngIf="isVisible">
+  <p>
+    {{ filterIntroText }}
+  </p>
+
+  <div class="d-flex justify-content-between mb-2">
+    <div><strong>Filter by:</strong></div>
+    <div>
+      <button type="button" class="btn btn-link" (click)="clearAll()">
+        <i class="fa fa-close"></i>
+        <span> Clear all</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="d-flex flex-wrap p-1">
+    <div class="check-group d-flex p-1 mb-1 w-50" *ngIf="filterInput?.totalSavedJobs">
+      <input type="checkbox" name="cb1" id="cb1" [(ngModel)]="vm.hasSameJobTitle">
+      <div class="checkbox-icons">
+        <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+      </div>
+      <label class="form-check-label" for="cb1">Same job title as a saved job</label>
+    </div>
+    <div class="check-group d-flex p-1 mb-1 w-50" *ngIf="filterInput?.totalSavedJobs">
+      <input type="checkbox" name="cb3" id="cb3" [(ngModel)]="vm.hasSameNoc">
+      <div class="checkbox-icons">
+        <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+      </div>
+      <label class="form-check-label" for="cb3">Same NOC code as a saved job</label>
+    </div>
+    <div class="check-group d-flex p-1 mb-1 w-50" *ngIf="filterInput?.totalSavedJobs">
+      <input type="checkbox" name="cb5" id="cb5" [(ngModel)]="vm.hasSameEmployer">
+      <div class="checkbox-icons">
+        <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+      </div>
+      <label class="form-check-label" for="cb5">Same employer as a saved job</label>
+    </div>
+    <div class="check-group d-flex p-1 mb-1 w-50" *ngIf="filterInput?.city">
+      <input type="checkbox" name="cb6" id="cb6" [(ngModel)]="vm.inTheSameCity">
+      <div class="checkbox-icons">
+        <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+      </div>
+      <label class="form-check-label" for="cb6">
+        Same city as your location {{ filterInput?.city ? '(' + filterInput.city + ')' : ''}}
+      </label>
+    </div>
+    <div class="check-group d-flex p-1 mb-1 w-50" *ngIf="filterInput?.isApprentice">
+      <input type="checkbox" name="cb8" id="cb8" [(ngModel)]="vm.isApprentice">
+      <div class="checkbox-icons">
+        <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+      </div>
+      <label class="form-check-label" for="cb8">Identified as an apprentice</label>
+    </div>
+    <div class="check-group d-flex p-1 mb-1 w-50"  *ngIf="filterInput?.isIndigenous">
+      <input type="checkbox" name="cb2" id="cb2" [(ngModel)]="vm.isIndigenous">
+      <div class="checkbox-icons">
+        <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+      </div>
+      <label class="form-check-label" for="cb2">Identified as an Indigenous person</label>
+    </div>
+    <div class="check-group d-flex p-1 mb-1 w-50" *ngIf="filterInput?.isMatureWorker">
+      <input type="checkbox" name="cb9" id="cb9" [(ngModel)]="vm.isMatureWorker">
+      <div class="checkbox-icons">
+        <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+      </div>
+      <label class="form-check-label" for="cb9">Identified as a mature worker</label>
+    </div>
+    <div class="check-group d-flex p-1 mb-1 w-50" *ngIf="filterInput?.isNewcomer">
+      <input type="checkbox" name="cb4" id="cb4" [(ngModel)]="vm.isNewcomer">
+      <div class="checkbox-icons">
+        <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+      </div>
+      <label class="form-check-label" for="cb4">Identified as a newcomer to B.C.</label>
+    </div>
+    <div class="check-group d-flex p-1 mb-1 w-50" *ngIf="filterInput?.hasDisability">
+      <input type="checkbox" name="cb10" id="cb10" [(ngModel)]="vm.hasDisability">
+      <div class="checkbox-icons">
+        <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+      </div>
+      <label class="form-check-label" for="cb10">Identified as a person with a disability</label>
+    </div>
+    <div class="check-group d-flex p-1 mb-1 w-50" *ngIf="filterInput?.isStudent">
+      <input type="checkbox" name="cb11" id="cb11" [(ngModel)]="vm.isStudent">
+      <div class="checkbox-icons">
+        <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+      </div>
+      <label class="form-check-label" for="cb11">Identified as a student</label>
+    </div>
+    <div class="check-group d-flex p-1 mb-1 w-50" *ngIf="filterInput?.isVeteran">
+      <input type="checkbox" name="cb12" id="cb12" [(ngModel)]="vm.isVeteran">
+      <div class="checkbox-icons">
+        <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+      </div>
+      <label class="form-check-label" for="cb12">Identified as a veteran of the Canadian Armed Forces</label>
+    </div>
+    <div class="check-group d-flex p-1 mb-1 w-50" *ngIf="filterInput?.isMinority">
+      <input type="checkbox" name="cb13" id="cb13" [(ngModel)]="vm.isMinority">
+      <div class="checkbox-icons">
+        <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+      </div>
+      <label class="form-check-label" for="cb13">Identified as a visible minority</label>
+    </div>
+    <div class="check-group d-flex p-1 mb-1 w-50" *ngIf="filterInput?.isYouth">
+      <input type="checkbox" name="cb7" id="cb7" [(ngModel)]="vm.isYouth">
+      <div class="checkbox-icons">
+        <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+        <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+      </div>
+      <label class="form-check-label" for="cb7">Identified as a youth</label>
+    </div>
+  </div>
+
+  <div class="form-group mt-2">
+    <button type="button" class="btn bg-blue" (click)="applyFilter()">
+      Apply filter
+    </button>
+  </div>
+</div>
+
+<!--<pre>{{ vm | json }}</pre>-->

@@ -1,0 +1,79 @@
+@model JobSeekerViewProfileHistoryViewModel;
+
+@{
+    ViewBag.Title = "Profile History";
+}
+
+<div id="page-profile-history">
+
+    <a asp-action="EditUser" asp-route-userId="@Model.JobSeekerId" class="btn btn-inline back-link"><i class="fa fa-chevron-left fa-left"></i>Back to job seeker profile</a>
+
+    <h1 class="page-title has-breadcrumb">@ViewBag.Title:</h1>
+    <h3 class="pb-5">@Model.FirstName @Model.LastName</h3>
+
+    <table class="table table-wbc-responsive table-profile-history" id="dtHistory">
+        <thead>
+            <tr>
+                <th>Date/Time</th>
+                <th>Activity</th>
+                <th>From What?</th>
+                <th>To What?</th>
+                <th>Editor</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.History != null)
+            {
+                foreach (var history in Model.History)
+                {
+                    <tr>
+                        <td>@history.DateCreated.ToString("yyyy-MM-dd hh:mm") PST</td>
+                        <td>@history.Activity</td>
+                        <td>@history.FromValue</td>
+                        <td>@history.ToValue</td>
+                        <td>@history.Editor</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+</div>
+
+<!-- Styles -->
+@section Styles {
+    <link rel="stylesheet" href="~/dist/css/dataTables.bootstrap.css" asp-append-version="true" />
+
+    <!-- This is to hide the datatable filter at the top-->
+    <!-- Styles -->
+    <style>
+        .dataTables_filter {
+            display: none !important;
+        }
+
+        .dataTables_length {
+            display: none !important;
+        }
+
+        #dtUsers_info {
+            display: none !important;
+        }
+
+        .paginate_button {
+            font-size: 18px;
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            padding: 2px;
+            margin: 0 10px;
+            border-bottom: solid 1px transparent;
+            color: blue;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="~/dist/lib/jquery.dataTables.min.js" asp-append-version="true"></script>
+    <script src="~/dist/lib/dataTables.bootstrap.min.js" asp-append-version="true"></script>
+    <script src="~/lib/dataTables-fullNumbers/full_numbers_no_ellipses.js" asp-append-version="true"></script>
+}

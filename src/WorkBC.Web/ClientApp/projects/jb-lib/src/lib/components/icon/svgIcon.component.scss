@@ -1,0 +1,94 @@
+::ng-deep lib-svg-icon {
+  svg {
+    display: inline-block;
+    stroke-width: 0;
+    stroke: currentColor;
+    fill: currentColor;
+
+    &.left {
+      transform: rotate(180deg);
+    }
+  }
+
+  vertical-align: inherit !important;
+}
+
+::ng-deep lib-svg-icon.info {
+  margin-left: 6px;
+}
+
+::ng-deep button {
+  // setup to make toggling button icons easier - first icon is shown on load, swaps on click
+  .toggle-icons {
+    lib-svg-icon:first-child {
+      display: inline;
+    }
+
+    lib-svg-icon:last-child {
+      display: none;
+    }
+  }
+
+  &[aria-expanded="true"] {
+    .toggle-icons {
+      lib-svg-icon:first-child {
+        display: none;
+      }
+
+      lib-svg-icon:last-child {
+        display: inline;
+      }
+    }
+  }
+}
+
+::ng-deep input[type="checkbox"] {
+  position: absolute;
+
+  & + .checkbox-icons, & + app-jb-checkbox .checkbox-icons {
+    display: inline;
+    position: absolute;
+    /*top: 2px;*/
+    z-index: -1;
+    color: #234075;
+
+    lib-svg-icon:first-child {
+      display: inline-flex;
+    }
+
+    lib-svg-icon:last-child {
+      display: none;
+    }
+
+    & + label {
+      margin-bottom: 0;
+      padding-left: 22px;
+      font-size: 0.875rem;
+      line-height: 1.125rem;
+    }
+  }
+
+  &:checked + .checkbox-icons, &:checked + app-jb-checkbox .checkbox-icons {
+    lib-svg-icon:first-child {
+      display: none;
+    }
+
+    lib-svg-icon:last-child {
+      display: inline-flex;
+    }
+  }
+}
+
+::ng-deep .check-group {
+  z-index: 0;
+  position: relative;
+  display: flex;
+
+  /*& + .check-group {
+    margin-top: 4px;
+  }*/
+
+  label {
+    cursor: pointer;
+  }
+}

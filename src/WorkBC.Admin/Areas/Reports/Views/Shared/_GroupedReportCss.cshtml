@@ -1,0 +1,35 @@
+﻿@model string
+
+<script>
+    window.datatablesExportPrintExtraCss = "<style>@Model</style>";
+    window.datatablesDisableSorting = true;
+
+    window.datatableExcelExtraFormats = function (sheet) {
+        // make text in the 3rd row white
+        $('row c[r="A3"]', sheet).attr('s', '1');
+        $('row c[r="B3"]', sheet).attr('s', '1');
+        $('row c[r="C3"]', sheet).attr('s', '1');
+        $('row c[r="D3"]', sheet).attr('s', '1');
+    }
+
+</script>
+
+<style>
+    @* leaving this code here in the partial view because it's the same CSS styling as the print css above*@
+    thead { display: none; }
+
+    .daterangepicker thead { display: table-header-group; }
+
+    tr.group-title th { @CssStyleExtensions.Title }
+
+    tr.group-header th { @CssStyleExtensions.Header }
+
+    tr.group-footer th { @CssStyleExtensions.Footer }
+
+    tr.group-space td { @CssStyleExtensions.Space }
+
+    table.dataTable.no-footer {
+        border-bottom: none;
+        margin-bottom: 40px;
+    }
+</style>

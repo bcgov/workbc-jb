@@ -1,0 +1,205 @@
+<div *ngIf="!loading" class="personal-settings-dialog">
+  <div class="modal-header">
+    <div mat-dialog-title style="margin-bottom: 0;">
+      <h2 class="dialog-title">Complete Your Personal Settings</h2>
+    </div>
+    <button type="button" class="btn btn-close" mat-button mat-dialog-close>
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <mat-dialog-content>
+      <div class="dialog-content-header">
+        <h2 class="dialog-content-title">
+          It looks like some information is missing
+        </h2>
+        <em>
+          Please complete the fields below to access your account.
+        </em>
+      </div>
+      <form [formGroup]="personalSettingsFormGroup">
+        <div class="personal-settings">
+          <div class="personal-settings-inner" *ngIf="showPersonalInfo">
+            <h2 id="PersonalInfo">
+              Personal Information
+            </h2>
+            <table class="table table-borderless table-sm">
+              <tr *ngIf="!hasFirstName">
+                <td><strong class="col-form-label">First name:</strong></td>
+                <td class="text--align-left">
+                  <input class="form-control" type="text" id="firstName" name="firstName"
+                    style="border-width: thin; border-color: #ced4da; width: 100%;" required
+                    formControlName="firstName" [ngClass]="{'input-danger': !isValid(vm.firstName)}"
+                    maxlength="50"/>
+                  <div aria-live="polite">
+                    <div [hidden]="isValid(vm.firstName)" class="text-danger">
+                      Please provide a first name
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="!hasLastName">
+                <td><strong class="col-form-label">Last name:</strong></td>
+                <td class="text--align-left">
+                  <input class="form-control" type="text" id="lastName" name="lastName"
+                    style="border-width: thin; border-color: #ced4da; width: 100%;" required
+                    formControlName="lastName"  [ngClass]="{'input-danger': !isValid(vm.lastName)}"
+                    maxlength="50"/>
+                  <div aria-live="polite">
+                    <div [hidden]="isValid(vm.lastName)" class="text-danger">
+                      Please provide a last name
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="personal-settings-inner below-tooltip" *ngIf="showSecurityQuestion">
+            <h2 id="SecurityQuestion">Security Question</h2>
+            <table class="table table-bordered table-sm">
+              <tr>
+                <td>
+                  <strong class="col-form-label">Security Question:</strong>
+                </td>
+                <td class="text--align-left" style="width: 75%;">
+                  <div class="select-group select-group-bg">
+                    <select id="securityQuestionId" class="form-control" formControlName="securityQuestionId"
+                            [ngClass]="{'input-danger': !isValid(vm.securityQuestionId)}">
+                      <option value="0">-- Select security question --</option>
+                      <option *ngFor="let securityQuestion of securityQuestions$ | async" [value]="securityQuestion.id">
+                        {{securityQuestion.questionText}}
+                      </option>
+                    </select>
+                    <i class="select-arrow"></i>
+                  </div>
+                  <div aria-live="polite">
+                    <div [hidden]="isValid(vm.securityQuestionId)" class="text-danger">
+                      Please select a security question
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong class="col-form-label">Your Answer:</strong></td>
+                <td class="text--align-left">
+                  <input type="text" class="form-control w-252" name="securityAnswer"
+                    style="border-width: thin; border-color: #ced4da; width: 100%;" id="securityAnswer"
+                    formControlName="securityAnswer" [ngClass]="{'input-danger': !isValid(vm.securityAnswer)}"
+                    maxlength="50"/>
+                  <div aria-live="polite">
+                    <div [hidden]="isValid(vm.securityAnswer)" class="text-danger">
+                      Please provide your answer
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="personal-settings-inner" *ngIf="showLocation">
+            <h2>Your Location</h2>
+            <table class="table table-borderless table-sm">
+              <tr>
+                <td>
+                  <strong class="col-form-label">Country:</strong>
+                </td>
+                <td class="text--align-left" style="width: 75%;">
+                  <div class="select-group select-group-bg">
+                    <select id="JobSeekerCountry" class="form-control" formControlName="countryId">
+                      <option *ngFor="let country of countries$ | async" [value]="country.id">{{country.name}}</option>
+                    </select>
+                    <i class="select-arrow"></i>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="!isNotCanada">
+                <td><strong class="col-form-label">Province:</strong></td>
+                <td class="text--align-left">
+                  <div class="select-group select-group-bg" [style.background-color]="isNotCanada ? '#e9ecef' : ''">
+                    <select id="JobSeekerProvince" class="form-control" formControlName="provinceId">
+                      <option *ngFor="let province of provinces$ | async" [value]="province.provinceId">
+                        {{province.name}}
+                      </option>
+                    </select>
+                    <i class="select-arrow"></i>
+                  </div>
+                </td>
+              </tr>
+              <tr [hidden]="isNotBC">
+                <td>
+                  <strong class="col-form-label">City:</strong>
+                </td>
+                <td class="text--align-left">
+                  <div class="form-input">
+                    <input type="text" class="form-control w-252" name="JobSeekerCity" id="JobSeekerCity"
+                      formControlName="city" style="border-width: thin; border-color: #ced4da; width: 100%;"
+                      placeholder="Enter city name" [matAutocomplete]="auto" autocomplete="new-city"
+                      [ngClass]="{'input-danger': !hideCityErrors && (submitted || (vm.city.touched && !vm.city.pristine)) && !!personalSettingsFormGroup.errors?.invalidCity}"/>
+
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let city of cities$ | async" [value]="city">
+                        {{city}}
+                      </mat-option>
+                    </mat-autocomplete>
+
+                    <div aria-live="polite">
+                      <div
+                        *ngIf="!hideCityErrors && (submitted || (vm.city.touched && !vm.city.pristine)) && !!personalSettingsFormGroup.errors?.invalidCity"
+                        class="text-danger">
+                        Please specify the city name
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="!isNotBC && currentRegions?.length > 1">
+                <td><strong class="col-form-label">Region:</strong></td>
+                <td class="text--align-left">
+                  <div class="select-group w-252" [style.background-color]="isNotBC ? '#e9ecef' : ''">
+                    <select id="locationId" class="form-control" formControlName="locationId"
+                      title="The selected city falls under various regions in B.C. Please specify the correct region." 
+                      [ngClass]="{'input-danger': !hideRegionErrors && submitted && !isValidRegion(vm)}">
+                      <option value="0">Select a region</option>
+                      <option *ngFor="let region of regions$ | async" [value]="region.locationId">
+                        {{region.locationName}}
+                      </option>
+                    </select>
+                    <i class="select-arrow"></i>
+                  </div>
+                  <div aria-live="polite">
+                    <div *ngIf="!hideRegionErrors && submitted && !isValidRegion(vm)" class="text-danger w-252">
+                      The selected city falls under various regions in B.C. Please specify the correct region.
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="!isNotBC && currentRegions?.length > 1">
+                <td colspan="2">
+                  <div class="bc-region-map">
+                    <img class="bc-region-map__image" [src]="mapUrl" alt="BC Region Map" />
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </form>
+    </mat-dialog-content>
+  </div>
+  <div class="modal-footer">
+    <mat-dialog-actions>
+      <table class="table table-borderless table-sm" style="margin-bottom: 0;">
+        <tr>
+          <td></td>
+          <td style="text-align: left; padding-bottom: 0; padding-top: 0;">
+            <button type="button" class="btn-continue inline-text-button" (click)="update()">
+              Update
+            </button>
+            <button type="button" class="btn-cancel inline-text-button" mat-button mat-dialog-close>
+              Cancel
+            </button>
+          </td>
+        </tr>
+      </table>
+    </mat-dialog-actions>
+  </div>
+</div>

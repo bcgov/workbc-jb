@@ -1,0 +1,229 @@
+/*
+* Table styles
+*/
+
+// Import partial stylesheets
+@import 'variables';
+@import 'breakpoints';
+@import 'lockrow';
+
+.datatable-container {
+
+    @include breakpoint(mobile) {
+        overflow: hidden;
+    }
+}
+
+table.table {
+    overflow: auto;
+    color: $grey-text;
+
+    th, td {
+        vertical-align: middle;
+        text-align: left;
+    }
+
+    thead {
+
+        th {
+            white-space: nowrap;
+            font-size: 0.95em;
+
+            a {
+                opacity: 0.8;
+            }
+
+            &.sort.sorting, &.sort.sorting_asc, &.sort.sorting_desc {
+                padding-right: 0.75rem;
+            }
+        }
+
+        .sort {
+            position: relative;
+            cursor: pointer;
+
+            &:after {
+                display: inline !important;
+                margin-left: 8px;
+                position: relative !important;
+                right: inherit !important;
+                content: "\f0dc";
+                font-family: "FontAwesome";
+                opacity: 0.2;
+                position: absolute;
+                right: 10px;
+                bottom: 0;
+                transform: translate(-50%, -50%);
+            }
+
+            &:hover {
+                a {
+                    opacity: 1;
+                }
+
+                &:after {
+                    opacity: 1;
+                }
+            }
+
+            &.sorting_asc:after {
+                content: "\f0de";
+                font-family: "FontAwesome";
+                opacity: 1;
+            }
+
+            &.sorting_desc:after {
+                content: "\f0dd";
+                font-family: "FontAwesome";
+                opacity: 1;
+            }
+
+            &.sorting_asc, &.sorting_desc {
+                a {
+                    opacity: 0.8;
+                }
+            }
+
+            &.sorting:not(.sort):after {
+                content: none;
+            }
+        }
+    }
+
+    tbody {
+        tr.deleted {
+            color: lighten($grey-text, 15%);
+            background: $grey-light-bg;
+        }
+
+        td.actions, td.urls {
+            text-align: left;
+
+            .btn {
+                display: block;
+                text-align: left;
+
+                &.btn-inline {
+                    height: auto;
+                    margin-bottom: 0;
+                }
+            }
+
+            .actions__btn-group {
+                display: flex;
+
+                .btn {
+                    margin-left: 20px;
+
+                    &:first-child {
+                        margin-left: 0;
+                    }
+                }
+            }
+        }
+
+        td.comment {
+            text-align: left;
+        }
+
+        td.urls {
+            white-space: nowrap;
+        }
+
+        td.emails {
+            word-break: break-all;
+        }
+    }
+}
+
+.filtered-status {
+    tr.locked {
+        color: lighten($grey-text, 15%);
+        background: $blue-light;
+
+        td.firstname {
+            padding-left: 2em;
+            padding-right: 2em;
+            @include lock-row;
+        }
+    }
+}
+
+tr.locked {
+    color: lighten($grey-text, 15%);
+    background: $blue-light;
+
+    td.status {
+        padding-left: 2em;
+        padding-right: 2em;
+        @include lock-row;
+    }
+}
+
+//adding responsive styles for tables on mobile
+@include breakpoint(mobile) {
+  .table-wbc-responsive {
+    display: block;
+
+    thead, tbody, th, td, tr {
+      display: block;
+    }
+
+    thead {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+
+    tr {
+      padding: 12px;
+      border-top: 0;
+      text-align: left;
+      position: relative;
+      padding-left: 40%;
+      border-bottom: 1px solid #dee2e6;
+
+      td {
+        width: 100%;
+        padding-right: 0;
+        text-align: left;
+        border-top: none;
+
+        &::before {
+          font-weight: 700;
+          position: absolute;
+          left: 12px;
+          width: 37%;
+          padding-right: 10px;
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  //Labels for responsive version of a table
+  //Replace accordingly to the different tables throughout the app
+  .table-example {
+    td:nth-of-type(1):before {
+      content: "Status";
+    }
+    td:nth-of-type(2):before {
+      content: "First Name";
+    }
+    td:nth-of-type(3):before {
+      content: "Last Name";
+    }
+    td:nth-of-type(4):before {
+      content: "Email Address";
+    }
+    td:nth-of-type(5):before {
+      content: "Location";
+    }
+    td:nth-of-type(6):before {
+      content: "Last Updated";
+    }
+    td:nth-of-type(7):before {
+      content: "Registered Date";
+    }
+  }
+}

@@ -1,0 +1,144 @@
+@import '../../../node_modules/ngx-toastr/toastr.css';
+@import '../../../node_modules/@angular/material/prebuilt-themes/indigo-pink.css';
+@import '../../../node_modules/font-awesome/css/font-awesome.min.css';
+@import '../../../shared-css/_placeholders';
+@import '../../../shared-css/_toastr';
+@import '../../../shared-css/_modals';
+@import '../../../shared-css/_accessibility';
+@import '../../../shared-css/_firefox.scss';
+@import '../../../shared-css/_errors.scss';
+
+// Disable job detail language toggle when google translation applied.
+html.translated-ltr, html.translated-rtl {
+  background: black;
+
+  .job-lang {
+    pointer-events: none;
+    color: #aaaaaa;
+
+    label {
+      opacity: .5;
+    }
+  }
+}
+
+.mat-button-focus-overlay {
+  background: none;
+  display: none;
+  opacity: 0 ;
+}
+
+.mat-button-ripple {
+  display: none;
+}
+
+// show the backToTop button that is already in the kentico footer
+#backToTop a.backToTopBtn {
+    display: block!important;
+}
+
+@media print {
+  span.icon-wrap, svg, button {
+    vertical-align: middle!important;
+  }
+
+  .current-filters {
+    //hide on print
+    .inline-text-button {
+      display: none;
+    }
+  }
+
+  .job-item {
+    min-width: 940px;
+
+    .title {
+      //hide on print
+      a:after, lib-svg-icon {
+        display: none;
+      }
+    }
+    //hide on print
+    .expiry div, .post-date {
+      white-space: nowrap;
+    }
+  }
+
+  .label-New {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+
+  .google-map {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+
+  app-results .results .job-listings {
+    border-top: 1.5px solid #bbbbbb;
+  }
+
+  app-item .job-item {
+    border-bottom: 1.5px solid #bbbbbb;
+  }
+}
+
+@media print and (min-width: 1px) {
+  .job-item {
+    .col-lg-2 {
+      flex: 0 0 15% !important;
+      max-width: 15% !important;
+    }
+
+    .col-lg-8 {
+      flex: 0 0 62% !important;
+      max-width: 62% !important;
+    }
+  }
+}
+
+/* Load background images from this file instead of from individual components. The component css ends
+   up being injected into the head of the page and served in a style tag, and css in this file ends up
+   being linked as an external css file.  URLs in css are relative to the file that contains
+   the URL.  URLs in components end up being relative to the Kentico server, and url's in a linked
+   css file end up being relative to the job board API server. 
+*/
+
+app-root {
+    .job-search-contain, .modal {
+        input[type=radio] + label {
+            background: url(/assets/images/icons/radio.png) 0 2px no-repeat;
+        }
+
+        input[type=radio]:checked + label {
+            background: url(/assets/images/icons/radio-selected.png) 0 2px no-repeat;
+        }
+
+        .select-group select + i {
+            background-image: url(/assets/icons/select-button-large-blue.svg);
+        }
+    }
+
+    app-item .job-item .title a:after {
+        background-image: url(/assets/icons/arrow-right.svg);
+    }
+
+    app-breadcrumb .breadcrumbs .breadcrumb .breadcrum-item+.breadcrum-item:before {
+        background-image: url(/assets/icons/arrow-right.svg);
+    }
+
+    #salaryDropdownMenu button {
+        &.caret-left:before,
+        &.caret-right:after {
+            background-image: url('/assets/icons/arrow-white-drop-down.svg');
+        }
+    }
+}
+
+@media (max-width: 939px) {
+  #site-navigation {
+    border-bottom: 1px solid #e1e3e5;
+    border-right: 1px solid #e1e3e5;
+  }
+}
+

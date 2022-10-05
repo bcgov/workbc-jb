@@ -1,0 +1,62 @@
+::ng-deep app-external-job-modal {
+  .external-job {
+
+    .modal-header p {
+      margin-right: 36px;
+    }
+
+    p, label {
+      color: #444;
+      margin-bottom: 15px;
+    }
+
+    .modal-footer {
+      .form-group {
+        margin-left: 0 !important;
+        width: 100%;
+        text-align: left;
+
+        @media (max-width: 939px) {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: flex-end;
+        }
+      }
+    }
+
+    .continue-btn {
+      width: 100%;
+      margin-right: 15px;
+      text-align: left;
+      font-size: 1rem;
+
+      @media (min-width: 939px) {
+        width: 200px !important;
+      }
+
+      & + button {
+        font-weight: bold;
+
+        @media (max-width: 939px) {
+          margin-top: 15px;
+        }
+      }
+    }
+
+    .inline-text-button {
+      border: none;
+      background: none;
+      font-weight: 700;
+      margin-top: 8px;
+      padding: 6px 16px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 939px) {
+        margin-top: 0;
+      }
+    }
+  }
+}

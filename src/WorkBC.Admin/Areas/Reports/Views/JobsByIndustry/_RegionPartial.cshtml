@@ -1,0 +1,11 @@
+﻿@model JobsByIndustryViewModel
+
+<div id="RegionPartial">
+    <div class="form-check">
+        <div class="form-group">
+            <select class="form-control uniform-width" asp-for="RegionId" asp-items="SelectLists.Regions">
+                <option value="0" selected>All Regions</option>
+            </select>
+        </div>
+    </div>
+</div>

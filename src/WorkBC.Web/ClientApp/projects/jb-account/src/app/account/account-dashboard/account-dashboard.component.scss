@@ -1,0 +1,195 @@
+@import "../../../variables";
+
+::ng-deep .account-contain app-account-dashboard {
+  .account-dashboard {
+    background: #fff;
+    padding: 20px 0 0;
+
+    @media (min-width: 940px) {
+      padding: 2rem 0 4rem;
+    }
+
+    & > .container {
+      @media (min-width: 940px) {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+  }
+
+  .dashboard-notification {
+    padding: 12px 20px;
+    background-color: $grey-light-bg;
+    border-left: 6px solid $yellow-notification;
+
+    p {
+      margin-bottom: 0.5rem;
+    }
+
+    a {
+      text-decoration: underline;
+    }
+
+    & + .dashboard-notification {
+      margin-top: 20px;
+    }
+
+    &__title {
+      display: flex;
+
+      .title {
+        margin-top: 0.5rem;
+      }
+
+      .notification-close {
+        text-decoration: none;
+        color: $primary-color;
+        background-color: #ffffff;
+        padding: 8px;
+        margin-top: 8px;
+        margin-left: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 25px;
+        height: 25px;
+        border-radius: 12px;
+
+        span {
+          font-size: 18px;
+          font-weight: 700;
+          line-height: 0;
+          margin-bottom: 2px;
+        }
+        /*img {
+          transform: rotate(45deg);
+        }*/
+      }
+    }
+
+    &__content {
+      margin: 12px 0;
+    }
+
+    .btn:focus {
+      box-shadow: 0 0 0 0.1rem rgba(0, 123, 255, 0.25);
+    }
+  }
+
+  .card {
+    border-radius: 0;
+    margin-bottom: 1.25rem;
+    border-color: $border-light-color;
+    background: lighten($seconday-color, 25%);
+
+    .card-sup-desc {
+      text-transform: uppercase;
+      font-weight: 700;
+      display: block;
+      margin: 0 0 0.5rem;
+      font-size: 0.93rem;
+      line-height: 1rem;
+    }
+
+    .card-header {
+      background: $primary-color;
+      color: #fff;
+      border-radius: 0;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.3125rem;
+      text-transform: uppercase;
+    }
+
+    .btn {
+      width: 100%;
+      font-size: 1rem;
+      font-weight: 700;
+      text-align: left;
+      padding: 11px 15px 9px;
+      border-top: solid 1px $border-light-color;
+      background: lighten($seconday-color, 25%);
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      &:focus {
+        box-shadow: none;
+        outline: 1px solid #51adcc;
+        border-bottom: 1px solid #51adcc;
+      }
+
+      &:last-child:focus {
+        border-bottom: none;
+      }
+
+      > lib-svg-icon {
+        position: relative;
+        top: -1px;
+      }
+    }
+  }
+
+  .account-sub-section {
+    .sub-header {
+      font-size: 1.5rem;
+      font-weight: 400;
+      padding-bottom: 0.5rem;
+      border-bottom: solid 1px $primary-color;
+      margin: 0 0 1rem 0;
+    }
+
+    a {
+      &:hover {
+        color: $primary-color;
+        text-decoration: underline;
+      }
+
+      i {
+        font-size: .6rem;
+        margin-left: .5rem;
+      }
+    }
+
+    [class*='col-'] {
+      margin-bottom: 1.25rem;
+    }
+  }
+
+  @media (min-width: 940px) {
+    .col-set {
+      [class*='col-']:nth-child(odd) {
+        padding-right: 0.625rem;
+        padding-left: 0.625rem;
+      }
+
+      [class*='col-']:nth-child(even) {
+        padding-left: 0.625rem;
+        padding-right: 0.625rem;
+      }
+
+      [class*='col-']:nth-child(odd):last-child,
+      [class*='col-']:nth-child(even):last-child {
+        padding-left: 0.625rem;
+        padding-right: 1.25rem;
+      }
+
+      [class*='col-']:nth-child(odd):first-child {
+        padding-left: 1.25rem;
+      }
+    }
+
+    .card {
+      height: 100%;
+    }
+
+    .account-sub-section {
+      [class*='col-'] {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

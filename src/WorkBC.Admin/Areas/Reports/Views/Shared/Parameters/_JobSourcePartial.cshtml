@@ -1,0 +1,13 @@
+﻿@model IJobSourceParams
+
+<div id="JobSourcePartial">
+    <div class="form-check">
+        <div class="form-group">
+            <select class="form-control uniform-width" asp-for="JobSourceId">
+                <option value="@JobSource.All">All</option>
+                <option value="@JobSource.Federal">Only National Job Bank Jobs</option>
+                <option value="@JobSource.Wanted">Only External Jobs</option>
+            </select>
+        </div>
+    </div>
+</div>

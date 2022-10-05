@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WorkBC.Indexers.Wanted": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

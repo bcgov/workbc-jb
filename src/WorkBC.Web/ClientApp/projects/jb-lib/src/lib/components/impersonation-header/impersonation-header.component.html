@@ -1,0 +1,8 @@
+<div class="impersonation-header" *ngIf="isImpersonating">
+  <div class="container">
+    <div class="row">
+      You are viewing <span class="font-weight-bold ml-1">{{fullName}}</span>'s account as they would see it.
+      <a [href]="adminUrl" (click)="backToAdmin($event)" class="ml-2">Back to administration</a>
+    </div>
+  </div>
+</div>

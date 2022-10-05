@@ -1,0 +1,59 @@
+::ng-deep app-date {
+  .date-filters {
+
+    @media (min-width: 940px) {
+      display: flex;
+    }
+
+    > div {
+      margin-right: 15px;
+    }
+
+    .date-picker {
+
+      &.disabled {
+        background-color: #fff;
+        opacity: 0.5;
+      }
+
+      input,
+      .input-group-append {
+        margin-left: 0;
+        min-width: 200px;
+
+        &:focus {
+          box-shadow: none;
+        }
+      }
+
+      input[disabled] {
+        background-color: transparent;
+
+        & + div {
+          z-index: -1;
+        }
+      }
+
+      .input-group-append {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+
+        .btn-outline-secondary.calendar {
+          width: 100%;
+          box-shadow: none;
+          opacity: 1;
+          background-position: right center;
+          background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAMAAADyHTlpAAAAS1BMVEUAAAA2QVM2QVM2QVM2QVM2QVM2QVM2QVM2QVM2QVM2QVM2QVM2QVM2QVM2QVM2QVM2QVM2QVM2QVM2QVM2QVM2QVM2QVM2QVM2QVPUNtmSAAAAGHRSTlMAcEBgEDD2oonKWE0Ujkrvv5RDIQnQdy2y34VMAAAAkklEQVQ4y+3SywrDIBBA0TE240SNebad///SCmkRW3xAswl4F46LsxhBaF26cXxPyjIthBgGf3ymTlL+KU07AKXAd8wuT1d33N1apKE8JRlFfMqzzC3K/LtroI95A7CzLlOJ3AMQ2jI12lOLVLNA7ymhVJX0zsiujhqpcCvTvd/9aZ9w2h9YRNSSphN/NUGrFXoBvIYLxizKj6oAAAAASUVORK5CYII=);
+          background-repeat: no-repeat;
+          border: 0px;
+
+          &:hover {
+            background-color: transparent;
+          }
+        }
+      }
+    }
+  }
+}

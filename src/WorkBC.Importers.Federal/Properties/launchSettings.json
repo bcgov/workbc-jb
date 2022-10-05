@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WorkBC.Importers.Federal": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

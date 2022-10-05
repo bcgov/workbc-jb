@@ -1,0 +1,79 @@
+﻿@model JobsByCityViewModel;
+
+@{
+    var top = 10;
+
+    IOrderedEnumerable<IGrouping<string, JobsByCityResult>> grouped = Model.Results.GroupBy(g => g.Region)
+        .OrderByDescending(g => g.Take(top).Sum(r => r.Vacancies));
+}
+
+<table class="table" id="ResultsTable">
+    <thead>
+    <tr>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    @{
+        // keep track of which rows contained group headers & footers so we can make
+        // them bold with CSS in the print version
+        var groupRows = new List<int>();
+        var bodyRow = 0;
+    }
+
+    @foreach (IGrouping<string, JobsByCityResult> g in grouped)
+    {
+        var postings = 0;
+        var vacancies = 0;
+        groupRows.Add(bodyRow);
+
+        <tr class="group-title">
+            <th>@g.Key.ToUpper()</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+        </tr>
+        <tr class="group-header">
+            <th>City</th>
+            <th class="text-right">Job vacancies</th>
+            <th class="text-right">Job postings</th>
+        </tr>
+
+        bodyRow += 2;
+
+        foreach (JobsByCityResult city in g.Take(top))
+        {
+            postings += city.Postings;
+            vacancies += city.Vacancies;
+            bodyRow += 1;
+
+            <tr>
+                <td>@city.City</td>
+                <td class="text-right">@city.Vacancies.ToString("#,##0")</td>
+                <td class="text-right">@city.Postings.ToString("#,##0")</td>
+            </tr>
+        }
+
+        bodyRow++;
+        groupRows.Add(bodyRow);
+
+        <tr class="group-footer">
+            <th>@g.Key.ToUpper() - TOP @top CITIES BY JOB VACANCIES AND POSTINGS TOTAL</th>
+            <th class="text-right">@vacancies.ToString("#,##0")</th>
+            <th class="text-right">@postings.ToString("#,##0")</th>
+        </tr>
+
+        <tr class="group-space">
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+
+        bodyRow++;
+    }
+    </tbody>
+</table>
+
+<partial name="_GroupedReportCss" model="groupRows.GetGroupCss()"/>

@@ -1,0 +1,93 @@
+<div class="job-item print-no-break">
+  <div class="row" [ngClass]="{'expired': isExpired }">
+    <div class="col-12 col-lg-8 job-info">
+      <div class="title">
+        <a *ngIf="item.IsFederalJob" [attr.href]="isExpired ? null : jobDetailsUrl">
+          {{item.Title}}
+        </a> <!--[routerLink]="['/job-details',item.JobId]" [class.disabled]="isExpired ? true : null"-->
+        <a *ngIf="!item.IsFederalJob" (click)="openModal($event)" style="cursor: pointer;"
+           [attr.href]="isExpired ? null : item.ExternalSource?.Source[0].Url">
+          {{item.Title}}
+        </a>
+        <lib-svg-icon *ngIf="!isProduction"
+          icon="info-blue" width="12px" height="12px" (click)="open(item.JobId)"></lib-svg-icon>
+      </div>
+      <div class="company" *ngIf="item.EmployerName">
+        <strong>{{item.EmployerName}}</strong>
+      </div>
+      <div *ngIf="!item.IsFederalJob">
+        <strong>Source: </strong>{{item.ExternalSource?.Source.length > 0 ? item.ExternalSource.Source[0].Source : 'N/A'}}
+      </div>
+      <div class="location" *ngIf="item.City">
+        <strong>Location: </strong>{{item.City}}
+      </div>
+      <div class="salary">
+        <strong>Salary: </strong>
+        <span>{{item.SalarySummary}}</span>
+      </div>
+      <div class="position-type" *ngIf="item.HoursOfWork.Description">
+        <strong>Job Type: </strong> {{item.HoursOfWork.Description.join(", ")}}, {{item.PeriodOfEmployment.Description.join(", ")}}
+      </div>
+    </div>
+    <div class="col-12 col-lg-2 stats-contain">
+      <div class="labels" *ngIf="item.Labels">
+        <!-- I made labels an array since I cant be sure that there won't ever be more than one label -->
+        <span class="label-{{label}}" *ngFor="let label of item.Labels">{{label}}</span>
+      </div>
+      <div class="views" *ngIf="item.Views > 0">{{item.Views}} views</div>
+      <div class="job-number mr-1" *ngIf="item.JobId && item.IsFederalJob">Job Number: {{item.JobId}}</div>
+    </div>
+    <div class="col-12 col-lg-2 cta-contain">
+      <div class="expiry" *ngIf="item.IsFederalJob">
+        <div class="expires-in">
+          <strong>{{isExpired ? "Expired" : "Expires in " + item.ExpiresIn + " days"}}</strong>
+        </div>
+        <div class="expiry-date text-nowrap">
+          Expires: 
+          <span aria-hidden="true">{{item.ExpireDate | date:'yyyy-MM-dd'}}</span>
+          <span class="sr-only">{{item.ExpireDate | date:'MMMM d, yyyy'}}</span>
+        </div>
+        <div class="post-date text-nowrap">
+          Posted: 
+          <span aria-hidden="true">{{item.DatePosted | date:'yyyy-MM-dd'}}</span>
+          <span class="sr-only">{{item.DatePosted | date:'MMMM d, yyyy'}}</span>
+        </div>
+        <div class="post-date text-nowrap">
+          Last Updated: 
+          <span aria-hidden="true">{{item.LastUpdated | date:'yyyy-MM-dd'}}</span>
+          <span class="sr-only">{{item.LastUpdated | date:'MMMM d, yyyy'}}</span>
+        </div>
+      </div>
+      <!-- if there is no expiry date, render posted date on it's own -->
+      <div class="post-date" *ngIf="!item.IsFederalJob">
+        Posted: 
+        <span aria-hidden="true">{{item.DatePosted | date:'yyyy-MM-dd'}}</span>
+        <span class="sr-only">{{item.DatePosted | date:'MMMM d, yyyy'}}</span>
+      </div>
+      <div class="cta text-nowrap d-print-none">
+        <lib-jb-a-link class="mr-2" [jobId]="item.JobId" [job]="item" *ngIf="!inSavedJobsView && !inRecommendedJobsView"></lib-jb-a-link>
+        <a href="{{printRoot}}Print/Job?jobid={{item.JobId}}" *ngIf="!inSavedJobsView && !inRecommendedJobsView && item.IsFederalJob" target="_blank">
+          <span class="icon-wrap blue small">
+            <lib-svg-icon icon="print" width="12px" height="12px"></lib-svg-icon>
+          </span>
+          <strong>Print</strong>
+        </a>
+        <a *ngIf="inSavedJobsView" (click)="addOrViewNote($event)" [attr.href]="isDisabled ? null : '#'">
+          <span class="icon-wrap blue small">
+            <lib-svg-icon [icon]="icon" [width]="iconWidthOrHeight" [height]="iconWidthOrHeight"></lib-svg-icon>
+          </span>
+          <strong>{{addOrView}} note</strong>
+        </a>
+        <a href="#" *ngIf="inSavedJobsView" (click)="deleteJob($event)">
+          <span class="icon-wrap blue small">
+            <lib-svg-icon icon="close" width="12px" height="12px"></lib-svg-icon>
+          </span>
+          <strong>Delete</strong>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="inRecommendedJobsView">
+    <em>{{ item.Reason }}</em>
+  </div>
+</div>

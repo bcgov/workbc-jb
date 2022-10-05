@@ -1,0 +1,79 @@
+<app-account [jobAlerts]="allJobAlerts.length" activeMenu="jobs"></app-account>
+<div class="job-alert-list">
+  <div class="container">
+    <h1><strong>Job Alerts <ng-container *ngIf="allJobAlerts.length">[{{allJobAlerts.length}}]</ng-container></strong></h1>
+    <div class="no-alerts" *ngIf="!allJobAlerts.length && !loading">
+      <h2>You have not created any job alerts yet.</h2>
+      <p>
+        Create a job alert to be notified of job postings that meet your search criteria. You can then view the job postings in your account and receive
+        notifications via email.
+      </p>
+    </div>
+    <a class="btn find-jobs-btn bg-blue mb-4" routerLink="create">
+      Create job alert
+      <lib-svg-icon icon="chev-white" width="25px" height="25px" class="pull-right"></lib-svg-icon>
+    </a>
+    <hr role="presentation" />
+    <div class="alert-listing">
+      <div class="job-alert" *ngFor="let jobAlert of jobAlerts">
+        <div class="row job-alert-title-row">
+          <div class="job-alert-title-container">
+            <p class="job-alert-title">{{ jobAlert.title }}</p>
+          </div>
+          <div class="jobs-available-container">
+            <a class="jobs-available" href="{{ getSearchUrl(jobAlert.urlParameters) }}">
+              <span *ngIf="jobAlert.matchedJobs == -1" class="mr-1">
+                <i class="fa fa-spinner fa-spin"></i>
+              </span>
+              <span *ngIf="jobAlert.matchedJobs != -1">{{ jobAlert.totalMatchedJobs }}</span>
+              <lib-svg-icon icon="chevron-thick" class="chevron" width="12px" height="8px"></lib-svg-icon>
+            </a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="email-frequency-container"><strong>Email alert frequency: </strong>{{ jobAlert.emailAlertFrequency }}</div>
+        </div>
+        <div class="row">
+          <div class="current-filters">
+            <ul [ngClass]="{'show-more': jobAlert.showMore}">
+              <li><strong>Your search criteria:</strong></li>
+              <li class="px-2 filter-tag" *ngFor="let filter of jobAlert.filters">
+                <span>{{filter}}</span>
+              </li>
+              <li>
+                <button *ngIf="jobAlert.filters.length > 3" type="button" class="inline-text-button btn-show-more-less" (click)="jobAlert.showMore = !jobAlert.showMore">
+                  <strong *ngIf="!jobAlert.showMore"><b>+ </b><u>Show more</u></strong>
+                  <strong *ngIf="jobAlert.showMore"><b>- </b><u>Show less</u></strong>
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div class="ctas">
+            <div class="cta">
+              <a routerLink="edit/{{jobAlert.id}}">
+                <!-- (click)="editJobAlert($event)" -->
+                <span class="icon-wrap blue small">
+                  <lib-svg-icon icon="pencil" width="15px" height="15px"></lib-svg-icon>
+                </span>
+                <strong>Edit</strong>
+              </a>
+              <a href="#" (click)="deleteJobAlert($event, jobAlert)">
+                <span class="icon-wrap blue small">
+                  <lib-svg-icon icon="close" width="12px" height="12px"></lib-svg-icon>
+                </span>
+                <strong>Delete</strong>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pagination mb-3" [style.display]="jobAlerts || allJobAlerts.length ? 'flex' : 'none'">
+        <app-pagination #pagination [style.visibility]="loading ? 'hidden': 'visible'"
+                        [vm]="paginationModel" [showDropdownPage]="false"
+                        (currentPageChanged)="onCurrentPageChanged()"></app-pagination>
+      </div>
+    </div>
+    <!--Below add Similar Display as Saved Jobs for Consistency-->
+  </div>
+</div>

@@ -1,0 +1,408 @@
+@import "../variables.scss";
+
+::ng-deep app-root {
+  // Global styles for our app, passed on to our child components but not up to the host.
+  // Sheet assumes root size of 16px. px values is used for measurements smaller than 0.25rem (4px)
+  // This sheet contains some overwrites of elements and bootstrap classes - complete or partial
+  // Base
+  .account-contain {
+    margin: 0;
+    background-color: #fff;
+  }
+
+  .account-contain,
+  .modal {
+    color: $primary-color;
+
+    h1 {
+      font-weight: 700;
+      font-size: 2rem;
+      margin: 0.67em 0;
+    }
+
+    h2 {
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+
+    a {
+      color: $link-color;
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      &.btn-inline {
+        font-weight: 700;
+        padding: 0;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    input[type="text"]::-webkit-input-placeholder {
+      /* Chrome/Opera/Safari */
+      color: $link-color;
+    }
+
+    input[type="text"]::-moz-placeholder {
+      /* Firefox 19+ */
+      color: $link-color;
+    }
+
+    input[type="text"]:-ms-input-placeholder {
+      /* IE 10+ */
+      color: $link-color;
+    }
+
+    input[type="text"]:-moz-placeholder {
+      /* Firefox 18- */
+      color: $link-color;
+    }
+    // Misc elements
+    .fa-round {
+      i.fa {
+        background: #fff;
+        color: $border-color;
+        font-size: 1rem;
+        font-weight: bold;
+        text-align: center;
+        width: 24px;
+        height: 24px;
+        line-height: 22px;
+        border-radius: 50%;
+      }
+
+      &.blue i.fa {
+        background: $seconday-color;
+        letter-spacing: 1px;
+      }
+    }
+
+    .info {
+      cursor: default;
+
+      i.fa {
+        background: $seconday-color;
+        color: $border-color;
+        font-size: 0.8rem;
+        font-weight: bold;
+        text-align: center;
+        width: 20px;
+        height: 20px;
+        line-height: 22px;
+        border-radius: 50%;
+        font-style: italic;
+        letter-spacing: 2px;
+        font-weight: lighter;
+      }
+    }
+
+    button.tooltip-icon {
+      padding: 0 0 0 8px;
+      margin-left: -8px;
+      outline: none;
+      border: none;
+      background-color: transparent;
+
+      &:focus {
+        outline: 1px dotted silver;
+      }
+    }
+
+    app-filter ngb-popover-window.bs-popover-bottom > div.arrow {
+      margin-left: -4px !important;
+    }
+
+    @media (max-width: 767px) {
+      .bs-popover-bottom {
+        max-width: 165px;
+      }
+    }
+
+    .bg-blue {
+      background: $seconday-color;
+    }
+
+    lib-svg-icon {
+      display: inline-flex;
+    }
+
+    .icon-wrap {
+      height: 30px;
+      width: 30px;
+      border-radius: 15px;
+      vertical-align: middle;
+      text-align: center;
+      line-height: 30px;
+      margin-right: 5px;
+
+      &.small {
+        height: 24px;
+        width: 24px;
+        line-height: 22px;
+        margin-right: 0px;
+      }
+
+      &.extra-small {
+        height: 16px;
+        width: 16px;
+        line-height: 14px;
+        margin-right: 0px;
+      }
+
+      > lib-svg-icon {
+        margin: 0px !important;
+      }
+
+      &.blue {
+        background-color: #5bc2e7;
+      }
+
+      &.white {
+        background-color: #fff;
+      }
+
+      &.gray {
+        background: #e9ebf0;
+      }
+    }
+    // Bootstrap Components
+    .container {
+      @media (max-width: 939px) {
+        max-width: 940px;
+      }
+    }
+
+    .btn {
+      width: auto;
+      border-radius: 0px;
+      font-size: 0.875rem;
+      font-weight: bold;
+      padding: 6px 15px;
+    }
+
+    .btn-link {
+      color: #234075;
+    }
+
+    .popover {
+      border-radius: 0px;
+      border: 1px solid #666;
+      box-shadow: none;
+      width: 235px;
+      font-size: 0.8rem;
+      cursor: text;
+      opacity: 1;
+
+      & > .arrow {
+        width: 8px;
+        height: 0px;
+        pointer-events: none;
+
+        &:before {
+          bottom: 3px;
+          left: 0;
+          border-top-color: #666 !important;
+          border-width: 5px;
+        }
+
+        &:after {
+          bottom: 2px;
+          left: 0;
+          border-top-color: #e9ebf0 !important;
+          border-width: 5px;
+        }
+      }
+
+      .popover-body {
+        font-weight: bold;
+        background: #e9ebf0;
+        padding: 10px;
+      }
+    }
+
+    .popover > .arrow:after, .popover > .arrow:before {
+      border-bottom: 0 !important;
+    }
+
+    .form-control {
+      font-size: 0.875rem;
+      border: 1px solid $border-light-color;
+      border-radius: 0;
+      height: 42px;
+      min-height: 30px;
+      padding: 9px;
+      color: $link-color;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    .form-group {
+      // margin-bottom: 20px;
+      @media (min-wdith: 600px) {
+        line-height: 40px;
+      }
+    }
+
+    .select-group {
+      background: #fff;
+      position: relative;
+      z-index: 0;
+
+      select {
+        cursor: pointer;
+        background: transparent;
+        padding-right: 50px;
+        -moz-appearance: none;
+        appearance: none;
+        -webkit-appearance: none;
+
+        & + i {
+          height: 42px;
+          width: 42px;
+          position: absolute;
+          right: 0px;
+          top: 0px;
+          margin: 0px;
+          z-index: -1;
+          background-image: url(data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMzIwIiBoZWlnaHQ9IjMyMCIgdmlld0JveD0iMCAwIDMyMCAzMjAiPjxzdHlsZT4uc3Qwe2ZpbGw6IzVCQzJFNzt9IC5zdDF7ZmlsbDojMUMxRDFGO308L3N0eWxlPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0zMjAgMHYzMjBIMFYwaDMyMHoiLz48cGF0aCBjbGFzcz0ic3QxIiBkPSJNMjAyIDEzNmwtNDQgNDgtNDAtNDhoODR6Ii8+PC9zdmc+);
+          background-repeat: no-repeat;
+          background-size: 100%;
+          background-color: #5bc2e7;
+          background-position-y: 50%;
+        }
+      }
+    }
+
+    button {
+      &:focus {
+        //outline: none;
+        box-shadow: none;
+      }
+
+      &.smoothCollapse {
+        font-size: 1rem;
+        padding: 0px;
+        border: 0px;
+
+        + lib-svg-icon {
+          cursor: pointer;
+          margin-left: 8px;
+        }
+      }
+
+      &.caret-left:before,
+      &.caret-right:after {
+        content: "";
+        display: inline-block;
+        height: 24px;
+        width: 11px;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAYCAMAAAAbMPchAAAAKlBMVEUAAAD///////////////////////////////////////////////////+Gu8ovAAAADXRSTlMAAQMKDxaHn7G3vr/SVYPAagAAADNJREFUeNq9xtkRABAMQMEnQeLqv10ZQwv2a/mprqeS7NYSiJ+6ELRHh3LkuWbmKq3w2QYQjwHE4oWqdwAAAABJRU5ErkJggg==);
+        background-repeat: no-repeat;
+        background-position: center;
+        vertical-align: top;
+      }
+
+      &.caret-left[aria-expanded="true"]:before,
+      &.caret-right[aria-expanded="true"]:after {
+        transform: rotate(180deg);
+      }
+
+      &.caret-left {
+        &:before {
+          margin-right: 12px;
+        }
+      }
+
+      &.caret-right {
+        &:after {
+          margin-left: 12px;
+        }
+      }
+    }
+  }
+
+  .no-results {
+    margin-top: 25px;
+  }
+
+  .header-banner {
+    display: none;
+
+    @media(min-width: 940px) {
+      min-height: 240px;
+      display: flex;
+      margin: 0 auto;
+      background-position: center center;
+      background-repeat: no-repeat;
+      position: relative;
+      background-size: cover;
+    }
+
+    &__container.container {
+      min-height: 240px;
+
+      @media(min-width: 940px) {
+        padding-left: 0;
+        padding-right: 0;
+        margin: 0 auto;
+        width: 940px;
+      }
+
+      .header-banner__title {
+        padding: 30px 120px 30px 30px;
+        width: 50%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.3);
+
+        h1 {
+          font-size: 2rem;
+          font-weight: 700;
+          line-height: 1.2em;
+          bottom: 40px;
+          color: #ffffff;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+
+  .header-banner--mobile {
+    display: flex;
+
+    @media(min-width: 940px) {
+      display: none;
+    }
+
+    .container {
+      background: #fff;
+
+      .header-banner__title {
+        width: 75%;
+        height: 100%;
+      }
+    }
+  }
+
+  .intro-text {
+    a {
+      text-decoration: underline;
+    }
+  }
+
+  select {
+    appearance: none;
+    -moz-appearance: none; /* Firefox */
+    -webkit-appearance: none; /* Safari and Chrome */
+    text-overflow: '';
+  }
+
+  select::-ms-expand {
+    display: none;
+  }
+}

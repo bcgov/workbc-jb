@@ -1,0 +1,13 @@
+@model MatrixReport
+
+@if (Model.TableData.Any())
+{
+    <tr class="group-footer">
+        <th>@Model.FooterTotalLabel</th>
+        @for (var i = 0; i < Model.TableData.First().Values.Count; i++)
+        {
+            <th class="text-right">@Model.SumColumn(i).ToString("#,##0")</th>
+        }
+        <th class="text-right">@Model.Total.ToString("#,##0")</th>
+    </tr>
+}

@@ -1,0 +1,35 @@
+﻿@model ICityReportTypeParams
+
+<div id="CityReportTypePartial">
+    <div class="form-check">
+        <input class="form-check-input" type="radio" value="top20" asp-for="ReportType" id="ReportTypeTop20">
+        <label class="form-check-label" for="ReportTypeTop20">
+            Top 20 cities
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" value="all" asp-for="ReportType" id="ReportTypeAll">
+        <label class="form-check-label" for="ReportTypeAll">
+            All cities
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" value="region" asp-for="ReportType" id="ReportTypeRegion">
+        <label class="form-check-label" for="ReportTypeRegion">
+            All cities in a region
+        </label>
+        <div class="form-group form-check-panel" id="regionPanel"
+             style="display: @(Model.ReportType == "region" ? "block" : "none");">
+            <select class="form-control uniform-width" asp-for="RegionId" asp-items="SelectLists.Regions">
+                <option value="0" selected>-- Select Region --</option>
+            </select>
+            <span class="text-danger" asp-validation-for="RegionId"></span>
+        </div>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" value="top10byRegion" asp-for="ReportType" id="ReportTypeRegionTop10">
+        <label class="form-check-label" for="ReportTypeRegionTop10">
+            Top 10 cities in each region
+        </label>
+    </div>
+</div>

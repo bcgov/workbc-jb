@@ -1,0 +1,369 @@
+﻿@inject SystemSettingsService SystemSettings
+@using System.Text.RegularExpressions
+@using WorkBC.ElasticSearch.Models.JobAttributes
+@using WorkBC.Shared.Extensions
+@using WorkBC.Web.Models.Search
+@using WorkBC.Web.Services
+@model WorkBC.Web.Models.Search.SearchResultsModel
+@{
+    Layout = null;
+    Source job = Model.Result[0];
+    bool french = Context.Request.Query["lang"] == "fr";
+    JobDetailsPageLabels il8n = Model.TextHeaders;
+    IEnumerable<string> jobType = job.HoursOfWork.Description.Union(job.PeriodOfEmployment.Description);
+    IEnumerable<string> workSchedule = job.EmploymentTerms.Description;
+    int newJobPeriodDays = (await SystemSettings.JbSearchSettingsAsync()).Settings.NewJobPeriodDays;
+}
+
+@functions {
+
+    private string FormatPhone(string phoneNumber)
+    {
+        if (phoneNumber == null)
+        {
+            return string.Empty;
+        }
+
+        string newNumber = Regex.Replace(phoneNumber, "[^0-9]", "");
+
+        if (newNumber.StartsWith("1") && newNumber.Length == 11)
+        {
+            newNumber = newNumber.Substring(1);
+        }
+
+        if (newNumber.Length != 10)
+        {
+            return phoneNumber;
+        }
+
+        string area = newNumber.Substring(0, 3);
+        string prefix = newNumber.Substring(3, 3);
+        string suffix = newNumber.Substring(6, 4);
+
+        return $"{area}.{prefix}.{suffix}";
+    }
+
+}
+
+<html>
+<head>
+    <title>WorkBC</title>
+    <link href="/print/print.css" type="text/css" rel="stylesheet" media="all" asp-append-version="true"/>
+</head>
+
+<body class="@(french ? "fr" : "en")">
+<div class="print-container">
+<div class="workbc-logo">
+    <img src="/print/workbc-logo-only.png" alt="WorkBC"/>
+</div>
+
+@if (job.DatePosted.HasValue && DateTime.Now.Date.Subtract(job.DatePosted.Value.Date).Days <= newJobPeriodDays)
+{
+    <span>
+        <p>
+            <strong>* @(french ? "NOUVEAU" : "NEW") *</strong>
+        </p>
+    </span>
+}
+<h1>@job.Title.ToUpper()</h1>
+<h2>@job.EmployerName</h2>
+<br/>
+
+<div class="job-detail-field">
+    <strong>@il8n.JobLocations:</strong>
+    @(job.IsVariousLocation ?? false ? french ? "Lieux Variés" : "Various locations" : job.City)
+</div>
+
+<div class="job-detail-field">
+    <strong>@il8n.Salary:</strong>
+    @(!string.IsNullOrWhiteSpace(job.SalaryDescription) ? job.SalaryDescription : "N/A")
+</div>
+
+<div class="job-detail-field">
+    <strong>@il8n.JobType: </strong>
+    @string.Join(", ", jobType)
+</div>
+
+@if (workSchedule != null && workSchedule.Any())
+{
+    <div class="job-detail-field">
+        <strong>@il8n.WorkSchedule: </strong>
+        @string.Join(", ", workSchedule)
+    </div>
+}
+
+<div class="job-detail-field">
+    <strong>@il8n.WorkplaceType: </strong>
+    @job.WorkplaceType.Description
+</div>
+
+<div class="job-detail-field">
+    <strong>@il8n.StartDate:</strong>
+    @if (job.StartDate != null && job.StartDate.Value.Year >= 2000)
+    {
+        @job.StartDate.Value.ToString("yyyy-MM-dd")
+    }
+    else
+    {
+        @il8n.AsSoonAsPossible
+    }
+
+</div>
+
+@if (job.ExpireDate.HasValue)
+{
+    <p class="expiresIn section-start">
+        <strong>
+            @il8n.ExpiresIn @job.ExpireDate.Value.Date.Subtract(DateTime.Now.Date).Days @il8n.Days
+        </strong>
+    </p>
+}
+
+<div class="job-detail-field">
+    <strong>@il8n.Expires:</strong> @job.ExpireDate?.ToString("yyyy-MM-dd")
+</div>
+<div class="job-detail-field">
+    <strong>@il8n.Posted:</strong> @job.DatePosted?.ToString("yyyy-MM-dd")
+</div>
+<div class="job-detail-field">
+    <strong>@il8n.LastUpdated:</strong> @job.LastUpdated.ToString("yyyy-MM-dd")
+</div>
+
+<div class="job-detail-field section-start">
+    <strong>@il8n.NumberOfViews:</strong> @job.Views
+</div>
+<div class="job-detail-field">
+    <strong>@il8n.JobNumber:</strong> <span>@job.JobId</span>
+</div>
+
+<div class="job-detail-field section-start">
+    <strong>@il8n.Language: </strong>
+    @(job.Lang == "en" ? "English" : "Francais")
+</div>
+
+<div class="job-detail-field">
+    <strong>@il8n.PositionsAvailable:</strong> @job.PositionsAvailable
+</div>
+
+<div class="job-detail-field">
+    <strong>@il8n.NocGroup:</strong> @job.NocGroup
+</div>
+
+<hr>
+
+<h2>@il8n.JobRequirements.ToUpper()</h2>
+<div class="requirements-container">
+    <!-- Education -->
+    @foreach (SkillCategory skill in job.SkillCategories)
+    {
+        @if (skill.Category.Id == 195)
+        {
+            <div>
+                <h3>@il8n.Education</h3>
+                <ul>
+                    @foreach (string skillItem in skill.Skills)
+                    {
+                        <li>
+                            @skillItem
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    }
+    <!-- Experience -->
+    @foreach (SkillCategory skill in job.SkillCategories)
+    {
+        @if (skill.Category.Id == 218)
+        {
+            <div>
+                <h3>@il8n.Experience</h3>
+                <ul>
+                    @foreach (string skillItem in skill.Skills)
+                    {
+                        <li>
+                            @skillItem
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    }
+    <!-- Benefits -->
+    @if (job.SalaryConditions.Description.Any())
+    {
+        <div>
+            <h3>@il8n.Benefits</h3>
+            <ul>
+                @foreach (string benefit in job.SalaryConditions.Description)
+                {
+                    <li>
+                        @benefit
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    <!-- Skills -->
+    @foreach (SkillCategory skill in job.SkillCategories)
+    {
+        @if (skill.Category.Id != 195 && skill.Category.Id != 218)
+        {
+            <div>
+                <h3>@skill.Category.Name</h3>
+                <ul class="@(skill.Skills.Count > 4 ? "multi" : "")">
+                    @foreach (string skillItem in skill.Skills)
+                    {
+                        <li>
+                            @skillItem
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    }
+</div>
+
+<!-- How To Apply -->
+
+<h2>@il8n.ApplyNow.ToUpper()</h2>
+
+<div class="apply-container">
+    <!-- Website -->
+    @if (!string.IsNullOrWhiteSpace(job.ApplyWebsite))
+    {
+        <div class="section">
+            <div class="job-detail-field">
+                <strong>@il8n.Online:</strong>
+                <a target="_blank" href="@job.ApplyWebsite">@job.ApplyWebsite</a>
+            </div>
+        </div>
+    }
+    <!-- Email -->
+    @if (!string.IsNullOrWhiteSpace(job.ApplyEmailAddress))
+    {
+        <div class="section">
+            <div class="job-detail-field">
+                <strong>@il8n.ByEmail:</strong>
+                <a href="mailto:@job.ApplyEmailAddress">@job.ApplyEmailAddress</a>
+            </div>
+        </div>
+    }
+    <!-- Phone -->
+    @if (!string.IsNullOrWhiteSpace(job.ApplyPhoneNumber))
+    {
+        <div class="section">
+            <div class="job-detail-field">
+                <strong>@il8n.ByPhone:</strong>
+                <p>
+                    <a href="tel:@job.ApplyPhoneNumber">@FormatPhone(job.ApplyPhoneNumber)</a>
+                    @if (!string.IsNullOrWhiteSpace(job.ApplyPhoneNumberExt))
+                    {
+                        @:Ext @job.ApplyPhoneNumberExt
+                    }
+                    <br />
+                    @if (!string.IsNullOrWhiteSpace(job.ApplyPhoneNumberTimeFrom))
+                    {
+                        @:Between @job.ApplyPhoneNumberTimeFrom and @job.ApplyPhoneNumberTimeTo
+                    }
+                </p>
+            </div>
+        </div>
+            }
+    <!-- Fax -->
+    @if (!string.IsNullOrWhiteSpace(job.ApplyFaxNumber))
+    {
+        <div class="section">
+            <div class="job-detail-field">
+                <strong>@il8n.ByFax:</strong>
+                <a href="tel:@job.ApplyFaxNumber">@FormatPhone(job.ApplyFaxNumber)</a>
+            </div>
+        </div>
+    }
+    <!-- In person at address -->
+    @if (!string.IsNullOrWhiteSpace(job.ApplyPersonStreet))
+    {
+        <div class="section">
+            <div class="job-detail-field">
+                <strong>@il8n.InPerson:</strong>
+                <address>
+                    @if (!string.IsNullOrWhiteSpace(job.ApplyPersonRoom))
+                    {
+                        @:Room @job.ApplyPersonRoom<br />
+                    }
+                    @if (!string.IsNullOrWhiteSpace(job.ApplyPersonStreet))
+                    {
+                        @job.ApplyPersonStreet<br />
+                    }
+                    @if (!string.IsNullOrWhiteSpace(job.ApplyPersonCity))
+                    {
+                        @job.ApplyPersonCity<br />
+                    }
+                    @if (!string.IsNullOrWhiteSpace(job.ApplyPersonProvince))
+                    {
+                        @job.ApplyPersonProvince<br />
+                    }
+                    @if (!string.IsNullOrWhiteSpace(job.ApplyPersonPostalCode))
+                    {
+                        @job.ApplyPersonPostalCode
+                    }
+                    Between @job.ApplyPersonTimeFrom and @job.ApplyPersonTimeTo
+                </address>
+            </div>
+        </div>
+    }
+    <!-- Mail -->
+    @if (!string.IsNullOrWhiteSpace(job.ApplyMailStreet))
+    {
+        <div class="section">
+            <div class="job-detail-field">
+                <strong>@il8n.ByMail:</strong>
+                <address>
+                    @if (!string.IsNullOrWhiteSpace(job.ApplyMailRoom))
+                    {
+                        @:Room @job.ApplyMailRoom<br />
+                    }
+                    @if (!string.IsNullOrWhiteSpace(job.ApplyMailStreet))
+                    {
+                        @job.ApplyMailStreet<br />
+                    }
+                    @if (!string.IsNullOrWhiteSpace(job.ApplyMailCity))
+                    {
+                        @job.ApplyMailCity<br />
+                    }
+                    @if (!string.IsNullOrWhiteSpace(job.ApplyMailProvince))
+                    {
+                        @job.ApplyMailProvince<br />
+                    }
+                    @if (!string.IsNullOrWhiteSpace(job.ApplyMailPostalCode))
+                    {
+                        @job.ApplyMailPostalCode
+                    }
+                </address>
+            </div>
+        </div>
+    }
+
+</div>
+</div>
+
+<script type="text/javascript">
+    function printWindow() {
+        window.print();
+        checkWindowState();
+    }
+
+    function checkWindowState() {
+
+        if (document.readyState === "complete") {
+            window.close();
+        } else {
+            setTimeout(checkWindowState, 2000);
+        }
+    }
+
+    printWindow();
+</script>
+
+</body>
+</html>

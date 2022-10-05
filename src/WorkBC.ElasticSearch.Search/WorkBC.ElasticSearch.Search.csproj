@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Authors>OXD</Authors>
+    <Company>WorkBC</Company>
+    <Product>WorkBC Job Board</Product>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\googlemapsinfowindow.json" />
+    <None Remove="Resources\industry_aggregation.json" />
+    <None Remove="Resources\jobdetail.json" />
+    <None Remove="Resources\jobsearch_googlemap.json" />
+    <None Remove="Resources\jobsearch_main.json" />
+    <None Remove="Resources\recommendedjobs.json" />
+    <None Remove="Resources\total_jobs.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\industry_aggregation.json" />
+    <EmbeddedResource Include="Resources\jobsearch_googlemap.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\googlemapsinfowindow.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\jobdetail.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\total_jobs.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\jobsearch_main.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\recommendedjobs.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WorkBC.Data\WorkBC.Data.csproj" />
+    <ProjectReference Include="..\WorkBC.ElasticSearch.Models\WorkBC.ElasticSearch.Models.csproj" />
+    <ProjectReference Include="..\WorkBC.Shared\WorkBC.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

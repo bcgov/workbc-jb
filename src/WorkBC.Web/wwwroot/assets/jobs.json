@@ -1,0 +1,57 @@
+[
+    {
+        "title": "Operational Manager",
+        "location": "Vancouver",
+        "company": "Milo Enterprises Inc.",
+        "salary": "$14.00 - $18.00/Hourly",
+        "jobType": "Full-Time, Permanent",
+        "labels": [
+            "new"
+        ],
+        "views": 56,
+        "jobNumber": 123,
+        "expriesIn": 4,
+        "expiresOn": "2019-01-01",
+        "postedOn": "2019-01-01",
+        "allowPrint": true,
+        "printUrl": "/fake/url/printMe",
+        "saveUrl": "/fake/url/saveMe"
+    },
+    {
+        "title": "Customer Experience Representative- Coles Aberdeen Mall",
+        "location": "Victoria",
+        "company": null,
+        "salary": null,
+        "jobType": "Part-Time, Full-Time, Permanent",
+        "labels": [
+            "new",
+            "standard"
+        ],
+        "views": null,
+        "jobNumber": null,
+        "expriesIn": null,
+        "expiresOn": null,
+        "postedOn": "2018-02-02",
+        "allowPrint": false,
+        "printUrl": null,
+        "saveUrl": "/fake/url/saveMe"
+    },
+    {
+        "title": "Drivers-Semi Truck Operations",
+        "location": "Vancouver",
+        "company": "Yen Bros Food Service (2011) Ltd",
+        "salary": "$18.50 - $20.00/Hourly",
+        "jobType": "Full-Time, Permanent",
+        "labels": [
+            "featured"
+        ],
+        "views": 19,
+        "jobNumber": 573845,
+        "expriesIn": 14,
+        "expiresOn": "2019-03-03",
+        "postedOn": "2018-03-03",
+        "allowPrint": true,
+        "printUrl": "/fake/url/printMe",
+        "saveUrl": "/fake/url/saveMe"
+    }
+]

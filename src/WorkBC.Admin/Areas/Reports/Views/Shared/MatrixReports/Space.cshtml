@@ -1,0 +1,10 @@
+@model IMatrixReportViewModel
+
+<tr class="group-space">
+    <td>&nbsp;</td>
+    @foreach (HtmlString cell in Model.TableHeadings)
+    {
+        <td>&nbsp;</td>
+    }
+    <td>&nbsp;</td>
+</tr>

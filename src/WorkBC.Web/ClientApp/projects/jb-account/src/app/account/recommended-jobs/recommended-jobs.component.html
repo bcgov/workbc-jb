@@ -1,0 +1,63 @@
+<app-account #account activeMenu="jobs"></app-account>
+<div class="recommended-jobs" [hidden]="loading">
+  <div class="container">
+    <div class="job-header">
+      <h1>
+        Recommended Jobs <ng-container *ngIf="totalRecommendedJobs != null">&nbsp;[{{ totalRecommendedJobs | number }}]</ng-container>
+      </h1>
+      <!--{{ filteredJobCount ? '[' + filteredJobCount + ']' : '' }}-->
+    </div>
+
+    <div class="intro-text" *ngIf="!totalRecommendedJobs" [innerHTML]="introTextNoRecommendedJobs"></div>
+    <div class="intro-text" *ngIf="totalRecommendedJobs" [innerHTML]="introText"></div>
+
+    <!--Check isVisible() on recommendation-filter.component.ts for visible condition -->
+    <lib-recommendation-filter [filterInput]="filterInput" [savedState]="filter" 
+      (filterApplied)="onFilterApplied($event)" *ngIf="totalRecommendedJobs">
+    </lib-recommendation-filter>
+    <div class="row" *ngIf="totalRecommendedJobs">
+      <div class="col-lg-6 col-md-6">
+        Found {{filteredJobCount | number}}
+        <span *ngIf="filteredJobCount !== 1">recommendations</span>
+        <span *ngIf="filteredJobCount === 1">recommendation</span>
+      </div>
+      <div class="col-lg-6 col-md-6" *ngIf="filteredJobCount">
+        <div class="sort-by">
+          <div class="form-group">
+            <label class="mb-0" for="sortBy"><strong>Sort by:</strong></label>
+            <div class="select-group job-source-select">
+              <select id="sortBy" class="form-control" [(ngModel)]="filter.sortOrder" (ngModelChange)="sortByChange()">
+                <option [value]="11">Relevance</option>
+                <option [value]="1">Date Posted: Newest First</option>
+                <option [value]="2">Date Posted: Oldest First</option>
+                <option [value]="3">Job Title (A-Z)</option>
+                <option [value]="4">Job Title (Z-A)</option>
+                <option [value]="5">Location (A-Z)</option>
+                <option [value]="6">Location (Z-A)</option>
+                <option [value]="7">Employer (A-Z)</option>
+                <option [value]="8">Employer (Z-A)</option>
+              </select>
+              <i class="select-arrow"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Below add Similar Display as Saved Jobs for Consistency-->
+    <div [hidden]="!filteredJobCount">
+      <hr role="presentation" />
+      <div class="job-listings" *ngIf="jobs && filteredJobCount && !loading">
+        <app-item *ngFor="let job of jobs" [item]="job" [inRecommendedJobsView]="true"></app-item>
+      </div>
+      <div class="pagination" [style.display]="jobs && filteredJobCount ? 'flex' : 'none'">
+        <app-pagination #pagination [style.visibility]="loading ? 'hidden': 'visible'" [vm]="paginationModel"
+          [updateUrl]="false" (currentPageChanged)="onCurrentPageChanged()"></app-pagination>
+      </div>
+    </div>
+
+    <div class="no-results" *ngIf="showNoResults" [innerHTML]="recommendedJobsNoResults">
+    </div>
+
+    <!--<pre>{{ filter | json }}</pre>-->
+  </div>
+</div>

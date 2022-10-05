@@ -1,0 +1,23 @@
+<div class="modal-header">
+  <button type="button" class="btn btn-close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <mat-dialog-content>
+    <div style="height: 550px;">
+      <div class="terms-logo">
+        <img src="https://www.workbc.ca/images/WBC-Logo-Color.png" class="site-logo__header-logo"
+             style="width: 206px; height: 38px;" aria-hidden="true" alt="WorkBC" title="WorkBC">
+      </div>
+
+      <div class="pageContent termsPages">
+        <div class="termsPages">
+          <h2>{{termsOfUseTitle}}</h2>
+        </div>
+        <div [innerHTML]="termsOfUseText"></div>
+      </div>
+    </div>
+  </mat-dialog-content>
+</div>
+

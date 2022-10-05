@@ -1,0 +1,57 @@
+@model NocCodeSummaryViewModel
+@{
+    ViewBag.ReportName = "NOC Code Summary";
+    ViewBag.Title = $"{ViewBag.ReportName} Report";
+}
+
+<div id="page-NOC-Code-Summary">
+    <h1 class="page-title has-breadcrumb">@ViewBag.Title</h1>
+    <div class="report-parameters">
+        <form method="get" asp-action="Results">
+
+            <div class="report-parameters__selection">
+                <h3 class="pb-2">NOC Code Category:</h3>
+                <partial name="_NocCategoryPartial" model="Model"/>
+
+                <div class="pt-3 pb-3" id="showZeroesPanel"
+                     style="display: @(Model.NocCategoryLevel == NocCategoryLevel.UnitGroup ? "none" : "block");">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="ShowZeroes">
+                        <label class="form-check-label" asp-for="ShowZeroes">
+                            Include NOC Codes with zero jobs
+                        </label>
+                    </div>
+                </div>
+
+                <h3 class="pb-2 pt-4">Jobs First Imported Between:</h3>
+                <partial name="Parameters/_SimpleDateRangePartial" model="Model"/>
+
+                <h3 class="pb-2 pt-4">Job Source:</h3>
+                <partial name="Parameters/_JobSourcePartial" model="Model"/>
+            </div>
+
+            <partial name="_RunButton"/>
+
+        </form>
+    </div>
+
+    @if (Model.Results != null)
+    {
+        ViewBag.HasResults = true;
+
+        <div class="report-results">
+
+            <partial name="_TitleWithCount"/>
+            <partial name="_Header" model="Model"/>
+
+            <div class="table-responsive-sm">
+                <partial name="ResultTables/JobsByNocCode" model="Model"/>
+            </div>
+
+            <script>
+                location.hash = "#results";
+            </script>
+
+        </div>
+    }
+</div>

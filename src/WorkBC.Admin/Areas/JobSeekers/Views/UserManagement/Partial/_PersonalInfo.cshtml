@@ -1,0 +1,17 @@
+﻿@model UserViewModel
+
+<div class="form-group">
+    <label class="font-weight-bold">First Name: <span class="required-asterisk">*</span></label>
+    <input class="form-control uniform-width" type="text" asp-for="FirstName" maxlength="50" />
+    <span asp-validation-for="FirstName" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label class="font-weight-bold">Last Name: <span class="required-asterisk">*</span></label>
+    <input class="form-control  uniform-width" type="text" asp-for="LastName" maxlength="50" />
+    <span asp-validation-for="LastName" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label class="font-weight-bold">Email: <span class="required-asterisk">*</span></label>
+    <input class="form-control  uniform-width" type="text" asp-for="Email" maxlength="256">
+    <span asp-validation-for="Email" class="text-danger"></span>
+</div>

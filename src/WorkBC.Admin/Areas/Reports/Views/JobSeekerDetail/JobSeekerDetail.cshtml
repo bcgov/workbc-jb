@@ -1,0 +1,105 @@
+@model JobSeekerDetailViewModel
+@{
+    ViewBag.ReportName = "Job Seeker Detail Report";
+    ViewBag.Title = $"{ViewBag.ReportName}";
+}
+
+<div id="page-Job-Seeker-Detail">
+    <h1 class="page-title has-breadcrumb">@ViewBag.Title</h1>
+    <div class="report-parameters">
+        <form method="get" asp-action="Results">
+
+            <div class="report-parameters__selection">
+                <h3 class="pb-2">Date Registered:</h3>
+                <partial name="Parameters/_JobSeekerDateRangePartial" model="Model"/>
+            </div>
+
+            <partial name="_RunButton"/>
+
+        </form>
+    </div>
+
+    @if (Model.Results != null)
+    {
+        ViewBag.HasResults = true;
+
+        <div class="report-results">
+
+            <partial name="_TitleWithCount"/>
+            <partial name="_Header" model="Model"/>
+
+            @if (Model.Count > Model.Results.Count)
+            {
+                <div class="alert alert-warning d-print-none">
+                    @Model.Count.ToString("#,##0") job seekers match your query, but only
+                    @Model.Results.Count.ToString("#,##0") results were returned due
+                    to system limitations. Please export to Excel to view all the results.
+                </div>
+            }
+            
+            <script>
+                window.excelUrl = '@Html.Raw($"/reports/JobSeekerDetail/Excel{Context.Request.QueryString}")';
+                window.setTimeout(function () {
+                    location.hash = "#results";
+                }, 300);
+            </script>
+
+            <div class="table-responsive-sm">
+                <div id="ResultsTable_wrapper" class="dataTables_wrapper">
+
+                    <div class="dt-buttons">
+                        <button class="dt-button buttons-copy disabled" tabindex="0" type="button" disabled title="Not Supported"><span>Copy</span></button>
+                        <button class="dt-button buttons-print-dialog" tabindex="0" type="button"><span>Print</span></button>
+                        <button class="dt-button buttons-epplus show-spinner" tabindex="0" type="button"><span>Excel</span></button>
+                    </div>
+
+                    <table class="table dataTable" id="ResultsTable">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Location</th>
+                                <th>Date<br>Registered</th>
+                                <th>Last<br>Updated<br>Date</th>
+                                <th>Employment<br>Groups</th>
+                                <th>Job<br>Alerts</th>
+                                <th>Saved<br>Jobs</th>
+                                <th>Saved<br>Career<br>Profiles</th>
+                                <th>Saved<br>Industry<br>Profiles</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (JobSeekerDetailResult user in Model.Results)
+                            {
+                                <tr>
+                                    <td>@(((AccountStatus)user.AccountStatus).ToString())</td>
+                                    <td>@user.FirstName</td>
+                                    <td>@user.LastName</td>
+                                    <td>@user.FormatEmail()</td>
+                                    <td>@user.Location</td>
+                                    <td>@user.DateRegistered.HtmlDateFormat()</td>
+                                    <td>@user.LastModified.HtmlDateFormat()</td>
+                                    <td>@user.EmploymentGroupsHtml</td>
+                                    <td>@user.HasJobAlerts.YesNo()</td>
+                                    <td>@user.HasSavedJobs.YesNo()</td>
+                                    <td>@user.HasSavedCareerProfiles.YesNo()</td>
+                                    <td>@user.HasSavedIndustryProfiles.YesNo()</td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    window.datePickerMinYear = 2013;
+</script>

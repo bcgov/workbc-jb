@@ -1,0 +1,156 @@
+@{
+    ViewBag.Title = "Manage Job Seeker Accounts";
+}
+
+<div id="page-job-seeker-accounts">
+    <h1 class="page-title">@ViewBag.Title</h1>
+    <div class="row row-search">
+        <div class="col col-md-4">
+            <div class="input-group search">
+                <input type="text" class="form-control search__input" placeholder="Search by name or email">
+                <div class="input-group-btn search__btn" tabindex="-1">
+                    <button class="btn btn-secondary" id="btnSearch">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col col--create-new-account">
+            <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("CreateUser", "UserManagement")'">
+                <i class="fa fa-plus fa-left"></i>
+                Create new job seeker account
+            </button>
+        </div>
+    </div>
+    <div class="row row-search-filters">
+        <button type="button" class="btn btn-search-filter btn-secondary btn-all active">
+            <span>All</span>
+            <span class="number" id="spAll"></span>
+        </button>
+        <button type="button" class="btn btn-search-filter btn-secondary btn-awaiting">
+            <span>Pending activation</span>
+            <span class="number" id="spPending"></span>
+        </button>
+        <button type="button" class="btn btn-search-filter btn-secondary btn-active">
+            <span>Active</span>
+            <span class="number" id="spActive"></span>
+        </button>
+        <button type="button" class="btn btn-search-filter btn-secondary btn-deactivated">
+            <span>Deactivated</span>
+            <span class="number" id="spDeactivated"></span>
+        </button>
+        <button type="button" class="btn btn-search-filter btn-secondary btn-deleted">
+            <span>Deleted</span>
+            <span class="number" id="spDeleted"></span>
+        </button>
+        <button type="button" id="btn-reset" class="btn btn-inline">
+            <span>Reset search</span>
+        </button>
+    </div>
+    <div class="row row-results">
+        <div class="col">
+            <label id="lblShowing"></label>
+        </div>
+        <div class="col form-group d-flex justify-content-end">
+            <label for="inputResultsCount">Results per page: </label>
+            <select id="inputResultsCount" class="form-control">
+                <option selected="">50</option>
+                <option>75</option>
+                <option>100</option>
+                <option>125</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="datatable-container">
+        <table class="table table-wbc-responsive table-users-search" id="dtJobSeekers">
+            <thead>
+                <tr>
+                    <th>
+                        ID
+                    </th>
+                    <th class="sort status-column">
+                        <a><span>Status</span></a>
+                    </th>
+                    <th class="sort">
+                        <a><span>First Name</span></a>
+                    </th>
+                    <th class="sort">
+                        <a><span>Last Name</span></a>
+                    </th>
+                    <th class="sort">
+                        <a><span>Email Address</span></a>
+                    </th>
+                    <th>
+                        <a><span>Location</span></a>
+                    </th>
+                    <th class="sort">
+                        <a><span>Last Updated</span></a>
+                    </th>
+                    <th class="sort">
+                        <a><span>Registered Date</span></a>
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <partial name="_DeleteUserModal" />
+
+</div>
+
+<div class="row row-back-to-top">
+    <div id="back-to-top">
+        <i class="fa fa-chevron-up fa-left"></i>
+        Back to top
+    </div>
+</div>
+
+<div id="lockedModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">User Locked</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    This user was locked by <span class="text-nowrap" id="currentUserLockedDisplayName"></span>
+                    on <span class="text-nowrap" id="currentUserDateLocked"></span>
+                    at <span class="text-nowrap" id="currentUserTimeLocked"></span>.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <a data-dismiss="modal" class="btn btn-clear">Cancel</a>
+                <a href="@Url.Action("EditUser", "UserManagement", new { Area = "jobseekers" })" class="btn btn-secondary no-margin" id="lnkViewAsReadonly">
+                    View as read-only
+                </a>
+                <form asp-area="JobSeekers" asp-controller="UserManagement" asp-action="UnlockUser" method="post" role="form">
+                    <input type="hidden" id="currentUserId" name="currentUserId" />
+                    <button type="submit" class="btn btn-primary">
+                        Unlock
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- This is to hide the datatable filter at the top-->
+<!-- Styles -->
+@section Styles {
+    <link rel="stylesheet" href="~/dist/css/dataTables.bootstrap.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/dist/lib/jquery.dataTables.min.js" asp-append-version="true"></script>
+    <script src="~/dist/lib/dataTables.bootstrap.min.js" asp-append-version="true"></script>
+    <script src="~/lib/dataTables-fullNumbers/full_numbers_no_ellipses.js" asp-append-version="true"></script>
+}

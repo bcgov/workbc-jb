@@ -1,0 +1,108 @@
+@import "../../../../variables.scss";
+
+::ng-deep app-job-alert {
+  .job-alert {
+    min-height: 550px;
+
+    p, label {
+      color: #444;
+      margin-bottom: 15px;
+    }
+
+    #alertTitle {
+      max-width: 380px;
+    }
+
+    .alert-interval-contain {
+      width: 123px;
+      margin-bottom: 15px;
+    }
+
+    .modal-body {
+      max-height: calc(100vh - 64px);
+      overflow-y: auto;
+    }
+
+    .create-alert-btn {
+      width: 100%;
+      margin-right: 15px;
+      text-align: left;
+      font-size: 1rem;
+
+      @media (min-width: 940px) {
+        width: 200px !important;
+      }
+
+      & + a, & + button {
+        font-weight: bold;
+
+        @media (max-width: 939px) {
+          float: right;
+          margin-top: 26px;
+          padding-right: 6px;
+        }
+      }
+    }
+
+    .btn-cancel {
+      border: none;
+      background: none;
+      font-weight: 700;
+
+      @media (max-width: 939px) {
+        margin-bottom: 36px;
+      }
+
+      &:hover {
+        color: #0056b3;
+        text-decoration: underline;
+      }
+    }
+
+    .current-filters {
+      display: flex;
+      align-items: center;
+
+      ul {
+        padding: 0px;
+        margin: 0px;
+
+        li {
+          display: inline-block;
+          margin-bottom: 10px;
+          margin-right: 10px;
+
+          &.filter-tag {
+            background-color: #e9ebf0;
+            font-size: 0.875rem;
+            padding: 7px 8px;
+            display: none;
+
+            &:nth-child(-n+3) {
+              display: inline-block;
+            }
+
+            a {
+              margin-left: 10px;
+            }
+          }
+
+          .btn-show-more-less {
+            margin-right: 10px;
+          }
+        }
+
+        &.show-more {
+          .filter-tag {
+            display: inline-block;
+          }
+        }
+      }
+    }
+  }
+}
+
+button.inline-text-button {
+  border: none;
+  background: none;
+}

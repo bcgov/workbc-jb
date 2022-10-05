@@ -1,0 +1,92 @@
+@import '../../../node_modules/ngx-toastr/toastr.css';
+@import '../../../node_modules/@angular/material/prebuilt-themes/indigo-pink.css';
+@import '../../../node_modules/font-awesome/css/font-awesome.min.css';
+@import '../../../shared-css/_placeholders';
+@import '../../../shared-css/_toastr';
+@import '../../../shared-css/_modals';
+@import '../../../shared-css/_accessibility';
+@import '../../../shared-css/_firefox.scss';
+@import '../../../shared-css/_errors.scss';
+
+html, body { height: 100%; }
+
+.select-group-bg {
+  background-color: white;
+}
+
+/* Load background images from this file instead of from individual components. The component css ends
+   up being injected into the head of the page and served in a style tag, and css in this file ends up
+   being linked as an external css file.  URLs in css are relative to the file that contains
+   the URL.  URLs in components end up being relative to the Kentico server, and url's in a linked
+   css file end up being relative to the job board API server. 
+*/
+
+app-login {
+
+    .header-banner {
+        background-image: url(/assets/images/jobseekers.jpg);
+    }
+
+    .account-login .login-form .form-group {
+        &.register a:after,
+        &.forgotPw button.btn-inline:after {
+            background-image: url(/assets/icons/arrow-right.svg);
+        }
+    }
+}
+
+app-password-reset .header-banner {
+    background-image: url('/assets/images/jobseekers.jpg');
+}
+
+app-confirm-email .header-banner {
+    background-image: url('/assets/images/registration.jpg');
+}
+
+app-job-seeker .job-seeker-account {
+    .account-ribbon  a:after {
+        background-image: url(/assets/icons/arrow-right.svg);
+    }
+    .side-banner {
+      background-image: url('/assets/images/jobseeker-register-bg.jpg');
+    }
+}
+
+app-landing .header-banner {
+    background-image: url('/assets/images/registration.jpg');
+}
+
+app-register {
+    .header-banner {
+        background-image: url('/assets/images/registration.jpg');
+    }
+
+    .account-select {
+        .job-seeker {
+            background-image: url('/assets/images/jobseeker.jpg');
+        }
+        .employer {
+            background-image: url('/assets/images/employer.jpg');
+        }
+    }
+}
+
+app-root {
+  #salaryDropdownMenu button {
+    &.caret-left:before,
+    &.caret-right:after {
+      background-image: url('/assets/icons/arrow-white-drop-down.svg');
+    }
+  }
+}
+
+app-item .job-item .title a:after {
+  background-image: url(/assets/icons/arrow-right.svg);
+}
+
+@media (max-width: 939px) {
+  #site-navigation {
+    border-bottom: 1px solid #e1e3e5;
+    border-right: 1px solid #e1e3e5;
+  }
+}

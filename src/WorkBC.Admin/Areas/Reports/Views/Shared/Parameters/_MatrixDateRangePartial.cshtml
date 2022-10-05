@@ -1,0 +1,117 @@
+﻿@model IMatrixDateRangeParams
+
+@{
+    IList<SelectListItem> years;
+    IList<SelectListItem> fiscalYearsTo;
+
+    if (Model.IsJobSeekerReport)
+    {
+        years = SelectLists.JobSeekerYears.ToList();
+
+        // remove 2012 from fiscal year dropdowns
+        fiscalYearsTo = SelectLists.JobSeekerFiscalYears
+            .Where(j => string.Compare(j.Value, "2013", StringComparison.Ordinal) > 0).ToList();
+    }
+    else
+    {
+        years = SelectLists.JobYears.ToList();
+
+        // remove 2019 from fiscal year dropdowns
+        fiscalYearsTo = SelectLists.JobFiscalYears
+            .Where(j => string.Compare(j.Value, "2021", StringComparison.Ordinal) > 0).ToList();
+    }
+
+    IList<SelectListItem> fiscalYearsFrom = fiscalYearsTo;
+
+    // remove next year from other date dropdowns
+    IList<SelectListItem> nonFutureYears = years.Where(j =>
+        string.Compare(j.Value, (DateTime.Now.Year + 1).ToString(), StringComparison.Ordinal) < 0).ToList();
+}
+
+<div id="MatrixDateRangePartial">
+    <div class="form-check">
+        <input class="form-check-input" type="radio" value="yearly" asp-for="DateTypeToggle" id="DateTypeToggleYearly">
+        <label class="form-check-label" for="DateTypeToggleYearly">
+            Fiscal years
+        </label>
+        <div class="form-group form-check-panel" id="yearlyPanel"
+             style="display: @(Model.DateTypeToggle == "yearly" ? "block" : "none");">
+            <fieldset>
+                <label class="fy-from">From:</label>
+                <select class="form-control d-inline-block ml-1" asp-for="FiscalYearFrom" asp-items="fiscalYearsFrom">
+                </select><br class="d-sm-none d-block"/>
+                <label class="fy-to">To:</label>
+                <select class="form-control d-inline-block ml-1" asp-for="FiscalYearTo" asp-items="fiscalYearsTo">
+                </select>
+            </fieldset>
+            <span class="text-danger" asp-validation-for="FiscalYearFrom"></span>
+        </div>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" value="monthly" asp-for="DateTypeToggle" id="DateTypeToggleMonthly">
+        <label class="form-check-label" for="DateTypeToggleMonthly">
+            Monthly
+        </label>
+        <div class="form-group form-check-panel" id="monthlyPanel"
+             style="display: @(Model.DateTypeToggle == "monthly" ? "block" : "none");">
+
+            <select class="form-control d-inline-block" asp-for="MonthlyRangeType">
+                <option data-val="@DateRangeHelper.Past12MonthsData" value="p12">
+                    Last 12 Months
+                </option>
+                <option data-val="@DateRangeHelper.ThisYearData" value="ty">
+                    This Calendar Year
+                </option>
+                <option data-val="@DateRangeHelper.LastYearData" value="ly">
+                    Last Calendar Year
+                </option>
+                <option data-val="@DateRangeHelper.ThisFiscalYearData" value="tfy">
+                    This Fiscal Year
+                </option>
+                <option data-val="@DateRangeHelper.LastFiscalYearData" value="lfy">
+                    Last Fiscal Year
+                </option>
+                <option value="custom">Custom Range</option>
+            </select>
+
+            <!--<fieldset class="date-range" style="display: @(Model.MonthlyRangeType == "custom" ? "block" : "none");" id="customPanel">-->
+
+            <label class="fy-from">From:</label>
+            <select class="form-control d-inline-block" asp-for="MonthlyStartMonth" asp-items="SelectLists.Months">
+            </select>
+            <select class="form-control d-inline-block" asp-for="MonthlyStartYear" asp-items="nonFutureYears">
+            </select>
+
+            <label class="fy-to">To:</label>
+            <select class="form-control d-inline-block" asp-for="MonthlyEndMonth" asp-items="SelectLists.Months">
+            </select>
+            <select class="form-control d-inline-block" asp-for="MonthlyEndYear" asp-items="years">
+            </select>
+            
+            <div>
+                <span class="text-danger" asp-validation-for="MonthlyStartMonth"></span>
+            </div>
+
+        </div>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" value="weekly" asp-for="DateTypeToggle" id="DateTypeToggleWeekly">
+        <label class="form-check-label" for="DateTypeToggleWeekly">
+            Weekly
+        </label>
+        <div class="form-group form-check-panel" id="weeklyPanel"
+             style="display: @(Model.DateTypeToggle == "weekly" ? "block" : "none");">
+
+            <p>Select month/year for a weekly breakdown:</p>
+
+            <fieldset>
+                <select class="form-control d-inline-block" asp-for="WeeklyMonth" asp-items="SelectLists.Months">
+                </select>
+                <select class="form-control d-inline-block" asp-for="WeeklyYear" asp-items="nonFutureYears">
+                </select>
+            </fieldset>
+            <span class="text-danger" asp-validation-for="WeeklyMonth"></span>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WorkBC.Notifications.JobAlerts": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

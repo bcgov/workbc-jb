@@ -1,0 +1,23 @@
+<div class="modal-header">
+  <button type="button" class="btn btn-close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <mat-dialog-content>
+    <mat-form-field class="textarea-full-width">
+      <textarea matInput [(ngModel)]="data.savedJobNoteModel.note" placeholder="Enter a note"></textarea>
+    </mat-form-field>
+  </mat-dialog-content>
+</div>
+<div class="modal-footer">
+  <mat-dialog-actions align="end">
+    <a [attr.href]="isExpired ? null : '#'" class="btn btn-continue" (click)="saveNote($event, isExpired)"
+      *ngIf="!isExpired" style="margin-right: 0">Save note
+    </a>
+    <a href="#" class="btn btn-continue btn-delete" (click)="deleteNote($event)" *ngIf="note"
+      style="margin-right: 0; margin-left: 15px;">
+      Delete
+    </a>
+  </mat-dialog-actions>
+</div>

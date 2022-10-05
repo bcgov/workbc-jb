@@ -1,0 +1,56 @@
+<app-account activeMenu="jobs"></app-account>
+<div class="saved-jobs">
+  <div class="container">
+    <h1>Saved Jobs <ng-container *ngIf="totalSavedJobs">[{{totalSavedJobs}}]</ng-container>
+    </h1>
+    <div class="no-saved-jobs" *ngIf="!totalSavedJobs">
+      <h2>You have not saved any jobs yet.</h2>
+      <p>Saving jobs can help you:</p>
+      <ul>
+        <li>Save time. You won't need to run a search to find your favourite job postings.</li>
+        <li>Stay organized. Keep all your saved jobs in one place.</li>
+        <li>Start planning. Create personalized notes for your job postings.</li>
+      </ul>
+    </div>
+    <div class="row">
+      <div class="col-lg-6 col-md-6 mb-1">
+        <a [href]="jbSearchUrl" class="btn find-jobs-btn bg-blue">
+          Find jobs
+          <lib-svg-icon icon="chev-white" width="25px" height="25px" class="pull-right"></lib-svg-icon>
+        </a>
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <div class="sort-by" *ngIf="totalSavedJobs">
+          <div class="form-group">
+            <label class="mb-0" for="sortBy"><strong>Sort by:</strong></label>
+            <div class="select-group job-source-select">
+              <select id="sortBy" class="form-control" [(ngModel)]="sortOrder" (ngModelChange)="sortByChange()">
+                <option value="11">Date Saved: Newest First</option>
+                <option value="1">Date Posted: Newest First</option>
+                <option value="2">Date Posted: Oldest First</option>
+                <option value="3">Job Title (A-Z)</option>
+                <option value="4">Job Title (Z-A)</option>
+                <option value="5">Location (A-Z)</option>
+                <option value="6">Location (Z-A)</option>
+                <option value="7">Employer (A-Z)</option>
+                <option value="8">Employer (Z-A)</option>
+              </select>
+              <i class="select-arrow"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="totalSavedJobs">
+      <hr role="presentation" />
+      <div class="job-listings" *ngIf="results && totalSavedJobs && !loading">
+        <app-item *ngFor="let job of results" [item]="job" [inSavedJobsView]="true" (deleted)="onDeleted($event)">
+        </app-item>
+      </div>
+      <div class="pagination" [style.display]="results && totalSavedJobs ? 'flex' : 'none'">
+        <app-pagination #pagination [style.visibility]="loading ? 'hidden': 'visible'" [vm]="paginationModel"
+          (currentPageChanged)="onCurrentPageChanged()"></app-pagination>
+      </div>
+    </div>
+  </div>
+</div>

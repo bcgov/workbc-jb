@@ -1,0 +1,6 @@
+<svg id="icon_checkbox-checked" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid" width="16" height="16" viewBox="0 0 16 16">
+  <g>
+    <rect x="0.5" y="0.5" width="15" height="15" style="fill: #000;fill-rule: evenodd;stroke: #000;stroke-width: 1px;fill: #fff;"/>
+    <path d="M13.000,4.981 C12.656,4.647 12.328,4.329 11.988,4.000 C9.851,6.009 7.692,8.038 5.516,10.084 C4.648,9.237 3.794,8.404 2.962,7.594 C2.624,7.922 2.294,8.243 2.000,8.528 C3.176,9.672 4.370,10.833 5.569,12.000 C8.035,9.671 10.523,7.320 13.000,4.981 Z" class="cls-1"/>
+  </g>
+</svg>

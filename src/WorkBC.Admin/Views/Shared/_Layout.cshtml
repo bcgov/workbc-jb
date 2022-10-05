@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+@{
+    ClaimsPrincipal user = Context.User;
+    string firstName = user.FindFirst(ClaimTypes.GivenName)?.Value ?? "";
+}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - WorkBC Admin</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/dist/css/bootstrap.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/dist/css/select2.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/dist/css/select2-bootstrap.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/dist/css/font-awesome.css" asp-append-version="true" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/dist/css/vendor.min.css" asp-append-version="true" />
+    </environment>
+    <link rel="stylesheet" href="~/dist/css/site.css" asp-append-version="true" />
+
+    @await RenderSectionAsync("Styles", false)
+</head>
+<body>
+    <header>    
+        <div class="banner d-print-none">
+            <a href="https://gov.bc.ca" alt="Go to the Government of British Columbia website">
+              <img class="banner__logo" src="/img/BCID_H_rgb_rev.svg" alt="Go to the Government of British Columbia website" />
+            </a>
+            <h2>WorkBC Job Board Administration</h2>
+        </div>
+        <div class="header-rightside">
+          <a class="nav-btn">
+            <i class="fa fa-bars" id="menu"></i>
+        </a>
+        <div class="header-rightside__content">
+            <p>
+                Welcome, @firstName
+                <a onclick="document.getElementById('logout_form').submit();"
+                   style="cursor: pointer; text-decoration: underline;">
+                    Log out
+                </a>
+            </p>
+        </div>
+    </div>
+    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logout_form"></form>
+</header>
+<nav class="navigation-main d-print-none" id="navbar">
+    <div class="container--wide">
+        <ul>
+            @if (Context.User.IsInRole(Roles.Admin) || Context.User.IsInRole(Roles.SuperAdmin))
+            {
+                <li class="nav-item @(ViewBag.NavArea == NavArea.USERS ? "active" : "")">
+                    <a class="nav-link" asp-area="JobSeekers" asp-controller="UserSearch" asp-action="Index">Job Seeker Accounts</a>
+                </li>
+                <li class="nav-item @(ViewBag.NavArea == NavArea.JOBS ? "active" : "")">
+                    <a class="nav-link" asp-area="Jobs" asp-controller="JobSearch" asp-action="Index">Job Postings</a>
+                </li>
+            }
+            @if (Context.User.IsInRole(Roles.SuperAdmin))
+            {
+                <li class="nav-item @(ViewBag.NavArea == NavArea.ADMIN_USERS ? "active" : "")">
+                    <a class="nav-link" asp-area="AdminAccounts" asp-controller="AdminUserSearch" asp-action="Index">Admin Accounts</a>
+                </li>
+                <li class="nav-item @(ViewBag.NavArea == NavArea.SYSTEMSETTINGS ? "active" : "")">
+                    <a class="nav-link" asp-area="SystemSettings" asp-controller="Settings" asp-action="Index">System Settings</a>
+                </li>
+            }
+            <li class="nav-item @(ViewBag.NavArea == NavArea.REPORTS ? "active" : "")">
+                <a class="nav-link" asp-area="Reports" asp-controller="Home" asp-action="Index">Reporting</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<main role="main" class="pt-3 pb-5">
+    <div class="container--wide">
+
+            @RenderBody()
+
+        </div>
+    </main>
+
+    <footer class="border-top footer">
+        <div class="container">
+            <p>&copy; Copyright @DateTime.Now.Year - Province of British Columbia. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="progress-overlay"><i class="fa fa-spinner fa-spin"></i></div>
+
+    <environment include="Development">
+        <script src="~/dist/lib/jquery.js" asp-append-version="true"></script>
+        <script src="~/dist/lib/bootstrap.bundle.js" asp-append-version="true"></script>
+        <script src="~/dist/lib/select2.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/dist/lib/jquery.min.js" asp-append-version="true"></script>
+        <script src="~/dist/lib/bootstrap.bundle.min.js" asp-append-version="true"></script>
+        <script src="~/dist/lib/select2.min.js" asp-append-version="true"></script>
+    </environment>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

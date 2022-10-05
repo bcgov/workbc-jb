@@ -1,0 +1,20 @@
+﻿@model IJobSeekerDateRangePicker
+
+<div id="JobSeekerDateRangePartial">
+    <div class="form-check">
+        <input class="form-check-input" type="radio" value="any" asp-for="DateTypeToggle" id="DateRangeAny">
+        <label class="form-check-label" for="DateRangeAny">
+            All dates
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" value="period" asp-for="DateTypeToggle" id="DateRangePeriod" data-date-end-date="0d">
+        <label class="form-check-label" for="DateRangePeriod">
+            Between dates
+        </label>
+        <div class="form-group form-check-panel" id="periodPanel"
+             style="display: @(Model.DateTypeToggle == "period" ? "block" : "none");">
+            <partial name="Parameters/_DateRangePickerPartial" model="Model"/>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,144 @@
+﻿<SolrResponse>
+  <Header>
+    <status>0</status>
+    <QTime>0</QTime>
+    <numFound>1</numFound>
+  </Header>
+  <Documents>
+    <Document>
+      <jobs_id>31387859</jobs_id>
+      <noc_2011>6322</noc_2011>
+      <skill_level>X</skill_level>
+      <remote_cd>1329806</remote_cd>
+      <title>line cook</title>
+      <noc>6322</noc>
+      <work_period_cd>F</work_period_cd>
+      <employer_type_id>0</employer_type_id>
+      <edulevel_cd>X</edulevel_cd>
+      <wage_class>E</wage_class>
+      <postal_code>V0R2P1</postal_code>
+      <employer_id>158139</employer_id>
+      <lang>en</lang>
+      <skill_categories>
+        <skill_category id="195">
+          <name>Education</name>
+          <options>
+            <option_name>Secondary (high) school graduation certificate or equivalent experience</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="218">
+          <name>Experience</name>
+          <options>
+            <option_name>1 year to less than 2 years</option_name>
+          </options>
+        </skill_category>
+        <skill_category id="685">
+          <name>Specific Skills</name>
+          <options>
+            <option_name>Train staff in preparation, cooking and handling of food</option_name>
+            <option_name>Supervise kitchen staff and helpers</option_name>
+            <option_name>Order supplies and equipment</option_name>
+            <option_name>Inspect kitchens and food service areas</option_name>
+            <option_name>Clean kitchen and work areas</option_name>
+            <option_name>Maintain inventory and records of food, supplies and equipment</option_name>
+            <option_name>Prepare and cook complete meals or individual dishes and foods</option_name>
+            <option_name>Plan menus, determine size of food portions, estimate food requirements and costs, and monitor and order supplies</option_name>
+          </options>
+        </skill_category>
+      </skill_categories>
+      <job_source_id>16</job_source_id>
+      <work_term_cd>P</work_term_cd>
+      <work_lang_cd>E</work_lang_cd>
+      <app_methods>
+        <app_online></app_online>
+        <app_email>naoya@bridgemans.ca</app_email>
+        <app_phone>
+          <app_phone_number></app_phone_number>
+          <app_phone_ext></app_phone_ext>
+          <app_phone_start_bus_hours></app_phone_start_bus_hours>
+          <app_phone_end_bus_hours></app_phone_end_bus_hours>
+        </app_phone>
+        <app_fax></app_fax>
+        <app_person>
+          <app_person_street></app_person_street>
+          <app_person_room></app_person_room>
+          <app_person_city></app_person_city>
+          <app_person_province></app_person_province>
+          <app_person_country></app_person_country>
+          <app_person_pstlcd></app_person_pstlcd>
+          <app_person_start_bus_hours></app_person_start_bus_hours>
+          <app_person_end_bus_hours></app_person_end_bus_hours>
+        </app_person>
+        <app_mail>
+          <app_mail_street></app_mail_street>
+          <app_mail_room></app_mail_room>
+          <app_mail_city></app_mail_city>
+          <app_mail_province></app_mail_province>
+          <app_mail_country></app_mail_country>
+          <app_mail_pstlcd></app_mail_pstlcd>
+        </app_mail>
+      </app_methods>
+      <naics_id>37</naics_id>
+      <hours>35 hours per week</hours>
+      <employer_name_case>Bridgemans Bistro</employer_name_case>
+      <employer_name_string>Bridgemans Bistro</employer_name_string>
+      <num_positions>2</num_positions>
+      <start_date />
+      <job_senior_flag>false</job_senior_flag>
+      <various_location_flag>false</various_location_flag>
+      <job_student_flag>false</job_student_flag>
+      <job_youth_flag>false</job_youth_flag>
+      <job_apprentice_flag>false</job_apprentice_flag>
+      <job_disability_flag>false</job_disability_flag>
+      <job_aboriginal_flag>false</job_aboriginal_flag>
+      <program_title>false</program_title>
+      <job_vismin_flag>false</job_vismin_flag>
+      <job_newcomer_flag>false</job_newcomer_flag>
+      <job_veteran_flag>false</job_veteran_flag>
+      <latlng_variance>1</latlng_variance>
+      <los_id>2</los_id>
+      <postal_code_ind>1</postal_code_ind>
+      <experience_min>12</experience_min>
+      <date_posted>2019-10-10T10:59:00Z</date_posted>
+      <file_update_date>2019-11-10T00:20:00Z</file_update_date>
+      <import_date>2019-11-10T01:03:57Z</import_date>
+      <display_until>2019-12-09T23:59:00Z</display_until>
+      <salary_hourly>15.0</salary_hourly>
+      <salary_weekly>525.0</salary_weekly>
+      <work_hours>35.0</work_hours>
+      <city_name>
+        <string>Mill Bay</string>
+      </city_name>
+      <lmi_geoarea_cd>
+        <string>25566</string>
+      </lmi_geoarea_cd>
+      <url>
+        <string>https://www.jobbank.gc.ca/jobsearch/jobposting/31387859</string>
+      </url>
+      <latlng_rpt>
+        <string>48.642257,-123.561174</string>
+      </latlng_rpt>
+      <latlng>
+        <string>48.642257,-123.561174</string>
+      </latlng>
+      <city_id>
+        <string>39780</string>
+      </city_id>
+      <noc_jobtitle_concordance_id>
+        <string>6225</string>
+      </noc_jobtitle_concordance_id>
+      <major_city_id>
+        <string>39071</string>
+      </major_city_id>
+      <province_cd>
+        <string>BC</string>
+      </province_cd>
+      <salary>
+        <string>$15.00 hourly</string>
+      </salary>
+      <employer_name>
+        <string>Bridgemans Bistro</string>
+      </employer_name>
+    </Document>
+  </Documents>
+</SolrResponse>

@@ -1,0 +1,102 @@
+<div class="header-banner">
+  <div class="header-banner__container container">
+    <div class="header-banner__title">
+      <h1>Log into your account</h1>
+    </div>
+  </div>
+</div>
+
+<div class="header-banner--mobile">
+  <div class="container">
+    <div class="header-banner__title">
+      <h1>Log into your account</h1>
+    </div>
+  </div>
+</div>
+
+<div class="account-login">
+  <div class="container">
+    <div class="login-form">
+      <form focusInvalidInput [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <p *ngIf="showSavingJobMessage" class="saved-items-alert pb-1 pt-2">
+          <span>You have {{ totalSavedItemsText }} temporarily saved {{ itemType }}{{ totalSavedItems > 1 ? 's' : '' }} in this session. </span>
+          <span *ngIf="!hasMoreThanOneType">To save {{ totalSavedItems > 1 ? 'these' : 'this' }} {{ itemType }}{{ totalSavedItems > 1 ? 's' : '' }}, please </span>
+          <span *ngIf="hasMoreThanOneType">Please </span>
+          <span>log in to your account. If you don’t have an account, create one now to save and </span>
+          <span>manage {{ totalSavedItems > 1 ? 'these items' : 'this item' }}.</span>
+        </p>
+
+        <div class="form-group creds">
+          <div class="form-group__inline">
+            <label for="emailInput">Email:</label>
+            <input class="form-control" [ngClass]="{'input-danger': errorField === 1 || !isValid(vm.email) }" id="emailInput" type="email" formControlName="email" required #email tabindex="0" />
+          </div>
+          <div aria-live="polite">
+            <div [hidden]="isValid(vm.email)" class="text-danger empty-left-220">
+              {{ messageForInvalidEmail }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group creds">
+          <div class="form-group__inline">
+            <label for="passwordInput">Password:</label>
+            <input class="form-control" [ngClass]="{'input-danger': errorField === 2 || !isValid(vm.password) }" id="passwordInput" type="password" formControlName="password" required />
+          </div>
+          <div aria-live="polite">
+            <div [hidden]="isValid(vm.password)" class="text-danger empty-left-220">
+              {{ messageForEmptyPassword }}
+            </div>
+          </div>
+        </div>
+
+        <div aria-live="polite">
+          <div class="form-group d-flex align-items-center" *ngIf="error">
+            <span class="text-danger">
+              <span *ngIf="!error.startsWith('ERR_')">
+                {{error}}
+              </span>
+              <span *ngIf="error === 'ERR_LOGIN_FAILED_DEACTIVATED'">
+                Your account has been deactivated.&nbsp; <a class="lnk-contact" href="/Contact-Us.aspx">Contact us to resolve the issue<i class="fa fa-chevron-right"></i></a>
+              </span>
+            </span>
+            <button type="button" class="btn btn-link px-1 btn-resend"
+                    (click)="resendEmail()" *ngIf="showEmailActivationLink">
+              Resend activation email now<i class="fa fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="check-group rememberMe">
+          <input type="checkbox" formControlName="staySignedIn" id="staySignedIn" />
+          <div class="checkbox-icons">
+            <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+          </div>
+          <label for="staySignedIn">Stay signed in</label>
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn account-login-btn bg-blue">
+            Log in
+            <lib-svg-icon icon="chev-white" width="25px" height="25px" class="pull-right"></lib-svg-icon>
+          </button>
+        </div>
+        <!--<p>
+          Form Value: {{ loginForm.value | json }}
+        </p>-->
+      </form>
+      <div class="form-group forgotPw">
+        <button class="btn-inline" (click)="forgotPasswordModal($event)"><strong>Forgot password?</strong>
+        </button>
+      </div>
+      <div class="form-group register">
+        Don't have an account?
+        <a href="#/register"><strong>Register now</strong>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+

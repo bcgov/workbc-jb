@@ -1,0 +1,29 @@
+::ng-deep app-confirm-email {
+
+  .account-confirm-email {
+    background: #ffffff;
+    padding: 60px 0;
+
+    .container {
+
+      @media(min-width: 940px) {
+        width: 940px;
+        margin: 0 auto;
+        padding: 0;
+      }
+    }
+
+    .sub-header {
+      font-size: 1.5rem;
+      font-weight: 400;
+    }
+
+    a {
+      font-weight: 700;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

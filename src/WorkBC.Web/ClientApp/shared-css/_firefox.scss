@@ -1,0 +1,11 @@
+/* Styles for firefox */
+
+// remove FF focus styling from select elements
+select::-moz-focus-inner {
+  outline: none !important;
+}
+
+select:-moz-focusring {
+  color: transparent !important;
+  text-shadow: 0 0 0 #234075 !important;
+}

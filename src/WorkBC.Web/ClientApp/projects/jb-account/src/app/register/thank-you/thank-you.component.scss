@@ -1,0 +1,38 @@
+::ng-deep app-thank-you {
+
+  .thank-you {
+    background: #ffffff;
+    padding-bottom: 20px;
+
+    @media(min-width: 940px) {
+      padding: 40px 0 80px 0;
+    }
+
+    .container {
+
+      @media(min-width: 940px) {
+        width: 940px;
+        margin: 0 auto;
+        padding: 0;
+      }
+    }
+
+    .sub-header {
+      font-size: 1.5rem;
+      font-weight: 400;
+    }
+  }
+
+  .form-group {
+    margin-top: 40px;
+
+    .resend-register-link-btn {
+      width: 100%;
+      text-align: left;
+
+      @media(min-width: 600px) {
+        width: 220px;
+      }
+    }
+  }
+}

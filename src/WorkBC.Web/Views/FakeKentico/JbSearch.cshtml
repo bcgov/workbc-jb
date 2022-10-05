@@ -1,0 +1,41 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
+@using Microsoft.Extensions.Hosting
+@model WorkBC.Web.Settings.AppSettings
+
+<link rel="stylesheet" href="~/bootstrap/bootstrap.css" asp-append-version="true">
+<link rel="stylesheet" href="~/dist/jb-search/styles.css" asp-append-version="true"/>
+
+<base href="/Test/JbSearch" />
+
+<app-root api="/" jbsearch="/Test/JbSearch" jbaccount="/Test/JbAccount" asp-append-version="true">
+    <div class="loading-wheel" style="height:200px"></div>
+    <style type="text/css">
+        footer { display: none; }
+    </style>
+</app-root>
+
+<script src="~/dist/jb-search/runtime-es2017.js" type="module" asp-append-version="true"></script>
+<script src="~/dist/jb-search/runtime-es5.js" nomodule defer asp-append-version="true"></script>
+<script src="~/dist/jb-search/polyfills-es5.js" nomodule defer asp-append-version="true"></script>
+<script src="~/dist/jb-search/polyfills-es2017.js" type="module" asp-append-version="true"></script>
+@if (env.IsDevelopment())
+{
+    <script src="~/dist/jb-search/vendor-es2017.js" type="module" asp-append-version="true"></script>
+    <script src="~/dist/jb-search/vendor-es5.js" nomodule defer asp-append-version="true"></script>
+}
+<script src="~/dist/jb-search/main-es2017.js" type="module" asp-append-version="true"></script>
+<script src="~/dist/jb-search/main-es5.js" nomodule defer asp-append-version="true"></script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=@Model.GoogleMapsReferrerApi" async defer></script>
+
+<script>
+    // disable the main form on the page.
+    (function ($) {
+        $(function () {
+            $("form#form").submit(function (e) {
+                e.preventDefault();
+            });
+            $("a.backToTopBtn").css("display","");
+        });
+    })($cmsj);
+</script>

@@ -1,0 +1,682 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "analysis": {
+      "analyzer": {
+        "default": {
+          "tokenizer": "standard",
+          "filter": [
+            "asciifolding",
+            "english_possessive_stemmer",
+            "lowercase",
+            "english_stop",
+            "english_stemmer",
+            "synonym"
+          ]
+        },
+        "english_exact": {
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase"
+          ]
+        }
+      },
+      "filter": {
+        ##SYNONYM##,
+        "english_stop": {
+          "type": "stop",
+          "stopwords": "_english_"
+        },
+        "english_stemmer": {
+          "type": "stemmer",
+          "language": "light_english"
+        },
+        "english_possessive_stemmer": {
+          "type": "stemmer",
+          "language": "possessive_english"
+        }
+      },
+      "normalizer": {
+        "lowercase_normalizer": {
+          "type": "custom",
+          "char_filter": [],
+          "filter": [ "lowercase", "asciifolding" ]
+        }
+      }
+    },
+    "index": {
+      "max_result_window": 50000
+    }
+  },
+  "mappings": {
+    "properties": {
+      "DatePosted": {
+        "type": "date"
+      },
+      "ExpireDate": {
+        "type": "date"
+      },
+      "StartDate": {
+        "type": "date"
+      },
+      "EduLevel": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "EmployerName": {
+        "type": "text",
+        "fields": {
+          "normalize": {
+            "type": "keyword",
+            "normalizer": "lowercase_normalizer"
+          },
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "exact": {
+            "type": "text",
+            "analyzer": "english_exact"
+          }
+        }
+      },
+      "JobDescription": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "exact": {
+            "type": "text",
+            "analyzer": "english_exact"
+          }
+        }
+      },
+      "EmployerTypeId": {
+        "type": "long"
+      },
+      "IsAboriginal": {
+        "type": "boolean"
+      },
+      "IsApprentice": {
+        "type": "boolean"
+      },
+      "IsDisability": {
+        "type": "boolean"
+      },
+      "IsNewcomer": {
+        "type": "boolean"
+      },
+      "IsStudent": {
+        "type": "boolean"
+      },
+      "IsVeteran": {
+        "type": "boolean"
+      },
+      "IsVismin": {
+        "type": "boolean"
+      },
+      "IsYouth": {
+        "type": "boolean"
+      },
+      "IsMatureWorker": {
+        "type": "boolean"
+      },
+      "IsVariousLocation": {
+        "type": "boolean"
+      },
+      "JobId": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "LocationGeo": {
+        "type": "geo_point"
+      },
+      "Location": {
+        "properties": {
+          "Lat": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "Lon": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "City": {
+        "type": "text",
+        "fields": {
+          "normalize": {
+            "type": "keyword",
+            "normalizer": "lowercase_normalizer"
+          },
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "exact": {
+            "type": "text",
+            "analyzer": "english_exact"
+          }
+        }
+      },
+      "Province": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "Region": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "Function": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "Industry": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "Occupation": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "Lang": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "PostalCode": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "Salary": {
+        "type": "float"
+      },
+      "Noc": {
+        "type": "float"
+      },
+      "NocGroup": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "NocJobTitle": {
+        "type": "text",
+        "fields": {
+          "normalize": {
+            "type": "keyword",
+            "normalizer": "lowercase_normalizer"
+          },
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "exact": {
+            "type": "text",
+            "analyzer": "english_exact"
+          }
+        }
+      },
+      "SkillCategories": {
+        "type": "nested",
+        "properties": {
+          "Category": {
+            "properties": {
+              "Id": {
+                "type": "long"
+              },
+              "Name": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              }
+            }
+          },
+          "SkillCount": {
+            "type": "long"
+          },
+          "Skills": {
+            "type": "text",
+            "copy_to": "AllSkills",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "Title": {
+        "type": "text",
+        "fields": {
+          "normalize": {
+            "type": "keyword",
+            "normalizer": "lowercase_normalizer"
+          },
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "exact": {
+            "type": "text",
+            "analyzer": "english_exact"
+          }
+        }
+      },
+      "WageClass": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "WorkHours": {
+        "type": "float"
+      },
+      "HoursOfWork": {
+        "properties": {
+          "Description": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "PeriodOfEmployment": {
+        "properties": {
+          "Description": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "EmploymentTerms": {
+        "properties": {
+          "Description": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "SalaryConditions": {
+        "properties": {
+          "Description": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "IsFederalJob": {
+        "type": "boolean"
+      },
+      "LastUpdated": {
+        "type": "date"
+      },
+      "PositionsAvailable": {
+        "type": "long"
+      },
+      "ApplyEmailAddress": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ApplyPhoneNumber": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ApplyPhoneNumberExt": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ApplyPhoneNumberTimeFrom": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ApplyPhoneNumberTimeTo": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ApplyFaxNumber": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ApplyWebsite": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "SalaryDescription": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "SalarySummary": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ProgramName": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ProgramDescription": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ApplyPersonStreet": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ApplyPersonRoom": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ApplyPersonCity": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ApplyPersonProvince": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ApplyPersonPostalCode": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ApplyPersonTimeFrom": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ApplyPersonTimeTo": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ApplyMailStreet": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ApplyMailRoom": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ApplyMailCity": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ApplyMailProvince": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "ApplyMailPostalCode": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "NaicsId": {
+        "type": "integer"
+      },
+      "AllSkills": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "exact": {
+            "type": "text",
+            "analyzer": "english_exact"
+          }
+        }
+      },
+      "SalarySort": {
+        "properties": {
+          "Ascending": {
+            "type": "float"
+          },
+          "Descending": {
+            "type": "float"
+          }
+        }
+      },
+      "ExternalSource": {
+        "type": "nested",
+        "properties": {
+          "Source": {
+            "properties": {
+              "Url": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              },
+              "Source": {
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "WorkplaceType": {
+        "properties": {
+          "Id": {
+            "type": "long"
+          },
+          "Description": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

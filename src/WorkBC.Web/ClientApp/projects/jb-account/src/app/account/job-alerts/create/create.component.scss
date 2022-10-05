@@ -1,0 +1,127 @@
+@import "../../../../variables";
+
+#underFilterSection {
+  @media (max-width: 939px) {
+    // Force setting margin top to 0 works best for responsiveness
+    margin-top: 0 !important;
+  }
+}
+
+.job-alerts {
+  padding: 0.8rem 0 0;
+  background: #fff;
+
+  @media (min-width: 940px) {
+    padding-bottom: 4rem;
+  }
+
+  .job-alerts-header {
+    margin: 20px 0 20px;
+  }
+
+  h2 {
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+
+  hr {
+    margin-bottom: 1.5rem;
+  }
+
+  .job-alerts-inner {
+    #emailNotifications {
+      text-align: left;
+      padding: 0 20px;
+
+      span {
+        margin-left: 5px;
+      }
+
+      lib-svg-icon {
+        display: inline-flex;
+        width: 12px;
+        transform: rotate(180deg);
+      }
+
+      &[aria-expanded="true"] {
+
+        lib-svg-icon {
+          transform: rotate(0deg);
+        }
+      }
+      // override 1.2 height from critical-workbc.css
+      input[type=radio] + label {
+        line-height: 1.25;
+      }
+    }
+
+    .btn {
+      &#delete {
+        padding: 10px 0;
+      }
+
+      &#cancel {
+        text-decoration: underline;
+      }
+    }
+
+    .optional-checks {
+      .check-group {
+        @media (max-width: 450px) {
+          width: 100%;
+        }
+
+        .form-check-label {
+          max-width: 90%;
+          overflow-wrap: break-word;
+          display: inline-flex;
+        }
+      }
+    }
+
+    .check-group {
+      .info {
+        margin-left: 10px;
+      }
+    }
+
+    a.btn.search-tips {
+      text-decoration: underline;
+      font-weight: normal;
+      padding-left: 0;
+    }
+  }
+
+  .sort-by {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    .form-group {
+      display: flex;
+      align-items: center;
+
+      strong {
+        margin-right: 8px;
+        line-height: 40px;
+
+        @media (min-width: 940px) {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+
+  .btn:focus, .btn:active {
+    box-shadow: none !important;
+    border: 1px solid #888;
+  }
+
+  #save {
+    margin-right: 4px;
+
+    &:focus {
+      outline: 1px solid #888;
+    }
+  }
+}

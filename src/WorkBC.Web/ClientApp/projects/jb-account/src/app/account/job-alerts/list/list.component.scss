@@ -1,0 +1,176 @@
+@import "../../../../variables";
+
+.job-alert-list {
+  padding-bottom: 4rem;
+
+  & > .container {
+    @media (min-width: 940px) {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+  .alert-listing {
+    .job-alert {
+      border-bottom: solid 1px #d5d6da;
+      padding: 15px 0 20px;
+
+      @media (min-width: 940px) {
+        padding: 15px 20px 20px;
+      }
+
+      .row {
+        flex-direction: column;
+
+        @media (min-width: 940px) {
+          flex-direction: row;
+        }
+
+        & > div {
+          padding: 0 20px;
+
+          @media (min-width: 940px) {
+            padding: 0;
+          }
+        }
+      }
+    }
+
+    a.jobs-available {
+      font-weight: 700;
+
+      .chevron {
+        transform: rotate(-90deg);
+      }
+
+      :hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin: 40px 0;
+    color: $link-color;
+  }
+
+  .no-alerts {
+    color: $link-color;
+    margin-bottom: 25px;
+
+    h2 {
+      font-weight: normal;
+      margin-bottom: 15px;
+    }
+  }
+
+  .find-jobs-btn {
+    width: 250px;
+    text-align: left;
+
+    @media(max-width: 600px) {
+      width: 100%;
+    }
+  }
+
+  .job-alert-title {
+    font-weight: 700;
+    margin-bottom: 0;
+    text-transform: capitalize;
+  }
+
+  .jobs-available-container {
+    @media (min-width: 940px) {
+      margin-left: auto;
+    }
+  }
+
+  .current-filters {
+    display: flex;
+    align-items: center;
+
+    ul {
+      padding: 0px;
+      margin: 0px;
+
+      li {
+        display: inline-block;
+        margin-bottom: 10px;
+        margin-right: 10px;
+
+        &:first-of-type {
+          width: 100%;
+
+          @media (min-width: 940px) {
+            width: auto;
+          }
+        }
+
+        &.filter-tag {
+          background: #fff;
+          font-size: 0.875rem;
+          padding: 7px 8px;
+          display: none;
+          border: 1px solid #d5d6da;
+
+          &:nth-child(-n+4) {
+            display: inline-block;
+          }
+
+          a {
+            margin-left: 10px;
+          }
+        }
+
+        .btn-show-more-less {
+          margin-right: 10px;
+        }
+      }
+
+      &.show-more {
+        .filter-tag {
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+  .ctas {
+    margin-left: auto;
+  }
+
+  .cta {
+    margin-left: auto;
+    margin-top: 0;
+    display: flex;
+    justify-content: flex-end;
+
+    @media (min-width: 940px) {
+      margin-left: 0;
+      margin-top: 10px;
+    }
+
+    a {
+      display: inline;
+      font-size: 0.875rem;
+
+      & + a {
+        margin-left: 25px;
+
+        @media (min-width: 940px) {
+          margin-left: 12px;
+        }
+      }
+    }
+
+    strong {
+      margin-left: 7px;
+    }
+  }
+
+  button.inline-text-button.btn-show-more-less {
+    border: none;
+    background: 0 0;
+  }
+}

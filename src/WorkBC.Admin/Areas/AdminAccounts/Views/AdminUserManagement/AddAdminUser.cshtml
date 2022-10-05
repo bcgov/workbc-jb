@@ -1,0 +1,67 @@
+@model AdminUserViewModel
+@{
+    ViewBag.Title = "Add Admin User";
+}
+
+<div id="page-edit-admin-user">
+
+    <a asp-area="AdminAccounts" asp-controller="AdminUserSearch" asp-action="Index" class="btn btn-inline back-link"><i class="fa fa-chevron-left fa-left"></i>Back to admin accounts</a>
+
+    <div class="row">
+        <div class="col col-12 col-md-9">
+            <h1 class="page-title has-breadcrumb">Add Administrator Account</h1>
+
+            <form asp-area="AdminAccounts" asp-controller="AdminUserManagement" asp-action="AddAdminUser" method="post" role="form">
+
+                <input type="hidden" asp-for="Guid">
+                <input type="hidden" asp-for="DisplayName">
+
+                @if (ViewData.ModelState["error"] != null)
+                {
+                    <div class="alert alert-danger">
+                        <span asp-validation-summary="All"></span>
+                    </div>
+                }
+
+                <div class="form-group">
+                    <label asp-for="SamAccountName" class="font-weight-bold"></label>
+                    <!--<input class="form-control uniform-width" type="text" asp-for="SamAccountName">-->
+                    <div class="input-group sam-account-name-input-group">
+                        <input class="form-control uniform-width" type="text" asp-for="SamAccountName">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-secondary ad-lookup" tabindex="-1">
+                                <i class="fa fa-user-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <span asp-validation-for="SamAccountName" class="text-danger"></span>
+                    <span class="text-danger field-validation-error" id="SamAccountNameAjaxError"></span>
+                </div>
+                <div class="admin-fields d-none">
+                    <div class="form-group">
+                        <label class="font-weight-bold" asp-for="DisplayName"></label>
+                        <div>
+                            <label id="lblDisplayName"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="font-weight-bold" asp-for="AdminLevel"></label>
+                    <select class="form-control uniform-width" asp-for="AdminLevel" asp-items="SelectLists.AdminLevels">
+                    </select>
+                    <span asp-validation-for="AdminLevel" class="text-danger"></span>
+                </div>
+
+                <div class="row pt-5 button-row">
+                    <button type="submit" class="btn btn-primary" disabled>Add</button>
+
+                    <button type="button" class="btn btn-clear" onclick="location.href='@Url.Action("Index", "AdminUserSearch")'">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+</div>

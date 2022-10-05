@@ -1,0 +1,132 @@
+﻿@model SystemSettingManagementViewModel
+
+@{
+    ViewBag.Title = "System Settings";
+}
+
+<link rel="stylesheet" type="text/css" href="~/dist/css/dataTables.bootstrap.css" asp-append-version="true" />
+
+<div id="page-system-settings">
+    <h1 class="page-title">@ViewBag.Title</h1>
+    <div class="row row-search">
+        <div class="col col-md-4">
+            <div class="input-group search">
+                <input type="text" class="form-control search__input" placeholder="Search">
+                <div class="input-group-btn search__btn" tabindex="-1">
+                    <button class="btn btn-secondary" type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive-sm">
+    <table class="table table-admin-accounts-search" id="dtSettings">
+        <thead>
+            <tr>
+                <th class="sort">
+                    <a><span>Name</span></a>
+                </th>
+                <th class="sort">
+                    <a><span>Value</span></a>
+                </th>
+                <th class="sort">
+                    <a><span>Description</span></a>
+                </th>
+                <th class="no-sort">
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var setting in Model.Results)
+            {
+                <tr>
+                    <td><span>@setting.Name</span></td>
+                    <td>
+                        @switch (setting.FieldType)
+                        {
+                            case SystemSettingFieldType.Boolean:
+                                if (setting.Value == "1")
+                                {
+                                    @:Yes
+                                }
+                                else
+                                {
+                                    @:No
+                                }
+                                break;
+                            case SystemSettingFieldType.MultiLineText:
+                            case SystemSettingFieldType.Html:
+                            case SystemSettingFieldType.Number:
+                            case SystemSettingFieldType.SingleLineText:
+
+                                var shortenValue = setting.Value;
+                                if (shortenValue.Length > 150)
+                                {
+                                    shortenValue = shortenValue.Substring(0, 150) + "...";
+                                }
+
+                                @shortenValue
+                                break;
+                        }
+                    </td>
+
+                    <td>
+                        @setting.Description
+                    </td>
+
+                    <td class="actions">
+                        <a href="/system-settings/Settings/Edit/@setting.Name" class="btn btn-inline">
+                            <i class="fa fa-pencil fa-left"></i>
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>
+</div>
+
+<div class="row row-back-to-top">
+    <div id="back-to-top">
+        <i class="fa fa-chevron-up fa-left"></i>
+        Back to top
+    </div>
+</div>
+
+<!-- This is to hide the datatable filter at the top-->
+<!-- Styles -->
+
+@section Styles {
+    <style>
+        .dataTables_filter {
+            display: none !important;
+        }
+
+        .dataTables_length {
+            display: none !important;
+        }
+
+        #dtUsers_info {
+            display: none !important;
+        }
+
+        .paginate_button {
+            font-size: 18px;
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            padding: 2px;
+            margin: 0 10px;
+            border-bottom: solid 1px transparent;
+            color: blue;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="~/dist/lib/jquery.dataTables.min.js" asp-append-version="true"></script>
+    <script src="~/dist/lib/dataTables.bootstrap.min.js" asp-append-version="true"></script>
+}

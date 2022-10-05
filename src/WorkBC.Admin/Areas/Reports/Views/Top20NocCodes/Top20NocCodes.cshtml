@@ -1,0 +1,53 @@
+@model Top20NocCodesViewModel
+@{
+    ViewBag.ReportName = "Top 20 NOC Codes";
+    ViewBag.Title = $"{ViewBag.ReportName} Report";
+}
+
+<div id="page-Top-20-Noc-Codes">
+    <h1 class="page-title has-breadcrumb">@ViewBag.Title</h1>
+    <div class="report-parameters">
+        <form method="get" asp-action="Results">
+
+            <div class="report-parameters__selection">
+                <h3 class="pb-2 pt-4">Jobs First Imported Between:</h3>
+                <partial name="Parameters/_SimpleDateRangePartial" model="Model"/>
+
+                <h3 class="pb-2 pt-4">Job Source:</h3>
+                <partial name="Parameters/_JobSourcePartial" model="Model"/>
+            </div>
+
+            <partial name="_RunButton"/>
+
+        </form>
+    </div>
+
+    @if (Model.Results != null)
+    {
+        ViewBag.HasResults = true;
+
+        <div class="report-results">
+
+            @if (Model.Results.Count == 20)
+            {
+                <h3 class="pb-3" id="results">
+                    @ViewBag.ReportName
+                </h3>
+            }
+            else
+            {
+                <partial name="_TitleWithCount"/>
+            }
+
+            <partial name="_Header" model="Model"/>
+
+            <div class="table-responsive-sm">
+                <partial name="ResultTables/JobsByNocCode" model="Model"/>
+            </div>
+
+            <script>
+                location.hash = "#results";
+            </script>
+        </div>
+    }
+</div>

@@ -1,0 +1,88 @@
+@model JobsByIndustryViewModel
+@{
+    ViewBag.ReportName = "Jobs by Industry";
+    ViewBag.Title = $"{ViewBag.ReportName} Report";
+}
+
+<div id="page-Jobs-By-Industry">
+    <h1 class="page-title has-breadcrumb">@ViewBag.Title</h1>
+    <div class="report-parameters">
+        <form method="get" asp-action="Results">
+
+            <div class="report-parameters__selection">
+                <h3 class="pb-2">Region:</h3>
+                <partial name="_RegionPartial" model="Model"/>
+
+                <h3 class="pb-2 pt-4">Jobs First Imported Between:</h3>
+                <partial name="Parameters/_SimpleDateRangePartial" model="Model"/>
+
+                <div class="form-check pt-4">
+                    <div class="form-group">
+                        <em>Note: This report only includes jobs from the National Job Bank.</em>
+                    </div>
+                </div>
+            </div>
+
+            <partial name="_RunButton"/>
+
+        </form>
+    </div>
+
+    @if (Model.Results != null)
+    {
+        ViewBag.HasResults = true;
+
+        <div class="report-results">
+
+            <partial name="_TitleWithCount"/>
+            <partial name="_Header" model="Model"/>
+            <em class="d-block pt-3">Note: The National Job Bank industries are slightly different from those used on WorkBC.ca</em>
+
+            <div class="table-responsive-sm">
+                <table class="table" id="ResultsTable">
+                    <thead>
+                    <tr>
+                        <th class="sort">Industry</th>
+                        <th class="sort text-right">Job vacancies</th>
+                        <th class="sort text-right">Job postings</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @{
+                        var postings = 0;
+                        var vacancies = 0;
+                    }
+
+                    @foreach (JobsByIndustryResult industry in Model.Results)
+                    {
+                        postings += industry.Postings;
+                        vacancies += industry.Vacancies;
+
+                        <tr>
+                            <td>@industry.Industry</td>
+                            <td class="text-right">@industry.Vacancies.ToString("#,##0")</td>
+                            <td class="text-right">@industry.Postings.ToString("#,##0")</td>
+                        </tr>
+                    }
+                    </tbody>
+
+                    @if (Model.Results.Any())
+                    {
+                        <tfoot>
+                        <tr>
+                            <th>TOTAL</th>
+                            <th class="text-right">@vacancies.ToString("#,##0")</th>
+                            <th class="text-right">@postings.ToString("#,##0")</th>
+                        </tr>
+                        </tfoot>
+                    }
+
+                </table>
+            </div>
+
+            <script>
+        location.hash = "#results";
+    </script>
+        </div>
+    }
+</div>

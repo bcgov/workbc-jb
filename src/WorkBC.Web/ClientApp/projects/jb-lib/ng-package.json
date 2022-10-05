@@ -1,0 +1,11 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../../wwwroot/dist/jb-lib",
+  "lib": {
+    "entryFile": "src/public-api.ts",
+    "umdModuleIds": {
+      "ngx-toastr": "ngx-toastr",
+      "@ng-bootstrap/ng-bootstrap": "@ng-bootstrap/ng-bootstrap"
+    }
+  }
+}

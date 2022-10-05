@@ -1,0 +1,59 @@
+﻿@{
+    Layout = null;
+
+    string samAccountName = Context.Request.Headers.ContainsKey("sm_universalid")
+        ? Context.Request.Headers["sm_universalid"].ToString().ToUpper()
+        : "NO-USERNAME";
+
+    string authDirName = Context.Request.Headers.ContainsKey("sm_authdirname")
+        ? Context.Request.Headers["sm_authdirname"].ToString().ToUpper()
+        : "NO-DOMAIN";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Not Authorized</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/dist/css/bootstrap.css" asp-append-version="true"/>
+        <link rel="stylesheet" href="~/dist/css/font-awesome.css" asp-append-version="true"/>
+        <link rel="stylesheet" href="~/dist/css/site.css" asp-append-version="true"/>
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/dist/css/vendor.min.css" asp-append-version="true"/>
+        <link rel="stylesheet" href="~/dist/css/site.min.css" asp-append-version="true"/>
+    </environment>
+</head>
+<body>
+<header>
+    <div class="banner">
+        <a href="https://gov.bc.ca/" alt="Go to the Government of British Columbia website">
+            <img class="banner__logo" src="/img/BCID_H_rgb_rev.svg" alt="Go to the Government of British Columbia website"/>
+        </a>
+        <h2>&nbsp;</h2>
+    </div>
+</header>
+<main role="main" class="pt-3 pb-5">
+    <div class="container">
+        <h1>You are not authorized to view this page</h1>
+        @if (samAccountName != "NO-USERNAME")
+        {
+            <p>You are logged in as @authDirName\@samAccountName.</p>
+        }
+        <p>
+            <a onclick="document.getElementById('logout_form').submit();" style="cursor: pointer; text-decoration: underline;">Log out</a>
+        </p>
+        <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logout_form"></form>
+    </div>
+</main>
+
+<footer class="border-top footer">
+    <div class="container">
+        <p>&copy; Copyright @DateTime.Now.Year - Province of British Columbia. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,4 @@
+"synonym": {
+  "type": "synonym",
+  "synonyms_path": "analysis/synonym.txt"
+}

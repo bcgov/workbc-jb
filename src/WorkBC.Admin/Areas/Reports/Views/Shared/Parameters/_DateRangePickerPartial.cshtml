@@ -1,0 +1,61 @@
+﻿@model IDateRangePicker
+@{
+    DateTime startDate = Model.StartDate ?? DateTime.Now;
+    DateTime endDate = Model.EndDate ?? DateTime.Now;
+}
+
+<div id="DateRangePickerPartial">
+
+    <select class="form-control" asp-for="DateRangeType">
+        <option data-val="@DateRangeHelper2.Past30Days" value="p30">
+            Past 30 Days
+        </option>
+        <option data-val="@DateRangeHelper2.ThisWeek" value="tw">
+            This Week
+        </option>
+        <option data-val="@DateRangeHelper2.LastWeek" value="lw">
+            Last Week
+        </option>
+        <option data-val="@DateRangeHelper2.ThisMonth" value="tm">
+            This Month
+        </option>
+        <option data-val="@DateRangeHelper2.LastMonth" value="lm">
+            Last Month
+        </option>
+        <option data-val="@DateRangeHelper2.ThisYear" value="ty">
+            This Calendar Year
+        </option>
+        <option data-val="@DateRangeHelper2.LastYear" value="ly">
+            Last Calendar Year
+        </option>
+        <option data-val="@DateRangeHelper2.ThisFiscalYear" value="tfy">
+            This Fiscal Year
+        </option>
+        <option data-val="@DateRangeHelper2.LastFiscalYear" value="lfy">
+            Last Fiscal Year
+        </option>
+        <option value="custom">Custom Range</option>
+    </select>
+
+    <small>From:</small>
+    <div class="input-group">
+        <input type="text" asp-for="StartDate" asp-format="{0:yyyy-MM-dd}" class="form-control date-input" readonly="readonly"/>
+        <div class="input-group-append">
+            <label asp-for="StartDate">
+                <i class="fa fa-calendar"></i>
+            </label>
+        </div>
+        <span class="text-danger" asp-validation-for="StartDate"></span>
+    </div>
+    <small>To:</small>
+    <div class="input-group">
+        <input type="text" asp-for="EndDate" asp-format="{0:yyyy-MM-dd}" class="form-control date-input" readonly="readonly" />
+        <div class="input-group-append">
+            <label asp-for="EndDate">
+                <i class="fa fa-calendar"></i>
+            </label>
+        </div>
+        <span class="text-danger" asp-validation-for="EndDate"></span>
+    </div>
+
+</div>

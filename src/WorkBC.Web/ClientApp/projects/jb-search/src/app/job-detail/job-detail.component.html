@@ -1,0 +1,293 @@
+<app-breadcrumb *ngIf="fromJobSearch" [hideBack]="true"></app-breadcrumb>
+<div class="job-details">
+<div class="container">
+  <h1 *ngIf="!jobLanguage"><strong>JOB POSTING</strong></h1>
+  <h1 *ngIf="jobDetail && jobLanguage" [attr.translate]="jobLanguage ? 'no' : null"><strong>{{textHeaders.jobPosting}}</strong></h1>
+    <div class="row" *ngIf="jobDetail">
+      <div class="col-lg-8" [attr.translate]="jobLanguage ? 'no' : null">
+        <div class="row">
+          <div class="col-lg-8">
+            <button type="button" class="back-btn" (click)="goBack()">
+              <lib-svg-icon icon="chev-blue" width="20px" height="20px"></lib-svg-icon>
+              <strong>{{ from }}</strong>
+            </button>
+          </div>
+          <div class="col-lg-4">
+            <div class="job-lang">
+              <span>ENGLISH</span>
+              <input title="French language" type="checkbox" name="job-language" id="job-language" [(ngModel)]="jobLanguage" (change)="toggleLanguage()" />
+              <label for="job-language"></label>
+              <span>FRANÇAIS</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-8">
+            <h2 class="job-title">{{jobDetail.Title}}</h2>
+          </div>
+          <div class="col-lg-4">
+            <div class="labels" *ngIf="jobDetail.Labels">
+              <!-- I made labels an array since I cant be sure that there won't ever be more than one label -->
+              <span class="label-{{label}}" *ngFor="let label of jobDetail.Labels">{{label}}</span>
+            </div>
+          </div>
+        </div>
+        <!-- Job Details -->
+        <div class="row">
+          <div class="col-md-8">
+              <div class="company"><strong>{{jobDetail.EmployerName}}</strong></div>
+              <table class="job-details-table job-details-table__details" role="presentation">
+                <!-- Job Location -->
+                <tr class="job-location">
+                  <td><strong>{{textHeaders.jobLocations}}: </strong></td>
+                  <td><span>{{ jobDetail.IsVariousLocation ? "Various locations" : jobDetail.City }}</span></td>
+                </tr>
+                <!-- Salary -->
+                <tr class="job-salary">
+                  <td><strong>{{textHeaders.salary}}: </strong></td>
+                  <td><span>{{ !jobDetail.SalaryDescription ? "N/A" : jobDetail.SalaryDescription }}</span></td>
+                </tr>
+                <tr class="job-type">
+                  <td><strong>{{textHeaders.jobType}}: </strong></td>
+                  <td><span>{{jobDetail.HoursOfWork.Description.join(", ")}}, {{jobDetail.PeriodOfEmployment.Description.join(", ")}}</span></td>
+                </tr>
+                <tr class="work-schedule" *ngIf="jobDetail.EmploymentTerms.Description.length">
+                  <td><strong>{{textHeaders.workSchedule}}: </strong></td>
+                  <td><span>{{jobDetail.EmploymentTerms.Description.join(", ")}}</span></td>
+                </tr>
+                <tr class="workplace-type">
+                  <td><strong>{{textHeaders.workplaceType}}: </strong></td>
+                  <td><span>{{jobDetail.WorkplaceType.Description}}</span></td>
+                </tr>
+                <tr class="start-date">
+                  <td><strong>{{textHeaders.startDate}}: </strong></td>
+                  <td>
+                    <span *ngIf="jobDetail.StartDate && jobDetail.StartDate.indexOf('0001') == -1">
+                      <span aria-hidden="true">{{jobDetail.StartDate | date:'yyyy-MM-dd'}}</span>
+                      <span class="sr-only">{{jobDetail.StartDate | date:'MMMM d, yyyy'}}</span>
+                    </span>
+                    <span *ngIf="!jobDetail.StartDate || jobDetail.StartDate.indexOf('0001') > -1">{{textHeaders.asSoonAsPossible}}</span>
+                  </td>
+                </tr>
+                <tr class="language">
+                  <td><strong>{{textHeaders.language}}: </strong></td>
+                  <td><span>{{jobDetail.Lang == 'en' ? 'English' : 'Francais'}}</span></td>
+                </tr>
+                <tr class="positions-available">
+                  <td><strong>{{textHeaders.positionsAvailable}}: </strong></td>
+                  <td><span>{{jobDetail.PositionsAvailable}}</span></td>
+                </tr>
+                <tr class="noc-group">
+                  <td><strong>{{textHeaders.nocGroup}}: </strong></td>
+                  <td><a href="/Jobs-Careers/Explore-Careers/Browse-Career-Profile/{{jobDetail.Noc}}">{{jobDetail.NocGroup}}</a></td>
+                </tr>
+              </table>
+          </div>
+          <div class="col-md-4">
+            <!--  -->
+            <div class="job-expires-in"><strong>{{textHeaders.expiresIn}} {{jobDetail.ExpiresIn}} {{textHeaders.days}}</strong></div>
+            <table class="job-details-table job-details-table__expiry" role="presentation">
+              <tr class="expiry-date">
+                <td><strong>{{textHeaders.expires}}:</strong></td>
+                <td>
+                  <span aria-hidden="true">{{jobDetail.ExpireDate | date:'yyyy-MM-dd'}}</span>
+                  <span class="sr-only">{{jobDetail.ExpireDate | date:'MMMM d, yyyy'}}</span>
+                </td>
+              </tr>
+              <tr class="post-date">
+                <td><strong>{{textHeaders.posted}}:</strong></td>
+                <td>
+                  <span aria-hidden="true">{{jobDetail.DatePosted | date:'yyyy-MM-dd'}}</span>
+                  <span class="sr-only">{{jobDetail.DatePosted | date:'MMMM d, yyyy'}}</span>
+                </td>
+              </tr>
+              <tr class="last-updated">
+                <td><strong>{{textHeaders.lastUpdated}}:</strong></td>
+                <td>
+                  <span aria-hidden="true">{{jobDetail.LastUpdated | date:'yyyy-MM-dd'}}</span>
+                  <span class="sr-only">{{jobDetail.LastUpdated | date:'MMMM d, yyyy'}}</span>
+                </td>
+              </tr>
+            </table>
+            <!--  -->
+            <div class="form-group">
+              <div class="views">{{jobDetail.Views}} {{textHeaders.views}}</div>
+              <div class="job-number"><strong>{{textHeaders.jobNumber}}:</strong> {{jobDetail.JobId}}</div>
+            </div>
+            <!--  -->
+            <div class="cta">
+              <lib-jb-a-link [jobId]="jobDetail.JobId" [isEnglish]="!jobLanguage"></lib-jb-a-link>
+            </div>
+            <div class="cta">
+              <a href="{{printRoot}}Print/Job?jobid={{jobDetail.JobId}}&lang={{jobLanguage ? 'fr' : 'en'}}" target="_blank">
+                <span class="icon-wrap blue small">
+                  <lib-svg-icon icon="print" width="14px" height="14px"></lib-svg-icon>
+                </span>
+                <strong>{{textHeaders.print}}</strong>
+              </a>
+            </div>
+            <div class="cta">
+              <a href="#" (click)="share($event)">
+                <span class="icon-wrap icon-print-wrap blue small">
+                  <i class="fa fa-share-alt"></i>
+                </span>
+                <strong>{{textHeaders.share}}</strong>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- job requirements-->
+        <div class="job-description">
+          <h3 class="job-requirements">{{textHeaders.jobRequirements}}</h3>
+          <div class="job-description-details">
+            <!-- Education -->
+            <div class="job-detail-wrap">
+              <h3>{{textHeaders.education}}</h3>
+              <div *ngFor="let skill of jobDetail.SkillCategories">
+                <div *ngIf="skill.Category.Id == 195">
+                  <ul [ngClass]="{'multi' : skill.Skills.length > 4 }">
+                    <li *ngFor="let skillItem of skill.Skills">
+                      {{skillItem}}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <!-- Experience -->
+            <div class="job-detail-wrap">
+              <h3>{{textHeaders.experience}}</h3>
+              <div *ngFor="let skill of jobDetail.SkillCategories">
+                <div *ngIf="skill.Category.Id == 218">
+                  <ul [ngClass]="{'multi' : skill.Skills.length > 4 }">
+                    <li *ngFor="let skillItem of skill.Skills">
+                      {{skillItem}}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <!-- Benefits -->
+            <div class="job-detail-wrap" *ngIf="jobDetail.SalaryConditions.Description.length > 0">
+              <h3>{{textHeaders.benefits}}</h3>
+              <ul [ngClass]="{'multi' : jobDetail.SalaryConditions.Description.length > 4 }">
+                <li *ngFor="let benefit of jobDetail.SalaryConditions.Description">
+                  {{benefit}}
+                </li>
+              </ul>
+            </div>
+            <!-- Skills -->
+            <div class="job-description-details__skills" *ngFor="let skill of jobDetail.SkillCategories">
+              <div *ngIf="skill.Category.Id != 195 && skill.Category.Id != 218">
+                <div class="job-detail-wrap">
+                  <h3>{{skill.Category.Name}}</h3>
+                  <ul [ngClass]="{'multi' : skill.Skills.length > 4 }">
+                    <li *ngFor="let skillItem of skill.Skills">
+                      {{skillItem}}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <!-- How To Apply -->
+            <div class="job-detail-wrap how-to-apply">
+              <h3 class="how-to-apply">{{textHeaders.applyNow}}</h3>
+              <!-- Website -->
+              <div class="row" *ngIf="jobDetail.ApplyWebsite">
+                <strong class="col-sm-2">{{textHeaders.online}}: </strong>
+                <div class="col-sm-10">
+                  <a target="_blank" href="{{jobDetail.ApplyWebsite}}">{{jobDetail.ApplyWebsite}}</a>
+                </div>
+              </div>
+              <!-- Email -->
+              <div class="row" *ngIf="jobDetail.ApplyEmailAddress">
+                <strong class="col-sm-2">{{textHeaders.byEmail}}: </strong>
+                <div class="col-sm-10">
+                  <a href="mailto:{{jobDetail.ApplyEmailAddress}}">{{jobDetail.ApplyEmailAddress}}</a>
+                </div>
+              </div>
+              <!-- Phone -->
+              <div class="row" *ngIf="jobDetail.ApplyPhoneNumber">
+                <strong class="col-sm-2">{{textHeaders.byPhone}}: </strong>
+                <div class="col-sm-10">
+                  <a href="tel:{{jobDetail.ApplyPhoneNumber}}">{{jobDetail.ApplyPhoneNumber | formatphone}}</a>
+                  <span *ngIf="jobDetail.ApplyPhoneNumberExt">&nbsp;Ext {{jobDetail.ApplyPhoneNumberExt}}</span>
+                  <br />
+                  <div *ngIf="jobDetail.ApplyPhoneNumberTimeFrom">Between {{jobDetail.ApplyPhoneNumberTimeFrom}} and {{jobDetail.ApplyPhoneNumberTimeTo}}</div>
+                </div>
+              </div>
+              <!-- Fax -->
+              <div class="row" *ngIf="jobDetail.ApplyFaxNumber">
+                <strong class="col-sm-2">{{textHeaders.byFax}}: </strong>
+                <div class="col-sm-10">
+                  <a href="tel:{{jobDetail.ApplyFaxNumber}}">{{jobDetail.ApplyFaxNumber | formatphone}}</a>
+                </div>
+              </div>
+              <!-- In person at address -->
+              <div class="row" *ngIf="jobDetail.ApplyPersonStreet">
+                <strong class="col-sm-2">{{textHeaders.inPerson}}: </strong>
+                <div class="col-sm-10">
+                  <address>
+                    Room {{jobDetail.ApplyPersonRoom}}<br *ngIf="jobDetail.ApplyPersonRoom" />
+                    {{jobDetail.ApplyPersonStreet}}<br *ngIf="jobDetail.ApplyPersonStreet" />
+                    {{jobDetail.ApplyPersonCity}}<br *ngIf="jobDetail.ApplyPersonCity" />
+                    {{jobDetail.ApplyPersonProvince}}<br *ngIf="jobDetail.ApplyPersonProvince" />
+                    {{jobDetail.ApplyPersonPostalCode}}<br *ngIf="jobDetail.ApplyPersonPostalCode" />
+                    Between {{jobDetail.ApplyPersonTimeFrom}} and {{jobDetail.ApplyPersonTimeTo}}
+                  </address>
+                </div>
+              </div>
+              <!-- Mail -->
+              <div class="row" *ngIf="jobDetail.ApplyMailStreet">
+                <strong class="col-sm-2">{{textHeaders.byMail}}: </strong>
+                <div class="col-sm-10">
+                  <address>
+                    Room {{jobDetail.ApplyMailRoom}}<br *ngIf="jobDetail.ApplyMailRoom" />
+                    {{jobDetail.ApplyMailStreet}}<br *ngIf="jobDetail.ApplyMailStreet" />
+                    {{jobDetail.ApplyMailCity}}<br *ngIf="jobDetail.ApplyMailCity" />
+                    {{jobDetail.ApplyMailProvince}}<br *ngIf="jobDetail.ApplyMailProvince" />
+                    {{jobDetail.ApplyMailPostalCode}}
+                  </address>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 job-sidebar-contain">
+        <div class="job-sidebar">
+          <div class="panel">
+            <div class="panel-head">
+              <a href="{{callToAction1LinkUrl}}">
+                <h5>{{callToAction1Intro}}</h5>
+                <h2>{{callToAction1Title}}</h2>
+              </a>
+            </div>
+            <div class="panel-body">
+              <p>{{callToAction1BodyText}}</p>
+              <a class="btn bg-blue" href="{{callToAction1LinkUrl}}">
+                <span>{{callToAction1LinkText}}</span>
+                <lib-svg-icon icon="chev-white" width="25px" height="25px" class="pull-right"></lib-svg-icon>
+              </a>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <a href="{{callToAction2LinkUrl}}">
+                <h5>{{callToAction2Intro}}</h5>
+                <h2>{{callToAction2Title}}</h2>
+              </a>
+            </div>
+            <div class="panel-body">
+              <p>{{callToAction2BodyText}}</p>
+              <a class="btn bg-blue" href="{{callToAction2LinkUrl}}">
+                <span>{{callToAction2LinkText}}</span>
+                <lib-svg-icon icon="chev-white" width="25px" height="25px" class="pull-right"></lib-svg-icon>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
