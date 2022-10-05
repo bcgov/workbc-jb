@@ -24,14 +24,14 @@ resource "aws_ecs_task_definition" "importer-app" {
 	{
 		essential   = true
 		name        = "wanted-importer"
-		image       = "${var.app_repo}/jb-importers-wanted:1.0"
+		image       = "${var.app_repo}/jb-importers-wanted:latest"
 		networkMode = "awsvpc"
 		
 		logConfiguration = {
 			logDriver = "awslogs"
 			options = {
 				awslogs-create-group  = "true"
-				awslogs-group         = "/ecs/${var.app_name}"
+				awslogs-group         = "/ecs/workbc-jobboard-wanted-importer"
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
