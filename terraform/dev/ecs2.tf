@@ -1,6 +1,6 @@
 # Scheduled Task
 resource "aws_ecs_task_definition" "importer-app" {
-  count                    = local.create_ecs_service
+  #count                    = local.create_ecs_service
   family                   = "workbc-jb-importer-task"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn            = aws_iam_role.workbc_jb_container_role.arn
