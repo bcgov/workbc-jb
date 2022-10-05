@@ -57,8 +57,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFMigrationRunner", "..\Build\EFMigrationRunner\EFMigrationRunner.csproj", "{33C4ACDA-15FF-4727-8566-B5784C6009A5}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cluster", "Cluster", "{9EDD11C7-FB10-4EAC-AF8A-83145703484D}"
 	ProjectSection(SolutionItems) = preProject
 		..\Docs\Cluster\elasticsearch.AANG.yml = ..\Docs\Cluster\elasticsearch.AANG.yml
@@ -72,6 +70,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cluster", "Cluster", "{9EDD
 		..\Docs\Cluster\redis.windows-service.MOMO.conf = ..\Docs\Cluster\redis.windows-service.MOMO.conf
 		..\Docs\Cluster\synonym.txt = ..\Docs\Cluster\synonym.txt
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFMigrationRunner", "EFMigrationRunner\EFMigrationRunner.csproj", "{D041C385-717C-4A51-925B-EB731D3511D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -131,17 +131,16 @@ Global
 		{5148FA86-3BD7-401D-80D6-B098841C26E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5148FA86-3BD7-401D-80D6-B098841C26E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5148FA86-3BD7-401D-80D6-B098841C26E2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{33C4ACDA-15FF-4727-8566-B5784C6009A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{33C4ACDA-15FF-4727-8566-B5784C6009A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{33C4ACDA-15FF-4727-8566-B5784C6009A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{33C4ACDA-15FF-4727-8566-B5784C6009A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D041C385-717C-4A51-925B-EB731D3511D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D041C385-717C-4A51-925B-EB731D3511D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D041C385-717C-4A51-925B-EB731D3511D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D041C385-717C-4A51-925B-EB731D3511D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F8212840-E647-4DA7-90CB-1F67D0FB5D81} = {9BC4ABED-4B6E-412E-A79B-AB741F8EBA5B}
-		{33C4ACDA-15FF-4727-8566-B5784C6009A5} = {DD9963D6-A278-4F2F-AD27-1C5DC6D32BD6}
 		{9EDD11C7-FB10-4EAC-AF8A-83145703484D} = {9BC4ABED-4B6E-412E-A79B-AB741F8EBA5B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
