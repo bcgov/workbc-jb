@@ -12,7 +12,34 @@ data "aws_alb_listener" "front_end" {
   port              = 443
 }
 
-resource "aws_alb_target_group" "app-admin" {
+resource "aws_alb_target_group" "web" {
+  name                 = "workbc-jb-target-group-${substr(uuid(), 0, 3)}"
+  port                 = 8081
+  protocol             = "HTTP"
+  vpc_id               = module.network.aws_vpc.id
+  target_type          = "ip"
+  deregistration_delay = 30
+
+  health_check {
+    healthy_threshold   = "5"
+    interval            = "30"
+    protocol            = "HTTP"
+    matcher             = "200"
+    timeout             = "5"
+    path                = var.health_check_path
+    unhealthy_threshold = "2"
+    port                = "8081"
+  }
+    
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = [name]
+  }
+
+  tags = var.common_tags
+}
+
+resource "aws_alb_target_group" "admin" {
   name                 = "workbc-jb-admin-target-group-${substr(uuid(), 0, 3)}"
   port                 = 8080
   protocol             = "HTTP"
@@ -44,12 +71,27 @@ resource "aws_lb_listener_rule" "host_based_weighted_routing" {
 
   action {
     type             = "forward"
-    target_group_arn = aws_alb_target_group.app-admin.arn
+    target_group_arn = aws_alb_target_group.web.arn
   }
 
   condition {
     host_header {
       values = [for sn in var.service_names : "${sn}.*"]
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "host_based_weighted_routing2" {
+  listener_arn = data.aws_alb_listener.front_end.arn
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_alb_target_group.admin.arn
+  }
+
+  condition {
+    host_header {
+      values = [for sn in var.service_names2 : "${sn}.*"]
     }
   }
 }

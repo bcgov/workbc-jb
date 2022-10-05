@@ -5,7 +5,7 @@ resource "random_integer" "cf_origin_id" {
   max = 100
 }
 
-resource "aws_cloudfront_distribution" "workbc-jb" {
+resource "aws_cloudfront_distribution" "workbc-jb-adm" {
 
   count = var.cloudfront ? 1 : 0
 
@@ -18,19 +18,19 @@ resource "aws_cloudfront_distribution" "workbc-jb" {
       "TLSv1.2"]
     }
 
-    domain_name = var.cloudfront_origin_domain
+    domain_name = var.cloudfront_origin_domain2
     origin_id   = random_integer.cf_origin_id.result
 	
 	custom_header {
 	  name = "X-Forwarded-Host"
-	  value = "dev-api-jobboard.workbc.ca"
+	  value = "dev-admin-jobboard.workbc.ca"
 	}
 	
   }
 
   enabled         = true
   is_ipv6_enabled = true
-  comment         = "JobBoard API"
+  comment         = "JobBoard Admin"
 
   default_cache_behavior {
     allowed_methods = [
@@ -73,7 +73,7 @@ resource "aws_cloudfront_distribution" "workbc-jb" {
 
   tags = var.common_tags
   
-  aliases = ["dev-api-jobboard.workbc.ca"]
+  aliases = ["dev-admin-jobboard.workbc.ca"]
 
   viewer_certificate {
     acm_certificate_arn = "arn:aws:acm:us-east-1:873424993519:certificate/0215bb2d-d224-4681-bf6b-227e9e82f29f"
@@ -82,7 +82,7 @@ resource "aws_cloudfront_distribution" "workbc-jb" {
 }
 
 output "cloudfront_url" {
-  value = "https://${aws_cloudfront_distribution.workbc-jb[0].domain_name}"
+  value = "https://${aws_cloudfront_distribution.workbc-jb-adm[0].domain_name}"
 
 }
 

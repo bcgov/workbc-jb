@@ -98,6 +98,12 @@ variable "service_names" {
   type        = list(string)
 }
 
+variable "service_names2" {
+  description = "List of service names to use as subdomains"
+  default     = ["workbc-jb-adm"]
+  type        = list(string)
+}
+
 variable "alb_name" {
   description = "Name of the internal alb"
   default     = "default"
@@ -110,6 +116,11 @@ variable "cloudfront" {
 }
 
 variable "cloudfront_origin_domain" {
+  description = "domain name of the app"
+  type        = string
+}
+
+variable "cloudfront_origin_domain2" {
   description = "domain name of the app"
   type        = string
 }
