@@ -28,6 +28,7 @@ resource "aws_alb_target_group" "app-admin" {
     timeout             = "5"
     path                = var.health_check_path
     unhealthy_threshold = "2"
+    port                = "8080"
   }
     
   lifecycle {

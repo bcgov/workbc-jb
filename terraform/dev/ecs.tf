@@ -37,14 +37,14 @@ resource "aws_ecs_task_definition" "admin-app" {
 	{
 		essential   = true
 		name        = "admin"
-		image       = "${var.app_repo}/jb-admin:1.1"
+		image       = "${var.app_repo}/jb-admin:latest"
 		networkMode = "awsvpc"
 		
 		logConfiguration = {
 			logDriver = "awslogs"
 			options = {
 				awslogs-create-group  = "true"
-				awslogs-group         = "/ecs/${var.app_name}"
+				awslogs-group         = "/ecs/workbc-jobboard-admin"
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
