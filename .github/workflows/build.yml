@@ -50,9 +50,9 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       # Runs a single command using the runners shell
-#      - name: Build Drupal docker image
-#        run: |
-#          docker build . -t 266795317183.dkr.ecr.ca-central-1.amazonaws.com/cc:${{ github.sha }}
-#      - name: Push Drupal docker image
-#        run: |
-#          docker push 266795317183.dkr.ecr.ca-central-1.amazonaws.com/cc:${{ github.sha }}
+      - name: Tag the Admin docker image
+        run: |
+          docker tag src_admin:latest 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-admin:latest
+      - name: Push Admin docker image
+        run: |
+          docker push 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-admin:latest
