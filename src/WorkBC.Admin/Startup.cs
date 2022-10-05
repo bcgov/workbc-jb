@@ -170,6 +170,12 @@ namespace WorkBC.Admin
                         {
                             // add a parameter to the keycloak redirect querystring
                             ctx.ProtocolMessage.SetParameter("kc_idp_hint", "idir");
+                            // change the redirect uri to the reverse proxy
+                            if (ctx.Request.Headers.Keys.Contains("X-Forwarded-Host"))
+                            {
+                                var host = ctx.Request.Headers["X-Forwarded-Host"][0];
+                                ctx.ProtocolMessage.SetParameter("redirect_uri", host);
+                            }
                             return Task.FromResult(0);
                         }
                     };
