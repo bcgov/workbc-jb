@@ -98,3 +98,10 @@ jobs:
       - name: Push Notification docker image
         run: |
           docker push 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-notifications:latest
+
+      - name: Tag the EFMigrationRunner docker image
+        run: |
+          docker tag src_migration-runner:latest 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-migration:latest
+      - name: Push EFMigrationRunnerdocker image
+        run: |
+          docker push 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-migration:latest
