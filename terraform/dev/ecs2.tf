@@ -1,17 +1,4 @@
 # Scheduled Task
-/*
-resource "aws_ecs_cluster" "importer" {
-  name               = "workbc-jb-importer-cluster"
-  capacity_providers = ["FARGATE_SPOT"]
-
-  default_capacity_provider_strategy {
-    capacity_provider = "FARGATE_SPOT"
-    weight            = 100
-  }
-
-  tags = var.common_tags
-}*/
-
 resource "aws_ecs_task_definition" "importer-app" {
   count                    = local.create_ecs_service
   family                   = "workbc-jb-importer-task"
