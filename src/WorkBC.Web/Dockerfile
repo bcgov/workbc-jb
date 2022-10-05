@@ -26,7 +26,7 @@ RUN dotnet publish "WorkBC.Web.csproj" -c Release -o /app/publish
 
 # Copy both build outputs to the runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
-EXPOSE 80
+EXPOSE 8081
 WORKDIR /app
 COPY --from=sdk /app/publish .
 COPY --from=node /src/WorkBC.Web/wwwroot/dist wwwroot/dist
