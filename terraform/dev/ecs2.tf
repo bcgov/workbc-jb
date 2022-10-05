@@ -37,13 +37,6 @@ resource "aws_ecs_task_definition" "importer-app" {
 			}
 		}		
 
-/*		portMappings = [
-			{
-				hostPort = 8080
-				protocol = "tcp"
-				containerPort = 8080
-			}
-		]*/
 		
 		environment = [
 			{
