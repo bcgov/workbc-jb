@@ -1,5 +1,17 @@
 version: '3.4'
 services:
+    web:
+        container_name: web
+        build:
+            context: .
+            dockerfile: ./WorkBC.Web/Dockerfile
+        ports:
+            - "8081:8081"
+        environment:
+            - ASPNETCORE_URLS=http://*:8081
+            - ASPNETCORE_ENVIRONMENT=Development
+        env_file:
+            - .env
     admin:
         build:
             context: .
@@ -27,26 +39,6 @@ services:
             dockerfile: ./WorkBC.Importers.Federal/Dockerfile
         env_file:
             - .env
-    notifications-job-alerts:
-        container_name: notifications-job-alerts
-        scale: 0
-        build:
-            context: .
-            dockerfile: ./WorkBC.Notifications.JobAlerts/Dockerfile
-        env_file:
-            - .env
-    web:
-        container_name: web
-        build:
-            context: .
-            dockerfile: ./WorkBC.Web/Dockerfile
-        ports:
-            - "8081:8081"
-        environment:
-            - ASPNETCORE_URLS=http://*:8081
-            - ASPNETCORE_ENVIRONMENT=Development
-        env_file:
-            - .env
     indexers-federal:
         container_name: indexers-federal
         scale: 0
@@ -61,5 +53,21 @@ services:
         build:
             context: .
             dockerfile: ./WorkBC.Indexers.Wanted/Dockerfile
+        env_file:
+            - .env
+    notifications-job-alerts:
+        container_name: notifications-job-alerts
+        scale: 0
+        build:
+            context: .
+            dockerfile: ./WorkBC.Notifications.JobAlerts/Dockerfile
+        env_file:
+            - .env
+    migration-runner:
+        container_name: migration-runner
+        scale: 0
+        build:
+            context: .
+            dockerfile: ./EFMigrationRunner/Dockerfile
         env_file:
             - .env
