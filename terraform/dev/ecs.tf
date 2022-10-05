@@ -164,7 +164,7 @@ resource "aws_ecs_task_definition" "admin-app" {
 }
 
 resource "aws_ecs_service" "admin" {
-  count                             = local.create_ecs_service
+  #count                             = local.create_ecs_service
   name                              = "workbc-jb-service"
   cluster                           = aws_ecs_cluster.admin.id
   task_definition                   = aws_ecs_task_definition.admin-app[count.index].arn
