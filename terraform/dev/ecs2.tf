@@ -1,6 +1,5 @@
-# Scheduled Task
+# scheduled task
 resource "aws_ecs_task_definition" "importer-app" {
-  #count                    = local.create_ecs_service
   family                   = "workbc-jb-importer-task"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn            = aws_iam_role.workbc_jb_container_role.arn
@@ -9,16 +8,6 @@ resource "aws_ecs_task_definition" "importer-app" {
   cpu                      = var.fargate_cpu
   memory                   = var.fargate_memory
   tags                     = var.common_tags
-  /*
-  volume {
-    name = "contents"
-    efs_volume_configuration  {
-        file_system_id = aws_efs_file_system.workbc.id
-    }
-  }
-  volume {
-    name = "app"
-  }*/
 
   container_definitions = jsonencode([
 	{
@@ -110,25 +99,6 @@ resource "aws_ecs_task_definition" "importer-app" {
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:re_secret::"
 			}
 		]
-/*
-		mountPoints = [
-			{
-				containerPath = "/contents",
-				sourceVolume = "contents"
-			},
-			{
-				containerPath = "/app",
-				sourceVolume = "app"
-			}
-		]
-		volumesFrom = []
-		
-		dependsOn = [
-			{
-				containerName = "init"
-				condition = "COMPLETE"
-			}
-		]*/
 	}
   ])
   
@@ -138,50 +108,13 @@ resource "aws_ecs_task_definition" "importer-app" {
   }
 }
 
-/*
-resource "aws_ecs_service" "importer" {
-  count                             = local.create_ecs_service
-  name                              = "workbc-jb-importer-service"
-  cluster                           = aws_ecs_cluster.importer.id
-  task_definition                   = aws_ecs_task_definition.importer-app[count.index].arn
-  desired_count                     = var.app_count
-  enable_ecs_managed_tags           = true
-  propagate_tags                    = "TASK_DEFINITION"
-#  health_check_grace_period_seconds = 60
-  wait_for_steady_state             = false
-  enable_execute_command            = true
-
-
-  capacity_provider_strategy {
-    capacity_provider = "FARGATE_SPOT"
-    weight            = 100
-  }
-
-
-  network_configuration {
-    security_groups  = [data.aws_security_group.app.id]
-    subnets          = module.network.aws_subnet_ids.app.ids
-    assign_public_ip = false
-  }
-
-  load_balancer {
-    target_group_arn = aws_alb_target_group.app-admin.id
-    container_name   = "admin"
-    container_port   = var.app_port
-  }
-
-  depends_on = [data.aws_alb_listener.front_end, aws_iam_role_policy_attachment.ecs_task_execution_role]
-
-  tags = var.common_tags
-}*/
-
 resource "aws_cloudwatch_event_rule" "cron" {
 	name = "importer_schedule"
 	schedule_expression = "rate(6 hours)"
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
-  arn      = aws_ecs_cluster.admin.arn
+  arn      = aws_ecs_cluster.jobboard.arn
   rule     = aws_cloudwatch_event_rule.cron.id
   role_arn = aws_iam_role.workbc_jb_container_role.arn
 
