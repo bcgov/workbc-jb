@@ -11,7 +11,7 @@ resource "aws_ecs_task_definition" "import-job" {
 
   container_definitions = jsonencode([
 	{
-		essential   = true
+		essential   = false
 		name        = "wanted-importer"
 		image       = "${var.app_repo}/jb-importers-wanted:latest"
 		networkMode = "awsvpc"
@@ -101,7 +101,7 @@ resource "aws_ecs_task_definition" "import-job" {
 		]
 	},
 	{
-		essential   = true
+		essential   = false
 		name        = "wanted-indexer"
 		image       = "${var.app_repo}/jb-indexers-wanted:latest"
 		networkMode = "awsvpc"
@@ -197,7 +197,7 @@ resource "aws_ecs_task_definition" "import-job" {
 		]
 	},
 	{
-		essential   = true
+		essential   = false
 		name        = "federal-importer"
 		image       = "${var.app_repo}/jb-importers-federal:latest"
 		networkMode = "awsvpc"
@@ -398,7 +398,7 @@ resource "aws_ecs_task_definition" "import-job" {
 
 resource "aws_cloudwatch_event_rule" "cron" {
 	name = "importer_schedule"
-	schedule_expression = "rate(1 hours)"
+	schedule_expression = "rate(1 hour)"
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
