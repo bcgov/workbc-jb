@@ -1,5 +1,10 @@
 version: '3.4'
 services:
+    my-sdk:
+        container_name: my-sdk
+        build:
+            context: .
+            dockerfile: ./WorkBC.Shared/Dockerfile
     web:
         container_name: web
         build:

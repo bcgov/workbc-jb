@@ -11,13 +11,9 @@ RUN npm run buildJbAccount
 RUN npm run buildJbSearch
 
 # Build the .NET core app in a dotnet sdk image
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS sdk
+FROM src_my-sdk AS sdk
 WORKDIR /src
 COPY ["WorkBC.Web/WorkBC.Web.csproj", "WorkBC.Web/"]
-COPY ["WorkBC.Shared/WorkBC.Shared.csproj", "WorkBC.Shared/"]
-COPY ["WorkBC.Data/WorkBC.Data.csproj", "WorkBC.Data/"]
-COPY ["WorkBC.ElasticSearch.Models/WorkBC.ElasticSearch.Models.csproj", "WorkBC.ElasticSearch.Models/"]
-COPY ["WorkBC.ElasticSearch.Search/WorkBC.ElasticSearch.Search.csproj", "WorkBC.ElasticSearch.Search/"]
 RUN dotnet restore "WorkBC.Web/WorkBC.Web.csproj"
 COPY . .
 RUN rm -rf WorkBC.Web/wwwroot/dist
