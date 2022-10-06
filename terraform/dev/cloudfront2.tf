@@ -1,9 +1,9 @@
 # cloudfront.tf
-
+/*
 resource "random_integer" "cf_origin_id" {
   min = 1
   max = 100
-}
+}*/
 
 resource "aws_cloudfront_distribution" "workbc-jb-adm" {
 
@@ -81,7 +81,7 @@ resource "aws_cloudfront_distribution" "workbc-jb-adm" {
   }
 }
 
-output "cloudfront_url" {
+output "cloudfront_url2" {
   value = "https://${aws_cloudfront_distribution.workbc-jb-adm[0].domain_name}"
 
 }
