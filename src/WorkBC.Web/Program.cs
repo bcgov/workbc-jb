@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using WorkBC.Data;
 using Serilog;
 using Serilog.Events;
+using Microsoft.Extensions.Hosting;
 
 namespace WorkBC.Web
 {
@@ -47,12 +48,15 @@ namespace WorkBC.Web
             _dbContext = new JobBoardContext(connectionString);
 
             //Start website
-            CreateWebHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Build().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                })
                 .UseSerilog();
     }
 }
