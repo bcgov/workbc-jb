@@ -1,7 +1,7 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 # Run webpack in a node image
-FROM node:14 AS node
+FROM node:14 AS node-build
 WORKDIR /src
 COPY ["WorkBC.Admin/package.json", "WorkBC.Admin/"]
 COPY ["WorkBC.Admin/package-lock.json", "WorkBC.Admin/"]
@@ -18,11 +18,10 @@ WORKDIR /src/WorkBC.Admin
 RUN ./node_modules/.bin/webpack --progress --mode production
 
 # Build the .NET core app in a dotnet sdk image
-FROM src_my-sdk AS sdk
+FROM src_jb-dotnet-build AS dotnet-build
 WORKDIR /src
-COPY ["WorkBC.Admin/WorkBC.Admin.csproj", "WorkBC.Admin/"]
+COPY ["WorkBC.Admin/", "WorkBC.Admin/"]
 RUN dotnet restore "WorkBC.Admin/WorkBC.Admin.csproj"
-COPY . .
 RUN rm -rf WorkBC.Admin/wwwroot/dist
 WORKDIR "/src/WorkBC.Admin"
 RUN dotnet publish "WorkBC.Admin.csproj" -c Release -o /app/publish
@@ -30,8 +29,8 @@ RUN dotnet publish "WorkBC.Admin.csproj" -c Release -o /app/publish
 # Copy both build outputs to the runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
-COPY --from=sdk /app/publish .
-COPY --from=node /src/WorkBC.Admin/wwwroot/dist wwwroot/dist
+COPY --from=dotnet-build /app/publish .
+COPY --from=node-build /src/WorkBC.Admin/wwwroot/dist wwwroot/dist
 EXPOSE 8080
 ENV Serilog__FileLoggingEnabled "false"
 ENTRYPOINT ["dotnet", "WorkBC.Admin.dll"]
