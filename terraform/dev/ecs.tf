@@ -25,6 +25,100 @@ resource "aws_ecs_task_definition" "app" {
 
   container_definitions = jsonencode([
 	{
+		essential   = false
+		name        = "migration"
+		image       = "${var.app_repo}/jb-migration:latest"
+		networkMode = "awsvpc"
+		
+		logConfiguration = {
+			logDriver = "awslogs"
+			options = {
+				awslogs-create-group  = "true"
+				awslogs-group         = "/ecs/workbc-jobboard-migration"
+				awslogs-region        = var.aws_region
+				awslogs-stream-prefix = "ecs"
+			}
+		}		
+
+		environment = [
+			{
+				name = "ConnectionStrings__DefaultConnection",
+				value = "${local.df_conn}"
+			},
+			{
+				name = "ConnectionStrings__EnterpriseConnection",
+				value = "${local.ent_conn}"
+			},
+			{
+				name = "ConnectionStrings__ElasticSearchServer",
+				value = "${aws_elasticsearch_domain.workbc-jb-cluster.endpoint}"
+			},
+			{
+				name = "ConnectionStrings__Redis",
+				value = "${aws_elasticache_replication_group.jb_redis_rg.configuration_endpoint_address}"
+			},
+			{
+				name = "EmailSettings__SmtpServer",
+				value = "apps.smtp.gov.bc.ca"
+			},
+			{
+				name = "ConnectionStrings__MigrationRunnerConnection",
+				value = "${local.df_conn}"
+			}
+
+		]
+		secrets = [
+			{
+				name = "IndexSettings__ElasticUser",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_username::"
+			},
+			{
+				name = "IndexSettings__ElasticPassword",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_password::"
+			},
+			{
+				name = "Keycloak__ClientId",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:kc_id::"
+			},
+			{
+				name = "Keycloak__ClientSecret",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:kc_secret::"
+			},
+			{
+				name = "WantedSettings__PassKey",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:wanted_pk::"
+			},
+			{
+				name = "AppSettings__GoogleMapsIPApi",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:gm_ip::"
+			},
+			{
+				name = "AppSettings__GoogleMapsReferrerApi",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:gm_ref::"
+			},
+			{
+				name = "FederalSettings__AuthCookie",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:fed_auth::"
+			},
+			{
+				name = "EmailSettings__SendGridKey",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:send_key::"
+			},
+			{
+				name = "EmailSettings__SendGridFromEmail",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:send_email::"
+			},
+			{
+				name = "RecaptchaSettings__SiteKey",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:re_key::"
+			},
+			{
+				name = "RecaptchaSettings__SecretKey",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:re_secret::"
+			}
+		]
+	},
+	{
 		essential   = true
 		name        = "web"
 		image       = "${var.app_repo}/jb:latest"
@@ -123,6 +217,12 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "RecaptchaSettings__SecretKey",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:re_secret::"
+			}
+		]
+		dependsOn = [
+			{
+				containerName = "migration"
+				condition = "COMPLETE"
 			}
 		]
 	},
@@ -225,6 +325,12 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "RecaptchaSettings__SecretKey",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:re_secret::"
+			}
+		]
+		dependsOn = [
+			{
+				containerName = "migration"
+				condition = "COMPLETE"
 			}
 		]
 	}
