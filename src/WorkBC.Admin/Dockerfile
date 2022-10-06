@@ -18,12 +18,9 @@ WORKDIR /src/WorkBC.Admin
 RUN ./node_modules/.bin/webpack --progress --mode production
 
 # Build the .NET core app in a dotnet sdk image
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS sdk
+FROM src_my-sdk AS sdk
 WORKDIR /src
 COPY ["WorkBC.Admin/WorkBC.Admin.csproj", "WorkBC.Admin/"]
-COPY ["WorkBC.Shared/WorkBC.Shared.csproj", "WorkBC.Shared/"]
-COPY ["WorkBC.Data/WorkBC.Data.csproj", "WorkBC.Data/"]
-COPY ["WorkBC.ElasticSearch.Models/WorkBC.ElasticSearch.Models.csproj", "WorkBC.ElasticSearch.Models/"]
 RUN dotnet restore "WorkBC.Admin/WorkBC.Admin.csproj"
 COPY . .
 RUN rm -rf WorkBC.Admin/wwwroot/dist
