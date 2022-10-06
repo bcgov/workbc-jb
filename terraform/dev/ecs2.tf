@@ -1,5 +1,5 @@
 # scheduled task
-resource "aws_ecs_task_definition" "importer-app" {
+resource "aws_ecs_task_definition" "batch" {
   family                   = "workbc-jb-importer-task"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn            = aws_iam_role.workbc_jb_container_role.arn
@@ -116,11 +116,11 @@ resource "aws_cloudwatch_event_rule" "cron" {
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
   arn      = aws_ecs_cluster.jobboard.arn
   rule     = aws_cloudwatch_event_rule.cron.id
-  role_arn = aws_iam_role.workbc_jb_container_role.arn
+  role_arn = aws_iam_role.workbc_jb_events_role.arn
 
   ecs_target {
     task_count          = 1
-    task_definition_arn = trimsuffix(aws_ecs_task_definition.importer-app.arn, ":${aws_ecs_task_definition.importer-app.revision}")
+    task_definition_arn = trimsuffix(aws_ecs_task_definition.batch.arn, ":${aws_ecs_task_definition.batch.revision}")
     launch_type         = "FARGATE"
     network_configuration {
       assign_public_ip = false

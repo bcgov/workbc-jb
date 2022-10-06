@@ -263,3 +263,52 @@ resource "aws_iam_role_policy" "mssql_s3" {
 
 	})
 }
+
+resource "aws_iam_role" "workbc_jb_events_role" {
+	name = "workbc_jb_events_role"
+	assume_role_policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "events.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        }
+    ]
+	})
+}
+
+resource "aws_iam_role_policy" "events_ecs" {
+	name = "EventBridgeECSPolicy"
+	role = aws_iam_role.workbc_jb_events_role.id
+	policy = jsonencode({
+
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ecs:RunTask"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": "iam:PassRole",
+            "Resource": [
+                "*"
+            ],
+            "Condition": {
+                "StringLike": {
+                    "iam:PassedToService": "ecs-tasks.amazonaws.com"
+                }
+            }
+        }
+    ]
+
+	})
+}
