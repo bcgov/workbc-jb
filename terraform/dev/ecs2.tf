@@ -430,7 +430,7 @@ resource "aws_ecs_task_definition" "notify-job" {
 
   container_definitions = jsonencode([
 	{
-		essential   = false
+		essential   = true
 		name        = "notifications"
 		image       = "${var.app_repo}/jb-notifications:latest"
 		networkMode = "awsvpc"
