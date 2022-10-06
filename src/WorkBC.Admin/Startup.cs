@@ -174,7 +174,7 @@ namespace WorkBC.Admin
                             if (ctx.Request.Headers.Keys.Contains("X-Forwarded-Host"))
                             {
                                 var host = ctx.Request.Headers["X-Forwarded-Host"][0];
-                                ctx.ProtocolMessage.SetParameter("redirect_uri", host);
+                                ctx.ProtocolMessage.SetParameter("redirect_uri", $"https://{host}");
                             }
                             return Task.FromResult(0);
                         }
