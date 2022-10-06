@@ -69,10 +69,10 @@ resource "aws_ecs_task_definition" "app" {
 				name = "EmailSettings__SmtpServer",
 				value = "apps.smtp.gov.bc.ca"
 			},
-/*			{
+			{
 				name = "ASPNETCORE_URLS",
-				value = "http://*:80"
-			}*/
+				value = "http://*:8081"
+			}
 
 		]
 		secrets = [
