@@ -54,7 +54,7 @@ namespace WorkBC.Admin
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.Lax;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
             string connectionString = Configuration.GetConnectionString("DefaultConnection");

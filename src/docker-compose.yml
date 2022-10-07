@@ -13,8 +13,9 @@ services:
             dockerfile: ./WorkBC.Web/Dockerfile
         ports:
             - "8081:8081"
+            - "8444:8444"
         environment:
-            - ASPNETCORE_URLS=http://*:8081
+            - ASPNETCORE_URLS=http://*:8081;https://*:8444
             - ASPNETCORE_ENVIRONMENT=Development
         env_file:
             - .env
@@ -24,8 +25,9 @@ services:
             dockerfile: ./WorkBC.Admin/Dockerfile
         ports:
             - "8080:8080"
+            - "8443:8443"
         environment:
-            - ASPNETCORE_URLS=http://*:8080
+            - ASPNETCORE_URLS=http://*:8080;https://*:8443
             - ASPNETCORE_ENVIRONMENT=Development
         env_file:
             - .env

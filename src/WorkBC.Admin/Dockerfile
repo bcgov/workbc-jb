@@ -32,5 +32,6 @@ WORKDIR /app
 COPY --from=dotnet-build /app/publish .
 COPY --from=node-build /src/WorkBC.Admin/wwwroot/dist wwwroot/dist
 EXPOSE 8080
+EXPOSE 8443
 ENV Serilog__FileLoggingEnabled "false"
 ENTRYPOINT ["dotnet", "WorkBC.Admin.dll"]
