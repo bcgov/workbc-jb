@@ -31,9 +31,16 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 .ToDictionary(d => d.Label, d => d.LocationId);
             Logger = logger;
 
-            _wantedJobExpiryDays = configuration.GetSection("WantedSettings").Exists()
-                ? int.Parse(configuration["WantedSettings:JobExpiryDays"])
-                : General.DefaultWantedJobExpiryDays;
+            try
+            {
+                _wantedJobExpiryDays = configuration.GetSection("WantedSettings").Exists()
+                    ? int.Parse(configuration["WantedSettings:JobExpiryDays"])
+                    : General.DefaultWantedJobExpiryDays;
+            } 
+            catch
+            {
+                _wantedJobExpiryDays = General.DefaultWantedJobExpiryDays;
+            }
         }
 
         public async Task DeactivateJobs(int jobSourceId)

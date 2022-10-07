@@ -30,7 +30,9 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
             try
             {
-                WantedJobExpiryDays = int.Parse(configuration["WantedSettings:JobExpiryDays"]);
+                WantedJobExpiryDays = configuration.GetSection("WantedSettings").Exists()
+                    ? int.Parse(configuration["WantedSettings:JobExpiryDays"])
+                    : General.DefaultWantedJobExpiryDays;
             } 
             catch
             {
