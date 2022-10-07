@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
@@ -55,6 +56,7 @@ namespace WorkBC.Admin
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
+                options.Secure = CookieSecurePolicy.Always;
             });
 
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
@@ -101,6 +103,8 @@ namespace WorkBC.Admin
             {
                 options.Cookie.Name = "JobBoard.Admin.Session";
                 options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.None;
                 options.IdleTimeout = TimeSpan.FromMinutes(60);
             });
 
@@ -113,6 +117,7 @@ namespace WorkBC.Admin
                 })
                 .AddCookie(options =>
                 {
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                     options.LoginPath = "/home/NotAuthorized";
                     options.AccessDeniedPath = "/home/NotAuthorized";
                     options.Events = new CookieAuthenticationEvents
