@@ -13,12 +13,11 @@
 **/*.jfm
 **/azds.yaml
 **/bin
-**/charts
+**/obj
 **/docker-compose*
 **/Dockerfile*
 **/node_modules
 **/npm-debug.log
-**/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
 **/wwwroot/dist
