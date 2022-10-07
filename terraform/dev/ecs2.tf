@@ -38,7 +38,7 @@ resource "aws_ecs_task_definition" "import-job" {
 			},
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
-				value = "${aws_elasticsearch_domain.workbc-jb-cluster.endpoint}"
+				value = "${local.es_conn}"
 			},
 			{
 				name = "ConnectionStrings__Redis",
@@ -128,7 +128,7 @@ resource "aws_ecs_task_definition" "import-job" {
 			},
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
-				value = "${aws_elasticsearch_domain.workbc-jb-cluster.endpoint}"
+				value = "${local.es_conn}"
 			},
 			{
 				name = "ConnectionStrings__Redis",
@@ -224,7 +224,7 @@ resource "aws_ecs_task_definition" "import-job" {
 			},
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
-				value = "${aws_elasticsearch_domain.workbc-jb-cluster.endpoint}"
+				value = "${local.es_conn}"
 			},
 			{
 				name = "ConnectionStrings__Redis",
@@ -320,7 +320,7 @@ resource "aws_ecs_task_definition" "import-job" {
 			},
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
-				value = "${aws_elasticsearch_domain.workbc-jb-cluster.endpoint}"
+				value = "${local.es_conn}"
 			},
 			{
 				name = "ConnectionStrings__Redis",
@@ -457,7 +457,7 @@ resource "aws_ecs_task_definition" "notify-job" {
 			},
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
-				value = "${aws_elasticsearch_domain.workbc-jb-cluster.endpoint}"
+				value = "${local.es_conn}"
 			},
 			{
 				name = "ConnectionStrings__Redis",
