@@ -11,4 +11,4 @@ FROM mcr.microsoft.com/dotnet/runtime:6.0
 WORKDIR /app
 COPY --from=dotnet-build /app/publish .
 ENV Serilog__FileLoggingEnabled "false"
-ENTRYPOINT ["dotnet", "WorkBC.Importers.Wanted.dll"]
+ENTRYPOINT ["dotnet", "WorkBC.Importers.Wanted.dll", "--bulk"]
