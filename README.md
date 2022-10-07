@@ -1,8 +1,8 @@
 # Getting Started
 
-* See __Docs/Workstation_Setup.md__ for instructions related to developer workstation setup. 
-* See __Docs/Server_Setup.md__ for instructions related to test/prod server setup. 
-* See __Docs/Cluster/README.md__ for instructions related to prod Redis/Elasticsearch cluster setup (prod only).
+* See __docs/Workstation_Setup.md__ for instructions related to developer workstation setup. 
+* See __docs/Server_Setup.md__ for instructions related to test/prod server setup. 
+* See __docs/Cluster/README.md__ for instructions related to prod Redis/Elasticsearch cluster setup (prod only).
 
 # Code Structure
 
