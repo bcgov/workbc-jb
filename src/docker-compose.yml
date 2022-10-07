@@ -5,7 +5,7 @@ services:
         scale: 0
         build:
             context: .
-            dockerfile: ./WorkBC.Shared/Dockerfile
+            dockerfile: ./dotnet-build.Dockerfile
     web:
         container_name: web
         build:
@@ -77,3 +77,9 @@ services:
             dockerfile: ./EFMigrationRunner/Dockerfile
         env_file:
             - .env
+    dotnet-cli:
+        container_name: dotnet-cli
+        scale: 0
+        build:
+            context: .
+            dockerfile: ./dotnet-cli.Dockerfile
