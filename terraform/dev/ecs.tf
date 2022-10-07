@@ -166,6 +166,10 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "ASPNETCORE_URLS",
 				value = "http://*:8081"
+			},
+			{
+				name = "AppSettings__UseRedisCache",
+				value = "true"
 			}
 
 		]
@@ -278,6 +282,10 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "ASPNETCORE_ENVIRONMENT",
 				value = "Development"
+			},
+			{
+				name = "AppSettings__UseRedisCache",
+				value = "true"
 			}
 
 		]
