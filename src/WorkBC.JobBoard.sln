@@ -73,6 +73,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cluster", "Cluster", "{9EDD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFMigrationRunner", "EFMigrationRunner\EFMigrationRunner.csproj", "{D041C385-717C-4A51-925B-EB731D3511D9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github-workflows", "github-workflows", "{422A269A-CF17-41D8-8F6C-584B37BE448B}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\build.yml = ..\.github\workflows\build.yml
+		..\.github\workflows\deploy-dev.yml = ..\.github\workflows\deploy-dev.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -142,6 +148,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F8212840-E647-4DA7-90CB-1F67D0FB5D81} = {9BC4ABED-4B6E-412E-A79B-AB741F8EBA5B}
 		{9EDD11C7-FB10-4EAC-AF8A-83145703484D} = {9BC4ABED-4B6E-412E-A79B-AB741F8EBA5B}
+		{422A269A-CF17-41D8-8F6C-584B37BE448B} = {4D3F46EC-AB25-43C3-AC38-94273294991C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1781AFC3-7F9D-4460-A5F9-B0E330F5ABF5}
