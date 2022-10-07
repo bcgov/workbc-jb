@@ -165,7 +165,7 @@ resource "aws_ecs_task_definition" "app" {
 			},
 			{
 				name = "ASPNETCORE_URLS",
-				value = "http://*:8081"
+				value = "http://*:8081;https://*:8444"
 			}
 
 		]
@@ -273,7 +273,7 @@ resource "aws_ecs_task_definition" "app" {
 			},
 			{
 				name = "ASPNETCORE_URLS",
-				value = "http://*:8080"
+				value = "http://*:8080;https://*:8443"
 			},
 			{
 				name = "ASPNETCORE_ENVIRONMENT",
