@@ -2,6 +2,7 @@ version: '3.4'
 services:
     jb-dotnet-build:
         container_name: jb-dotnet-build
+        scale: 0
         build:
             context: .
             dockerfile: ./WorkBC.Shared/Dockerfile
