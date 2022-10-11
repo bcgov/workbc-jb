@@ -286,6 +286,10 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "AppSettings__UseRedisCache",
 				value = "true"
+			},
+			{
+				name = "Keycloak__DevModeBypassEnabled",
+				value = "false"
 			}
 
 		]
@@ -345,7 +349,7 @@ resource "aws_ecs_task_definition" "app" {
 				condition = "COMPLETE"
 			}
 		]
-	},
+	}/*,
 	{
 		essential   = false
 		name        = "cli"
@@ -356,7 +360,7 @@ resource "aws_ecs_task_definition" "app" {
 			logDriver = "awslogs"
 			options = {
 				awslogs-create-group  = "true"
-				awslogs-group         = "/ecs/workbc-jobboard-admin"
+				awslogs-group         = "/ecs/workbc-jobboard-cli"
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
@@ -447,7 +451,7 @@ resource "aws_ecs_task_definition" "app" {
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:re_secret::"
 			}
 		]
-	}
+	}*/
   ])
   
   runtime_platform {
