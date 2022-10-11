@@ -43,10 +43,6 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "ConnectionStrings__Redis",
 				value = "${aws_elasticache_replication_group.jb_redis_rg.configuration_endpoint_address}"
-			},
-			{
-				name = "EmailSettings__SmtpServer",
-				value = "apps.smtp.gov.bc.ca"
 			}
 		]
 		secrets = [
@@ -133,10 +129,6 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "ConnectionStrings__Redis",
 				value = "${aws_elasticache_replication_group.jb_redis_rg.configuration_endpoint_address}"
-			},
-			{
-				name = "EmailSettings__SmtpServer",
-				value = "apps.smtp.gov.bc.ca"
 			}
 		]
 		secrets = [
@@ -229,10 +221,6 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "ConnectionStrings__Redis",
 				value = "${aws_elasticache_replication_group.jb_redis_rg.configuration_endpoint_address}"
-			},
-			{
-				name = "EmailSettings__SmtpServer",
-				value = "apps.smtp.gov.bc.ca"
 			}
 		]
 		secrets = [
@@ -325,10 +313,6 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "ConnectionStrings__Redis",
 				value = "${aws_elasticache_replication_group.jb_redis_rg.configuration_endpoint_address}"
-			},
-			{
-				name = "EmailSettings__SmtpServer",
-				value = "apps.smtp.gov.bc.ca"
 			}
 		]
 		secrets = [
@@ -464,8 +448,12 @@ resource "aws_ecs_task_definition" "notify-job" {
 				value = "${aws_elasticache_replication_group.jb_redis_rg.configuration_endpoint_address}"
 			},
 			{
-				name = "EmailSettings__SmtpServer",
-				value = "apps.smtp.gov.bc.ca"
+				name = "EmailSettings__UseSes",
+				value = "true"
+			},
+			{
+				name = "EmailSettings__FromEmail",
+				value = "noreply@workbc.ca"
 			}
 		]
 		secrets = [

@@ -38,9 +38,16 @@ namespace WorkBC.Notifications.JobAlerts.Services
             var emailSettings = configuration.GetSection("EmailSettings").Get<Shared.Settings.EmailSettings>();
             var proxySettings = configuration.GetSection("ProxySettings").Get<ProxySettings>();
 
-            _emailSender = emailSettings.UseSmtp
-                ? (IEmailSender) new SmtpEmailSender(emailSettings, _logger)
-                : new SendGridEmailSender(emailSettings, proxySettings, _logger);
+            if (emailSettings.UseSes)
+            {
+                _emailSender = new AmazonSesEmailSender(emailSettings, _logger);
+            } 
+            else
+            {
+                _emailSender = emailSettings.UseSmtp
+                    ? (IEmailSender)new SmtpEmailSender(emailSettings, _logger)
+                    : new SendGridEmailSender(emailSettings, proxySettings, _logger);
+            }
 
             Dictionary<string, string> emailSettingsDict = _dbContext.SystemSettings
                 .Where(s => EF.Functions.Like(s.Name, "email.%"))

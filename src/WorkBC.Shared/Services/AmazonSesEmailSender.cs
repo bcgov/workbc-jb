@@ -13,24 +13,18 @@ namespace WorkBC.Shared.Services
     public class AmazonSesEmailSender : IEmailSender
     {
         private readonly EmailSettings _emailSettings;
-        private readonly ProxySettings _proxySettings;
         private readonly ILogger _logger;
 
-        public AmazonSesEmailSender(IOptions<EmailSettings> emailSettings, IOptions<ProxySettings> proxySettings, ILogger logger)
+        public AmazonSesEmailSender(IOptions<EmailSettings> emailSettings, ILogger logger)
         {
             _emailSettings = emailSettings.Value;
-            _proxySettings = proxySettings.Value;
             _logger = logger;
         }
 
-        public AmazonSesEmailSender(EmailSettings emailSettings, ProxySettings proxySettings, ILogger logger)
+        public AmazonSesEmailSender(EmailSettings emailSettings, ILogger logger)
         {
             _emailSettings = emailSettings;
-            _proxySettings = proxySettings;
             _logger = logger;
-
-            //AmazonSimpleEmailServiceConfig config = new AmazonSimpleEmailServiceConfig();
-            //client = new AmazonSimpleEmailServiceClient((this._amazonAccessKey, this._amazonSecretKey, config);
         }
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage, string textMessage)
@@ -40,7 +34,7 @@ namespace WorkBC.Shared.Services
                 return;
             }
 
-            string fromEmail = "noreply@gov.bc.ca";
+            string fromEmail = _emailSettings.FromEmail ?? "noreply@workbc.ca";
             string fromName = _emailSettings.FromName ?? "WorkBC.ca No Reply";
 
             var msg = new Message
@@ -53,8 +47,7 @@ namespace WorkBC.Shared.Services
                 }
             };
 
-            using (IAmazonSimpleEmailService client = new AmazonSimpleEmailServiceClient("", "",
-                Amazon.RegionEndpoint.CACentral1))
+            using (IAmazonSimpleEmailService client = new AmazonSimpleEmailServiceClient())
             {
                 var sendRequest = new SendEmailRequest
                 {

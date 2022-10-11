@@ -58,10 +58,6 @@ resource "aws_ecs_task_definition" "app" {
 				value = "${aws_elasticache_replication_group.jb_redis_rg.configuration_endpoint_address}"
 			},
 			{
-				name = "EmailSettings__SmtpServer",
-				value = "apps.smtp.gov.bc.ca"
-			},
-			{
 				name = "ConnectionStrings__MigrationRunnerConnection",
 				value = "${local.df_conn}"
 			}
@@ -160,9 +156,13 @@ resource "aws_ecs_task_definition" "app" {
 				value = "${aws_elasticache_replication_group.jb_redis_rg.primary_endpoint_address}"
 			},
 			{
-				name = "EmailSettings__SmtpServer",
-				value = "apps.smtp.gov.bc.ca"
+				name = "EmailSettings__UseSes",
+				value = "true"
 			},
+			{
+				name = "EmailSettings__FromEmail",
+				value = "noreply@workbc.ca"
+			},			
 			{
 				name = "ASPNETCORE_URLS",
 				value = "http://*:8081"
@@ -270,10 +270,6 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "ConnectionStrings__Redis",
 				value = "${aws_elasticache_replication_group.jb_redis_rg.configuration_endpoint_address}"
-			},
-			{
-				name = "EmailSettings__SmtpServer",
-				value = "apps.smtp.gov.bc.ca"
 			},
 			{
 				name = "ASPNETCORE_URLS",
@@ -388,8 +384,12 @@ resource "aws_ecs_task_definition" "app" {
 				value = "${aws_elasticache_replication_group.jb_redis_rg.configuration_endpoint_address}"
 			},
 			{
-				name = "EmailSettings__SmtpServer",
-				value = "apps.smtp.gov.bc.ca"
+				name = "EmailSettings__UseSes",
+				value = "true"
+			},
+			{
+				name = "EmailSettings__FromEmail",
+				value = "noreply@workbc.ca"
 			},
 			{
 				name = "ASPNETCORE_URLS",
