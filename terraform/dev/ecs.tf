@@ -60,6 +60,10 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "ConnectionStrings__MigrationRunnerConnection",
 				value = "${local.df_conn}"
+			},
+			{
+				name = "AppSettings__ApplyMigrations",
+				value = "true"
 			}
 
 		]
