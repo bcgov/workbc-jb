@@ -79,7 +79,6 @@ services:
             - .env
     dotnet-cli:
         container_name: dotnet-cli
-        scale: 0
         build:
             context: .
             dockerfile: ./dotnet-cli.Dockerfile
