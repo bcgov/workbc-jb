@@ -2,11 +2,11 @@
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Serilog;
-using WorkBC.Shared.Settings;
 using EmailSettings = WorkBC.Shared.Settings.EmailSettings;
 using Amazon.SimpleEmail.Model;
 using Amazon.SimpleEmail;
 using System.Collections.Generic;
+using Amazon;
 
 namespace WorkBC.Shared.Services
 {
@@ -47,7 +47,9 @@ namespace WorkBC.Shared.Services
                 }
             };
 
-            using (IAmazonSimpleEmailService client = new AmazonSimpleEmailServiceClient())
+            using (IAmazonSimpleEmailService client = new AmazonSimpleEmailServiceClient(
+                RegionEndpoint.GetBySystemName(_emailSettings.SesRegion)
+            ))
             {
                 var sendRequest = new SendEmailRequest
                 {
