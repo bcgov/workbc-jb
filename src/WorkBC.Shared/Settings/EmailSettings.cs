@@ -2,6 +2,7 @@
 {
     public class EmailSettings
     {
+        public bool UseSes { get; set; }
         public bool UseSmtp { get; set; }
         public int SmtpPort { get; set; }
         public string SmtpServer { get; set; }

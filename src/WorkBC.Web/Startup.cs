@@ -195,6 +195,10 @@ namespace WorkBC.Web
             {
                 services.AddTransient<IEmailSender, SmtpEmailSender>();
             }
+            else if (_emailSettings.UseSes)
+            {
+                services.AddTransient<IEmailSender, AmazonSesEmailSender>();
+            }
             else
             {
                 services.AddTransient<IEmailSender, SendGridEmailSender>();
