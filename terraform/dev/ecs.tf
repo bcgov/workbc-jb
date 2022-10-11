@@ -170,6 +170,18 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "AppSettings__UseRedisCache",
 				value = "true"
+			},
+			{
+				name = "AppSettings__JbAccountUrl",
+				value = "https://dev.workbc.ca/Account.aspx"
+			},
+			{
+				name = "AppSettings__JbSearchUrl",
+				value = "https://dev.workbc.ca/Job-Careers/Find-Jobs/Jobs.aspx"
+			},
+			{
+				name = "AppSettings__ApplyMigrations",
+				value = "false"
 			}
 
 		]
@@ -221,6 +233,10 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "RecaptchaSettings__SecretKey",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:re_secret::"
+			},
+			{
+				name = "TokenManagement__Secret",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:tk_secret::"
 			}
 		]
 		dependsOn = [
@@ -285,6 +301,18 @@ resource "aws_ecs_task_definition" "app" {
 			},
 			{
 				name = "Keycloak__DevModeBypassEnabled",
+				value = "false"
+			},
+			{
+				name = "AppSettings__JbAccountUrl",
+				value = "https://dev.workbc.ca/Account.aspx"
+			},
+			{
+				name = "AppSettings__JbSearchUrl",
+				value = "https://dev.workbc.ca/Job-Careers/Find-Jobs/Jobs.aspx"
+			},
+			{
+				name = "AppSettings__ApplyMigrations",
 				value = "false"
 			}
 
