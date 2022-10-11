@@ -303,6 +303,10 @@ resource "aws_ecs_task_definition" "app" {
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_password::"
 			},
 			{
+				name = "Keycloak__Domain",
+				value = "${data.aws_secretsmanager_secret_version.creds.arn}:kc_domain::"
+			},
+			{
 				name = "Keycloak__ClientId",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:kc_id::"
 			},
@@ -349,7 +353,7 @@ resource "aws_ecs_task_definition" "app" {
 				condition = "COMPLETE"
 			}
 		]
-	}/*,
+	},
 	{
 		essential   = false
 		name        = "cli"
@@ -451,7 +455,7 @@ resource "aws_ecs_task_definition" "app" {
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:re_secret::"
 			}
 		]
-	}*/
+	}
   ])
   
   runtime_platform {
