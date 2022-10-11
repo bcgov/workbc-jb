@@ -454,6 +454,10 @@ resource "aws_ecs_task_definition" "notify-job" {
 			{
 				name = "EmailSettings__FromEmail",
 				value = "noreply@workbc.ca"
+			},
+			{
+				name = "AppSettings__JbSearchUrl",
+				value = "https://dev.workbc.ca/Job-Careers/Find-Jobs/Jobs.aspx"
 			}
 		]
 		secrets = [
