@@ -185,9 +185,9 @@ resource "aws_iam_role_policy" "workbc_jb_container_ssm" {
   EOF  
 }
 
-/*
-resource "aws_iam_role_policy" "workbc_container_ses" {
-  name = "workbc_container_ses"
+
+resource "aws_iam_role_policy" "workbc_jb_container_ses" {
+  name = "workbc_jb_container_ses"
   role = aws_iam_role.workbc_jb_container_role.id
 
   policy = <<-EOF
@@ -207,7 +207,7 @@ resource "aws_iam_role_policy" "workbc_container_ses" {
       ]
   }
   EOF  
-}*/
+}
 
 resource "aws_iam_role" "mssql_native_backup_restore_role" {
 	name = "mssqlNativeBackupRestoreRole"
