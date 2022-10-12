@@ -12,7 +12,7 @@ services:
             context: .
             dockerfile: ./WorkBC.Web/Dockerfile
             args:
-                Version__ReleaseName: ${{ github.sha }}
+                Version__ReleaseName: ${TS}
         ports:
             - "8081:8081"
         environment:
