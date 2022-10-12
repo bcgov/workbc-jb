@@ -1,6 +1,7 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 # Build the Angular app in a node image
+ARG GITHUB_SHA
 FROM node:14 AS node-build
 WORKDIR /src
 COPY ["WorkBC.Web/ClientApp", "WorkBC.Web/ClientApp"]
