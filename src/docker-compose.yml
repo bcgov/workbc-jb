@@ -11,11 +11,14 @@ services:
         build:
             context: .
             dockerfile: ./WorkBC.Web/Dockerfile
+            args:
+                GIT1: ${CUSTOM_VARIABLE}
         ports:
             - "8081:8081"
         environment:
             - ASPNETCORE_URLS=http://*:8081
             - ASPNETCORE_ENVIRONMENT=Development
+            - GIT2=${CUSTOM_VARIABLE}
         env_file:
             - .env
     admin:
