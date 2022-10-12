@@ -31,17 +31,15 @@ jobs:
           
       - name: Get current timestamp
         run: |
-          export CUSTOM_VARIABLE=$(date +%s)
+          env
+#          export TS=$(date +%s)
 
-#      - uses: isbang/compose-action@v1.3.2
-#        with:
-#            compose-file: "src/docker-compose.yml"
-#            up-flags: "--no-start"
-#        env:
-#            CUSTOM_VARIABLE: "test"
-      - name: Run docker build
-        run: |
-          docker compose -f src/docker-compose.yml build
+      - uses: isbang/compose-action@v1.3.2
+        with:
+            compose-file: "src/docker-compose.yml"
+            up-flags: "--no-start"
+        env:
+            CUSTOM_VARIABLE: "test"
 
       # Pull AWS credentials
       - name: Configure AWS credentials
