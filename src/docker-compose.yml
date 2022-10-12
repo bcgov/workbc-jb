@@ -11,8 +11,6 @@ services:
         build:
             context: .
             dockerfile: ./WorkBC.Web/Dockerfile
-            args:
-                Version__ReleaseName: test
         ports:
             - "8081:8081"
         environment:
