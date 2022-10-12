@@ -1,3 +1,5 @@
+ARG commit
+
 version: '3.4'
 services:
     jb-dotnet-build:
@@ -11,6 +13,8 @@ services:
         build:
             context: .
             dockerfile: ./WorkBC.Web/Dockerfile
+            args:
+                GITHUB_SHA: ${commit}
         ports:
             - "8081:8081"
         environment:
