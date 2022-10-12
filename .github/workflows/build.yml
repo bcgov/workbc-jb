@@ -25,9 +25,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-#      - name: Create empty .env file. 
-#        run: |
-#          touch src/.env
+      - name: Create empty .env file. 
+        run: |
+          echo 'GITHUB_SHA=$(git rev-parse --short HEAD)' > src/.env
 
       - uses: isbang/compose-action@v1.2.0
         with:
