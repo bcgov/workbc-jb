@@ -39,7 +39,7 @@ jobs:
             compose-file: "src/docker-compose.yml"
             up-flags: "--no-start"
         env:
-            Version__ReleaseName: "test"
+            CUSTOM_VARIABLE: "test"
 
       # Pull AWS credentials
       - name: Configure AWS credentials
