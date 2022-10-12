@@ -34,7 +34,7 @@ jobs:
           env
 #          export TS=$(date +%s)
 
-      - uses: isbang/compose-action@v1.2.0
+      - uses: isbang/compose-action@v1.3.2
         with:
             compose-file: "src/docker-compose.yml"
             up-flags: "--no-start"
