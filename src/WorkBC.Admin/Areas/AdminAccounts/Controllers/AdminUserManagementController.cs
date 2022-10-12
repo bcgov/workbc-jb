@@ -206,7 +206,7 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
         {
             string username = id;
 
-            if (_environment == "Development")
+            if (_environment == "Development" && _configuration["Keycloak:DevModeBypassEnabled"] == "true")
             {
                 return Ok(new
                 {
