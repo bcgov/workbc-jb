@@ -21,9 +21,11 @@ RUN dotnet publish "WorkBC.Web.csproj" -c Release -o /app/publish
 
 # Copy both build outputs to the runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
+ARG BUILD_NUMBER
 EXPOSE 8081
 WORKDIR /app
 COPY --from=dotnet-build /app/publish .
 COPY --from=node-build /src/WorkBC.Web/wwwroot/dist wwwroot/dist
+RUN sed -i "s|VERSION_SET_BY_GITHUB_ACTION|${BUILD_NUMBER}|g" /app/appsettings.json
 ENV Serilog__FileLoggingEnabled "false"
 ENTRYPOINT ["dotnet", "WorkBC.Web.dll"]
