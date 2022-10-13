@@ -132,7 +132,7 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
     ```
 * Use http://localhost:8081 to access the main web site
 * Use http://localhost:8080 to access the admin site
-* You can use the console in the dotnet-cli container to run ad-hoc scheduled task commands. See examples below
+* You can use the console in the dotnet-cli container to run ad-hoc scheduled task commands. Some common examples are below.
 
     Run the Wanted Importer
     ```
@@ -140,7 +140,7 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
     dotnet WorkBC.Importers.Wanted.dll
     ```
 
-    Run the Wanted Importer in bulk mode
+    Run the Wanted Importer in bulk mode (get jobs for the past 30 days)
     ```
     cd /app/workbc-importers-wanted
     dotnet WorkBC.Importers.Wanted.dll --bulk
@@ -164,6 +164,12 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
     dotnet WorkBC.Importers.Federal.dll
     ```
 
+    Run the Federal Indexer
+    ```
+    cd /app/workbc-indexers-federal
+    dotnet WorkBC.Indexers.Federal.dll
+    ```
+
     Run the Federal Indexer and re-create the indexes
     ```
     cd /app/workbc-indexers-federal
@@ -175,3 +181,7 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
     cd /app/efmigrationrunner
     dotnet EFMigrationRunner.dll
     ```
+
+* Linux command are case sensitive.  
+* You can use `--help` to see more options e.g. `dotnet WorkBC.Indexers.Federal.dll --help`
+
