@@ -26,8 +26,10 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Create empty .env file. 
-        run: |
-          touch src/.env
+        run: touch src/.env
+
+      - name: Set current date as env variable
+        run: echo "NOW::$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
 
       - uses: isbang/compose-action@v1.3.2
         with:
@@ -36,7 +38,7 @@ jobs:
         env:
             COMMIT_SHA: ${{ github.sha }}
             RUN_NUMBER: ${{ github.run_number }}
-            BUILD_DATE: $(date +'%Y-%m-%dT%H:%M:%S')
+            BUILD_DATE: ${{ NOW }}
 
       # Pull AWS credentials
       - name: Configure AWS credentials
