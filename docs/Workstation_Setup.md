@@ -118,18 +118,60 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
 * CSS changes isn't showing on the site
     * Webpack needs to run in order for your change to display. 
 
-##### 6. Running with Docker
+##### 6. Running with Docker Desktop
 
 * Get the key/value pairs from the "ENV" tab of the spredsheet in step 2 above, and put them into a file in /src called `.env`
     * You might need to change the Server name in ConnectionStrings__DefaultConnection, ConnectionStrings__EnterpriseConnection and ConnectionStrings__MigrationRunnerConnection to include an instance name if your SQL server was installed with an instance name (e.g. localhost\SQLEXPRESS)
 * Create a user account in SQL Server called "jobboard" with the password "password"
 * Add this user to the db_owner role on WorkBC_jobboard_dev and WorkBC_enterprise_dev 
 * Run these commands from powershell
-```
-cd /src
-docker-compose build
-docker-compose up
-```
+    ```
+    cd /src
+    docker-compose build
+    docker-compose up
+    ```
 * Use http://localhost:8081 to access the main web site
 * Use http://localhost:8080 to access the admin site
-* Use the console in the dotnet-cli container to run scheduled tasks
+* You can use the console in the dotnet-cli container to run ad-hoc scheduled task commands. See examples below
+
+    Run the Wanted Importer
+    ```
+    cd /app/workbc-importers-wanted
+    dotnet WorkBC.Importers.Wanted.dll
+    ```
+
+    Run the Wanted Importer in bulk mode
+    ```
+    cd /app/workbc-importers-wanted
+    dotnet WorkBC.Importers.Wanted.dll --bulk
+    ```
+
+    Run the Wanted Indexer
+    ```
+    cd /app/workbc-indexers-wanted
+    dotnet WorkBC.Indexers.Wanted.dll
+    ```
+
+    Run the Wanted Indexer and re-create the indexes
+    ```
+    cd /app/workbc-indexers-wanted
+    dotnet WorkBC.Indexers.Wanted.dll -r
+    ```
+
+    Run the Federal Importer
+    ```
+    cd /app/workbc-importers-federal
+    dotnet WorkBC.Importers.Federal.dll
+    ```
+
+    Run the Federal Indexer and re-create the indexes
+    ```
+    cd /app/workbc-indexers-federal
+    dotnet WorkBC.Indexers.Federal.dll -r
+    ```
+
+    Run SQL migrations
+    ```
+    cd /app/efmigrationrunner
+    dotnet EFMigrationRunner.dll
+    ```
