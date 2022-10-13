@@ -1,14 +1,16 @@
 # WorkBC Job board Visual Studio Setup 
 
 ##### 1. Prerequisite
-* NodeJS
+* NodeJS 14
 * MS SQL Server
 * Elastic Search 7
 * Visual Studio
-* .Net Core 5.0
+* .NET 6.0 SDK
+* Docker Desktop
 
 ##### 1.a NodeJS
-Download the latest version of NodeJS here: https://nodejs.org/en/download/
+Download NodeJS 14 here: https://nodejs.org/en/download/
+Use NVM to install it so you can have more than one version of NodeJS on your machine
 
 ##### 1.b
 Download SQL Server 2017 or newer : https://www.microsoft.com/en-ca/download/details.aspx?id=55994
@@ -41,11 +43,17 @@ Be sure to download SQL Server Management Studio as well : https://docs.microsof
             * rest goes automatically
 
 ##### 1.d Visual Studio
-Download Visual Studio 2019 or later: https://visualstudio.microsoft.com/downloads/
+Download Visual Studio 2022 or later: https://visualstudio.microsoft.com/downloads/
 The community version will work fine for the project.
 
+##### 2. Setting up user secrets & .env file
 
-##### 2. Setting up databases
+* A number of secrets were removed fro the appsettings.json files when this application was migrated from TFS to Github
+* These are stored in a spreadsheet and can be obtained from TBTB
+* Get the commands from "USER-SECRETS" tab in the spreadsheets, and run them in the `/src/WorkBC.Web` folder using Powershell
+    * You might need to change the Server name in ConnectionStrings:DefaultConnection, ConnectionStrings:EnterpriseConnection and ConnectionStrings:MigrationRunnerConnection to include an instance name if your SQL server was installed with an instance name (e.g. localhost\SQLEXPRESS)
+
+##### 3. Setting up databases
 
 There are two type of databases in the project:
 * Elastic Search
@@ -63,22 +71,6 @@ There are two type of databases in the project:
 _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Backup \\files\Personal\\[Windows Username]\WorkBC_Enterprise_DEV.bak)_
 * Go back to Microsoft SQL Server Management Studio and right-click on Databases and “Restore Database…”
 * Select “Device” option and find the extracted file to select it and restore
-* Add the following connection strings from the root of the WorkBC.Web folder by running the following commands in PowerShell (Setting up .Net secret keys)
-
-    ___Elastic search connection___
-    ```
-     dotnet user-secrets set ConnectionStrings:ElasticSearchServer "http://localhost:9200"
-    ```
-
-    ___Connection to the Enterprise database___
-    ```
-    dotnet user-secrets set ConnectionStrings:EnterpriseConnection "server=YOUR_SERVER_NAME; Integrated security=true;Database=WorkBC_Enterprise_Dev"
-    ```
-
-    ___Connection to the new Job Board database___
-    ```
-    dotnet user-secrets set ConnectionStrings:DefaultConnection "server=YOUR_SERVER_NAME;Integrated security=true;Database=WorkBC_JobBoard_Dev"
-    ```
 
 * Next we need to run the SQL migrations to create the database tables for the new job board database. 
     * Open the solution in Visual Studio
@@ -87,16 +79,16 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
 
 * Run the dll files in each following folders:
     * NOTE: The Federal API whitelisted an IP, if it fails the IP is wrong where the request is coming from. 
-    * WorkBC.Importers.Federal\bin\Debug\net5.0 (Import Federal jobs to the SQL database)
+    * WorkBC.Importers.Federal\bin\Debug\net6.0 (Import Federal jobs to the SQL database)
     ```.\WorkBC.Importers.Federal.exe```
-    * WorkBC.Importers.Wanted\bin\Debug\net5.0 (Import WantedAPI jobs to the SQL database)
+    * WorkBC.Importers.Wanted\bin\Debug\net6.0 (Import WantedAPI jobs to the SQL database)
     ```.\WorkBC.Importers.Wanted.exe```
-    * WorkBC.Indexers.Federal\bin\Debug\net5.0 (Index the Federal jobs in ElasticSearch)
+    * WorkBC.Indexers.Federal\bin\Debug\net6.0 (Index the Federal jobs in ElasticSearch)
     ```.\WorkBC.Indexers.Federal.exe --reindex```
-    * WorkBC.Indexers.Wanted\bin\Debug\net5.0 (Index the WantedAPI jobs in ElasticSearch)
+    * WorkBC.Indexers.Wanted\bin\Debug\net6.0 (Index the WantedAPI jobs in ElasticSearch)
     ```.\WorkBC.Indexers.Wanted.exe```
 
-##### 3. Running the job board web project (WorkBC.Web)
+##### 4. Running the job board web project (WorkBC.Web)
 
 * Go to the "ClientApp" folder on disk
 * Open PowerShell and run ```npm install```
@@ -107,7 +99,7 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
 * Ensure that the "WorkBC.Web" project is set as the startup project
 * Run the project with or without debugging
 
-##### 4. Running the Admin web project (MVC project)
+##### 5. Running the Admin web project (MVC project)
 
 * Browse to the "WorkBC.admin" project on disk.
 * Open PowerShell and runn the following commands:
@@ -125,3 +117,19 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
     * This is usually because webpack did not run, you need to run webpack to compile the css for the admin project. 
 * CSS changes isn't showing on the site
     * Webpack needs to run in order for your change to display. 
+
+##### 6. Running with Docker
+
+* Get the key/value pairs from the "ENV" tab of the spredsheet in step 2 above, and put them into a file in /src called `.env`
+    * You might need to change the Server name in ConnectionStrings__DefaultConnection, ConnectionStrings__EnterpriseConnection and ConnectionStrings__MigrationRunnerConnection to include an instance name if your SQL server was installed with an instance name (e.g. localhost\SQLEXPRESS)
+* Create a user account in SQL Server called "jobboard" with the password "password"
+* Add this user to the db_owner role on WorkBC_jobboard_dev and WorkBC_enterprise_dev 
+* Run these commands from powershell
+```
+cd /src
+docker-compose build
+docker-compose up
+```
+* Use http://localhost:8081 to access the main web site
+* Use http://localhost:8080 to access the admin site
+* Use the console in the dotnet-cli container to run scheduled tasks

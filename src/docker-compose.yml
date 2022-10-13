@@ -86,3 +86,5 @@ services:
         build:
             context: .
             dockerfile: ./dotnet-cli.Dockerfile
+        env_file:
+            - .env
