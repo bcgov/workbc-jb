@@ -13,6 +13,8 @@ services:
             dockerfile: ./WorkBC.Web/Dockerfile
             args:
                 COMMIT_SHA: ${COMMIT_SHA}
+                RUN_NUMBER: ${RUN_NUMBER}
+                BUILD_DATE: ${BUILD_DATE}
         ports:
             - "8081:8081"
         environment:
