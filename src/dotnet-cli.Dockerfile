@@ -9,4 +9,5 @@ COPY --from=src_indexers-federal /app /app/workbc-indexers-federal
 COPY --from=src_notifications-job-alerts /app /app/workbc-notifications-jobalerts
 COPY --from=src_migration-runner /app /app/efmigrationrunner
 
-ENTRYPOINT ["/bin/bash"]
+# keep the container running indefinitely by using this entrypoint
+ENTRYPOINT ["sleep", "infinity"]
