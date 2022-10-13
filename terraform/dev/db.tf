@@ -23,8 +23,8 @@ resource "aws_db_option_group" "mssql-og" {
 
 # SQL Server
 resource "aws_db_instance" "mssql" {
-  allocated_storage       = 20
-  max_allocated_storage   = 100
+  allocated_storage       = 100
+  max_allocated_storage   = 200
   engine                  = "sqlserver-web"
   engine_version	  = "15.00"
   instance_class          = "db.t3.small"
