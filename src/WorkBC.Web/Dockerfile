@@ -21,9 +21,12 @@ RUN dotnet publish "WorkBC.Web.csproj" -c Release -o /app/publish
 
 # Copy both build outputs to the runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
+ARG COMMIT_SHA
 EXPOSE 8081
 WORKDIR /app
 COPY --from=dotnet-build /app/publish .
 COPY --from=node-build /src/WorkBC.Web/wwwroot/dist wwwroot/dist
+#RUN sed -i "s|VERSION_SET_BY_GITHUB_ACTION|${COMMIT_SHA}|g" /app/appsettings.json
 ENV Serilog__FileLoggingEnabled "false"
+ENV Version__ReleaseName "${COMMIT_SHA}"
 ENTRYPOINT ["dotnet", "WorkBC.Web.dll"]
