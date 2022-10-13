@@ -1,7 +1,6 @@
 # Getting Started
 
 * See [Workstation_Setup.md](docs/Workstation_Setup.md) for instructions related to developer workstation setup. 
-* See [Server_Setup.md](docs/Server_Setup.md) for instructions related to test/prod server setup. 
 
 # Code Structure
 

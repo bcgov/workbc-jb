@@ -32,10 +32,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkBC.Admin", "WorkBC.Admi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{9BC4ABED-4B6E-412E-A79B-AB741F8EBA5B}"
 	ProjectSection(SolutionItems) = preProject
-		..\Docs\Elasticsearch-JVM-Options.png = ..\Docs\Elasticsearch-JVM-Options.png
 		..\LICENSE.txt = ..\LICENSE.txt
 		..\README.md = ..\README.md
-		..\Docs\Server_Setup.md = ..\Docs\Server_Setup.md
 		..\Docs\Workstation_Setup.md = ..\Docs\Workstation_Setup.md
 	EndProjectSection
 EndProject
@@ -43,32 +41,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkBC.ElasticSearch.Indexi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkBC.ElasticSearch.Search", "WorkBC.ElasticSearch.Search\WorkBC.ElasticSearch.Search.csproj", "{54C1081E-D924-4F76-B9CD-551F334007DB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kentico", "Kentico", "{F8212840-E647-4DA7-90CB-1F67D0FB5D81}"
-	ProjectSection(SolutionItems) = preProject
-		..\Docs\Kentico\Notes.md = ..\Docs\Kentico\Notes.md
-		..\Docs\Kentico\Page-General-Tab-Navigation.png = ..\Docs\Kentico\Page-General-Tab-Navigation.png
-		..\Docs\Kentico\UpdateSearchTile.JPG = ..\Docs\Kentico\UpdateSearchTile.JPG
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkBC.Notifications.JobAlerts", "WorkBC.Notifications.JobAlerts\WorkBC.Notifications.JobAlerts.csproj", "{5148FA86-3BD7-401D-80D6-B098841C26E2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4D3F46EC-AB25-43C3-AC38-94273294991C}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cluster", "Cluster", "{9EDD11C7-FB10-4EAC-AF8A-83145703484D}"
-	ProjectSection(SolutionItems) = preProject
-		..\Docs\Cluster\elasticsearch.AANG.yml = ..\Docs\Cluster\elasticsearch.AANG.yml
-		..\Docs\Cluster\elasticsearch.APPA.yml = ..\Docs\Cluster\elasticsearch.APPA.yml
-		..\Docs\Cluster\elasticsearch.MOMO.yml = ..\Docs\Cluster\elasticsearch.MOMO.yml
-		..\Docs\Cluster\README.md = ..\Docs\Cluster\README.md
-		..\Docs\Cluster\redis.sentinel.conf = ..\Docs\Cluster\redis.sentinel.conf
-		..\Docs\Cluster\redis.windows-service.3.2.100.UNTOUCHED.conf = ..\Docs\Cluster\redis.windows-service.3.2.100.UNTOUCHED.conf
-		..\Docs\Cluster\redis.windows-service.AANG.conf = ..\Docs\Cluster\redis.windows-service.AANG.conf
-		..\Docs\Cluster\redis.windows-service.APPA.conf = ..\Docs\Cluster\redis.windows-service.APPA.conf
-		..\Docs\Cluster\redis.windows-service.MOMO.conf = ..\Docs\Cluster\redis.windows-service.MOMO.conf
-		..\Docs\Cluster\synonym.txt = ..\Docs\Cluster\synonym.txt
+		dotnet-build.Dockerfile = dotnet-build.Dockerfile
+		dotnet-cli.Dockerfile = dotnet-cli.Dockerfile
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFMigrationRunner", "EFMigrationRunner\EFMigrationRunner.csproj", "{D041C385-717C-4A51-925B-EB731D3511D9}"
@@ -146,8 +125,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{F8212840-E647-4DA7-90CB-1F67D0FB5D81} = {9BC4ABED-4B6E-412E-A79B-AB741F8EBA5B}
-		{9EDD11C7-FB10-4EAC-AF8A-83145703484D} = {9BC4ABED-4B6E-412E-A79B-AB741F8EBA5B}
 		{422A269A-CF17-41D8-8F6C-584B37BE448B} = {4D3F46EC-AB25-43C3-AC38-94273294991C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
