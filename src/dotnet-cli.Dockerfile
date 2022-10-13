@@ -2,6 +2,9 @@
 
 FROM mcr.microsoft.com/dotnet/runtime:6.0
 
+RUN cp /usr/share/zoneinfo/America/Vancouver /etc/localtime && \
+    echo "America/Vancouver" > /etc/timezone
+
 COPY --from=src_importers-wanted /app /app/workbc-importers-wanted
 COPY --from=src_importers-federal /app /app/workbc-importers-federal
 COPY --from=src_indexers-wanted /app /app/workbc-indexers-wanted

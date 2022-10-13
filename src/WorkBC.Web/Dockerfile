@@ -26,6 +26,8 @@ ARG RUN_NUMBER
 ARG BUILD_DATE
 EXPOSE 8081
 WORKDIR /app
+RUN cp /usr/share/zoneinfo/America/Vancouver /etc/localtime && \
+    echo "America/Vancouver" > /etc/timezone
 COPY --from=dotnet-build /app/publish .
 COPY --from=node-build /src/WorkBC.Web/wwwroot/dist wwwroot/dist
 ENV Serilog__FileLoggingEnabled "false"
