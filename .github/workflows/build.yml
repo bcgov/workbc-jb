@@ -38,7 +38,7 @@ jobs:
         env:
             COMMIT_SHA: ${{ github.sha }}
             RUN_NUMBER: ${{ github.run_number }}
-            BUILD_DATE: $NOW
+            BUILD_DATE: ${{ env.NOW }}
 
       # Pull AWS credentials
       - name: Configure AWS credentials
