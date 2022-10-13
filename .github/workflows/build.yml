@@ -35,6 +35,8 @@ jobs:
             up-flags: "--no-start"
         env:
             COMMIT_SHA: ${{ github.sha }}
+            RUN_NUMBER: ${{ github.run_number }}
+            BUILD_DATE: $(date +'%Y-%m-%dT%H:%M:%S')
 
       # Pull AWS credentials
       - name: Configure AWS credentials

@@ -46,7 +46,22 @@ namespace WorkBC.Web.Controllers
         [HttpGet]
         public string Version()
         {
-            return _configuration["Version:ReleaseName"];
+            return _configuration["Version:RunNumber"];
+        }
+
+        [HttpGet]
+        public IActionResult BuildInfo()
+        {
+            // the 3 values below are set at build time as environment variables
+            // in the docker container
+            return Ok(
+                new
+                {
+                    SHA = _configuration["Version:SHA"],
+                    RunNumber = _configuration["Version:RunNumber"],
+                    BuildDate = _configuration["Version:BuildDate"]
+                }
+            );
         }
     }
 }
