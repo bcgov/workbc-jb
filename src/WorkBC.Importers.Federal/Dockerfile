@@ -9,6 +9,8 @@ RUN dotnet publish "WorkBC.Importers.Federal.csproj" -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/runtime:6.0
 WORKDIR /app
+RUN cp /usr/share/zoneinfo/America/Vancouver /etc/localtime && \
+    echo "America/Vancouver" > /etc/timezone
 COPY --from=dotnet-build /app/publish .
 ENV Serilog__FileLoggingEnabled "false"
 ENTRYPOINT ["dotnet", "WorkBC.Importers.Federal.dll"]

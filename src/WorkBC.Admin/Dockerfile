@@ -29,6 +29,8 @@ RUN dotnet publish "WorkBC.Admin.csproj" -c Release -o /app/publish
 # Copy both build outputs to the runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
+RUN cp /usr/share/zoneinfo/America/Vancouver /etc/localtime && \
+    echo "America/Vancouver" > /etc/timezone
 COPY --from=dotnet-build /app/publish .
 COPY --from=node-build /src/WorkBC.Admin/wwwroot/dist wwwroot/dist
 EXPOSE 8080
