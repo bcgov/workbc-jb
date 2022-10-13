@@ -28,18 +28,13 @@ jobs:
       - name: Create empty .env file. 
         run: |
           touch src/.env
-          
-      - name: Get current timestamp
-        run: |
-          env
-#          export TS=$(date +%s)
 
       - uses: isbang/compose-action@v1.3.2
         with:
             compose-file: "src/docker-compose.yml"
             up-flags: "--no-start"
         env:
-            CUSTOM_VARIABLE: "test"
+            COMMIT_SHA: ${{ github.sha }}
 
       # Pull AWS credentials
       - name: Configure AWS credentials
