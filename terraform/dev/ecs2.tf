@@ -35,7 +35,7 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "ConnectionStrings__EnterpriseConnection",
 				value = "${local.ent_conn}"
-			},
+			}/*,
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
 				value = "${local.es_conn}"
@@ -43,10 +43,10 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "ConnectionStrings__Redis",
 				value = "${aws_elasticache_replication_group.jb_redis_rg.configuration_endpoint_address}"
-			}
+			}*/
 		]
 		secrets = [
-			{
+			/*{
 				name = "IndexSettings__ElasticUser",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_username::"
 			},
@@ -61,11 +61,11 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "Keycloak__ClientSecret",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:kc_secret::"
-			},
+			},*/
 			{
 				name = "WantedSettings__PassKey",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:wanted_pk::"
-			},
+			}/*,
 			{
 				name = "AppSettings__GoogleMapsIPApi",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:gm_ip::"
@@ -93,7 +93,7 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "RecaptchaSettings__SecretKey",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:re_secret::"
-			}
+			}*/
 		]
 	},
 	{
@@ -125,11 +125,11 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
 				value = "${local.es_conn}"
-			},
+			}/*,
 			{
 				name = "ConnectionStrings__Redis",
 				value = "${aws_elasticache_replication_group.jb_redis_rg.configuration_endpoint_address}"
-			}
+			}*/
 		]
 		secrets = [
 			{
@@ -139,7 +139,7 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "IndexSettings__ElasticPassword",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_password::"
-			},
+			}/*,
 			{
 				name = "Keycloak__ClientId",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:kc_id::"
@@ -179,7 +179,7 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "RecaptchaSettings__SecretKey",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:re_secret::"
-			}
+			}*/
 		]
 		dependsOn = [
 			{
@@ -213,7 +213,7 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "ConnectionStrings__EnterpriseConnection",
 				value = "${local.ent_conn}"
-			},
+			}/*,
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
 				value = "${local.es_conn}"
@@ -221,10 +221,10 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "ConnectionStrings__Redis",
 				value = "${aws_elasticache_replication_group.jb_redis_rg.configuration_endpoint_address}"
-			}
+			}*/
 		]
 		secrets = [
-			{
+			/*{
 				name = "IndexSettings__ElasticUser",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_username::"
 			},
@@ -243,19 +243,19 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "WantedSettings__PassKey",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:wanted_pk::"
-			},
+			},*/
 			{
 				name = "AppSettings__GoogleMapsIPApi",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:gm_ip::"
 			},
-			{
+			/*{
 				name = "AppSettings__GoogleMapsReferrerApi",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:gm_ref::"
-			},
+			},*/
 			{
 				name = "FederalSettings__AuthCookie",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:fed_auth::"
-			},
+			}/*,
 			{
 				name = "EmailSettings__SendGridKey",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:send_key::"
@@ -271,7 +271,7 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "RecaptchaSettings__SecretKey",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:re_secret::"
-			}
+			}*/
 		]
 		dependsOn = [
 			{
@@ -309,11 +309,11 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
 				value = "${local.es_conn}"
-			},
+			}/*,
 			{
 				name = "ConnectionStrings__Redis",
 				value = "${aws_elasticache_replication_group.jb_redis_rg.configuration_endpoint_address}"
-			}
+			}*/
 		]
 		secrets = [
 			{
@@ -324,7 +324,7 @@ resource "aws_ecs_task_definition" "import-job" {
 				name = "IndexSettings__ElasticPassword",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_password::"
 			},
-			{
+			/*{
 				name = "Keycloak__ClientId",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:kc_id::"
 			},
@@ -335,11 +335,11 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "WantedSettings__PassKey",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:wanted_pk::"
-			},
+			},*/
 			{
 				name = "AppSettings__GoogleMapsIPApi",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:gm_ip::"
-			},
+			}/*,
 			{
 				name = "AppSettings__GoogleMapsReferrerApi",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:gm_ref::"
@@ -363,7 +363,7 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "RecaptchaSettings__SecretKey",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:re_secret::"
-			}
+			}*/
 		]
 		dependsOn = [
 			{
@@ -443,10 +443,10 @@ resource "aws_ecs_task_definition" "notify-job" {
 				name = "ConnectionStrings__ElasticSearchServer",
 				value = "${local.es_conn}"
 			},
-			{
+			/*{
 				name = "ConnectionStrings__Redis",
 				value = "${aws_elasticache_replication_group.jb_redis_rg.configuration_endpoint_address}"
-			},
+			},*/
 			{
 				name = "EmailSettings__UseSes",
 				value = "true"
@@ -461,7 +461,7 @@ resource "aws_ecs_task_definition" "notify-job" {
 			}
 		]
 		secrets = [
-			{
+			/*{
 				name = "IndexSettings__ElasticUser",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_username::"
 			},
@@ -492,11 +492,11 @@ resource "aws_ecs_task_definition" "notify-job" {
 			{
 				name = "FederalSettings__AuthCookie",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:fed_auth::"
-			},
+			},*/
 			{
 				name = "EmailSettings__SendGridKey",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:send_key::"
-			},
+			}/*,
 			{
 				name = "EmailSettings__SendGridFromEmail",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:send_email::"
@@ -508,7 +508,7 @@ resource "aws_ecs_task_definition" "notify-job" {
 			{
 				name = "RecaptchaSettings__SecretKey",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:re_secret::"
-			}
+			}*/
 		]
 	}	
   ])
