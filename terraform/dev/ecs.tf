@@ -41,7 +41,7 @@ resource "aws_ecs_task_definition" "app" {
 		}		
 
 		environment = [
-			{
+/*			{
 				name = "ConnectionStrings__DefaultConnection",
 				value = "${local.df_conn}"
 			},
@@ -56,7 +56,7 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "ConnectionStrings__Redis",
 				value = "${aws_elasticache_replication_group.jb_redis_rg.configuration_endpoint_address}"
-			},
+			},*/
 			{
 				name = "ConnectionStrings__MigrationRunnerConnection",
 				value = "${local.df_conn}"
@@ -67,7 +67,7 @@ resource "aws_ecs_task_definition" "app" {
 			}
 
 		]
-		secrets = [
+/*		secrets = [
 			{
 				name = "IndexSettings__ElasticUser",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_username::"
@@ -116,7 +116,7 @@ resource "aws_ecs_task_definition" "app" {
 				name = "RecaptchaSettings__SecretKey",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:re_secret::"
 			}
-		]
+		]*/
 	},
 	{
 		essential   = true
