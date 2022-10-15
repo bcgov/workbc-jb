@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkBC.Data;
 
+#nullable disable
+
 namespace WorkBC.Data.Migrations
 {
     [DbContext(typeof(JobBoardContext))]
@@ -15,16 +17,18 @@ namespace WorkBC.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.9")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("FriendlyName")
                         .HasColumnType("nvarchar(max)");
@@ -34,7 +38,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DataProtectionKeys");
+                    b.ToTable("DataProtectionKeys", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -61,15 +65,16 @@ namespace WorkBC.Data.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -85,15 +90,16 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims");
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -109,7 +115,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims");
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -133,7 +139,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins");
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -148,7 +154,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles");
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -169,15 +175,16 @@ namespace WorkBC.Data.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.AdminUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("AdminLevel")
                         .HasColumnType("int");
@@ -229,7 +236,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("ModifiedByAdminUserId");
 
-                    b.ToTable("AdminUsers");
+                    b.ToTable("AdminUsers", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.Country", b =>
@@ -250,7 +257,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Countries");
+                    b.ToTable("Countries", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.DeletedJob", b =>
@@ -268,7 +275,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("DeletedByAdminUserId");
 
-                    b.ToTable("DeletedJobs");
+                    b.ToTable("DeletedJobs", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.ExpiredJob", b =>
@@ -284,15 +291,16 @@ namespace WorkBC.Data.Migrations
 
                     b.HasKey("JobId");
 
-                    b.ToTable("ExpiredJobs");
+                    b.ToTable("ExpiredJobs", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.GeocodedLocationCache", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("City")
                         .HasMaxLength(80)
@@ -330,7 +338,7 @@ namespace WorkBC.Data.Migrations
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
-                    b.ToTable("GeocodedLocationCache");
+                    b.ToTable("GeocodedLocationCache", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.Impersonation", b =>
@@ -354,7 +362,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("AspNetUserId");
 
-                    b.ToTable("ImpersonationLog");
+                    b.ToTable("ImpersonationLog", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.ImportedJobFederal", b =>
@@ -385,7 +393,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasKey("JobId");
 
-                    b.ToTable("ImportedJobsFederal");
+                    b.ToTable("ImportedJobsFederal", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.ImportedJobWanted", b =>
@@ -422,7 +430,7 @@ namespace WorkBC.Data.Migrations
                     b.HasIndex("HashId")
                         .IsUnique();
 
-                    b.ToTable("ImportedJobsWanted");
+                    b.ToTable("ImportedJobsWanted", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.Industry", b =>
@@ -436,7 +444,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Industries");
+                    b.ToTable("Industries", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.IndustryNaics", b =>
@@ -449,7 +457,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasKey("IndustryId", "NaicsId");
 
-                    b.ToTable("IndustryNaics");
+                    b.ToTable("IndustryNaics", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.Job", b =>
@@ -551,15 +559,16 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("NocCodeId");
 
-                    b.ToTable("Jobs");
+                    b.ToTable("Jobs", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.JobAlert", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<byte>("AlertFrequency")
                         .HasColumnType("tinyint");
@@ -599,7 +608,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("DateCreated");
 
-                    b.ToTable("JobAlerts");
+                    b.ToTable("JobAlerts", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.JobId", b =>
@@ -617,7 +626,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("JobSourceId");
 
-                    b.ToTable("JobIds");
+                    b.ToTable("JobIds", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.JobSeeker", b =>
@@ -728,16 +737,19 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.HasIndex("DateRegistered")
-                        .HasAnnotation("SqlServer:Include", new[] { "LastName", "FirstName", "Email", "AccountStatus" });
+                    b.HasIndex("DateRegistered");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("DateRegistered"), new[] { "LastName", "FirstName", "Email", "AccountStatus" });
 
                     b.HasIndex("Email")
                         .IsUnique()
-                        .HasFilter("[Email] IS NOT NULL")
-                        .HasAnnotation("SqlServer:Include", new[] { "LastName", "FirstName", "AccountStatus" });
+                        .HasFilter("[Email] IS NOT NULL");
 
-                    b.HasIndex("LastModified")
-                        .HasAnnotation("SqlServer:Include", new[] { "LastName", "FirstName", "Email", "AccountStatus" });
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("Email"), new[] { "LastName", "FirstName", "AccountStatus" });
+
+                    b.HasIndex("LastModified");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("LastModified"), new[] { "LastName", "FirstName", "Email", "AccountStatus" });
 
                     b.HasIndex("LocationId");
 
@@ -755,24 +767,28 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("SecurityQuestionId");
 
-                    b.HasIndex("FirstName", "LastName")
-                        .HasAnnotation("SqlServer:Include", new[] { "Email", "AccountStatus" });
+                    b.HasIndex("FirstName", "LastName");
 
-                    b.HasIndex("LastName", "FirstName")
-                        .HasAnnotation("SqlServer:Include", new[] { "Email", "AccountStatus" });
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("FirstName", "LastName"), new[] { "Email", "AccountStatus" });
 
-                    b.HasIndex("AccountStatus", "LastName", "FirstName")
-                        .HasAnnotation("SqlServer:Include", new[] { "Email" });
+                    b.HasIndex("LastName", "FirstName");
 
-                    b.ToTable("AspNetUsers");
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("LastName", "FirstName"), new[] { "Email", "AccountStatus" });
+
+                    b.HasIndex("AccountStatus", "LastName", "FirstName");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("AccountStatus", "LastName", "FirstName"), new[] { "Email" });
+
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.JobSeekerAdminComment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
@@ -795,15 +811,16 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("EnteredByAdminUserId");
 
-                    b.ToTable("JobSeekerAdminComments");
+                    b.ToTable("JobSeekerAdminComments", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.JobSeekerChangeEvent", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
@@ -830,15 +847,16 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("ModifiedByAdminUserId");
 
-                    b.ToTable("JobSeekerChangeLog");
+                    b.ToTable("JobSeekerChangeLog", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.JobSeekerEvent", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
@@ -855,15 +873,16 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("DateLogged");
 
-                    b.ToTable("JobSeekerEventLog");
+                    b.ToTable("JobSeekerEventLog", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.JobSeekerFlags", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
@@ -901,15 +920,16 @@ namespace WorkBC.Data.Migrations
                         .IsUnique()
                         .HasFilter("[AspNetUserId] IS NOT NULL");
 
-                    b.ToTable("JobSeekerFlags");
+                    b.ToTable("JobSeekerFlags", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.JobSeekerVersion", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<short>("AccountStatus")
                         .HasColumnType("smallint");
@@ -987,7 +1007,7 @@ namespace WorkBC.Data.Migrations
                         .IsUnique()
                         .HasFilter("[AspNetUserId] IS NOT NULL");
 
-                    b.ToTable("JobSeekerVersions");
+                    b.ToTable("JobSeekerVersions", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.JobSource", b =>
@@ -1008,15 +1028,16 @@ namespace WorkBC.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("JobSources");
+                    b.ToTable("JobSources", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.JobVersion", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<DateTime>("ActualDatePosted")
                         .HasColumnType("datetime2");
@@ -1071,7 +1092,7 @@ namespace WorkBC.Data.Migrations
                     b.HasIndex("JobId", "VersionNumber")
                         .IsUnique();
 
-                    b.ToTable("JobVersions");
+                    b.ToTable("JobVersions", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.JobView", b =>
@@ -1087,7 +1108,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasKey("JobId");
 
-                    b.ToTable("JobViews");
+                    b.ToTable("JobViews", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.Location", b =>
@@ -1134,7 +1155,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Locations");
+                    b.ToTable("Locations", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.NocCategory", b =>
@@ -1152,7 +1173,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasKey("CategoryCode");
 
-                    b.ToTable("NocCategories");
+                    b.ToTable("NocCategories", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.NocCode", b =>
@@ -1174,7 +1195,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("NocCodes");
+                    b.ToTable("NocCodes", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.Province", b =>
@@ -1192,7 +1213,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasKey("ProvinceId");
 
-                    b.ToTable("Provinces");
+                    b.ToTable("Provinces", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.Region", b =>
@@ -1212,7 +1233,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Regions");
+                    b.ToTable("Regions", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.ReportData.JobSeekerStat", b =>
@@ -1235,7 +1256,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("JobSeekerStats");
+                    b.ToTable("JobSeekerStats", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.ReportData.JobSeekerStatLabel", b =>
@@ -1253,7 +1274,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasKey("Key");
 
-                    b.ToTable("JobSeekerStatLabels");
+                    b.ToTable("JobSeekerStatLabels", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.ReportData.JobStat", b =>
@@ -1279,7 +1300,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("JobStats");
+                    b.ToTable("JobStats", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.ReportData.ReportPersistenceControl", b =>
@@ -1299,15 +1320,16 @@ namespace WorkBC.Data.Migrations
 
                     b.HasKey("WeeklyPeriodId", "TableName");
 
-                    b.ToTable("ReportPersistenceControl");
+                    b.ToTable("ReportPersistenceControl", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.ReportData.WeeklyPeriod", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<byte>("CalendarMonth")
                         .HasColumnType("tinyint");
@@ -1337,15 +1359,16 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("WeekEndDate");
 
-                    b.ToTable("WeeklyPeriods");
+                    b.ToTable("WeeklyPeriods", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.SavedCareerProfile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
@@ -1371,15 +1394,16 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("DateSaved");
 
-                    b.ToTable("SavedCareerProfiles");
+                    b.ToTable("SavedCareerProfiles", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.SavedIndustryProfile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
@@ -1405,15 +1429,16 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("DateSaved");
 
-                    b.ToTable("SavedIndustryProfiles");
+                    b.ToTable("SavedIndustryProfiles", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.SavedJob", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
@@ -1443,7 +1468,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("JobId");
 
-                    b.ToTable("SavedJobs");
+                    b.ToTable("SavedJobs", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.SecurityQuestion", b =>
@@ -1457,7 +1482,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SecurityQuestions");
+                    b.ToTable("SecurityQuestions", (string)null);
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.SystemSetting", b =>
@@ -1488,7 +1513,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("ModifiedByAdminUserId");
 
-                    b.ToTable("SystemSettings");
+                    b.ToTable("SystemSettings", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
