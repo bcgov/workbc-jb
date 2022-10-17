@@ -182,6 +182,16 @@ namespace WorkBC.Admin
                                 ctx.ProtocolMessage.SetParameter("redirect_uri", $"https://{host}/signin-oidc");
                             }
                             return Task.FromResult(0);
+                        },
+                        OnRedirectToIdentityProviderForSignOut = ctx =>
+                        {
+                            // change the post-logout redirect uri to the reverse proxy
+                            if (ctx.Request.Headers.Keys.Contains("X-Forwarded-Host"))
+                            {
+                                var host = ctx.Request.Headers["X-Forwarded-Host"][0];
+                                ctx.ProtocolMessage.SetParameter("post_logout_redirect_uri", $"https://{host}/");
+                            }
+                            return Task.FromResult(0);
                         }
                     };
                 });
