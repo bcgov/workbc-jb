@@ -8,9 +8,9 @@ namespace WorkBC.Web.Helpers
     {
         public AutoMapperProfile()
         {
-            CreateMap<JobSeeker, IRegisterModel>();
+            CreateMap<JobSeeker, IRegisterModel>().AsProxy();
             CreateMap<IRegisterModel, JobSeeker>();
-            CreateMap<JobSeeker, IUserInfo>();
+            CreateMap<JobSeeker, IUserInfo>().AsProxy();
         }
     }
 }
