@@ -4,8 +4,9 @@ locals {
   project          = get_env("LICENSE_PLATE")
   environment      = reverse(split("/", get_terragrunt_dir()))[0]
   app_version      = get_env("app_version", "")
-  app_image        = get_env("app_image", "")
-  app_repo         = split("/", get_env("app_image"))[0]
+#  app_image        = get_env("app_image", "")
+#  app_repo         = split("/", get_env("app_image"))[0]
+  app_repo         = get_env("app_repo", "")
 }
 
 generate "remote_state" {
@@ -29,7 +30,7 @@ generate "tfvars" {
   if_exists         = "overwrite"
   disable_signature = true
   contents          = <<-EOF
-  app_image = "${local.app_image}"
+#  app_image = "${local.app_image}"
   app_repo = "${local.app_repo}"
   app_version = "${local.app_version}"
 EOF
