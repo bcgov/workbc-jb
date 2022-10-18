@@ -3,6 +3,7 @@ locals {
   tfc_organization = "bcgov"
   project          = get_env("LICENSE_PLATE")
   environment      = reverse(split("/", get_terragrunt_dir()))[0]
+  app_version      = get_env("app_version", "")
   app_image        = get_env("app_image", "")
   app_repo         = split("/", get_env("app_image"))[0]
 }
@@ -30,6 +31,7 @@ generate "tfvars" {
   contents          = <<-EOF
   app_image = "${local.app_image}"
   app_repo = "${local.app_repo}"
+  app_version = "${local.app_version}"
 EOF
 }
 

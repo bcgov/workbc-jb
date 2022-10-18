@@ -56,10 +56,11 @@ variable "app_count" {
   default     = 1
 }
 
-#variable "container_name" {
-#  description = "Container name"
-#  default     = "sample-client-app"
-#}
+variable "app_version" {
+  description = "build version"
+  type        = string
+  default     = ""
+}
 
 variable "health_check_path" {
   default = "/health"

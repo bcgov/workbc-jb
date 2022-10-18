@@ -13,7 +13,7 @@ resource "aws_ecs_task_definition" "import-job" {
 	{
 		essential   = false
 		name        = "wanted-importer"
-		image       = "${var.app_repo}/jb-importers-wanted:latest"
+		image       = "${var.app_repo}/jb-importers-wanted:${var.app_version}"
 		networkMode = "awsvpc"
 		
 		logConfiguration = {
@@ -99,7 +99,7 @@ resource "aws_ecs_task_definition" "import-job" {
 	{
 		essential   = false
 		name        = "wanted-indexer"
-		image       = "${var.app_repo}/jb-indexers-wanted:latest"
+		image       = "${var.app_repo}/jb-indexers-wanted:${var.app_version}"
 		networkMode = "awsvpc"
 		
 		logConfiguration = {
@@ -191,7 +191,7 @@ resource "aws_ecs_task_definition" "import-job" {
 	{
 		essential   = false
 		name        = "federal-importer"
-		image       = "${var.app_repo}/jb-importers-federal:latest"
+		image       = "${var.app_repo}/jb-importers-federal:${var.app_version}"
 		networkMode = "awsvpc"
 		
 		logConfiguration = {
@@ -283,7 +283,7 @@ resource "aws_ecs_task_definition" "import-job" {
 	{
 		essential   = true
 		name        = "federal-indexer"
-		image       = "${var.app_repo}/jb-indexers-federal:latest"
+		image       = "${var.app_repo}/jb-indexers-federal:${var.app_version}"
 		networkMode = "awsvpc"
 		
 		logConfiguration = {
@@ -416,7 +416,7 @@ resource "aws_ecs_task_definition" "notify-job" {
 	{
 		essential   = true
 		name        = "notifications"
-		image       = "${var.app_repo}/jb-notifications:latest"
+		image       = "${var.app_repo}/jb-notifications:${var.app_version}"
 		networkMode = "awsvpc"
 		
 		logConfiguration = {
