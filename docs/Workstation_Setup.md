@@ -65,13 +65,38 @@ There are two type of databases in the project:
 ##### Setup
 * Follow steps 1c to get Elastic Search services up and running
 * Open Microsoft SQL Server Management Studio
-* Connect
+* Connect to your localhost server
 * Create a new database called "WorkBC_jobboard_dev"
 * Download the backup database, saving it inside your MS SQL server instance 
 _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Backup \\files\Personal\\[Windows Username]\WorkBC_Enterprise_DEV.bak)_
 * Go back to Microsoft SQL Server Management Studio and right-click on Databases and “Restore Database…”
 * Select “Device” option and find the extracted file to select it and restore
-
+* The server needs to have mixed mode authentication to allow connections to the database
+   * Right click on the server in Microsoft SQL Server Management Studio and select “Properties”
+   * Click on the “Security” page in the left hand menu of the popup that appears
+   * Under “Server authentication”, select the radio button for “SQL Server and Windows Authentication mode”
+   * Click the “OK” button to save the changes
+* A SQL server login needs to be created for the website projects to pull from the database
+   * In Microsoft SQL Server Management Studio, expand the “Security” folder under the root server
+   * Right click on “Logins” and select the option “New Login”
+   * Enter the login name as: jobbank
+   *  Select “SQL Server authentication” option
+   *  Set the password and password confirmation as: password
+   *  Uncheck the option “Enforce password policy”
+   *  Under the “Default database” dropdown, select the option “WorkBC_jobboard_dev”
+   *  On the left hand menu, click on “User Mapping”
+   *  Under “Users mapped to this login”, check the checkbox for “WorkBC_jobboard_dev”
+   *  Under “Database role membership”, check the option “db_owner”
+   *  Click the “OK” button to create the new login
+* We need to set up the database to allow TCP/IP connections
+   * Open Sql Server Configuration Manager in Windows
+   * On the left menu, select “SQL Server Network Configuration”
+   * Double click on “Protocals for {YOUR_MS_SQL_SERVER_NAME}”
+   * Double click on the option “TCP/IP”
+   * In the popup that appears, click on the dropdown to the right of “Enabled” and select “Yes”
+   * Click the “Apply” button to save the configuration and close the popup
+* Open Services app in Windows
+* Find “SQL Server” instance, right click on it and select “Restart”
 * Next we need to run the SQL migrations to create the database tables for the new job board database. 
     * Open the solution in Visual Studio
     * Go to Visual Studios > Tools > NuGet Package Manager > Package Manager Console
