@@ -30,7 +30,6 @@ generate "tfvars" {
   if_exists         = "overwrite"
   disable_signature = true
   contents          = <<-EOF
-#  app_image = "${local.app_image}"
   app_repo = "${local.app_repo}"
   app_version = "${local.app_version}"
 EOF
