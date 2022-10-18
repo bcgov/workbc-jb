@@ -42,9 +42,6 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
       
-#      - name: Set current date as env variable
-#        run: echo "NOW=$(date +'%s')" >> $GITHUB_ENV
-        
       - uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: ${{ env.TF_VERSION }}
