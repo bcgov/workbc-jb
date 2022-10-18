@@ -27,7 +27,7 @@ resource "aws_ecs_task_definition" "app" {
 	{
 		essential   = false
 		name        = "migration"
-		image       = "${var.app_repo}/jb-migration:latest"
+		image       = "${var.app_repo}/jb-migration:${var.app_version}"
 		networkMode = "awsvpc"
 		
 		logConfiguration = {
@@ -121,7 +121,7 @@ resource "aws_ecs_task_definition" "app" {
 	{
 		essential   = true
 		name        = "web"
-		image       = "${var.app_repo}/jb:latest"
+		image       = "${var.app_repo}/jb:${var.app_version}"
 		networkMode = "awsvpc"
 		
 		logConfiguration = {
@@ -253,7 +253,7 @@ resource "aws_ecs_task_definition" "app" {
 	{
 		essential   = true
 		name        = "admin"
-		image       = "${var.app_repo}/jb-admin:latest"
+		image       = "${var.app_repo}/jb-admin:${var.app_version}"
 		networkMode = "awsvpc"
 		
 		logConfiguration = {
@@ -385,7 +385,7 @@ resource "aws_ecs_task_definition" "app" {
 	{
 		essential   = false
 		name        = "cli"
-		image       = "${var.app_repo}/jb-cli:latest"
+		image       = "${var.app_repo}/jb-cli:${var.app_version}"
 		networkMode = "awsvpc"
 		
 		logConfiguration = {

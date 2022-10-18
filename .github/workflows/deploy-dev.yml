@@ -41,7 +41,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
-
+      
       - uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: ${{ env.TF_VERSION }}
@@ -55,5 +55,6 @@ jobs:
         working-directory: ${{ env.TG_SRC_PATH }}/${{ env.TFC_WORKSPACE }}
         env:
           app_image: ${{ env.IMAGE_ID }}:${{ github.event.workflow_run.head_sha }}
+          app_version: ${{ github.event.workflow_run.head_sha }}
           LICENSE_PLATE: ${{ secrets.MY_LICENSE_PLATE }}
         run: terragrunt run-all apply --terragrunt-non-interactive
