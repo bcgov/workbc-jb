@@ -8,7 +8,7 @@ on:
       - completed
 
 env:
-  IMAGE_ID: ${{ secrets.AWS_ECR_URI }}
+  IMAGE_ID: ${{ secrets.AWS_ECR_URI2 }}
   
   TF_VERSION: 1.0.5
   TG_VERSION: 0.31.4
@@ -54,7 +54,8 @@ jobs:
       - name: Terragrunt Apply
         working-directory: ${{ env.TG_SRC_PATH }}/${{ env.TFC_WORKSPACE }}
         env:
-          app_image: ${{ env.IMAGE_ID }}:${{ github.event.workflow_run.head_sha }}
+#          app_image: ${{ env.IMAGE_ID }}:${{ github.event.workflow_run.head_sha }}
+          app_repo: ${{ env.IMAGE_ID }}
           app_version: ${{ github.event.workflow_run.head_sha }}
           LICENSE_PLATE: ${{ secrets.MY_LICENSE_PLATE }}
         run: terragrunt run-all apply --terragrunt-non-interactive

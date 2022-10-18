@@ -43,7 +43,7 @@ variable "app_image" {
 variable "app_repo" {
   description = "ECR docker image repo"
   type        = string
-  default     = "266795317183.dkr.ecr.ca-central-1.amazonaws.com"
+  default     = ""
 }
 
 variable "app_port" {
