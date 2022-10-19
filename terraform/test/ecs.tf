@@ -113,11 +113,11 @@ resource "aws_ecs_task_definition" "app" {
 			},
 			{
 				name = "AppSettings__JbAccountUrl",
-				value = "https://dev.workbc.ca/Account.aspx"
+				value = "https://test2.workbc.ca/Account.aspx"
 			},
 			{
 				name = "AppSettings__JbSearchUrl",
-				value = "https://dev.workbc.ca/Jobs-Careers/Find-Jobs/Jobs.aspx"
+				value = "https://test2.workbc.ca/Jobs-Careers/Find-Jobs/Jobs.aspx"
 			},
 			{
 				name = "AppSettings__ApplyMigrations",
@@ -217,10 +217,10 @@ resource "aws_ecs_task_definition" "app" {
 				name = "ASPNETCORE_URLS",
 				value = "http://*:8080"
 			},
-			{
+			/*{
 				name = "ASPNETCORE_ENVIRONMENT",
 				value = "Development"
-			},
+			},*/
 			{
 				name = "AppSettings__UseRedisCache",
 				value = "true"
@@ -231,11 +231,11 @@ resource "aws_ecs_task_definition" "app" {
 			},
 			{
 				name = "AppSettings__JbAccountUrl",
-				value = "https://dev.workbc.ca/Account.aspx"
+				value = "https://test2.workbc.ca/Account.aspx"
 			},
 			{
 				name = "AppSettings__JbSearchUrl",
-				value = "https://dev.workbc.ca/Job-Careers/Find-Jobs/Jobs.aspx"
+				value = "https://test2.workbc.ca/Job-Careers/Find-Jobs/Jobs.aspx"
 			},
 			{
 				name = "AppSettings__ApplyMigrations",
@@ -314,10 +314,10 @@ resource "aws_ecs_task_definition" "app" {
 				name = "ASPNETCORE_URLS",
 				value = "http://*:8080"
 			},
-			{
+			/*{
 				name = "ASPNETCORE_ENVIRONMENT",
 				value = "Development"
-			},
+			},*/
 			{
 				name = "AppSettings__UseRedisCache",
 				value = "true"
