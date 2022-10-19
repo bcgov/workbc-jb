@@ -37,33 +37,33 @@ jobs:
           docker push ${{ env.IMAGE_ID }}/jb:${GITHUB_REF#refs/tags/}
           
           docker pull ${{ env.IMAGE_ID }}/jb-admin:${GITHUB_SHA}
-          docker tag ${{ env.IMAGE_ID }}/jb-admin:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb:${GITHUB_REF#refs/tags/}
+          docker tag ${{ env.IMAGE_ID }}/jb-admin:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb-admin:${GITHUB_REF#refs/tags/}
           docker push ${{ env.IMAGE_ID }}/jb-admin:${GITHUB_REF#refs/tags/}
           
           docker pull ${{ env.IMAGE_ID }}/jb-cli:${GITHUB_SHA}
-          docker tag ${{ env.IMAGE_ID }}/jb-cli:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb:${GITHUB_REF#refs/tags/}
+          docker tag ${{ env.IMAGE_ID }}/jb-cli:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb-cli:${GITHUB_REF#refs/tags/}
           docker push ${{ env.IMAGE_ID }}/jb-cli:${GITHUB_REF#refs/tags/}
           
           docker pull ${{ env.IMAGE_ID }}/jb-migration:${GITHUB_SHA}
-          docker tag ${{ env.IMAGE_ID }}/jb-migration:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb:${GITHUB_REF#refs/tags/}
+          docker tag ${{ env.IMAGE_ID }}/jb-migration:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb-migration:${GITHUB_REF#refs/tags/}
           docker push ${{ env.IMAGE_ID }}/jb-migration:${GITHUB_REF#refs/tags/}
           
           docker pull ${{ env.IMAGE_ID }}/jb-importers-federal:${GITHUB_SHA}
-          docker tag ${{ env.IMAGE_ID }}/jb-importers-federal:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb:${GITHUB_REF#refs/tags/}
+          docker tag ${{ env.IMAGE_ID }}/jb-importers-federal:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb-importers-federal:${GITHUB_REF#refs/tags/}
           docker push ${{ env.IMAGE_ID }}/jb-importers-federal:${GITHUB_REF#refs/tags/}
           
           docker pull ${{ env.IMAGE_ID }}/jb-indexers-federal:${GITHUB_SHA}
-          docker tag ${{ env.IMAGE_ID }}/jb-indexers-federal:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb:${GITHUB_REF#refs/tags/}
+          docker tag ${{ env.IMAGE_ID }}/jb-indexers-federal:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb-indexers-federal:${GITHUB_REF#refs/tags/}
           docker push ${{ env.IMAGE_ID }}/jb-indexers-federal:${GITHUB_REF#refs/tags/}   
           
           docker pull ${{ env.IMAGE_ID }}/jb-importers-wanted:${GITHUB_SHA}
-          docker tag ${{ env.IMAGE_ID }}/jb-importers-wanted:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb:${GITHUB_REF#refs/tags/}
+          docker tag ${{ env.IMAGE_ID }}/jb-importers-wanted:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb-importers-wanted:${GITHUB_REF#refs/tags/}
           docker push ${{ env.IMAGE_ID }}/jb-importers-wanted:${GITHUB_REF#refs/tags/}
           
           docker pull ${{ env.IMAGE_ID }}/jb-indexers-wanted:${GITHUB_SHA}
-          docker tag ${{ env.IMAGE_ID }}/jb-indexers-wanted:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb:${GITHUB_REF#refs/tags/}
+          docker tag ${{ env.IMAGE_ID }}/jb-indexers-wanted:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb-indexers-wanted:${GITHUB_REF#refs/tags/}
           docker push ${{ env.IMAGE_ID }}/jb-indexers-wanted:${GITHUB_REF#refs/tags/}
           
           docker pull ${{ env.IMAGE_ID }}/jb-notifications:${GITHUB_SHA}
-          docker tag ${{ env.IMAGE_ID }}/jb-notifications:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb:${GITHUB_REF#refs/tags/}
+          docker tag ${{ env.IMAGE_ID }}/jb-notifications:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb-notifications:${GITHUB_REF#refs/tags/}
           docker push ${{ env.IMAGE_ID }}/jb-notifications:${GITHUB_REF#refs/tags/}                
