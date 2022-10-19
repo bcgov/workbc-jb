@@ -4,8 +4,6 @@ locals {
   project          = get_env("LICENSE_PLATE")
   environment      = reverse(split("/", get_terragrunt_dir()))[0]
   app_version      = get_env("app_version", "")
-#  app_image        = get_env("app_image", "")
-#  app_repo         = split("/", get_env("app_image"))[0]
   app_repo         = get_env("app_repo", "")
 }
 
