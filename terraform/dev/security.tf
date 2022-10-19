@@ -50,3 +50,15 @@ resource "aws_security_group" "redis_security_group" {
 		cidr_blocks	= [data.aws_vpc.main.cidr_block]
 	}
 }
+
+resource "aws_security_group" "mssql_security_group" {
+	name	=	"mssql_sg"
+	vpc_id	=	data.aws_vpc.main.id
+	
+	ingress {
+		from_port	=	1433
+		to_port		=	1433
+		protocol	=	"tcp"
+		cidr_blocks	= [data.aws_vpc.main.cidr_block]
+	}
+}
