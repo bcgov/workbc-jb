@@ -181,7 +181,7 @@ resource "aws_ecs_task_definition" "app" {
 			},
 			{
 				name = "AppSettings__JbSearchUrl",
-				value = "https://dev.workbc.ca/Job-Careers/Find-Jobs/Jobs.aspx"
+				value = "https://dev.workbc.ca/Jobs-Careers/Find-Jobs/Jobs.aspx"
 			},
 			{
 				name = "AppSettings__ApplyMigrations",
