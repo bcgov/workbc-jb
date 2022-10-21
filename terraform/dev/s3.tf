@@ -25,8 +25,8 @@ data "aws_iam_policy_document" "allow_access_from_other_accounts" {
     ]
 
     resources = [
-      aws_s3_bucket.example.arn,
-      "${aws_s3_bucket.workbc_jb_s3.arn}/*",
+#      aws_s3_bucket.example.arn,
+      "${aws_s3_bucket.workbc_jb_s3.arn}",
     ]
   }
 	
@@ -45,7 +45,7 @@ data "aws_iam_policy_document" "allow_access_from_other_accounts" {
     ]
 
     resources = [
-      aws_s3_bucket.example.arn,
+#      aws_s3_bucket.example.arn,
       "${aws_s3_bucket.workbc_jb_s3.arn}/*",
     ]
   }
