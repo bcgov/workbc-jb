@@ -14,6 +14,12 @@ resource "aws_s3_bucket_policy" "allow_access_from_other_accounts" {
 
 data "aws_iam_policy_document" "allow_access_from_other_accounts" {
   statement {
+    
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::873424993519:role/mssqlNativeBackupRestoreRole"]
+    }
+	  
     principals {
       type        = "AWS"
       identifiers = ["arn:aws:iam::054099626264:role/mssqlNativeBackupRestoreRole"]
@@ -25,12 +31,16 @@ data "aws_iam_policy_document" "allow_access_from_other_accounts" {
     ]
 
     resources = [
-#      aws_s3_bucket.example.arn,
       "${aws_s3_bucket.workbc_jb_s3.arn}",
     ]
   }
 	
   statement {
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::873424993519:role/mssqlNativeBackupRestoreRole"]
+    }
+	  
     principals {
       type        = "AWS"
       identifiers = ["arn:aws:iam::054099626264:role/mssqlNativeBackupRestoreRole"]
@@ -45,7 +55,6 @@ data "aws_iam_policy_document" "allow_access_from_other_accounts" {
     ]
 
     resources = [
-#      aws_s3_bucket.example.arn,
       "${aws_s3_bucket.workbc_jb_s3.arn}/*",
     ]
   }
