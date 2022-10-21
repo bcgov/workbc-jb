@@ -246,7 +246,7 @@ resource "aws_iam_role_policy" "mssql_s3" {
                 "s3:ListBucket",
                 "s3:GetBucketLocation"
             ],
-            "Resource": "arn:aws:s3:::workbc-dev-bucket"
+            "Resource": "${aws_s3_bucket.workbc_jb_s3.arn}"
         },
         {
             "Effect": "Allow",
@@ -257,7 +257,7 @@ resource "aws_iam_role_policy" "mssql_s3" {
                 "s3:ListMultipartUploadParts",
                 "s3:AbortMultipartUpload"
             ],
-            "Resource": "arn:aws:s3:::workbc-dev-bucket/*"
+            "Resource": "${aws_s3_bucket.workbc_jb_s3.arn}"
         }
     ]
 
