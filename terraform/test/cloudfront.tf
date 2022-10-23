@@ -47,6 +47,7 @@ resource "aws_cloudfront_distribution" "workbc-jb" {
 
     forwarded_values {
       query_string = true
+      headers = ["Origin", "Authorization"]
 
       cookies {
         forward = "all"
