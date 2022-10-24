@@ -56,8 +56,8 @@ resource "aws_cloudfront_distribution" "workbc-jb" {
 
     viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
-    default_ttl            = 120
-    max_ttl                = 300
+    default_ttl            = 3600
+    max_ttl                = 86400
 	
     # SimpleCORS
     response_headers_policy_id = "60669652-455b-4ae9-85a4-c4c02393f86c"
