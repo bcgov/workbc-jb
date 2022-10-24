@@ -46,8 +46,7 @@ resource "aws_cloudfront_distribution" "workbc-jb" {
     target_origin_id = random_integer.cf_origin_id.result
 
     forwarded_values {
-      query_string = true
-      query_string_cache_keys = ["/api/career-compass", "/api/Location", "/api/Search", "/api/SystemSettings", "/api/security-questions"]
+      query_string = false
       headers = ["Origin", "Authorization"]
 
       cookies {
