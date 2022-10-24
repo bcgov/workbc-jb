@@ -46,7 +46,7 @@ resource "aws_cloudfront_distribution" "workbc-jb-adm" {
     target_origin_id = random_integer.cf_origin_id.result
 
     forwarded_values {
-      query_string = true
+      query_string = false
 
       cookies {
         forward = "all"
