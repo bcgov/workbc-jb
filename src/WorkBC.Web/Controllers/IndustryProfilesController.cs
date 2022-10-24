@@ -30,6 +30,7 @@ namespace WorkBC.Web.Controllers
         }
 
         [HttpGet("total")]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true, Duration = 0)]
         public async Task<IActionResult> GetIndustryProfilesTotalAsync()
         {
             var savedIndustryProfiles = await _context.SavedIndustryProfiles
@@ -40,6 +41,7 @@ namespace WorkBC.Web.Controllers
         }
 
         [HttpGet]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true, Duration = 0)]
         public async Task<ActionResult<IEnumerable<IndustryProfileModel>>> GetSavedIndustryProfilesAsync()
         {
             var savedIndustryProfiles = await _context.SavedIndustryProfiles
@@ -134,6 +136,7 @@ namespace WorkBC.Web.Controllers
 
         // GET: api/industry-profile/Status/1
         [HttpGet("status/{naicsId}")]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true, Duration = 0)]
         public async Task<bool> GetIndustryProfileStatus(int naicsId)
         {
             //find the industry profile id based on the naics code

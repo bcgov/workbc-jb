@@ -13,6 +13,7 @@ namespace WorkBC.Web.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
+    [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true, Duration = 0)]
     public class SavedJobsController : JobsControllerBase
     {
         private readonly ISavedJobsService _savedJobsService;

@@ -15,6 +15,7 @@ namespace WorkBC.Web.Controllers
     [Authorize]
     [ApiController]
     [Route("api/recommended-jobs")]
+    [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true, Duration = 0)]
     public class RecommendedJobsController : JobsControllerBase
     {
         private readonly ILogger<RecommendedJobsController> _logger;
