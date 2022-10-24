@@ -38,6 +38,7 @@ namespace WorkBC.Web.Controllers
 
         // GET: api/career-profiles
         [HttpGet]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true, Duration = 0)]
         public async Task<ActionResult<IEnumerable<CareerProfileModel>>> GetSavedCareerProfiles()
         {
             var savedCareerProfiles = await _context.SavedCareerProfiles
@@ -68,6 +69,7 @@ namespace WorkBC.Web.Controllers
         }
 
         [HttpGet("total")]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true, Duration = 0)]
         public async Task<IActionResult> GetCareerProfilesTotalAsync()
         {
             var savedCareerProfiles = await _context.SavedCareerProfiles
@@ -79,6 +81,7 @@ namespace WorkBC.Web.Controllers
 
         // GET: api/CareerProfiles/5
         [HttpGet("{id}")]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true, Duration = 0)]
         public async Task<ActionResult<SavedCareerProfile>> GetSavedCareerProfile(int id)
         {
             var savedCareerProfile = await _context.SavedCareerProfiles.FindAsync(id);
@@ -195,6 +198,7 @@ namespace WorkBC.Web.Controllers
 
         // GET: api/CareerProfiles/Status/1234
         [HttpGet("status/{noc}")]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true, Duration = 0)]
         public async Task<bool> GetCareerProfileStatus(int noc)
         {
             //find the career profile id based on the noc code
