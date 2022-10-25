@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -16,6 +17,8 @@ namespace WorkBC.Indexers.Federal
     {
         static async Task Main(string[] args)
         {
+            CultureInfo.CurrentCulture = new CultureInfo("en-CA", false);
+
             IConfigurationBuilder builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true)

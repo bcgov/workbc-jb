@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +18,8 @@ namespace WorkBC.Notifications.JobAlerts
         /// </summary>
         private static async Task Main(string[] args)
         {
+            CultureInfo.CurrentCulture = new CultureInfo("en-CA", false);
+
             IConfigurationBuilder builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true)
