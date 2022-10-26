@@ -458,10 +458,14 @@ resource "aws_ecs_task_definition" "notify-job" {
 			{
 				name = "AppSettings__JbSearchUrl",
 				value = "https://dev.workbc.ca/Jobs-Careers/Find-Jobs/Jobs.aspx"
+			},
+			{
+				name = "AppSettings__SendEmailTestingTo",
+				value = "LMI.Support@gov.bc.ca"
 			}
 		]
 		secrets = [
-			/*{
+			{
 				name = "IndexSettings__ElasticUser",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_username::"
 			},
@@ -469,7 +473,7 @@ resource "aws_ecs_task_definition" "notify-job" {
 				name = "IndexSettings__ElasticPassword",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_password::"
 			},
-			{
+			/*{
 				name = "Keycloak__ClientId",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:kc_id::"
 			},
