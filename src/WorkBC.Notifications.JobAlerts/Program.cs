@@ -31,14 +31,22 @@ namespace WorkBC.Notifications.JobAlerts
 
             logger.Information("JOB ALERT TASK STARTED");
 
-            try
+
+            if (configuration["AppSettings:IsProduction"] == "true" || !string.IsNullOrWhiteSpace(configuration["AppSettings:SendEmailTestingTo"])) 
             {
-                var service = new JobAlertSenderService(configuration, logger);
-                await service.RunJobAlertSender();
-            }
-            catch (Exception exc)
+                try
+                {
+                    var service = new JobAlertSenderService(configuration, logger);
+                    await service.RunJobAlertSender();
+                }
+                catch (Exception exc)
+                {
+                    logger.Error($"Failed sending notifications:\n{exc}");
+                }
+            } 
+            else
             {
-                logger.Error($"Failed sending notifications:\n{exc}");
+                logger.Information("No emails were sent. AppSettings__SendEmailTestingTo is blank and AppSettings__IsProduction is false.");
             }
 
             logger.Information("JOB ALERT TASK COMPLETED");
