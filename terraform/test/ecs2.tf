@@ -275,10 +275,21 @@ resource "aws_ecs_task_definition" "notify-job" {
 			{
 				name = "AppSettings__JbSearchUrl",
 				value = "https://test2.workbc.ca/Jobs-Careers/Find-Jobs/Jobs.aspx"
+			},
+			{
+				name = "AppSettings__SendEmailTestingTo",
+				value = "LMI.Support@gov.bc.ca"
 			}
 		]
 		secrets = [
-			
+			{
+				name = "IndexSettings__ElasticUser",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_username::"
+			},
+			{
+				name = "IndexSettings__ElasticPassword",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_password::"
+			},
 			{
 				name = "EmailSettings__SendGridKey",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:send_key::"
