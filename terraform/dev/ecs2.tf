@@ -382,7 +382,7 @@ resource "aws_ecs_task_definition" "import-job" {
 
 resource "aws_cloudwatch_event_rule" "cron" {
 	name = "importer_schedule"
-	schedule_expression = "cron(0 5,11,17,23 * * ? *)"
+	schedule_expression = "cron(0 2,8,14,20 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
