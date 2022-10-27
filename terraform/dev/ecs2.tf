@@ -382,7 +382,7 @@ resource "aws_ecs_task_definition" "import-job" {
 
 resource "aws_cloudwatch_event_rule" "cron" {
 	name = "importer_schedule"
-	schedule_expression = "rate(1 hour)"
+	schedule_expression = "cron(0 2,8,14,20 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
@@ -525,7 +525,7 @@ resource "aws_ecs_task_definition" "notify-job" {
 
 resource "aws_cloudwatch_event_rule" "cron2" {
 	name = "notifications_schedule"
-	schedule_expression = "rate(1 day)"
+	schedule_expression = "cron(0 13 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task2" {
