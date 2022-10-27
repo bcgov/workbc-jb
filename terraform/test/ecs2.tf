@@ -202,7 +202,8 @@ resource "aws_ecs_task_definition" "import-job" {
 
 resource "aws_cloudwatch_event_rule" "cron" {
 	name = "importer_schedule"
-	schedule_expression = "rate(1 hour)"
+	# send notification every 6 hours at 7AM, 1PM, 7PM, 1AM PST
+	schedule_expression = "cron(0 2,8,14,20 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
@@ -306,7 +307,8 @@ resource "aws_ecs_task_definition" "notify-job" {
 
 resource "aws_cloudwatch_event_rule" "cron2" {
 	name = "notifications_schedule"
-	schedule_expression = "rate(1 day)"
+	# send notification every day at 6 AM PST
+	schedule_expression = "cron(0 13 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task2" {
