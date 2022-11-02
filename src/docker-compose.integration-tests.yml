@@ -1,0 +1,34 @@
+version: '3.4'
+services:
+    jb-dotnet-build:
+        container_name: jb-dotnet-build
+        scale: 0
+        build:
+            context: .
+            dockerfile: ./dotnet-build.Dockerfile
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+        networks:
+            - my-network
+        environment:
+            - discovery.type=single-node
+        ports:
+            - 9200:9200
+        healthcheck:
+           test: curl -s http://localhost:9200 > /dev/null || exit 1
+           interval: 30s
+           timeout: 10s
+           retries: 50
+    tests:
+        build: 
+            context: .
+            dockerfile: ./WorkBC.Tests/DockerFile
+        networks:
+            - my-network
+        depends_on:
+            elasticsearch:
+                condition: service_healthy
+
+networks:
+    my-network:
+        driver: bridge
