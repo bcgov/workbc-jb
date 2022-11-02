@@ -36,7 +36,8 @@ namespace WorkBC.Tests.Tests
             IConfigurationBuilder builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true)
-                .AddUserSecrets<TestsBase>();
+                .AddUserSecrets<TestsBase>()
+                .AddEnvironmentVariables();
 
             IConfiguration configuration = builder.Build();
 

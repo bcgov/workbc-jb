@@ -15,8 +15,25 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  test:
+    name: Run test suite
+    runs-on: ubuntu-latest
+    env:
+      COMPOSE_FILE: src/docker-compose.integration-tests.yml
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Build test image
+      run: docker-compose build
+
+    - name: Run tests
+      run: docker-compose up --abort-on-container-exit
+
   # This workflow contains a single job called "build"
   build:
+    needs: test  
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
