@@ -2,11 +2,8 @@
 
 FROM src_jb-dotnet-build AS dotnet-build
 WORKDIR /src
-COPY ["WorkBC.Indexers.Federal/WorkBC.Indexers.Federal.csproj", "WorkBC.Indexers.Federal/"]
-COPY ["WorkBC.Web/WorkBC.Web.csproj", "WorkBC.Web/"]
-COPY ["WorkBC.Tests/WorkBC.Tests.csproj", "WorkBC.Tests/"]
+COPY ["WorkBC.Tests/", "WorkBC.Tests/"]
 RUN dotnet restore "WorkBC.Tests/WorkBC.Tests.csproj"
-COPY . .
 RUN dotnet build "WorkBC.Tests/WorkBC.Tests.csproj"
 ENV ConnectionStrings__ElasticSearchServer "http://elasticsearch:9200"
 ENTRYPOINT ["dotnet", "test", "WorkBC.Tests/WorkBC.Tests.csproj"]

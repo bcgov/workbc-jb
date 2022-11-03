@@ -17,6 +17,7 @@
     </PackageReference>
     <PackageReference Include="Divergic.Logging.Xunit" Version="3.6.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
 	  <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
@@ -34,10 +35,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WorkBC.ElasticSearch.Indexing\WorkBC.ElasticSearch.Indexing.csproj" />
     <ProjectReference Include="..\WorkBC.ElasticSearch.Models\WorkBC.ElasticSearch.Models.csproj" />
     <ProjectReference Include="..\WorkBC.ElasticSearch.Search\WorkBC.ElasticSearch.Search.csproj" />
-    <ProjectReference Include="..\WorkBC.Indexers.Federal\WorkBC.Indexers.Federal.csproj" />
-    <ProjectReference Include="..\WorkBC.Web\WorkBC.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>
