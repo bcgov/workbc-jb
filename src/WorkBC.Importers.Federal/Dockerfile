@@ -5,7 +5,7 @@ WORKDIR /src
 COPY ["WorkBC.Importers.Federal/", "WorkBC.Importers.Federal/"]
 RUN dotnet restore "WorkBC.Importers.Federal/WorkBC.Importers.Federal.csproj"
 WORKDIR "/src/WorkBC.Importers.Federal"
-RUN dotnet publish "WorkBC.Importers.Federal.csproj" -c Release -o /app/publish
+RUN dotnet publish "WorkBC.Importers.Federal.csproj" -c Release -o /app/publish --no-restore --no-dependencies
 
 FROM mcr.microsoft.com/dotnet/runtime:6.0
 WORKDIR /app

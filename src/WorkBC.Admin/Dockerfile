@@ -24,7 +24,7 @@ COPY ["WorkBC.Admin/", "WorkBC.Admin/"]
 RUN dotnet restore "WorkBC.Admin/WorkBC.Admin.csproj"
 RUN rm -rf WorkBC.Admin/wwwroot/dist
 WORKDIR "/src/WorkBC.Admin"
-RUN dotnet publish "WorkBC.Admin.csproj" -c Release -o /app/publish
+RUN dotnet publish "WorkBC.Admin.csproj" -c Release -o /app/publish --no-restore --no-dependencies
 
 # Copy both build outputs to the runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0

@@ -17,7 +17,7 @@ COPY ["WorkBC.Web/", "WorkBC.Web/"]
 RUN rm -rf WorkBC.Web/wwwroot/dist
 RUN dotnet restore "WorkBC.Web/WorkBC.Web.csproj"
 WORKDIR "/src/WorkBC.Web"
-RUN dotnet publish "WorkBC.Web.csproj" -c Release -o /app/publish
+RUN dotnet publish "WorkBC.Web.csproj" -c Release -o /app/publish --no-restore --no-dependencies
 
 # Copy both build outputs to the runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
