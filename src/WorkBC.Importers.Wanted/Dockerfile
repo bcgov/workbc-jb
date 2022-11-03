@@ -5,7 +5,7 @@ WORKDIR /src
 COPY ["WorkBC.Importers.Wanted/", "WorkBC.Importers.Wanted/"]
 RUN dotnet restore "WorkBC.Importers.Wanted/WorkBC.Importers.Wanted.csproj"
 WORKDIR "/src/WorkBC.Importers.Wanted"
-RUN dotnet publish "WorkBC.Importers.Wanted.csproj" -c Release -o /app/publish
+RUN dotnet publish "WorkBC.Importers.Wanted.csproj" -c Release -o /app/publish --no-restore --no-dependencies
 
 FROM mcr.microsoft.com/dotnet/runtime:6.0
 WORKDIR /app

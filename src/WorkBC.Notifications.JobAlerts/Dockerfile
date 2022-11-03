@@ -5,7 +5,7 @@ WORKDIR /src
 COPY ["WorkBC.Notifications.JobAlerts/", "WorkBC.Notifications.JobAlerts/"]
 RUN dotnet restore "WorkBC.Notifications.JobAlerts/WorkBC.Notifications.JobAlerts.csproj"
 WORKDIR "/src/WorkBC.Notifications.JobAlerts"
-RUN dotnet publish "WorkBC.Notifications.JobAlerts.csproj" -c Release -o /app/publish
+RUN dotnet publish "WorkBC.Notifications.JobAlerts.csproj" -c Release -o /app/publish --no-restore --no-dependencies
 
 FROM mcr.microsoft.com/dotnet/runtime:6.0
 WORKDIR /app

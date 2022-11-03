@@ -16,5 +16,5 @@ COPY ["WorkBC.ElasticSearch.Search/", "WorkBC.ElasticSearch.Search/"]
 RUN dotnet restore "WorkBC.ElasticSearch.Indexing/WorkBC.ElasticSearch.Indexing.csproj"
 RUN dotnet restore "WorkBC.ElasticSearch.Search/WorkBC.ElasticSearch.Search.csproj"
 
-RUN dotnet build "WorkBC.ElasticSearch.Indexing/WorkBC.ElasticSearch.Indexing.csproj" -c Release
-RUN dotnet build "WorkBC.ElasticSearch.Search/WorkBC.ElasticSearch.Search.csproj" -c Release
+RUN dotnet build "WorkBC.ElasticSearch.Indexing/WorkBC.ElasticSearch.Indexing.csproj" -c Release --no-restore
+RUN dotnet build "WorkBC.ElasticSearch.Search/WorkBC.ElasticSearch.Search.csproj" -c Release --no-restore

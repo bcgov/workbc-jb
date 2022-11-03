@@ -5,7 +5,7 @@ WORKDIR /src
 COPY ["WorkBC.Indexers.Wanted/", "WorkBC.Indexers.Wanted/"]
 RUN dotnet restore "WorkBC.Indexers.Wanted/WorkBC.Indexers.Wanted.csproj"
 WORKDIR "/src/WorkBC.Indexers.Wanted"
-RUN dotnet publish "WorkBC.Indexers.Wanted.csproj" -c Release -o /app/publish
+RUN dotnet publish "WorkBC.Indexers.Wanted.csproj" -c Release -o /app/publish --no-restore --no-dependencies
 
 FROM mcr.microsoft.com/dotnet/runtime:6.0
 WORKDIR /app

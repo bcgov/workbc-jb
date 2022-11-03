@@ -4,6 +4,6 @@ FROM src_jb-dotnet-build AS dotnet-build
 WORKDIR /src
 COPY ["WorkBC.Tests/", "WorkBC.Tests/"]
 RUN dotnet restore "WorkBC.Tests/WorkBC.Tests.csproj"
-RUN dotnet build "WorkBC.Tests/WorkBC.Tests.csproj"
+RUN dotnet build "WorkBC.Tests/WorkBC.Tests.csproj" -c Release --no-restore --no-dependencies
 ENV ConnectionStrings__ElasticSearchServer "http://elasticsearch:9200"
-ENTRYPOINT ["dotnet", "test", "WorkBC.Tests/WorkBC.Tests.csproj"]
+ENTRYPOINT ["dotnet", "test", "WorkBC.Tests/WorkBC.Tests.csproj", "-c", "Release", "--no-restore", "--no-build"]

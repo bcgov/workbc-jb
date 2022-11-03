@@ -5,7 +5,7 @@ WORKDIR /src
 COPY ["EFMigrationRunner/", "EFMigrationRunner/"]
 RUN dotnet restore "EFMigrationRunner/EFMigrationRunner.csproj"
 WORKDIR "/src/EFMigrationRunner"
-RUN dotnet publish "EFMigrationRunner.csproj" -c Release -o /app/publish
+RUN dotnet publish "EFMigrationRunner.csproj" -c Release -o /app/publish --no-restore --no-dependencies
 
 FROM mcr.microsoft.com/dotnet/runtime:6.0
 WORKDIR /app
