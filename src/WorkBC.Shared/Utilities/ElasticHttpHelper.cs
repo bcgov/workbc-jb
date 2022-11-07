@@ -142,7 +142,12 @@ namespace WorkBC.Shared.Utilities
                 
                 result = await httpClient.PostAsync(url, jsonContent);
 
-                if (!result.IsSuccessStatusCode)
+                if (result.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new Exception($"Elasticsearch returned an Unauthorized status code\n"
+                       + $"url={url}\n" + $"user={_username}\n" + $"pwd={_password}");
+                }
+                else if (!result.IsSuccessStatusCode)
                 {
                     throw new Exception($"Elasticsearch returned a {result.StatusCode} status code");
                 }
