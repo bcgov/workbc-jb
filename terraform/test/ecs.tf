@@ -134,7 +134,6 @@ resource "aws_ecs_task_definition" "app" {
 				name = "IndexSettings__ElasticPassword",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_password::"
 			},
-
 			{
 				name = "AppSettings__GoogleMapsIPApi",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:gm_ip::"
@@ -142,15 +141,6 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "AppSettings__GoogleMapsReferrerApi",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:gm_ref::"
-			},
-
-			{
-				name = "EmailSettings__SendGridKey",
-				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:send_key::"
-			},
-			{
-				name = "EmailSettings__SendGridFromEmail",
-				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:send_email::"
 			},
 			{
 				name = "RecaptchaSettings__SiteKey",
@@ -333,7 +323,6 @@ resource "aws_ecs_task_definition" "app" {
 				name = "IndexSettings__ElasticPassword",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_password::"
 			},
-			
 			{
 				name = "WantedSettings__PassKey",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:wanted_pk::"
@@ -342,14 +331,9 @@ resource "aws_ecs_task_definition" "app" {
 				name = "AppSettings__GoogleMapsIPApi",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:gm_ip::"
 			},
-			
 			{
 				name = "FederalSettings__AuthCookie",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:fed_auth::"
-			},
-			{
-				name = "EmailSettings__SendGridKey",
-				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:send_key::"
 			}
 		]
 	}

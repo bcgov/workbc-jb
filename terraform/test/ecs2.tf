@@ -290,10 +290,6 @@ resource "aws_ecs_task_definition" "notify-job" {
 			{
 				name = "IndexSettings__ElasticPassword",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_password::"
-			},
-			{
-				name = "EmailSettings__SendGridKey",
-				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:send_key::"
 			}
 		]
 	}	
