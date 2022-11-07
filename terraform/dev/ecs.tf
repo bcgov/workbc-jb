@@ -141,14 +141,6 @@ resource "aws_ecs_task_definition" "app" {
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:gm_ref::"
 			},
 			{
-				name = "EmailSettings__SendGridKey",
-				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:send_key::"
-			},
-			{
-				name = "EmailSettings__SendGridFromEmail",
-				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:send_email::"
-			},
-			{
 				name = "RecaptchaSettings__SiteKey",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:re_key::"
 			},
@@ -339,10 +331,6 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "FederalSettings__AuthCookie",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:fed_auth::"
-			},
-			{
-				name = "EmailSettings__SendGridKey",
-				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:send_key::"
 			}
 		]
 	}
