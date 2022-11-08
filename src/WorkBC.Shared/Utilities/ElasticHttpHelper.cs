@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace WorkBC.Shared.Utilities
@@ -144,8 +145,9 @@ namespace WorkBC.Shared.Utilities
 
                 if (result.StatusCode == HttpStatusCode.Unauthorized)
                 {
+                    var maskedPassword = new Regex("\\S").Replace(_password, "*");
                     throw new Exception($"Elasticsearch returned an Unauthorized status code\n"
-                       + $"url={url}\n" + $"user={_username}\n" + $"pwd={_password}");
+                       + $"url={url}\n" + $"user={_username}\n" + $"pwd={maskedPassword}");
                 }
                 else if (!result.IsSuccessStatusCode)
                 {
