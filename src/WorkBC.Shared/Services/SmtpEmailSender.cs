@@ -37,21 +37,22 @@ namespace WorkBC.Shared.Services
 
             try
             {
-                var client = new SmtpClient(_emailSettings.SmtpServer, _emailSettings.SmtpPort);
-
-                var mailMessage = new MailMessage
+                using (var client = new SmtpClient(_emailSettings.SmtpServer, _emailSettings.SmtpPort))
                 {
-                    From = new MailAddress(fromEmail, fromName),
-                    Body = textMessage,
-                    Subject = subject
-                };
+                    var mailMessage = new MailMessage
+                    {
+                        From = new MailAddress(fromEmail, fromName),
+                        Body = textMessage,
+                        Subject = subject
+                    };
 
-                mailMessage.AlternateViews.Add(
-                    AlternateView.CreateAlternateViewFromString(htmlMessage, Encoding.UTF8, "text/html"));
+                    mailMessage.AlternateViews.Add(
+                        AlternateView.CreateAlternateViewFromString(htmlMessage, Encoding.UTF8, "text/html"));
 
-                mailMessage.To.Add(email);
+                    mailMessage.To.Add(email);
 
-                await client.SendMailAsync(mailMessage);
+                    await client.SendMailAsync(mailMessage);
+                }
             }
             catch (Exception ex)
             {
