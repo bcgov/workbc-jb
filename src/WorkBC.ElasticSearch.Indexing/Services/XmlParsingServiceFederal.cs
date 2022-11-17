@@ -27,7 +27,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
         }
 
         public XmlParsingServiceFederal(List<Data.Model.JobBoard.Location> duplicateCities,
-            Dictionary<string, string> uniqueCities, List<NocCode> nocCodes, IGeocodingService geocodingService): base(duplicateCities, uniqueCities, nocCodes)
+            Dictionary<string, string> uniqueCities, List<NocCode> nocCodes, IGeocodingService geocodingService) : base(duplicateCities, uniqueCities, nocCodes)
         {
             this._geocodingService = geocodingService;
         }
@@ -66,7 +66,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 var culture = new CultureInfo("en-US");
 
                 // get noc code
-                var noc = xmlJobNode["noc_2011"].InnerText;
+                var noc = xmlJobNode["noc2016"].InnerText;
                 var nocId = Convert.ToInt16(noc);
 
                 // make sure the code is valid
