@@ -27,7 +27,7 @@ resource "aws_db_instance" "mssql" {
   max_allocated_storage   = 200
   engine                  = "sqlserver-web"
   engine_version	  = "15.00"
-  instance_class          = "db.t4g.medium"
+  instance_class          = "db.t3.medium"
   identifier              = "ceu-mssql"
   username                = local.db_creds.username
   password                = local.db_creds.password
