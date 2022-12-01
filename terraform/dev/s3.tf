@@ -24,6 +24,11 @@ data "aws_iam_policy_document" "allow_access_from_other_accounts" {
       type        = "AWS"
       identifiers = ["arn:aws:iam::054099626264:role/mssqlNativeBackupRestoreRole"]
     }
+	
+	principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::846410483170:role/mssqlNativeBackupRestoreRole"]
+    }
 
     actions = [
       "s3:ListBucket",
@@ -44,6 +49,11 @@ data "aws_iam_policy_document" "allow_access_from_other_accounts" {
     principals {
       type        = "AWS"
       identifiers = ["arn:aws:iam::054099626264:role/mssqlNativeBackupRestoreRole"]
+    }
+	
+	principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::846410483170:role/mssqlNativeBackupRestoreRole"]
     }
 
     actions = [
