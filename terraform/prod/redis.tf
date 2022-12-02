@@ -7,6 +7,7 @@ resource "aws_elasticache_replication_group" "jb_redis_rg" {
 	description			=	"Redis replication group for JobBoard"
 	node_type			=	"cache.t3.small"
 	num_cache_clusters		=	2
+	engine_version			=	"6.x"
 	parameter_group_name		=	"default.redis6.x"
 	port				=	6379
 	
