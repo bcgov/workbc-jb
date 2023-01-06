@@ -8,6 +8,9 @@ namespace WorkBC.ElasticSearch.Models.JobAttributes
 {
     public class Source
     {
+        [JsonIgnore]
+        private string _noc;
+
         [JsonProperty("JobId", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(StringToLongConverter))]
         public long JobId { get; set; }
@@ -128,7 +131,26 @@ namespace WorkBC.ElasticSearch.Models.JobAttributes
         public string NocGroup { get; set; }
 
         [JsonProperty("Noc", NullValueHandling = NullValueHandling.Ignore)]
-        public string Noc { get; set; }
+        public string Noc
+        {
+            get
+            {
+                const int nocLength = 4;
+                if (string.IsNullOrWhiteSpace(_noc))
+                {
+                    return string.Empty;
+                }
+                if (_noc.Length >= nocLength)
+                {
+                    return _noc;
+                }
+                var zeroes = new string('0', nocLength);
+                // pad the NOC with zeroes so it is always nocLength characters
+                var s = $"{zeroes}{_noc}";
+                return s.Substring(s.Length - nocLength, nocLength);
+            }
+            set { _noc = value; }
+        }
 
         [JsonProperty("IsVariousLocation", NullValueHandling = NullValueHandling.Ignore)]
         public bool? IsVariousLocation { get; set; }
