@@ -174,7 +174,7 @@
     <!-- Experience -->
     @foreach (SkillCategory skill in job.SkillCategories)
     {
-        @if (skill.Category.Id == 218)
+        @if (skill.Category.Id == 100001)
         {
             <div>
                 <h3>@il8n.Experience</h3>
@@ -207,7 +207,7 @@
     <!-- Skills -->
     @foreach (SkillCategory skill in job.SkillCategories)
     {
-        @if (skill.Category.Id != 195 && skill.Category.Id != 218)
+        @if (skill.Category.Id != 195 && skill.Category.Id != 100001)
         {
             <div>
                 <h3>@skill.Category.Name</h3>

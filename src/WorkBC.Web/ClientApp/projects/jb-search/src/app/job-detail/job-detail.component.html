@@ -158,7 +158,7 @@
             <div class="job-detail-wrap">
               <h3>{{textHeaders.experience}}</h3>
               <div *ngFor="let skill of jobDetail.SkillCategories">
-                <div *ngIf="skill.Category.Id == 218">
+                <div *ngIf="skill.Category.Id == 100001">
                   <ul [ngClass]="{'multi' : skill.Skills.length > 4 }">
                     <li *ngFor="let skillItem of skill.Skills">
                       {{skillItem}}
@@ -178,7 +178,7 @@
             </div>
             <!-- Skills -->
             <div class="job-description-details__skills" *ngFor="let skill of jobDetail.SkillCategories">
-              <div *ngIf="skill.Category.Id != 195 && skill.Category.Id != 218">
+              <div *ngIf="skill.Category.Id != 195 && skill.Category.Id != 100001">
                 <div class="job-detail-wrap">
                   <h3>{{skill.Category.Name}}</h3>
                   <ul [ngClass]="{'multi' : skill.Skills.length > 4 }">
