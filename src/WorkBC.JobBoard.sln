@@ -45,6 +45,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkBC.Notifications.JobAle
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4D3F46EC-AB25-43C3-AC38-94273294991C}"
 	ProjectSection(SolutionItems) = preProject
+		docker-compose.integration-tests.yml = docker-compose.integration-tests.yml
+		docker-compose.local-dev.yml = docker-compose.local-dev.yml
 		docker-compose.yml = docker-compose.yml
 		dotnet-build.Dockerfile = dotnet-build.Dockerfile
 		dotnet-cli.Dockerfile = dotnet-cli.Dockerfile
