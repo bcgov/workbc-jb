@@ -18,6 +18,8 @@ namespace WorkBC.Admin.Controllers
 
         public IActionResult Logout()
         {
+            HttpContext.Session.Clear();
+
             return new SignOutResult(new[]
             {
                 OpenIdConnectDefaults.AuthenticationScheme,
