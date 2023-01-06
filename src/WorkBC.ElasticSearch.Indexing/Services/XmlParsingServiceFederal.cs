@@ -66,13 +66,12 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 var culture = new CultureInfo("en-US");
 
                 // get noc code
-                var noc = xmlJobNode["noc2016"].InnerText;
-                var nocId = Convert.ToInt16(noc);
+                var noc = Convert.ToInt16(xmlJobNode["noc2016"].InnerText);
 
                 // make sure the code is valid
-                if (NocCodes.All(c => c.Id != nocId))
+                if (NocCodes.All(c => c.Id != noc))
                 {
-                    noc = null;
+                    noc = 0;
                 }
 
                 job = new ElasticSearchJob
@@ -116,7 +115,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     ExpireDate = Convert.ToDateTime(xmlJobNode["display_until"].InnerText),
                     LastUpdated = Convert.ToDateTime(xmlJobNode["file_update_date"].InnerText),
                     PositionsAvailable = Convert.ToInt32(xmlJobNode["num_positions"].InnerText),
-                    Noc = noc,
+                    Noc = noc == 0 ? (int?)null : noc,
                     IsVariousLocation = Convert.ToBoolean(xmlJobNode["various_location_flag"].InnerText),
                     ProgramName = xmlJobNode["program_name"] != null
                         ? xmlJobNode["program_name"].InnerText
@@ -496,7 +495,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                 #region Noc
 
-                job.NocGroup = GetNocGroup(nocId, isFrench);
+                job.NocGroup = GetNocGroup(job.Noc, isFrench);
                 job.NocJobTitle = job.Title;
 
                 #endregion

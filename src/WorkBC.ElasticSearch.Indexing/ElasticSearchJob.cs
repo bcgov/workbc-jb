@@ -46,7 +46,7 @@ namespace WorkBC.ElasticSearch.Indexing
         public SalaryConditions SalaryConditions { get; set; }
         public WorkplaceType WorkplaceType { get; set; }
         public DateTime? ExpireDate { get; set; }
-        public string Noc { get; set; }
+        public int? Noc { get; set; }
         public string NocGroup { get; set; }
         public string NocJobTitle { get; set; }
         public bool IsVariousLocation { get; set; }

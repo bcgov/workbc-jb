@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using Microsoft.Extensions.Configuration;
 using WorkBC.Data.Model.JobBoard;
-using WorkBC.ElasticSearch.Indexing.XmlParsingHelpers;
 
 namespace WorkBC.ElasticSearch.Indexing.Services
 {
@@ -265,7 +264,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                                 }
 
                                 //set job noc code
-                                job.Noc = nocInt == 0 ? null : noc;
+                                job.Noc = nocInt == 0 ? (int?)null : nocInt;
                             }
 
                             if (nocInt > 0)

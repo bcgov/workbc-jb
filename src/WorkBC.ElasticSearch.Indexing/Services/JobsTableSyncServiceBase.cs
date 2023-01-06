@@ -140,9 +140,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 }
             }
 
-            var nocId = Convert.ToInt16(elasticJob.Noc);
-
-            bool newVersion = job.NocCodeId != nocId
+            bool newVersion = job.NocCodeId != (short?)elasticJob.Noc
                               || job.IndustryId != (short?)(elasticJob.NaicsId == 0 ? (int?)null : elasticJob.NaicsId)
                               || job.LocationId != locationId
                               || job.PositionsAvailable != (short)elasticJob.PositionsAvailable
@@ -153,7 +151,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             job.EmployerName = elasticJob.EmployerName.Truncate(100);
             job.City = string.Join(", ", elasticJob.City ?? new string[] { }).Truncate(120);
             job.Title = elasticJob.Title.Truncate(300);
-            job.NocCodeId = nocId == 0 ? null : nocId;
+            job.NocCodeId = (short?)elasticJob.Noc;
             job.DatePosted = elasticJob.DatePosted;
             job.ActualDatePosted = elasticJob.ActualDatePosted;
             job.ExpireDate = elasticJob.ExpireDate ?? DateTime.Now.AddDays(_wantedJobExpiryDays);
