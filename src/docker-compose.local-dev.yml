@@ -1,0 +1,15 @@
+version: '3'
+name: workbc-jb-local
+services:
+  elasticsearch:
+    image: elasticsearch:7.17.8
+    ports:
+      - 9200:9200
+    environment:
+      discovery.type: 'single-node'
+      xpack.security.enabled: 'false'
+  kibana:
+    image: kibana:7.17.8
+    scale: 0
+    ports:
+      - 5601:5601

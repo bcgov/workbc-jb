@@ -7,7 +7,7 @@ services:
             context: .
             dockerfile: ./dotnet-build.Dockerfile
     elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.17.8
         networks:
             - my-network
         environment:
