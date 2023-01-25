@@ -1,5 +1,4 @@
 using System;
-using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
@@ -179,7 +178,6 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
                 {
                     AdminLevel = model.AdminLevel,
                     DisplayName = model.DisplayName,
-                    Guid = (model.Guid ?? "").Replace("-", "").ToUpper(),
                     SamAccountName = model.SamAccountName.ToUpper(),
                     GivenName = ParseGivenName(model.DisplayName),
                     Surname = ParseSurname(model.DisplayName),
@@ -236,11 +234,18 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
             var users = await graphClient.Users
                 .Request(queryOptions)
                 .Header("ConsistencyLevel", "eventual")
+                .Select(x => new {
+                    x.Id,
+                    x.Mail,
+                    x.GivenName,
+                    x.Surname,
+                    x.DisplayName
+                })
                 .GetAsync();
 
             if (!users.Any())
             {
-                return NotFound("The IDIR entered is invalid. Please enter a valid IDIR.");
+                return NotFound("The IDIR entered is invalid. Please enter a valid Azure AD IDIR.");
             }
 
             User user = users.FirstOrDefault();
