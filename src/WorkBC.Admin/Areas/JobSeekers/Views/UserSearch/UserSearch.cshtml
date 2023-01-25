@@ -131,7 +131,7 @@
                 <a href="@Url.Action("EditUser", "UserManagement", new { Area = "jobseekers" })" class="btn btn-secondary no-margin" id="lnkViewAsReadonly">
                     View as read-only
                 </a>
-                <form asp-area="JobSeekers" asp-controller="UserManagement" asp-action="UnlockUser" method="post" role="form">
+                <form asp-area="JobSeekers" asp-controller="UserManagement" asp-action="UnlockUser" method="post" role="form" asp-antiforgery="true">
                     <input type="hidden" id="currentUserId" name="currentUserId" />
                     <button type="submit" class="btn btn-primary">
                         Unlock

@@ -15,7 +15,7 @@
                 Any experimentation should be conducted on the test server. Only apply changes to production
                 after thorough quality assurance testing has been completed on the test server.
             </div>
-            <form asp-area="SystemSettings" asp-controller="Settings" asp-action="Update" method="post" role="form">
+            <form asp-area="SystemSettings" asp-controller="Settings" asp-action="Update" method="post" role="form" asp-antiforgery="true">
                 <input type="hidden" asp-for="FieldType" />
                 <input type="hidden" asp-for="Name" />
                 <input type="hidden" asp-for="Description" />

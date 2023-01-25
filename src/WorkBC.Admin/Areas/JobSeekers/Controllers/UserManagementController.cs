@@ -42,6 +42,7 @@ namespace WorkBC.Admin.Areas.JobSeekers.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> UnlockUser(string currentUserId)
         {
             await _service.UnlockUser(currentUserId);
@@ -102,6 +103,8 @@ namespace WorkBC.Admin.Areas.JobSeekers.Controllers
             return View("EditUser", model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateUser(UserViewModel model)
         {
             if (string.IsNullOrWhiteSpace(model.Email))
@@ -195,6 +198,7 @@ namespace WorkBC.Admin.Areas.JobSeekers.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddProfileComment(JobSeekerAddCommentViewModel model)
         {
             //add comment
@@ -205,6 +209,7 @@ namespace WorkBC.Admin.Areas.JobSeekers.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<bool> ToggleComment(int commentId, string jobSeekerId)
         {
             var result = await _service.ToggleComment(commentId);
@@ -225,6 +230,7 @@ namespace WorkBC.Admin.Areas.JobSeekers.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddUser(UserViewModel model)
         {
             bool isModelValid = ModelState.IsValid;
@@ -378,6 +384,7 @@ namespace WorkBC.Admin.Areas.JobSeekers.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteUser(string userId)
         {
             var result = await _service.DeleteUser(userId, base.CurrentAdminUserId);
@@ -387,6 +394,7 @@ namespace WorkBC.Admin.Areas.JobSeekers.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ActivateUser(string userId)
         {
             await _service.ActivateUser(userId, base.CurrentAdminUserId);
@@ -396,6 +404,7 @@ namespace WorkBC.Admin.Areas.JobSeekers.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeactivateUser(string userId)
         {
             await _service.DeactivateUser(userId, base.CurrentAdminUserId);

@@ -6,7 +6,7 @@
 <div id="page-add-comments">
 
     <a asp-action="ViewProfileComments" asp-route-userId="@Model.JobSeekerId" class="btn btn-inline back-link"><i class="fa fa-chevron-left fa-left"></i>Back to view comments</a>
-    <form asp-area="JobSeekers" asp-controller="UserManagement" asp-action="AddProfileComment" method="post" role="form">
+    <form asp-area="JobSeekers" asp-controller="UserManagement" asp-action="AddProfileComment" method="post" role="form" asp-antiforgery="true">
         <input type="hidden" asp-for="JobSeekerId" />
 
         @if (ViewData.ModelState["error"] != null)

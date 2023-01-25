@@ -86,6 +86,7 @@ namespace WorkBC.Admin.Areas.SystemSettings.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Update(SystemSettingViewModel model)
         {
             var showError = false;
