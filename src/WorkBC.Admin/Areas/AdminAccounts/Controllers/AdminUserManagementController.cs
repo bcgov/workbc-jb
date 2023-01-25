@@ -12,6 +12,10 @@ using WorkBC.Admin.Services;
 using WorkBC.Data;
 using WorkBC.Data.Model.JobBoard;
 using WorkBC.Shared.Extensions;
+using Azure.Identity;
+using Microsoft.Graph;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
 {
@@ -202,7 +206,7 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
         }
 
         [HttpPost]
-        public ActionResult UserInfo(string id)
+        public async Task<IActionResult> UserInfo(string id)
         {
             string username = id;
 
@@ -215,33 +219,45 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
                 });
             }
 
-            string domain = _configuration["AppSettings:Domain"];
+            var tenantId = _configuration["AzureAdSettings:TenantId"];
+            var clientId = _configuration["AzureAdSettings:ClientId"];
+            var clientSecret = _configuration["AzureAdSettings:ClientSecret"];
 
-#pragma warning disable CA1416 // Validate platform compatibility
-            using (var context = new PrincipalContext(ContextType.Domain, domain))
+            var creds = new ClientSecretCredential(tenantId, clientId, clientSecret);
+
+            GraphServiceClient graphClient = new GraphServiceClient(creds);
+
+            var queryOptions = new List<QueryOption>()
             {
-                UserPrincipal user = UserPrincipal.FindByIdentity(context, username);
-                if (user == null)
-                {
-                    return NotFound("The IDIR entered is invalid. Please enter a valid IDIR.");
-                }
+                new QueryOption("$count", "true"),
+                new QueryOption("$search", $"\"userPrincipalName:{username}@gov.bc.ca\"")
+            };
 
-                string guid = (user.Guid?.ToString() ?? "").Replace("-", "").ToUpper();
-                if (_dbContext.AdminUsers.Any(u => u.Guid == guid && !u.Deleted))
-                {
-                    return Conflict("This IDIR username already exists.");
-                }
+            var users = await graphClient.Users
+                .Request(queryOptions)
+                .Header("ConsistencyLevel", "eventual")
+                .GetAsync();
 
-                return Ok(new
-                {
-                    user.Guid,
-                    user.DisplayName,
-                    user.EmailAddress,
-                    user.Surname,
-                    user.Name
-                });
+            if (!users.Any())
+            {
+                return NotFound("The IDIR entered is invalid. Please enter a valid IDIR.");
             }
-#pragma warning restore CA1416 // Validate platform compatibility
+
+            User user = users.FirstOrDefault();
+            string guid = (user.Id?.ToString() ?? "").Replace("-", "").ToUpper();
+            if (_dbContext.AdminUsers.Any(u => u.Guid == guid && !u.Deleted))
+            {
+                return Conflict("This IDIR username already exists.");
+            }
+
+            return Ok(new
+            {
+                Guid = user.Id,
+                DisplayName = user.DisplayName,
+                EmailAddress = user.Mail,
+                Surname = user.Surname,
+                Name = user.GivenName
+            });
         }
 
         [HttpPost]
