@@ -14,7 +14,7 @@
             </div>
             <div class="modal-footer">
                 <a data-dismiss="modal" class="btn btn-clear">Cancel</a>
-                <form asp-area="AdminAccounts" asp-controller="AdminUserManagement" asp-action="DeleteUser" method="post" role="form">
+                <form asp-area="AdminAccounts" asp-controller="AdminUserManagement" asp-action="DeleteUser" method="post" role="form" asp-antiforgery="true">
                     <input type="hidden" id="userId" name="userId" value="@Model" />
                     <button type="submit" class="btn btn-primary">Yes, delete this account</button>
                 </form>

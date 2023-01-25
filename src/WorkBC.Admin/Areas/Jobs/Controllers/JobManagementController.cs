@@ -30,6 +30,7 @@ namespace WorkBC.Admin.Areas.Jobs.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteJob(string jobId)
         {
             await _service.DeleteJob(Convert.ToInt64(jobId), base.CurrentAdminUserId);

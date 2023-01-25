@@ -10,7 +10,7 @@
 
     <div class="row">
         <div class="col col-12 col-md-9">
-            <form asp-area="JobSeekers" asp-controller="UserManagement" asp-action="AddUser" method="post" role="form">
+            <form asp-area="JobSeekers" asp-controller="UserManagement" asp-action="AddUser" method="post" role="form" asp-antiforgery="true">
                 <input type="hidden" asp-for="LocationId" />
                 <input type="hidden" asp-for="RegionId" />
                 <input type="hidden" asp-for="City" />

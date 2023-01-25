@@ -177,7 +177,7 @@
                 <a href="@Url.Action("EditAdminUser", "AdminUserManagement", new { Area = "AdminAccounts" })" class="btn btn-secondary no-margin" id="lnkViewAsReadonly">
                     View as read-only
                 </a>
-                <form asp-area="AdminAccounts" asp-controller="AdminUserManagement" asp-action="UnlockAdminUser" method="post" role="form">
+                <form asp-area="AdminAccounts" asp-controller="AdminUserManagement" asp-action="UnlockAdminUser" method="post" role="form" asp-antiforgery="true">
                     <input type="hidden" id="currentUserId" name="currentUserId" />
                     <button type="submit" class="btn btn-primary">
                         Unlock

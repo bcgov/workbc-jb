@@ -82,6 +82,7 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult UpdateAdminUser(AdminUserViewModel model)
         {
             if (!ModelState.IsValid)
@@ -130,6 +131,7 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult DeleteUser(int userId)
         {
             //find the admin user by ID
@@ -157,6 +159,7 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult AddAdminUser(AdminUserViewModel model)
         {
             // check for duplicate users
@@ -266,6 +269,7 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult UnlockAdminUser(int currentUserId)
         {
             //find admin user

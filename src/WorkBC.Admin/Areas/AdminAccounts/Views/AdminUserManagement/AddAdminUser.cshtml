@@ -11,7 +11,7 @@
         <div class="col col-12 col-md-9">
             <h1 class="page-title has-breadcrumb">Add Administrator Account</h1>
 
-            <form asp-area="AdminAccounts" asp-controller="AdminUserManagement" asp-action="AddAdminUser" method="post" role="form">
+            <form asp-area="AdminAccounts" asp-controller="AdminUserManagement" asp-action="AddAdminUser" method="post" role="form" asp-antiforgery="true">
 
                 <input type="hidden" asp-for="Guid">
                 <input type="hidden" asp-for="DisplayName">

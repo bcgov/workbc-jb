@@ -113,7 +113,7 @@
             </div>
             <div class="modal-footer">
                 <a data-dismiss="modal" class="btn btn-clear">Cancel</a>
-                <form asp-area="Jobs" asp-controller="JobManagement" asp-action="DeleteJob" method="post" role="form">
+                <form asp-area="Jobs" asp-controller="JobManagement" asp-action="DeleteJob" method="post" role="form" asp-antiforgery="true" asp-antiforgery="true">
                     <input type="hidden" id="jobId" name="jobId" />
                     <button type="submit" class="btn btn-primary">Delete</button>
                 </form>
