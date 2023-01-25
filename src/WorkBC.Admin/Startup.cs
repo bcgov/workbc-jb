@@ -230,6 +230,7 @@ namespace WorkBC.Admin
             app.UseAuthentication();
             app.UseMiddleware<JobBoardAdminAccountMiddleware>();
             app.UseAuthorization();
+            app.UseSession();
 
             app.UseMvc(routes =>
             {
