@@ -17,30 +17,25 @@ namespace WorkBC.Admin.Helpers
 {
     public class JobBoardAdminOpenIdConnectHelper
     {
-        // These are the claim names we use on the old Keycloak silver cluster
-        // todo: this code can be deleted after all environments have been migrated to gold.
-        private const string UserGuidClaimOld = "idir_userid";
-        private const string UsernameClaimOld = "preferred_username";
-
-        // These are the claim names we use on the new Keycloak gold cluster
-        private const string UserGuidClaimNew = "idir_user_guid";
-        private const string UsernameClaimNew = "idir_username";
+        private const string UserGuidClaim = "idir_user_guid";
+        private const string UsernameClaim = "idir_username";
 
         public static void HandleAdminUserLogin(TokenValidatedContext tokenCtx)
         {
-            string guid = tokenCtx.Principal.FindFirstValue(UserGuidClaimNew);
-            if (guid == null)
-            {
-                // if the Gold claim isn't available, try to get the silver claim
-                // todo: this code can be deleted after all environments have been migrated to gold.
-                guid = tokenCtx.Principal.FindFirstValue(UserGuidClaimOld);
-            }
-            string tidyGuid = guid.Replace("-", "").ToUpper();
+            string guid = tokenCtx.Principal.FindFirstValue(UserGuidClaim);
+            string username = tokenCtx.Principal.FindFirstValue(UsernameClaim);
 
             //Get EF context
             var dbCtx = tokenCtx.HttpContext.RequestServices.GetRequiredService<JobBoardContext>();
 
+            string tidyGuid = guid.Replace("-", "").ToUpper();
+
             AdminUser user = dbCtx.AdminUsers.FirstOrDefault(u => u.Guid == tidyGuid && !u.Deleted);
+
+            if (user == null)
+            {
+                user = dbCtx.AdminUsers.FirstOrDefault(u => u.SamAccountName == username && !u.Deleted && string.IsNullOrWhiteSpace(u.Guid));
+            }
 
             if (user != null)
             {
@@ -100,20 +95,18 @@ namespace WorkBC.Admin.Helpers
                     user.DateUpdated = DateTime.Now;
                 }
 
-                string userSamAccountName = tokenCtx.Principal.FindFirstValue(UsernameClaimNew);
-
-                if (userSamAccountName == null)
-                {
-                    // if the Gold claim isn't available, try to get the silver claim
-                    // todo: this code can be deleted after all environments have been migrated to gold.
-                    string username = tokenCtx.Principal.FindFirstValue(UsernameClaimOld);
-                    // the preferred_username claim will be like "bob@idir".  We just want "BOB" (uppercase)
-                    userSamAccountName = username.Split('@')[0].ToUpper();
-                }
+                string userSamAccountName = tokenCtx.Principal.FindFirstValue(UsernameClaim);
 
                 if (user.SamAccountName != userSamAccountName)
                 {
                     user.SamAccountName = userSamAccountName;
+                    user.DateUpdated = DateTime.Now;
+                }
+
+                if (string.IsNullOrWhiteSpace(user.Guid))
+                {
+                    string guid = tokenCtx.Principal.FindFirstValue(UserGuidClaim);
+                    user.Guid = (guid ?? "").Replace("-", "").ToUpper();
                     user.DateUpdated = DateTime.Now;
                 }
 
