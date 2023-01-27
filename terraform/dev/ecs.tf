@@ -251,6 +251,10 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "Keycloak__ClientSecret",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:kc_secret::"
+			},
+			{
+				name = "AzureAdSettings__ClientSecret",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:azure_secret::"
 			}
 		]
 		dependsOn = [
