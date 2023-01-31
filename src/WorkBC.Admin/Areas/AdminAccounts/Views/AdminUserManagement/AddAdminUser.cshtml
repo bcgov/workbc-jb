@@ -13,6 +13,7 @@
 
             <form asp-area="AdminAccounts" asp-controller="AdminUserManagement" asp-action="AddAdminUser" method="post" role="form" asp-antiforgery="true">
 
+                <input type="hidden" asp-for="Guid">
                 <input type="hidden" asp-for="SamAccountName">
                 <input type="hidden" asp-for="DisplayName">
 

@@ -1,4 +1,5 @@
 using System;
+using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
@@ -11,10 +12,6 @@ using WorkBC.Admin.Services;
 using WorkBC.Data;
 using WorkBC.Data.Model.JobBoard;
 using WorkBC.Shared.Extensions;
-using Azure.Identity;
-using Microsoft.Graph;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
 {
@@ -163,13 +160,8 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
         public IActionResult AddAdminUser(AdminUserViewModel model)
         {
             // check for duplicate users
-            string samAccountName = (model.SamAccountName ?? "").ToUpper().Trim();
-            if (string.IsNullOrEmpty(samAccountName))
-            {
-                ModelState.AddModelError("SamAccountName", "SamAccountName cannot be blank");
-            }
-
-            if (_dbContext.AdminUsers.Any(u => u.SamAccountName == samAccountName && !u.Deleted))
+            string guid = model.Guid.Replace("-", "").ToUpper();
+            if (_dbContext.AdminUsers.Any(u => u.Guid == guid && !u.Deleted))
             {
                 ModelState.AddModelError("SamAccountName", "User already exists");
             }
@@ -186,6 +178,7 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
                 {
                     AdminLevel = model.AdminLevel,
                     DisplayName = model.DisplayName,
+                    Guid = (model.Guid ?? "").Replace("-", "").ToUpper(),
                     SamAccountName = model.SamAccountName.ToUpper(),
                     GivenName = ParseGivenName(model.DisplayName),
                     Surname = ParseSurname(model.DisplayName),
@@ -212,7 +205,7 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UserInfo(string id)
+        public ActionResult UserInfo(string id)
         {
             string username = id;
 
@@ -220,57 +213,38 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
             {
                 return Ok(new
                 {
-                    SamAccountName = username,
+                    Guid = GetFakeUserGuid(username),
                     DisplayName = $"XT:{username.ToUpper()} AEST:EX"
                 });
             }
 
-            var tenantId = _configuration["AzureAdSettings:TenantId"];
-            var clientId = _configuration["AzureAdSettings:ClientId"];
-            var clientSecret = _configuration["AzureAdSettings:ClientSecret"];
+            string domain = _configuration["AppSettings:Domain"];
 
-            var creds = new ClientSecretCredential(tenantId, clientId, clientSecret);
-
-            GraphServiceClient graphClient = new GraphServiceClient(creds);
-
-            var queryOptions = new List<QueryOption>()
+#pragma warning disable CA1416 // Validate platform compatibility
+            using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
-                new QueryOption("$count", "true"),
-                new QueryOption("$filter", $"onPremisesSamAccountName eq '{username}' or userPrincipalName eq '{username}@gov.bc.ca'"),
-            };
+                UserPrincipal user = UserPrincipal.FindByIdentity(context, username);
+                if (user == null)
+                {
+                    return NotFound("The IDIR entered is invalid. Please enter a valid IDIR.");
+                }
 
-            var users = await graphClient.Users
-                .Request(queryOptions)
-                .Header("ConsistencyLevel", "eventual")
-                .Select(x => new {
-                    x.Mail,
-                    x.GivenName,
-                    x.Surname,
-                    x.DisplayName,
-                    x.OnPremisesSamAccountName
-                })
-                .GetAsync();
+                string guid = (user.Guid?.ToString() ?? "").Replace("-", "").ToUpper();
+                if (_dbContext.AdminUsers.Any(u => u.Guid == guid && !u.Deleted))
+                {
+                    return Conflict("This IDIR username already exists.");
+                }
 
-            if (!users.Any())
-            {
-                return NotFound("The IDIR entered is invalid. Please enter a valid Azure AD IDIR.");
+                return Ok(new
+                {
+                    user.Guid,
+                    user.DisplayName,
+                    user.EmailAddress,
+                    user.Surname,
+                    user.Name
+                });
             }
-
-            User user = users.FirstOrDefault();
-            string samName = (user.OnPremisesSamAccountName ?? "").Trim().ToUpper();
-            if (_dbContext.AdminUsers.Any(u => u.SamAccountName == samName && !u.Deleted))
-            {
-                return Conflict("This IDIR username already exists.");
-            }
-
-            return Ok(new
-            {
-                SamAccountName = user.OnPremisesSamAccountName,
-                DisplayName = user.DisplayName,
-                EmailAddress = user.Mail,
-                Surname = user.Surname,
-                Name = user.GivenName
-            });
+#pragma warning restore CA1416 // Validate platform compatibility
         }
 
         [HttpPost]
@@ -322,7 +296,27 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
             return RedirectToAction("Index", "AdminUserSearch");
         }
 
- 
+        /// <summary>
+        ///     Generates a repeatable fake guid based on the username.
+        ///     Used for dev environments.
+        /// </summary>
+        private static Guid GetFakeUserGuid(string username)
+        {
+            byte[] ba = Encoding.Default.GetBytes(username.ToUpper());
+            var hexString = BitConverter.ToString(ba).Replace("-", "");
+
+            var guidString = (hexString + "00000000000000000000000000000000").ToLower();
+
+            var g1 = guidString.Substring(0, 8);
+            var g2 = guidString.Substring(8, 4);
+            var g3 = guidString.Substring(12, 4);
+            var g4 = guidString.Substring(16, 4);
+            var g5 = guidString.Substring(20, 12);
+
+            string guid = $"{g1}-{g2}-{g3}-{g4}-{g5}";
+            return Guid.Parse(guid);
+        }
+
         /// <summary>
         ///     Parse a Surname from an IDIR DisplayName
         ///     e.g.
