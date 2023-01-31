@@ -241,7 +241,7 @@ $(document).ready(function () {
 
             // Assign handlers immediately after making the request,
             // and remember the jqxhr object for this request
-            var samName = $("#SamAccountName").val();
+            var samName = $("#Username").val();
 
             if (samName.trim() === "") {
                 adLookupError();
@@ -253,7 +253,7 @@ $(document).ready(function () {
             $.post("UserInfo/" + encodeURI(samName), function (data) {
                 $("#DisplayName").val(data.displayName);
                 $('#lblDisplayName').text(data.displayName);
-                $("#Guid").val(data.guid);
+                $("#SamAccountName").val(data.samAccountName);
                 $("button.ad-lookup").css("background-color", "green").css("border-color", "green");
                 $("button.ad-lookup i").removeClass("fa-spin fa-spinner fa-user-plus fa-times").addClass("fa-check");
                 $(':input[type="submit"]').prop('disabled', false);
@@ -265,18 +265,18 @@ $(document).ready(function () {
                 });
         });
 
-        $("#SamAccountName").keydown(function () {
+        $("#Username").keydown(function () {
             $("button.ad-lookup").css("background-color", "").css("border-color", "");
             $("button.ad-lookup i").removeClass("fa-spin fa-spinner fa-check fa-times").addClass("fa-user-plus");
             $("#DisplayName").val("");
             $('#lblDisplayName').text("");
-            $("#Guid").val("");
+            $("#SamAccountName").val("");
             $('.admin-fields').addClass('d-none');
             $(':input[type="submit"]').prop('disabled', true);
             $('span[data-valmsg-for=SamAccountName]').html('');
         });
 
-        $('#SamAccountName').keypress(function (e) {
+        $('#Username').keypress(function (e) {
             var key = e.which;
             if (key === 13)  // the enter key code
             {
@@ -285,13 +285,13 @@ $(document).ready(function () {
             }
         }); 
 
-        $('#SamAccountName').on('paste', function () {
+        $('#Username').on('paste', function () {
             setTimeout(() => {
                 $("button.ad-lookup").click();
             }, 50);
         }); 
 
-        $('#SamAccountName').blur(function () {
+        $('#Username').blur(function () {
             $("button.ad-lookup").click();
         }); 
     }

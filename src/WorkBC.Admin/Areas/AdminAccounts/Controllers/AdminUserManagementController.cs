@@ -163,8 +163,13 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
         public IActionResult AddAdminUser(AdminUserViewModel model)
         {
             // check for duplicate users
-            string guid = model.Guid.Replace("-", "").ToUpper();
-            if (_dbContext.AdminUsers.Any(u => u.Guid == guid && !u.Deleted))
+            string samAccountName = (model.SamAccountName ?? "").ToUpper().Trim();
+            if (string.IsNullOrEmpty(samAccountName))
+            {
+                ModelState.AddModelError("SamAccountName", "SamAccountName cannot be blank");
+            }
+
+            if (_dbContext.AdminUsers.Any(u => u.SamAccountName == samAccountName && !u.Deleted))
             {
                 ModelState.AddModelError("SamAccountName", "User already exists");
             }
@@ -215,7 +220,7 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
             {
                 return Ok(new
                 {
-                    Guid = GetFakeUserGuid(username),
+                    SamAccountName = username,
                     DisplayName = $"XT:{username.ToUpper()} AEST:EX"
                 });
             }
@@ -231,18 +236,18 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
             var queryOptions = new List<QueryOption>()
             {
                 new QueryOption("$count", "true"),
-                new QueryOption("$search", $"\"userPrincipalName:{username}@gov.bc.ca\"")
+                new QueryOption("$filter", $"onPremisesSamAccountName eq '{username}' or userPrincipalName eq '{username}@gov.bc.ca'"),
             };
 
             var users = await graphClient.Users
                 .Request(queryOptions)
                 .Header("ConsistencyLevel", "eventual")
                 .Select(x => new {
-                    x.Id,
                     x.Mail,
                     x.GivenName,
                     x.Surname,
-                    x.DisplayName
+                    x.DisplayName,
+                    x.OnPremisesSamAccountName
                 })
                 .GetAsync();
 
@@ -260,7 +265,7 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
 
             return Ok(new
             {
-                Guid = user.Id,
+                SamAccountName = user.OnPremisesSamAccountName,
                 DisplayName = user.DisplayName,
                 EmailAddress = user.Mail,
                 Surname = user.Surname,
@@ -317,27 +322,7 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
             return RedirectToAction("Index", "AdminUserSearch");
         }
 
-        /// <summary>
-        ///     Generates a repeatable fake guid based on the username.
-        ///     Used for dev environments.
-        /// </summary>
-        private static Guid GetFakeUserGuid(string username)
-        {
-            byte[] ba = Encoding.Default.GetBytes(username.ToUpper());
-            var hexString = BitConverter.ToString(ba).Replace("-", "");
-
-            var guidString = (hexString + "00000000000000000000000000000000").ToLower();
-
-            var g1 = guidString.Substring(0, 8);
-            var g2 = guidString.Substring(8, 4);
-            var g3 = guidString.Substring(12, 4);
-            var g4 = guidString.Substring(16, 4);
-            var g5 = guidString.Substring(20, 12);
-
-            string guid = $"{g1}-{g2}-{g3}-{g4}-{g5}";
-            return Guid.Parse(guid);
-        }
-
+ 
         /// <summary>
         ///     Parse a Surname from an IDIR DisplayName
         ///     e.g.
