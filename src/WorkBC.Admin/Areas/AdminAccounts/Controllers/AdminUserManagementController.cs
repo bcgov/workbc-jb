@@ -1,11 +1,14 @@
 using System;
-using System.DirectoryServices.AccountManagement;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Azure.Identity;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Graph;
 using WorkBC.Admin.Areas.AdminAccounts.Models;
 using WorkBC.Admin.Controllers;
 using WorkBC.Admin.Services;
@@ -205,7 +208,7 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
         }
 
         [HttpPost]
-        public ActionResult UserInfo(string id)
+        public async Task<IActionResult> UserInfo(string id)
         {
             string username = id;
 
@@ -214,37 +217,53 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
                 return Ok(new
                 {
                     Guid = GetFakeUserGuid(username),
+                    SamAccountName = username,
                     DisplayName = $"XT:{username.ToUpper()} AEST:EX"
                 });
             }
 
-            string domain = _configuration["AppSettings:Domain"];
+            var tenantId = _configuration["AzureAdSettings:TenantId"];
+            var clientId = _configuration["AzureAdSettings:ClientId"];
+            var clientSecret = _configuration["AzureAdSettings:ClientSecret"];
 
-#pragma warning disable CA1416 // Validate platform compatibility
-            using (var context = new PrincipalContext(ContextType.Domain, domain))
+            var creds = new ClientSecretCredential(tenantId, clientId, clientSecret);
+
+            GraphServiceClient graphClient = new GraphServiceClient(creds);
+
+            var queryOptions = new List<QueryOption>()
             {
-                UserPrincipal user = UserPrincipal.FindByIdentity(context, username);
-                if (user == null)
-                {
-                    return NotFound("The IDIR entered is invalid. Please enter a valid IDIR.");
-                }
+                new QueryOption("$count", "true"),
+                new QueryOption("$filter", $"onPremisesSamAccountName eq '{username}' or userPrincipalName eq '{username}@gov.bc.ca'"),
+            };
 
-                string guid = (user.Guid?.ToString() ?? "").Replace("-", "").ToUpper();
-                if (_dbContext.AdminUsers.Any(u => u.Guid == guid && !u.Deleted))
-                {
-                    return Conflict("This IDIR username already exists.");
-                }
+            var users = await graphClient.Users
+                .Request(queryOptions)
+                .Header("ConsistencyLevel", "eventual")
+                .Select(x => new {
+                    x.OnPremisesImmutableId,
+                    x.OnPremisesSamAccountName,
+                    x.DisplayName
+                })
+                .GetAsync();
 
-                return Ok(new
-                {
-                    user.Guid,
-                    user.DisplayName,
-                    user.EmailAddress,
-                    user.Surname,
-                    user.Name
-                });
+            if (!users.Any())
+            {
+                return NotFound("The IDIR entered is invalid. Please enter a valid Azure AD IDIR.");
             }
-#pragma warning restore CA1416 // Validate platform compatibility
+
+            User user = users.FirstOrDefault();
+            string samName = (user.OnPremisesSamAccountName ?? "").Trim().ToUpper();
+            if (_dbContext.AdminUsers.Any(u => u.SamAccountName == samName && !u.Deleted))
+            {
+                return Conflict("This IDIR username already exists.");
+            }
+
+            return Ok(new
+            {
+                Guid = new Guid(Convert.FromBase64String(user.OnPremisesImmutableId)),
+                SamAccountName = user.OnPremisesSamAccountName,
+                user.DisplayName
+            });
         }
 
         [HttpPost]

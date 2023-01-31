@@ -241,18 +241,19 @@ $(document).ready(function () {
 
             // Assign handlers immediately after making the request,
             // and remember the jqxhr object for this request
-            var samName = $("#Username").val();
+            var searchName = $("#Username").val();
 
-            if (samName.trim() === "") {
+            if (searchName.trim() === "") {
                 adLookupError();
                 return;
             }
 
             $("button.ad-lookup i").removeClass("fa-user-plus fa-check fa-times").addClass("fa-spin fa-spinner");
 
-            $.post("UserInfo/" + encodeURI(samName), function (data) {
+            $.post("UserInfo/" + encodeURI(searchName), function (data) {
                 $("#DisplayName").val(data.displayName);
                 $('#lblDisplayName').text(data.displayName);
+                $("#Guid").val(data.guid);
                 $("#SamAccountName").val(data.samAccountName);
                 $("button.ad-lookup").css("background-color", "green").css("border-color", "green");
                 $("button.ad-lookup i").removeClass("fa-spin fa-spinner fa-user-plus fa-times").addClass("fa-check");
@@ -270,6 +271,7 @@ $(document).ready(function () {
             $("button.ad-lookup i").removeClass("fa-spin fa-spinner fa-check fa-times").addClass("fa-user-plus");
             $("#DisplayName").val("");
             $('#lblDisplayName').text("");
+            $("#Guid").val("");
             $("#SamAccountName").val("");
             $('.admin-fields').addClass('d-none');
             $(':input[type="submit"]').prop('disabled', true);
