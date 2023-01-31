@@ -257,8 +257,8 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
             }
 
             User user = users.FirstOrDefault();
-            string guid = (user.Id?.ToString() ?? "").Replace("-", "").ToUpper();
-            if (_dbContext.AdminUsers.Any(u => u.Guid == guid && !u.Deleted))
+            string samName = (user.OnPremisesSamAccountName ?? "").Trim().ToUpper();
+            if (_dbContext.AdminUsers.Any(u => u.SamAccountName == samName && !u.Deleted))
             {
                 return Conflict("This IDIR username already exists.");
             }
