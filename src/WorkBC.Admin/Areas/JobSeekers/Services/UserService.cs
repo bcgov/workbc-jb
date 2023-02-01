@@ -226,7 +226,7 @@ namespace WorkBC.Admin.Areas.JobSeekers.Services
             var sortBy = "";
             var sortDir = true;
 
-            if (model.Order != null)
+            if (model.Order != null && model.Order.Count != 0)
             {
                 // in this example we just default sort on the 1st column
                 sortBy = model.Columns[model.Order[0].Column].Data;
