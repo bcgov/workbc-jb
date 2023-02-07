@@ -49,6 +49,10 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "AppSettings__ApplyMigrations",
 				value = "true"
+			},
+			{
+				name = "AppSettings__IsProduction",
+				value = "true"
 			}
 
 		]
@@ -122,6 +126,10 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "AppSettings__ApplyMigrations",
 				value = "false"
+			},
+			{
+				name = "AppSettings__IsProduction",
+				value = "true"
 			}
 
 		]
@@ -226,6 +234,10 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "AppSettings__ApplyMigrations",
 				value = "false"
+			},
+			{
+				name = "AppSettings__IsProduction",
+				value = "true"
 			}
 
 		]
@@ -306,6 +318,10 @@ resource "aws_ecs_task_definition" "app" {
 			},
 			{
 				name = "AppSettings__UseRedisCache",
+				value = "true"
+			},
+			{
+				name = "AppSettings__IsProduction",
 				value = "true"
 			}
 
