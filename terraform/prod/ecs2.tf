@@ -35,6 +35,10 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "ConnectionStrings__EnterpriseConnection",
 				value = "${local.ent_conn}"
+			},
+			{
+				name = "AppSettings__IsProduction",
+				value = "true"
 			}
 		]
 		secrets = [
@@ -74,6 +78,10 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
 				value = "${local.es_conn}"
+			},
+			{
+				name = "AppSettings__IsProduction",
+				value = "true"
 			}
 		]
 		secrets = [
@@ -118,6 +126,10 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "ConnectionStrings__EnterpriseConnection",
 				value = "${local.ent_conn}"
+			},
+			{
+				name = "AppSettings__IsProduction",
+				value = "true"
 			}
 		]
 		secrets = [
@@ -168,6 +180,10 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
 				value = "${local.es_conn}"
+			},
+			{
+				name = "AppSettings__IsProduction",
+				value = "true"
 			}
 		]
 		secrets = [
@@ -280,6 +296,10 @@ resource "aws_ecs_task_definition" "notify-job" {
 			{
 				name = "AppSettings__SendEmailTestingTo",
 				value = "LMI.Support@gov.bc.ca"
+			},
+			{
+				name = "AppSettings__IsProduction",
+				value = "true"
 			}
 		]
 		secrets = [
