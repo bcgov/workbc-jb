@@ -216,7 +216,10 @@ namespace WorkBC.Admin
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                Secure = CookieSecurePolicy.Always
+            });
 
             app.UseAuthentication();
             app.UseMiddleware<JobBoardAdminAccountMiddleware>();
