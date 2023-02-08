@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -183,12 +184,6 @@ namespace WorkBC.Admin
                                 ctx.ProtocolMessage.SetParameter("post_logout_redirect_uri", $"https://{host}/");
                             }
                             return Task.FromResult(0);
-                        },
-                        OnRemoteFailure = ctx =>
-                        {
-                            ctx.Response.Redirect("/");
-                            ctx.HandleResponse();
-                            return Task.FromResult(0);
                         }
                     };
                 });
@@ -224,7 +219,9 @@ namespace WorkBC.Admin
             app.UseStaticFiles();
             app.UseCookiePolicy(new CookiePolicyOptions
             {
-                Secure = CookieSecurePolicy.Always
+                Secure = CookieSecurePolicy.Always,
+                MinimumSameSitePolicy = SameSiteMode.None,
+                HttpOnly = HttpOnlyPolicy.Always
             });
 
             app.UseAuthentication();
