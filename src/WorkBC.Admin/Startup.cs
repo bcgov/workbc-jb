@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -99,6 +98,15 @@ namespace WorkBC.Admin
             {
                 services.AddDistributedMemoryCache();
             }
+
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = "JobBoard.Admin.Session";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.IdleTimeout = TimeSpan.FromMinutes(60);
+            });
 
             services.AddTransient<SelectListService>();
 
@@ -217,16 +225,12 @@ namespace WorkBC.Admin
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy(new CookiePolicyOptions
-            {
-                Secure = CookieSecurePolicy.Always,
-                MinimumSameSitePolicy = SameSiteMode.None,
-                HttpOnly = HttpOnlyPolicy.Always
-            });
+            app.UseCookiePolicy();
 
             app.UseAuthentication();
             app.UseMiddleware<JobBoardAdminAccountMiddleware>();
             app.UseAuthorization();
+            app.UseSession();
 
             app.UseMvc(routes =>
             {
