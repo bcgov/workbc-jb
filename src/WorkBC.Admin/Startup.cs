@@ -183,6 +183,12 @@ namespace WorkBC.Admin
                                 ctx.ProtocolMessage.SetParameter("post_logout_redirect_uri", $"https://{host}/");
                             }
                             return Task.FromResult(0);
+                        },
+                        OnRemoteFailure = ctx =>
+                        {
+                            ctx.Response.Redirect("/");
+                            ctx.HandleResponse();
+                            return Task.FromResult(0);
                         }
                     };
                 });
