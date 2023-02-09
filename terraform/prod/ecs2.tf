@@ -295,7 +295,7 @@ resource "aws_ecs_task_definition" "notify-job" {
 			},
 			{
 				name = "AppSettings__SendEmailTestingTo",
-				value = "LMI.Support@gov.bc.ca"
+				value = ""
 			},
 			{
 				name = "AppSettings__IsProduction",
