@@ -100,6 +100,15 @@ namespace WorkBC.Admin
                 services.AddDistributedMemoryCache();
             }
 
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = "JobBoard.Admin.Session";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.IdleTimeout = TimeSpan.FromMinutes(60);
+            });
+
             services.AddTransient<SelectListService>();
 
             services.AddAuthentication(options =>
@@ -229,6 +238,7 @@ namespace WorkBC.Admin
             app.UseAuthentication();
             app.UseMiddleware<JobBoardAdminAccountMiddleware>();
             app.UseAuthorization();
+            app.UseSession();
 
             app.UseMvc(routes =>
             {
