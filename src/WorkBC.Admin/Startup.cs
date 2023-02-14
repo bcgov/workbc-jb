@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -119,8 +118,6 @@ namespace WorkBC.Admin
                 .AddCookie(options =>
                 {
                     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                    options.Cookie.HttpOnly = true;
-                    options.Cookie.SameSite = SameSiteMode.None;
                     options.LoginPath = "/home/NotAuthorized";
                     options.AccessDeniedPath = "/home/NotAuthorized";
                     options.Events = new CookieAuthenticationEvents
@@ -228,17 +225,11 @@ namespace WorkBC.Admin
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy(new CookiePolicyOptions
-            {
-                HttpOnly = HttpOnlyPolicy.Always,
-                MinimumSameSitePolicy = SameSiteMode.None,
-                Secure = CookieSecurePolicy.Always
-            });
+            app.UseCookiePolicy();
 
             app.UseAuthentication();
             app.UseMiddleware<JobBoardAdminAccountMiddleware>();
             app.UseAuthorization();
-            app.UseSession();
 
             app.UseMvc(routes =>
             {
