@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -12,10 +13,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using Serilog.Extensions.Logging;
 using StackExchange.Redis;
 using WorkBC.Admin.Areas.Jobs.Services;
 using WorkBC.Admin.Areas.JobSeekers.Services;
@@ -99,15 +102,6 @@ namespace WorkBC.Admin
                 services.AddDistributedMemoryCache();
             }
 
-            services.AddSession(options =>
-            {
-                options.Cookie.Name = "JobBoard.Admin.Session";
-                options.Cookie.HttpOnly = true;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.Cookie.SameSite = SameSiteMode.None;
-                options.IdleTimeout = TimeSpan.FromMinutes(60);
-            });
-
             services.AddTransient<SelectListService>();
 
             services.AddAuthentication(options =>
@@ -118,6 +112,8 @@ namespace WorkBC.Admin
                 .AddCookie(options =>
                 {
                     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.SameSite = SameSiteMode.None;
                     options.LoginPath = "/home/NotAuthorized";
                     options.AccessDeniedPath = "/home/NotAuthorized";
                     options.Events = new CookieAuthenticationEvents
@@ -192,6 +188,15 @@ namespace WorkBC.Admin
                                 ctx.ProtocolMessage.SetParameter("post_logout_redirect_uri", $"https://{host}/");
                             }
                             return Task.FromResult(0);
+                        },
+                        OnRemoteFailure = ctx =>
+                        {
+                            var logger = new SerilogLoggerFactory().CreateLogger<Startup>();
+                            logger.LogWarning("WorkBC KC OnRemoteFailure redirect to '/'");
+                            logger.LogWarning(ctx.Failure?.ToString() ?? "ctx.Failure is null");
+                            ctx.Response.Redirect("/");
+                            ctx.HandleResponse();
+                            return Task.FromResult(0);
                         }
                     };
                 });
@@ -225,7 +230,12 @@ namespace WorkBC.Admin
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                HttpOnly = HttpOnlyPolicy.Always,
+                MinimumSameSitePolicy = SameSiteMode.None,
+                Secure = CookieSecurePolicy.Always
+            });
 
             app.UseAuthentication();
             app.UseMiddleware<JobBoardAdminAccountMiddleware>();
