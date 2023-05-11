@@ -77,63 +77,63 @@ jobs:
       # Push images into ECR
       - name: Tag the Admin docker image
         run: |
-          docker tag src_admin:latest 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-admin:${{ github.sha }}
+          docker tag src_admin:latest ${{ secrets.AWS_ECR_URI }}/jb-admin:${{ github.sha }}
       - name: Push Admin docker image
         run: |
-          docker push 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-admin:${{ github.sha }}
+          docker push ${{ secrets.AWS_ECR_URI }}/jb-admin:${{ github.sha }}
           
       - name: Tag the Wanted Importer docker image
         run: |
-          docker tag src_importers-wanted:latest 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-importers-wanted:${{ github.sha }}
+          docker tag src_importers-wanted:latest ${{ secrets.AWS_ECR_URI }}/jb-importers-wanted:${{ github.sha }}
       - name: Push the Wanted Importer docker image
         run: |
-          docker push 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-importers-wanted:${{ github.sha }}
+          docker push ${{ secrets.AWS_ECR_URI }}/jb-importers-wanted:${{ github.sha }}
           
       - name: Tag the Federal Importer docker image
         run: |
-          docker tag src_importers-federal:latest 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-importers-federal:${{ github.sha }}
+          docker tag src_importers-federal:latest ${{ secrets.AWS_ECR_URI }}/jb-importers-federal:${{ github.sha }}
       - name: Push Federal Importer docker image
         run: |
-          docker push 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-importers-federal:${{ github.sha }}
+          docker push ${{ secrets.AWS_ECR_URI }}/jb-importers-federal:${{ github.sha }}
           
       - name: Tag the Wanted Indexer docker image
         run: |
-          docker tag src_indexers-wanted:latest 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-indexers-wanted:${{ github.sha }}
+          docker tag src_indexers-wanted:latest ${{ secrets.AWS_ECR_URI }}/jb-indexers-wanted:${{ github.sha }}
       - name: Push the Wanted Indexer docker image
         run: |
-          docker push 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-indexers-wanted:${{ github.sha }}
+          docker push ${{ secrets.AWS_ECR_URI }}/jb-indexers-wanted:${{ github.sha }}
           
       - name: Tag the Federal indexer docker image
         run: |
-          docker tag src_indexers-federal:latest 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-indexers-federal:${{ github.sha }}
+          docker tag src_indexers-federal:latest ${{ secrets.AWS_ECR_URI }}/jb-indexers-federal:${{ github.sha }}
       - name: Push the Federal indexer docker image
         run: |
-          docker push 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-indexers-federal:${{ github.sha }}
+          docker push ${{ secrets.AWS_ECR_URI }}/jb-indexers-federal:${{ github.sha }}
           
       - name: Tag the Web docker image
         run: |
-          docker tag src_web:latest 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb:${{ github.sha }}
+          docker tag src_web:latest ${{ secrets.AWS_ECR_URI }}/jb:${{ github.sha }}
       - name: Push Web docker image
         run: |
-          docker push 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb:${{ github.sha }}
+          docker push ${{ secrets.AWS_ECR_URI }}/jb:${{ github.sha }}
 
       - name: Tag the Notification docker image
         run: |
-          docker tag src_notifications-job-alerts:latest 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-notifications:${{ github.sha }}
+          docker tag src_notifications-job-alerts:latest ${{ secrets.AWS_ECR_URI }}/jb-notifications:${{ github.sha }}
       - name: Push Notification docker image
         run: |
-          docker push 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-notifications:${{ github.sha }}
+          docker push ${{ secrets.AWS_ECR_URI }}/jb-notifications:${{ github.sha }}
 
       - name: Tag the EFMigrationRunner docker image
         run: |
-          docker tag src_migration-runner:latest 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-migration:${{ github.sha }}
+          docker tag src_migration-runner:latest ${{ secrets.AWS_ECR_URI }}/jb-migration:${{ github.sha }}
       - name: Push EFMigrationRunner docker image
         run: |
-          docker push 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-migration:${{ github.sha }}
+          docker push ${{ secrets.AWS_ECR_URI }}/jb-migration:${{ github.sha }}
 
       - name: Tag the Dotnet CLI docker image
         run: |
-          docker tag src_dotnet-cli:latest 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-cli:${{ github.sha }}
+          docker tag src_dotnet-cli:latest ${{ secrets.AWS_ECR_URI }}/jb-cli:${{ github.sha }}
       - name: Push Dotnet CLI docker image
         run: |
-          docker push 266795317183.dkr.ecr.ca-central-1.amazonaws.com/jb-cli:${{ github.sha }}
+          docker push ${{ secrets.AWS_ECR_URI }}/jb-cli:${{ github.sha }}
