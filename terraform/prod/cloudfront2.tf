@@ -70,7 +70,7 @@ resource "aws_cloudfront_distribution" "workbc-jb-adm" {
   aliases = ["admin-jobboard.workbc.ca"]
 
   viewer_certificate {
-    acm_certificate_arn = "arn:aws:acm:us-east-1:846410483170:certificate/27a09302-3322-4d85-96f3-db4be28a8e24"
+    acm_certificate_arn = "arn:aws:acm:us-east-1:846410483170:certificate/7a840819-dce2-4d5e-afbb-6176589430cb"
     minimum_protocol_version = "TLSv1.2_2021"
     ssl_support_method = "sni-only"
   }
