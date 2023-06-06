@@ -1,8 +1,10 @@
 # Getting Started
 
-* See [Workstation_Setup.md](docs/Workstation_Setup.md) for instructions related to developer workstation setup. 
+[![Lifecycle:Maturing](https://img.shields.io/badge/Lifecycle-Maturing-007EC6)](https://github.com/bcgov/workbc-main)
 
 # Code Structure
+
+See [Workstation_Setup.md](docs/Workstation_Setup.md) for instructions related to developer workstation setup.
 
 ## Website Projects
 
