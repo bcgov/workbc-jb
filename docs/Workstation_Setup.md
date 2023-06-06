@@ -7,10 +7,11 @@
 * Visual Studio
 * .NET 6.0 SDK
 * Docker Desktop
+   * For Docker on a VM, you need to enable nested virtualization
 
 ### 1.a NodeJS
 Download NodeJS 14 here: https://nodejs.org/en/download/
-Use NVM to install it so you can have more than one version of NodeJS on your machine
+Use NVM to install it so you can have more than one version of NodeJS on your machine. It is important to note that v14 must be used in this project. Newer versions can cause issues.
 
 ### 1.b MS SQL Server
 Download SQL Server 2017 or newer : https://www.microsoft.com/en-ca/download/details.aspx?id=55994
@@ -52,6 +53,7 @@ There are two type of databases in the project:
 * Create a new database called "WorkBC_jobboard_dev"
 * Download the backup database, saving it inside your MS SQL server instance 
 _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Backup \\files\Personal\\[Windows Username]\WorkBC_Enterprise_DEV.bak)_
+  * Backup is located on the Stuart server here: ```H:\Backups\STUART$SQL2017\WorkBC_Enterprise_DEV\FULL```
 * Go back to Microsoft SQL Server Management Studio and right-click on Databases and “Restore Database…”
 * Select “Device” option and find the extracted file to select it and restore
 * The server needs to have mixed mode authentication to allow connections to the database
@@ -89,6 +91,7 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
     * NOTE: The Federal API whitelisted an IP, if it fails the IP is wrong where the request is coming from. 
     * WorkBC.Importers.Federal\bin\Debug\net6.0 (Import Federal jobs to the SQL database)
     ```.\WorkBC.Importers.Federal.exe```
+      * Note that this first task takes a long time. It also has a max of 20,000 records. When I ran this, I ended up having to run it twice to capture all 25,000 records required.
     * WorkBC.Importers.Wanted\bin\Debug\net6.0 (Import WantedAPI jobs to the SQL database)
     ```.\WorkBC.Importers.Wanted.exe```
     * WorkBC.Indexers.Federal\bin\Debug\net6.0 (Index the Federal jobs in ElasticSearch)
