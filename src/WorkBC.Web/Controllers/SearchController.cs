@@ -240,7 +240,7 @@ namespace WorkBC.Web.Controllers
         [Route("api/[controller]/[action]/{language}")]
         public async Task<int> GetTotalJobs(string language = "")
         {
-            long? jobs = await GetTotalJobsInternal(language);
+            long? jobs = await GetTotalJobsInternalUsingSearch(language);
             return (int)(jobs ?? 0);
         }
 
@@ -266,6 +266,52 @@ namespace WorkBC.Web.Controllers
             ElasticSearchResponse response = await totalJobQuery.GetTotalJobs(language);
             await _cacheService.SaveLongAsync(cacheKey, response.Count, cacheMinutes * 60);
             return response.Count;
+        }
+
+        /// <summary>
+        ///     Gets the total number of jobs using Search parameters (none) to match search page
+        /// </summary>
+        private async Task<long> GetTotalJobsInternalUsingSearch(string language)
+        {
+            JobSearchFilters filters = new JobSearchFilters();
+            string index = language != "fr"
+                ? _configuration["IndexSettings:DefaultIndex"]
+                : General.FrenchIndex;
+
+            //Search object that we will use to search Elastic Search
+            var esq = new JobSearchQuery(_geocodingService, _configuration, filters);
+
+            //Get search results from Elastic search
+            ElasticSearchResponse results = await esq.GetSearchResults(index: index);
+
+            //Build the object that we will return to the client
+            var sr = new SearchResultsModel
+            {
+                PageNumber = filters.Page,
+                PageSize = filters.PageSize
+            };
+
+            if (results != null)
+            {
+                if (results.Hits?.HitsHits != null)
+                {
+                    sr.Result = results.Hits.HitsHits.Select(hit => hit.Source).ToArray();
+                    sr.Count = results.Hits.Total.Value ?? 0;
+
+                    //Send the jobs to the cache service 
+                    //Get the number of views for each job and get the data back
+                    sr.Result = await _viewCountService.GetJobViews(sr.Result);
+
+                    // set the IsNew bit on new jobs
+                    await SetNewJobs(sr.Result);
+                }
+                else
+                {
+                    sr.Result = Array.Empty<Source>();
+                }
+            }
+            return sr.Count;
+
         }
     }
 }
