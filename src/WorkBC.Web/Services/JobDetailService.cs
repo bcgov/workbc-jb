@@ -210,6 +210,29 @@ namespace WorkBC.Web.Services
                         }
                     }
 
+                    //set job language language
+                    for (int k = 0; k < retval.Hits.HitsHits[0].Source.WorkLangCd.Description.Count; k++)
+                    {
+                        switch (retval.Hits.HitsHits[0].Source.WorkLangCd.Description[k].ToLower())
+                        {
+                            case "english":
+                                retval.Hits.HitsHits[0].Source.WorkLangCd.Description[k] = "Anglais";
+                                break;
+                            case "french":
+                                retval.Hits.HitsHits[0].Source.WorkLangCd.Description[k] = "Français";
+                                break;
+                            case "english or french":
+                                retval.Hits.HitsHits[0].Source.WorkLangCd.Description[k] = "Anglais ou français";
+                                break;
+                            case "bilingual":
+                                retval.Hits.HitsHits[0].Source.WorkLangCd.Description[k] = "Bilingue";
+                                break;
+                            case "other":
+                                retval.Hits.HitsHits[0].Source.WorkLangCd.Description[k] = "Autre";
+                                break;
+                        }
+                    }
+
                     //set period of employment language
                     for (int k = 0; k < retval.Hits.HitsHits[0].Source.PeriodOfEmployment.Description.Count; k++)
                     {

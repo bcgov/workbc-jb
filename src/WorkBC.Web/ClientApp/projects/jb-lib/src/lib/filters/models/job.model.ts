@@ -249,6 +249,7 @@ export class Job extends RecommendedJob {
   IsYouth: string;
   IsVariousLocation: string;
   Lang: string;
+  WorkLangCd: JobLanguageCls;
   Occupation: string;
   PostalCode: string;
   Province: string;
@@ -377,6 +378,9 @@ export class WorkplaceTypeCls {
   Description: string;
 }
 
+export class JobLanguageCls {
+  Description: string[];
+}
 export class TextHeader {
   jobPosting: string;
   salary: string;
