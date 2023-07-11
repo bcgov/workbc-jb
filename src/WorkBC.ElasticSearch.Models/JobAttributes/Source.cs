@@ -30,6 +30,9 @@ namespace WorkBC.ElasticSearch.Models.JobAttributes
         [JsonProperty("Lang", NullValueHandling = NullValueHandling.Ignore)]
         public string Lang { get; set; }
 
+        [JsonProperty("WorkLangCd", NullValueHandling = NullValueHandling.Ignore)]
+        public JobType WorkLangCd { get; set; }
+
         [JsonProperty("Location", NullValueHandling = NullValueHandling.Ignore)]
         public Location[] Location { get; set; }
 
