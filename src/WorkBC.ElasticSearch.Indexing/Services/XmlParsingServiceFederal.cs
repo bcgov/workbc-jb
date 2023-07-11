@@ -15,7 +15,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
     public class XmlParsingServiceFederal : XmlParsingServiceBase
     {
         private const int WorkplaceInfoSkillCategoryId = 100000;
-        private const int BenefitsSkillCategoryId = 102000;
+        private const int BenefitsSkillCategoryId = 102001;
         private const string VirtualJobBasedIn_EN = "Virtual job based in";
         private const string VirtualJobBasedIn_FR = "Emploi virtuel basé à";
         private readonly IGeocodingService _geocodingService;
@@ -84,7 +84,8 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                         ? xmlJobNode["employer_name_string"].InnerText.Trim()
                         : string.Empty,
                     EmployerTypeId = Convert.ToInt32(xmlJobNode["employer_type_id"].InnerText),
-                    Lang = xmlJobNode["lang"].InnerText,
+                    Lang = xmlJobNode["lang"].InnerText, 
+                    WorkLangCd = new JobLanguage(),// xmlJobNode["work_lang_cd"].InnerText,
                     PostalCode = xmlJobNode["postal_code"] != null
                         ? xmlJobNode["postal_code"].InnerText
                         : string.Empty,
@@ -146,6 +147,33 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                         break;
                 }
 
+                #endregion
+
+                #region Job Language
+
+                job.WorkLangCd.Description = new List<string>
+                {
+                    xmlJobNode["work_lang_cd"].InnerText
+                };
+
+                switch (job.WorkLangCd.Description[0].ToLower())
+                {
+                    case "e":
+                        job.WorkLangCd.Description[0] = "English";
+                        break;
+                    case "f":
+                        job.WorkLangCd.Description[0] = "French";
+                        break;
+                    case "u":
+                        job.WorkLangCd.Description[0] = "English or French";
+                        break;
+                    case "b":
+                        job.WorkLangCd.Description[0] = "Bilingual";
+                        break;
+                    case "o":
+                        job.WorkLangCd.Description[0] = "Other";
+                        break;
+                }
                 #endregion
 
                 #region Period of Employment
@@ -263,7 +291,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                             if (benefit.StartsWith("Rrsp") || benefit.StartsWith("Resp"))
                             {
                                 benefit = benefit
-                                    .Replace("Rrsp", "RRSP")
+                                    .Replace("Rrsp", "RRSP") 
                                     .Replace("Resp", "RESP");
                             }
 

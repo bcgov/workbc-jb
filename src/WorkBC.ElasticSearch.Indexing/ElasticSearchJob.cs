@@ -17,6 +17,7 @@ namespace WorkBC.ElasticSearch.Indexing
         public string EduLevel { get; set; }
         public string EmployerName { get; set; }
         public string Lang { get; set; }
+        public JobLanguage WorkLangCd { get; set; }
         public Location[] Location { get; set; }
         public string[] City { get; set; } 
         public string Province { get; set; }
@@ -160,6 +161,10 @@ namespace WorkBC.ElasticSearch.Indexing
     public class HoursOfWork
     {
         public List<string> Description { get; set; }
+    }
+    public class JobLanguage
+    {
+        public List<string> Description { get; set; } 
     }
     public class PeriodOfEmployment
     {
