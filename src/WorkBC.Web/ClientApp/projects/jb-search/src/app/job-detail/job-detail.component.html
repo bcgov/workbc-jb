@@ -190,67 +190,70 @@
               </div>
             </div>
             <!-- How To Apply -->
-            <div class="job-detail-wrap how-to-apply">
-              <h3 class="how-to-apply">{{textHeaders.applyNow}}</h3>
-              <!-- Website -->
-              <div class="row" *ngIf="jobDetail.ApplyWebsite">
-                <strong class="col-sm-2">{{textHeaders.online}}: </strong>
-                <div class="col-sm-10">
-                  <a target="_blank" href="{{jobDetail.ApplyWebsite}}">{{jobDetail.ApplyWebsite}}</a>
+            <form>
+              <input id="how-to-apply-button" type="button" value="Show how to apply" onclick='document.getElementById("job-detail-wrap-section").style = "visibility:visible"; document.getElementById("how-to-apply-button").style = "visibility:hidden";' />
+              <div id="job-detail-wrap-section" class="job-detail-wrap how-to-apply" style="visibility:hidden">
+                <h3 class="how-to-apply">{{textHeaders.applyNow}}</h3>
+                <!-- Website -->
+                <div class="row" *ngIf="jobDetail.ApplyWebsite">
+                  <strong class="col-sm-2">{{textHeaders.online}}: </strong>
+                  <div class="col-sm-10">
+                    <a target="_blank" href="{{jobDetail.ApplyWebsite}}">{{jobDetail.ApplyWebsite}}</a>
+                  </div>
+                </div>
+                <!-- Email -->
+                <div class="row" *ngIf="jobDetail.ApplyEmailAddress">
+                  <strong class="col-sm-2">{{textHeaders.byEmail}}: </strong>
+                  <div class="col-sm-10">
+                    <a href="mailto:{{jobDetail.ApplyEmailAddress}}">{{jobDetail.ApplyEmailAddress}}</a>
+                  </div>
+                </div>
+                <!-- Phone -->
+                <div class="row" *ngIf="jobDetail.ApplyPhoneNumber">
+                  <strong class="col-sm-2">{{textHeaders.byPhone}}: </strong>
+                  <div class="col-sm-10">
+                    <a href="tel:{{jobDetail.ApplyPhoneNumber}}">{{jobDetail.ApplyPhoneNumber | formatphone}}</a>
+                    <span *ngIf="jobDetail.ApplyPhoneNumberExt">&nbsp;Ext {{jobDetail.ApplyPhoneNumberExt}}</span>
+                    <br />
+                    <div *ngIf="jobDetail.ApplyPhoneNumberTimeFrom">Between {{jobDetail.ApplyPhoneNumberTimeFrom}} and {{jobDetail.ApplyPhoneNumberTimeTo}}</div>
+                  </div>
+                </div>
+                <!-- Fax -->
+                <div class="row" *ngIf="jobDetail.ApplyFaxNumber">
+                  <strong class="col-sm-2">{{textHeaders.byFax}}: </strong>
+                  <div class="col-sm-10">
+                    <a href="tel:{{jobDetail.ApplyFaxNumber}}">{{jobDetail.ApplyFaxNumber | formatphone}}</a>
+                  </div>
+                </div>
+                <!-- In person at address -->
+                <div class="row" *ngIf="jobDetail.ApplyPersonStreet">
+                  <strong class="col-sm-2">{{textHeaders.inPerson}}: </strong>
+                  <div class="col-sm-10">
+                    <address>
+                      Room {{jobDetail.ApplyPersonRoom}}<br *ngIf="jobDetail.ApplyPersonRoom" />
+                      {{jobDetail.ApplyPersonStreet}}<br *ngIf="jobDetail.ApplyPersonStreet" />
+                      {{jobDetail.ApplyPersonCity}}<br *ngIf="jobDetail.ApplyPersonCity" />
+                      {{jobDetail.ApplyPersonProvince}}<br *ngIf="jobDetail.ApplyPersonProvince" />
+                      {{jobDetail.ApplyPersonPostalCode}}<br *ngIf="jobDetail.ApplyPersonPostalCode" />
+                      Between {{jobDetail.ApplyPersonTimeFrom}} and {{jobDetail.ApplyPersonTimeTo}}
+                    </address>
+                  </div>
+                </div>
+                <!-- Mail -->
+                <div class="row" *ngIf="jobDetail.ApplyMailStreet">
+                  <strong class="col-sm-2">{{textHeaders.byMail}}: </strong>
+                  <div class="col-sm-10">
+                    <address>
+                      Room {{jobDetail.ApplyMailRoom}}<br *ngIf="jobDetail.ApplyMailRoom" />
+                      {{jobDetail.ApplyMailStreet}}<br *ngIf="jobDetail.ApplyMailStreet" />
+                      {{jobDetail.ApplyMailCity}}<br *ngIf="jobDetail.ApplyMailCity" />
+                      {{jobDetail.ApplyMailProvince}}<br *ngIf="jobDetail.ApplyMailProvince" />
+                      {{jobDetail.ApplyMailPostalCode}}
+                    </address>
+                  </div>
                 </div>
               </div>
-              <!-- Email -->
-              <div class="row" *ngIf="jobDetail.ApplyEmailAddress">
-                <strong class="col-sm-2">{{textHeaders.byEmail}}: </strong>
-                <div class="col-sm-10">
-                  <a href="mailto:{{jobDetail.ApplyEmailAddress}}">{{jobDetail.ApplyEmailAddress}}</a>
-                </div>
-              </div>
-              <!-- Phone -->
-              <div class="row" *ngIf="jobDetail.ApplyPhoneNumber">
-                <strong class="col-sm-2">{{textHeaders.byPhone}}: </strong>
-                <div class="col-sm-10">
-                  <a href="tel:{{jobDetail.ApplyPhoneNumber}}">{{jobDetail.ApplyPhoneNumber | formatphone}}</a>
-                  <span *ngIf="jobDetail.ApplyPhoneNumberExt">&nbsp;Ext {{jobDetail.ApplyPhoneNumberExt}}</span>
-                  <br />
-                  <div *ngIf="jobDetail.ApplyPhoneNumberTimeFrom">Between {{jobDetail.ApplyPhoneNumberTimeFrom}} and {{jobDetail.ApplyPhoneNumberTimeTo}}</div>
-                </div>
-              </div>
-              <!-- Fax -->
-              <div class="row" *ngIf="jobDetail.ApplyFaxNumber">
-                <strong class="col-sm-2">{{textHeaders.byFax}}: </strong>
-                <div class="col-sm-10">
-                  <a href="tel:{{jobDetail.ApplyFaxNumber}}">{{jobDetail.ApplyFaxNumber | formatphone}}</a>
-                </div>
-              </div>
-              <!-- In person at address -->
-              <div class="row" *ngIf="jobDetail.ApplyPersonStreet">
-                <strong class="col-sm-2">{{textHeaders.inPerson}}: </strong>
-                <div class="col-sm-10">
-                  <address>
-                    Room {{jobDetail.ApplyPersonRoom}}<br *ngIf="jobDetail.ApplyPersonRoom" />
-                    {{jobDetail.ApplyPersonStreet}}<br *ngIf="jobDetail.ApplyPersonStreet" />
-                    {{jobDetail.ApplyPersonCity}}<br *ngIf="jobDetail.ApplyPersonCity" />
-                    {{jobDetail.ApplyPersonProvince}}<br *ngIf="jobDetail.ApplyPersonProvince" />
-                    {{jobDetail.ApplyPersonPostalCode}}<br *ngIf="jobDetail.ApplyPersonPostalCode" />
-                    Between {{jobDetail.ApplyPersonTimeFrom}} and {{jobDetail.ApplyPersonTimeTo}}
-                  </address>
-                </div>
-              </div>
-              <!-- Mail -->
-              <div class="row" *ngIf="jobDetail.ApplyMailStreet">
-                <strong class="col-sm-2">{{textHeaders.byMail}}: </strong>
-                <div class="col-sm-10">
-                  <address>
-                    Room {{jobDetail.ApplyMailRoom}}<br *ngIf="jobDetail.ApplyMailRoom" />
-                    {{jobDetail.ApplyMailStreet}}<br *ngIf="jobDetail.ApplyMailStreet" />
-                    {{jobDetail.ApplyMailCity}}<br *ngIf="jobDetail.ApplyMailCity" />
-                    {{jobDetail.ApplyMailProvince}}<br *ngIf="jobDetail.ApplyMailProvince" />
-                    {{jobDetail.ApplyMailPostalCode}}
-                  </address>
-                </div>
-              </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
