@@ -4,7 +4,7 @@
       "filter": {
         "range": {
           "ExpireDate": {
-            "gte": "now",
+            "gte": "now/d",
             "time_zone": "America/Vancouver"
           }
         }
