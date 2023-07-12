@@ -20,12 +20,16 @@ export class TermsOfUseComponent {
     return this.settings.jbAccount.registration.termsOfUseTitle;
   }
 
-  get termsOfUseText(): SafeHtml {
+  get termsOfUseText(): string {
     const terms = new DOMParser().parseFromString(
       this.settings.jbAccount.registration.termsOfUseText,
       'text/html'
     );
-    return this.sanitizer.bypassSecurityTrustHtml(terms.body.innerHTML);
+    return terms.body.innerHTML;
+  }
+
+  ngAfterViewInit() {
+    document.getElementById('termsOfUseText').innerHTML = this.termsOfUseText;
   }
 
   close(): void {
