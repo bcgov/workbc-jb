@@ -308,6 +308,10 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                             //All Education categories should have the ID 195 (Feds) 
                             id = 195;
                             break;
+                        case "études":
+                            //All Education categories should have the ID 195 (Feds) 
+                            id = 195;
+                            break;
                     }
 
                     var sc = new SkillCategory
