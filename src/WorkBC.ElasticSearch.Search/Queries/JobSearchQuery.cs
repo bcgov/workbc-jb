@@ -1053,78 +1053,31 @@ namespace WorkBC.ElasticSearch.Search.Queries
 
             foreach (Source job in jobs)
             {
-                int bestIndex = -1;
-
-                if (job.Location.Length <= 1)
-                {
-                    bestIndex = 0;
-                }
-                else
-                {
-                    // If the job has multiple locations, and one of the locations is in the most
-                    // frequent city then we want to pick that one. 
-                    // The default zoom/pan of the map is based on the plotted pins. Jobs with multiple
-                    // cities can sometimes cause pins to be added in areas completely outside the 
-                    // geographic area where the user was searching. 
-                    string[] cities;
-                    if (job.City == null || job.City.StartsWith("Virtual") || !job.City.Contains(','))
-                    {
-                        cities = new[] { job.City ?? "" };
-                    }
-                    else
-                    {
-                        cities = job.City.Split(',').Select(c => c.Trim()).ToArray();
-                    }
-
-                    for (var j = 0; j < cities.Length; j++)
-                    {
-                        if (cities[j] == mostFrequentCity)
-                        {
-                            bestIndex = j;
-                        }
-                    }
-                }
-
-                // if we didn't find a best city index, then check the regions next
-                if (bestIndex == -1 && job.Region is { Length: > 1 })
-                {
-                    for (var j = 0; j < job.Region.Length; j++)
-                    {
-                        if (job.Region[j] == mostFrequentRegion)
-                        {
-                            bestIndex = j;
-                        }
-                    }
-                }
-
                 for (var i = 0; i < job.Location.Length; i++)
                 {
                     // if the job had multiple locations but none of the locations were in the most
                     // frequent city or region then we'll just plot all the locations.
-                    if (i == bestIndex || bestIndex == -1)
-                    {
-                        Location geo = job.Location[i];
+                    Location geo = job.Location[i];
 
-                        if (typeof(T) == typeof(GoogleMapsPinLocation))
+                    if (typeof(T) == typeof(GoogleMapsPinLocation))
+                    {
+                        results.Add((T)(object)new GoogleMapsPinLocation
                         {
-                            results.Add((T)(object)new GoogleMapsPinLocation
-                            {
-                                JobId = job.JobId.ToString(),
-                                Latitude = geo.Lat,
-                                Longitude = geo.Lon
-                            });
-                        }
-                        else if (typeof(T) == typeof(CareerCompassJobMapLocation))
+                            JobId = job.JobId.ToString(),
+                            Latitude = geo.Lat,
+                            Longitude = geo.Lon
+                        });
+                    }
+                    else if (typeof(T) == typeof(CareerCompassJobMapLocation))
+                    {
+                        results.Add((T)(object)new CareerCompassJobMapLocation
                         {
-                            results.Add((T)(object)new CareerCompassJobMapLocation
-                            {
-                                Lat = double.Parse(geo.Lat),
-                                Lng = double.Parse(geo.Lon),
-                                Bounds = true,
-                                // ReSharper disable once PossibleNullReferenceException
-                                Content = contentFunction(job)
-                            });
-                        }
+                            Lat = double.Parse(geo.Lat),
+                            Lng = double.Parse(geo.Lon),
+                            Bounds = true,
+                            // ReSharper disable once PossibleNullReferenceException
+                            Content = contentFunction(job)
+                        });
                     }
                 }
             }
