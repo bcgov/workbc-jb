@@ -286,6 +286,19 @@ export class ResultsComponent implements OnInit {
         this.mapElement.nativeElement,
         mapProperties
       );
+      const thisButton = document.createElement("div");
+      const britishColumbia = { lat: 53.726668, lng: -127.647621 };
+      thisButton.textContent = "View full map";
+      thisButton.style.background = "white";
+      thisButton.style.border = "1px solid #CCC";
+      thisButton.style.cursor = "pointer";
+      thisButton.style.boxShadow = "0 0 5px -1px rgba(0,0,0,0.2)";
+      thisButton.style.padding = "5px";
+      thisButton.addEventListener('click', () => {
+        this.map.setCenter(britishColumbia);
+        this.map.setZoom(5);
+      });
+      this.map.controls[google.maps.ControlPosition.TOP_CENTER].push(thisButton);
 
       //clear map
       if (this.markers != null) {
