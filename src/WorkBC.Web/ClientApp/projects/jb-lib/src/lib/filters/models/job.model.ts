@@ -277,7 +277,6 @@ export class Job extends RecommendedJob {
   //ExpiresIn: number;
   get ExpiresIn(): number {
     const oneDay = 86400000;
-    const sevenHours = 25200000;
     let result = -1;
     if (this.IsFederalJob) {
       const dateNow = new Date();
