@@ -280,9 +280,11 @@ export class Job extends RecommendedJob {
     const sevenHours = 25200000;
     let result = -1;
     if (this.IsFederalJob) {
-      const dateNowPDT = Math.floor((new Date().getTime() - sevenHours) / oneDay) * oneDay;
-      const dateExpire = Math.floor(new Date(this.ExpireDate).getTime() / oneDay) * oneDay;
-      const diffDays = (dateExpire - dateNowPDT) / oneDay;
+      const dateNow = new Date();
+      dateNow.setHours(0, 0, 0, 0);
+      const expireDate = new Date(this.ExpireDate);
+      expireDate.setHours(0, 0, 0, 0);
+      const diffDays = (expireDate.getTime() - dateNow.getTime()) / oneDay;
       result = diffDays;
     }
     return result;
