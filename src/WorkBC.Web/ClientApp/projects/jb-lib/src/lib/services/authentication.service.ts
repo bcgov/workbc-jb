@@ -91,7 +91,7 @@ export class AuthenticationService {
           const profileIds = tmpCareerProfile.split(','); //check when there are multiple id's in the string
 
           //use the last ID as the profile ID when redirecting
-          window.location.href = window.location.origin + '/Jobs-Careers/Explore-Careers/Browse-Career-Profile/' + profileIds[profileIds.length -1];
+          //window.location.href = window.location.origin + '/Jobs-Careers/Explore-Careers/Browse-Career-Profile/' + profileIds[profileIds.length -1];
         });
     }
   }
@@ -117,7 +117,7 @@ export class AuthenticationService {
           );
 
           //take the user back to the industry page
-          window.location.href = url;
+          //window.location.href = url;
         });
     }
   }
@@ -146,7 +146,7 @@ export class AuthenticationService {
             this.storageService.justLoggedInkey, '1'
           );
 
-          // trigger a custom event so the Kentico header will update 
+          // trigger a custom event so the Kentico header will update
           window.dispatchEvent(new CustomEvent('jobboardlogin'));
         }
 
@@ -202,7 +202,7 @@ export class AuthenticationService {
           this.storageService.removeItem(this.storageService.tmpSavedJobsKey);
           this.storageService.removeItem(this.storageService.tmpJobAlertKey);
 
-          // trigger a custom event so the Kentico header will update 
+          // trigger a custom event so the Kentico header will update
           window.dispatchEvent(new CustomEvent('jobboardlogin'));
         }
 
