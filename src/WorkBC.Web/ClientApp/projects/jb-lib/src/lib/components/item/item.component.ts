@@ -53,9 +53,14 @@ export class ItemComponent {
       result = this.inSavedJobsView && !this.item.IsActive;
       if (!result && this.item.ExpireDate) {
         const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const offSet = new Date().getTimezoneOffset();
+        const offSetHours = offSet / 60 * -1;
+        const offSetMinutes = offSet % 60;
+        today.setHours(offSetHours, offSetMinutes, 0, 0);
         const expireDate = new Date(this.item.ExpireDate);
-        result = expireDate < today;
+        //expireDate.setHours(0, 0, 0, 0);
+        console.log(expireDate, today);
+        result = expireDate <= today;
       }
     }
     return result;
