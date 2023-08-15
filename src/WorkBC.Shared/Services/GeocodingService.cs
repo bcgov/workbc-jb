@@ -30,7 +30,7 @@ namespace WorkBC.Shared.Services
         public async Task<GeocodedLocationCache> GetLocation(string location)
         {
             GeocodedLocationCache cachedLocation =
-                await _dbContext.GeocodedLocationCache.FirstOrDefaultAsync(g => g.Name == location);
+                await _dbContext.GeocodedLocationCache.FirstOrDefaultAsync(g => g.Name == location); // .ToUpper()
 
             if (cachedLocation != null)
             {

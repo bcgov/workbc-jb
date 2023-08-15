@@ -721,6 +721,8 @@ namespace WorkBC.ElasticSearch.Search.Queries
                         //Other job posting websites (e.g. Monster, Workopolis, Indeed)
                         //These are External jobs only and are provided through the external API feed.)
                         jsonJobSource = "{ \"term\": { \"IsFederalJob\": false } }";
+                        jsonJobSource = "{ \"query_string\": { \"query\": \"EmployerName: Dover OR EmployerTypeId: 4\" }";
+                        jsonJobSource = "{ \"query\": {\"nested\": {\"path\": \"ExternalSource\", \"query\": {\"bool\": {\"should\": [{\"match_phrase\": {\"ExternalSource.Source.Source\": \"CareerBeacon \"}}, {\"match_phrase\": {\"ExternalSource.Source.Source\": \"Dover Corporation\"}}, {\"match\": {\"EmployerTypeId\": \"4\"}}]}}}}}}";
                         break;
                     case "3":
                         // federal government

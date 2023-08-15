@@ -395,7 +395,7 @@ namespace WorkBC.Importers.Federal.Services
                 using (var httpClient = new HttpClient(handler))
                 {
                     // set timeout to 5 seconds
-                    httpClient.Timeout = new TimeSpan(0,0,5);
+                    httpClient.Timeout = new TimeSpan(0,0,60);
 
                     httpClient.DefaultRequestHeaders.Add("Cookie", _federalSettings.AuthCookie);
 
@@ -406,7 +406,7 @@ namespace WorkBC.Importers.Federal.Services
                         //Save response
                         responseFromServer = await response.Content.ReadAsStringAsync();
                     }
-                    catch
+                    catch (Exception ex)
                     {
                         Console.Write("-WAIT_5_SECONDS-");
                         await Task.Delay(5000); // wait 5 seconds and try again
