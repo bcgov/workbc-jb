@@ -374,9 +374,94 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                         }
                         else
                         {
-                            job.City = cacheLocation.City != null
-                                ? new[] { $"{VirtualJobBasedIn_EN} {cacheLocation.City}, {cacheLocation.Province}" }
-                                : new[] { $"{VirtualJobBasedIn_EN} {cacheLocation.Province}" };
+                            if (cacheLocation.City == null && cacheLocation.Province == null)
+                            {
+                                switch (employerPostalCode[..1])
+                                {
+                                    case "A":
+                                        job.City = isFrench ? new[] { $"{VirtualJobBasedIn_FR} Terre-Neuve-et-Labrador" }
+                                                            : new[] { $"{VirtualJobBasedIn_EN} Newfoundland and Labrador" };
+                                        break;
+                                    case "B":
+                                        job.City = isFrench ? new[] { $"{VirtualJobBasedIn_FR} Nouvelle-Écosse" }
+                                                            : new[] { $"{VirtualJobBasedIn_EN} Nova Scotia" };
+                                        break;
+                                    case "C":
+                                        job.City = isFrench ? new[] { $"{VirtualJobBasedIn_FR} Île-du-Prince-Édouard" }
+                                                            : new[] { $"{VirtualJobBasedIn_EN} Prince Edward Island" };
+                                        break;
+                                    case "E":
+                                        job.City = isFrench ? new[] { $"{VirtualJobBasedIn_FR} Nouveau-Brunswick" }
+                                                            : new[] { $"{VirtualJobBasedIn_EN} New Brunswick" };
+                                        break;
+                                    case "G":
+                                        job.City = isFrench ? new[] { $"{VirtualJobBasedIn_FR} Est du Québec" }
+                                                            : new[] { $"{VirtualJobBasedIn_EN} Eastern Quebec" };
+                                        break;
+                                    case "H":
+                                        job.City = isFrench ? new[] { $"{VirtualJobBasedIn_FR} Grand Montréal" }
+                                                            : new[] { $"{VirtualJobBasedIn_EN} Metropolitan Montréal" };
+                                        break;
+                                    case "J":
+                                        job.City = isFrench ? new[] { $"{VirtualJobBasedIn_FR} Ouest du Québec" }
+                                                            : new[] { $"{VirtualJobBasedIn_EN} Western Quebec" };
+                                        break;
+                                    case "K":
+                                        job.City = isFrench ? new[] { $"{VirtualJobBasedIn_FR} Est de l'Ontario" }
+                                                            : new[] { $"{VirtualJobBasedIn_EN} Eastern Ontario" };
+                                        break;
+                                    case "L":
+                                        job.City = isFrench ? new[] { $"{VirtualJobBasedIn_FR} Centre de l'Ontario" }
+                                                            : new[] { $"{VirtualJobBasedIn_EN} Central Ontario" };
+                                        break;
+                                    case "M":
+                                        job.City = isFrench ? new[] { $"{VirtualJobBasedIn_FR} Grand Toronto" }
+                                                            : new[] { $"{VirtualJobBasedIn_EN} Metropolitan Toronto" };
+                                        break;
+                                    case "N":
+                                        job.City = isFrench ? new[] { $"{VirtualJobBasedIn_FR} Sud-ouest de l'Ontario" }
+                                                            : new[] { $"{VirtualJobBasedIn_EN} Southwestern Ontario" };
+                                        break;
+                                    case "P":
+                                        job.City = isFrench ? new[] { $"{VirtualJobBasedIn_FR} Nord de l'Ontario" }
+                                                            : new[] { $"{VirtualJobBasedIn_EN} Northern Ontario" };
+                                        break;
+                                    case "R":
+                                        job.City = isFrench ? new[] { $"{VirtualJobBasedIn_FR} Manitoba" }
+                                                            : new[] { $"{VirtualJobBasedIn_EN} Manitoba" };
+                                        break;
+                                    case "S":
+                                        job.City = isFrench ? new[] { $"{VirtualJobBasedIn_FR} Saskatchewan" }
+                                                            : new[] { $"{VirtualJobBasedIn_EN} Saskatchewan" };
+                                        break;
+                                    case "T":
+                                        job.City = isFrench ? new[] { $"{VirtualJobBasedIn_FR} Alberta" }
+                                                            : new[] { $"{VirtualJobBasedIn_EN} Alberta" };
+                                        break;
+                                    case "V":
+                                        job.City = isFrench ? new[] { $"{VirtualJobBasedIn_FR} Colombie-Britannique" } 
+                                                            : new[] { $"{VirtualJobBasedIn_EN} British Columbia" };
+                                        break;
+                                    case "X":
+                                        job.City = isFrench ? new[] { $"{VirtualJobBasedIn_FR} Territoires du Nord-Ouest et Nunavut" } 
+                                                            : new[] { $"{VirtualJobBasedIn_EN} Northwest Territories and Nunavut" };
+                                        break;
+                                    case "Y":
+                                        job.City = isFrench ? new[] { $"{VirtualJobBasedIn_FR} Yukon" }
+                                                            : new[] { $"{VirtualJobBasedIn_EN} Yukon" };
+                                        break;
+                                    default:
+                                        job.City = isFrench ? new[] { $"Emploi virtuel, base inconnue" }
+                                                            : new[] { $"Virtual job, base unknown" };
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                job.City = cacheLocation.City != null
+                                    ? new[] { $"{VirtualJobBasedIn_EN} {cacheLocation.City}, {cacheLocation.Province}" }
+                                    : new[] { $"{VirtualJobBasedIn_EN} {cacheLocation.Province}" };
+                            }
                         }
                     }
 
