@@ -730,7 +730,7 @@ namespace WorkBC.ElasticSearch.Search.Queries
                     case "4":
                         // municipal government
                         //These are an option on the Federal Job Bank and should be available through the federal XML feed.
-                        jsonJobSource = "{ \"nested\": {\"path\": \"ExternalSource\", \"query\": {\"bool\": { \"should\": [ {\"match_phrase\": {\"ExternalSource.Source.Source\": \"CivicJobs.ca\"}}, {\"match_phrase\": {\"ExternalSource.Source.Source\": \"CivicInfoBC\"}}, {\"match\": {\"EmployerTypeId\": \"4\"}} ] }} } }";
+                        jsonJobSource = "{ \"term\": { \"EmployerTypeId\": 4 } }";
                         break;
                     case "5":
                         //BC provincial government
