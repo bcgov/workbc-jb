@@ -709,7 +709,6 @@ namespace WorkBC.ElasticSearch.Search.Queries
             if (!string.IsNullOrEmpty(SearchJobSource) && SearchJobSource != "0")
             {
                 var jsonJobSource = string.Empty;
-
                 switch (SearchJobSource)
                 {
                     case "1":
@@ -729,8 +728,7 @@ namespace WorkBC.ElasticSearch.Search.Queries
                         break;
                     case "4":
                         // municipal government
-                        //These are an option on the Federal Job Bank and should be available through the federal XML feed.
-                        jsonJobSource = "{ \"nested\": {\"path\": \"ExternalSource\", \"query\": {\"bool\": { \"should\": [ {\"match_phrase\": {\"ExternalSource.Source.Source\": \"CivicInfoBC\"}}, {\"match_phrase\": {\"ExternalSource.Source.Source\": \"CivicJobs.ca\"}}, {\"match\": {\"IsFederalJob\": false}}, {\"term\": {\"EmployerTypeId\": \"4\"}} ] }} } }";
+                        jsonJobSource = "{ \"term\": {\"EmployerTypeId\": {\"value\": \"4\"}}},{\"nested\": {\"path\": \"ExternalSource\",\"query\": {\"bool\": {\"should\": [{\"match_phrase\": {\"ExternalSource.Source.Source\": \"CivicInfoBC\"}},{\"match_phrase\": {\"ExternalSource.Source.Source\": \"CivicJobs.ca\"}}]}}}}";
                         break;
                     case "5":
                         //BC provincial government
