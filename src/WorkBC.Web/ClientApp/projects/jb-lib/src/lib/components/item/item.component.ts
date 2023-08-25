@@ -58,7 +58,7 @@ export class ItemComponent {
         const offSetMinutes = offSet % 60;
         today.setHours(offSetHours, offSetMinutes, 0, 0);
         const expireDate = new Date(this.item.ExpireDate);
-        //expireDate.setHours(0, 0, 0, 0);
+        expireDate.setHours(23, 59, 0, 0);
         console.log(expireDate, today);
         result = expireDate <= today;
       }
