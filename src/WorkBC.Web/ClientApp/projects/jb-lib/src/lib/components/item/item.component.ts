@@ -52,12 +52,17 @@ export class ItemComponent {
     if (this.item) {
       result = this.inSavedJobsView && !this.item.IsActive;
       if (!result && this.item.ExpireDate) {
+        const offSet = new Date().getTimezoneOffset();
+        const offSetHours = offSet / 60 - 1;
+        const offSetMinutes = offSet % 60;
         const today = new Date();
-        //const offSet = new Date().getTimezoneOffset();
-        //const offSetHours = offSet / 60 * -1;
-        //const offSetMinutes = offSet % 60;
+        today.setHours(today.getHours() + offSetHours);
+        today.setMinutes(today.getMinutes() + offSetMinutes);
+        //const today = new Date().getHours() + offSetHours;
+        //const currHours = today.getHours();
+        //const currMinutes = today.getMinutes();
         console.log("Today:" + today);
-        today.setHours(23, 59, 0, 0);
+        //today.setHours(currHours + offSetHours, currMinutes + offSetMinutes, 0, 0);
         const expireDate = new Date(this.item.ExpireDate);
         //expireDate.setHours(offSetHours, offSetMinutes, 0, 0);
         console.log(expireDate, today);
