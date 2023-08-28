@@ -63,6 +63,7 @@ export class ItemComponent {
         //const currMinutes = today.getMinutes();
         console.log("Today:" + today);
         today.setHours(0, 0, 0, 0);
+        console.log("Today now:" + today);
         //today.setHours(currHours + offSetHours, currMinutes + offSetMinutes, 0, 0);
         const expireDate = new Date(this.item.ExpireDate);
         //expireDate.setHours(offSetHours, offSetMinutes, 0, 0);
