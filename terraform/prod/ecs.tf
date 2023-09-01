@@ -362,7 +362,7 @@ resource "aws_ecs_service" "jobboard" {
   name                              = "workbc-jb-service"
   cluster                           = aws_ecs_cluster.jobboard.id
   task_definition                   = aws_ecs_task_definition.app[count.index].arn
-  desired_count                     = var.app_count
+  desired_count                     = 2
   enable_ecs_managed_tags           = true
   propagate_tags                    = "TASK_DEFINITION"
   health_check_grace_period_seconds = 60
