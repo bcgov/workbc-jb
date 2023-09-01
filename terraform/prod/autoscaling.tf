@@ -5,7 +5,7 @@ resource "aws_appautoscaling_target" "ecs" {
   service_namespace  = "ecs"
   resource_id        = "service/${aws_ecs_cluster.jobboard.name}/${aws_ecs_service.jobboard[count.index].name}"
   scalable_dimension = "ecs:service:DesiredCount"
-  min_capacity       = 1
+  min_capacity       = 2
   max_capacity       = 6
 }
 
