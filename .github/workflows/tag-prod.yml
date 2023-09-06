@@ -1,0 +1,70 @@
+name: Tag-Prod
+
+on:
+  push:
+    tags: 
+      - "v[0-9]+.[0-9]+-prod*"
+
+env:
+  IMAGE_ID: ${{ secrets.AWS_ECR_URI }}
+
+jobs:
+  main:
+    name: main
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-duration-seconds: 900
+          role-session-name: workbc-cc-github-action
+          role-skip-session-tagging: true
+          
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Create Docker Tag
+        run: |
+          docker pull ${{ env.IMAGE_ID }}/jb:latest-test
+          docker tag ${{ env.IMAGE_ID }}/jb:latest-test ${{ env.IMAGE_ID }}/jb:${GITHUB_REF#refs/tags/}
+          docker push ${{ env.IMAGE_ID }}/jb:${GITHUB_REF#refs/tags/}
+          
+          docker pull ${{ env.IMAGE_ID }}/jb-admin:latest-test
+          docker tag ${{ env.IMAGE_ID }}/jb-admin:latest-test ${{ env.IMAGE_ID }}/jb-admin:${GITHUB_REF#refs/tags/}
+          docker push ${{ env.IMAGE_ID }}/jb-admin:${GITHUB_REF#refs/tags/}
+          
+          docker pull ${{ env.IMAGE_ID }}/jb-cli:latest-test
+          docker tag ${{ env.IMAGE_ID }}/jb-cli:latest-test ${{ env.IMAGE_ID }}/jb-cli:${GITHUB_REF#refs/tags/}
+          docker push ${{ env.IMAGE_ID }}/jb-cli:${GITHUB_REF#refs/tags/}
+          
+          docker pull ${{ env.IMAGE_ID }}/jb-migration:latest-test
+          docker tag ${{ env.IMAGE_ID }}/jb-migration:latest-test ${{ env.IMAGE_ID }}/jb-migration:${GITHUB_REF#refs/tags/}
+          docker push ${{ env.IMAGE_ID }}/jb-migration:${GITHUB_REF#refs/tags/}
+          
+          docker pull ${{ env.IMAGE_ID }}/jb-importers-federal:latest-test
+          docker tag ${{ env.IMAGE_ID }}/jb-importers-federal:latest-test ${{ env.IMAGE_ID }}/jb-importers-federal:${GITHUB_REF#refs/tags/}
+          docker push ${{ env.IMAGE_ID }}/jb-importers-federal:${GITHUB_REF#refs/tags/}
+          
+          docker pull ${{ env.IMAGE_ID }}/jb-indexers-federal:latest-test
+          docker tag ${{ env.IMAGE_ID }}/jb-indexers-federal:latest-test ${{ env.IMAGE_ID }}/jb-indexers-federal:${GITHUB_REF#refs/tags/}
+          docker push ${{ env.IMAGE_ID }}/jb-indexers-federal:${GITHUB_REF#refs/tags/}   
+          
+          docker pull ${{ env.IMAGE_ID }}/jb-importers-wanted:latest-test
+          docker tag ${{ env.IMAGE_ID }}/jb-importers-wanted:latest-test ${{ env.IMAGE_ID }}/jb-importers-wanted:${GITHUB_REF#refs/tags/}
+          docker push ${{ env.IMAGE_ID }}/jb-importers-wanted:${GITHUB_REF#refs/tags/}
+          
+          docker pull ${{ env.IMAGE_ID }}/jb-indexers-wanted:latest-test
+          docker tag ${{ env.IMAGE_ID }}/jb-indexers-wanted:latest-test ${{ env.IMAGE_ID }}/jb-indexers-wanted:${GITHUB_REF#refs/tags/}
+          docker push ${{ env.IMAGE_ID }}/jb-indexers-wanted:${GITHUB_REF#refs/tags/}
+          
+          docker pull ${{ env.IMAGE_ID }}/jb-notifications:latest-test
+          docker tag ${{ env.IMAGE_ID }}/jb-notifications:latest-test ${{ env.IMAGE_ID }}/jb-notifications:${GITHUB_REF#refs/tags/}
+          docker push ${{ env.IMAGE_ID }}/jb-notifications:${GITHUB_REF#refs/tags/}
