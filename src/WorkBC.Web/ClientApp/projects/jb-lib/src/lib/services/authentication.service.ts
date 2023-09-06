@@ -90,8 +90,8 @@ export class AuthenticationService {
           //take the user back to the career page
           const profileIds = tmpCareerProfile.split(','); //check when there are multiple id's in the string
 
-          //use the last ID as the profile ID when redirecting
-          //window.location.href = window.location.origin + '/Jobs-Careers/Explore-Careers/Browse-Career-Profile/' + profileIds[profileIds.length -1];
+          // reload the page to update the total number of career profiles saved
+          window.location.reload();
         });
     }
   }
@@ -116,8 +116,8 @@ export class AuthenticationService {
             this.storageService.tmpIndustryProfileUrlKey
           );
 
-          //take the user back to the industry page
-          //window.location.href = url;
+          // reload the page to update the total number of industry profiles saved
+          window.location.reload();
         });
     }
   }
