@@ -291,7 +291,7 @@ resource "aws_ecs_task_definition" "notify-job" {
 			},
 			{
 				name = "AppSettings__JbSearchUrl",
-				value = "https://www.workbc.ca/Jobs-Careers/Find-Jobs/Jobs.aspx"
+				value = "https://www.workbc.ca/search-and-prepare-job/find-jobs"
 			},
 			{
 				name = "AppSettings__SendEmailTestingTo",
