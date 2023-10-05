@@ -47,6 +47,14 @@ namespace WorkBC.Shared.Services
                 }
                 catch (DbUpdateException e)
                 {
+                    // In the event two requests for a uncached location are made near simultaneously
+                    // and a duplicate key error is generated, we handle the error gracefully and
+                    // return the geoLocation.
+                    if (e.GetBaseException().Message.Contains("duplicate key"))
+                    {
+                        return geo;
+                    }
+                    
                     _logger?.LogError("DBUpdateException: " + e.Message);
                     throw;
                 }

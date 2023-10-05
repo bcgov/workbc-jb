@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -58,19 +60,21 @@ namespace WorkBC.Tests.Tests
             
         }
         
-        [Fact(DisplayName = "A Geolocation cannot be saved to the database if an identical lowercase name exists")]
-        public async Task LocationNamesAreCaseSensitive()
+        [Fact(DisplayName = "A Geolocation already in the cache is gracefully handled")]
+        public async Task GeolocationInTheCacheAreGracefullyHandled()
         {
             await _geocodingCachingService.SetLocation(_deltaLowercase);
             try
             {
                 var response = await _geocodingCachingService.SetLocation(_deltaUppercase);
-                Assert.True(false);
-            }
-            catch (Exception e)
-            {
-                // We should get an exception
                 Assert.True(true);
+            }
+            catch (DbUpdateException e)
+            {
+                // We should NOT get this exception
+                const string expected = "Cannot insert duplicate key row in object 'dbo.GeocodedLocationCache' with unique" +
+                                    " index 'IX_GeocodedLocationCache_Name'. The duplicate key value is (Delta, BC).";
+                Assert.DoesNotContain(expected, e.GetBaseException().Message);
             }
             
             // clean up
@@ -81,28 +85,17 @@ namespace WorkBC.Tests.Tests
         [Fact(DisplayName = "Location names are matched to the cache using using a case-insensitive comparison")]
         public async Task LocationNamesAreMatchedUsingUppercase()
         {
-            var notExpectedLocation = new GeocodedLocationCache
-            {
-                DateGeocoded = DateTime.Now,
-                Latitude = "0",
-                Longitude = "0",
-                Name = "Fictitious, BC"
-            };
-            
             var mockGeoService = new Mock<IGeocodingService>();
-            mockGeoService.Setup(m => m.GetLocation(It.IsAny<string>()))
-                .Returns(Task.FromResult(notExpectedLocation));
-                
             var localCachingService = new GeocodingCachingService(_dbContext, mockGeoService.Object);
             await localCachingService.SetLocation(_deltaLowercase);
-            var result = await localCachingService.GetLocation(_deltaUppercase.Name);
+            var result = await localCachingService.GetLocation("Delta, BC");
             // We expect GetLocation() to return the result from the cache -- not the result from Moq
+            mockGeoService.Verify(service => service.GetLocation(It.IsAny<string>()), Times.Never());
             Assert.Equal(_deltaLowercase.Latitude, result.Latitude);
             
             // clean up
             await _geocodingCachingService.DeleteLocation(_deltaLowercase);
             await _geocodingCachingService.DeleteLocation(_deltaUppercase);
         }
-        
     }
 }
