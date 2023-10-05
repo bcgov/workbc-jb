@@ -24,7 +24,8 @@ namespace WorkBC.Notifications.JobAlerts.Services
         public JobAlertSearchService(IConfiguration configuration, JobBoardContext dbContext)
         {
             _configuration = configuration;
-            _geocodingService = new GeocodingService(dbContext, configuration);
+            var geoService = new GeocodingService(configuration);
+            _geocodingService = new GeocodingCachingService(dbContext, geoService);
         }
 
         /// <summary>
