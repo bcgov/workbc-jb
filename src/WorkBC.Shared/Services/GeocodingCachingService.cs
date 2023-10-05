@@ -12,6 +12,7 @@ namespace WorkBC.Shared.Services
         private readonly ILogger<IGeocodingService> _logger;
         private readonly IGeocodingService _geocodingService;
 
+        // constructor
         public GeocodingCachingService(JobBoardContext dbContext, IGeocodingService geocodingService,
             ILogger<IGeocodingService> logger = null)
         {
@@ -22,9 +23,8 @@ namespace WorkBC.Shared.Services
 
         public async Task<GeocodedLocationCache> GetLocation(string location)
         {
-            GeocodedLocationCache cachedLocation =
-                await _dbContext.GeocodedLocationCache.FirstOrDefaultAsync(g => g.Name == location);
-
+            GeocodedLocationCache cachedLocation = await GetLocationFromCacheOrNull(_dbContext, location);
+                
             if (cachedLocation != null)
             {
                 return cachedLocation;
@@ -64,8 +64,7 @@ namespace WorkBC.Shared.Services
         
         public async Task<bool> DeleteLocation(GeocodedLocationCache geo)
         {
-            GeocodedLocationCache cachedLocation =
-                await _dbContext.GeocodedLocationCache.FirstOrDefaultAsync(g => g.Name == geo.Name);
+            GeocodedLocationCache cachedLocation = await GetLocationFromCacheOrNull(_dbContext, geo.Name);
 
             if (cachedLocation != null)
             {
@@ -82,6 +81,11 @@ namespace WorkBC.Shared.Services
                 }
             }
             return false;
+        }
+        
+        private static async Task<GeocodedLocationCache> GetLocationFromCacheOrNull(JobBoardContext dbContext, string location)
+        {
+            return await dbContext.GeocodedLocationCache.FirstOrDefaultAsync(g => g.Name == location);
         }
     }
 }
