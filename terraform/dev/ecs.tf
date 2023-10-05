@@ -111,11 +111,11 @@ resource "aws_ecs_task_definition" "app" {
 			},
 			{
 				name = "AppSettings__JbAccountUrl",
-				value = "https://dev.workbc.ca/Account.aspx"
+				value = "https://dev.workbc.ca/account"
 			},
 			{
 				name = "AppSettings__JbSearchUrl",
-				value = "https://dev.workbc.ca/Jobs-Careers/Find-Jobs/Jobs.aspx"
+				value = "https://dev.workbc.ca/search-and-prepare-job/find-jobs"
 			},
 			{
 				name = "AppSettings__ApplyMigrations",
@@ -219,11 +219,11 @@ resource "aws_ecs_task_definition" "app" {
 			},
 			{
 				name = "AppSettings__JbAccountUrl",
-				value = "https://dev.workbc.ca/Account.aspx"
+				value = "https://dev.workbc.ca/account"
 			},
 			{
 				name = "AppSettings__JbSearchUrl",
-				value = "https://dev.workbc.ca/Jobs-Careers/Find-Jobs/Jobs.aspx"
+				value = "https://dev.workbc.ca/search-and-prepare-job/find-jobs"
 			},
 			{
 				name = "AppSettings__ApplyMigrations",
