@@ -864,7 +864,7 @@ namespace WorkBC.ElasticSearch.Search.Queries
 
                     if (_filters.EndDate != null && _filters.EndDate.Year > 0)
                     {
-                        // set the time component to the very end-of-day so
+                        // set the time component to the end-of-day so
                         // the search includes jobs posted on the EndDate
                         _filters.EndDate.Hour = 23;
                         _filters.EndDate.Minute = 59;
