@@ -862,10 +862,20 @@ namespace WorkBC.ElasticSearch.Search.Queries
                         ? _filters.StartDate.ToString()
                         : "1970-01-01";
 
-                    EndDate = _filters.EndDate != null && _filters.EndDate.Year > 0
-                        ? _filters.EndDate.ToString()
-                        : DateTime.MaxValue.ToString("yyyy-MM-dd");
-
+                    if (_filters.EndDate != null && _filters.EndDate.Year > 0)
+                    {
+                        // set the time component to the very end-of-day so
+                        // the search includes jobs posted on the EndDate
+                        _filters.EndDate.Hour = 23;
+                        _filters.EndDate.Minute = 59;
+                        _filters.EndDate.Second = 59;
+                        _filters.EndDate.Millisecond = 999;
+                        EndDate = _filters.EndDate.ToString();
+                    }
+                    else
+                    {
+                        EndDate = DateTime.MaxValue.ToString("yyyy-MM-dd");
+                    }
                     break;
             }
 
