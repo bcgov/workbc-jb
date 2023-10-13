@@ -39,7 +39,7 @@ public class JobSearchQueryTest
         
     }
     
-    [Fact(DisplayName = "User can search jobs by posted date range that includes both the staring and ending dates")]
+    [Fact(DisplayName = "User can search jobs by posted date range that includes both the starting and ending dates")]
     public async Task CreateJobSearchFilterForSinglePostDateRange()
     {
         Filters.SearchDateSelection = "3";
