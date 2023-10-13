@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using WorkBC.ElasticSearch.Models.Filters;
 using WorkBC.ElasticSearch.Search.Queries;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using WorkBC.Shared.Services;
 using WorkBC.Tests.FakeServices;
 using Xunit;
