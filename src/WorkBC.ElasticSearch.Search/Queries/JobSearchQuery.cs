@@ -34,6 +34,10 @@ namespace WorkBC.ElasticSearch.Search.Queries
             _configuration = configuration;
             _filters = filters;
             _geocodingService = geocodingService;
+            
+            // Apply filter logic 
+            SetSortFilters();
+            SetFilters();
         }
 
         #endregion
@@ -146,9 +150,8 @@ namespace WorkBC.ElasticSearch.Search.Queries
         /// <summary>
         ///     Build JSON string that will be used to query Elastic Search
         /// </summary>
-        public async Task<string> ToJson(IConfiguration configuration, string jsonFileName)
+        public async Task<string> ToJson(IConfiguration configuration, string json)
         {
-            string json = ResourceFileHelper.ReadFile(jsonFileName);
             var filterGroups = new List<string>();
             GeocodedLocationCache geoLocation = null;
 
@@ -815,11 +818,8 @@ namespace WorkBC.ElasticSearch.Search.Queries
 
             string url = $"{server}/{index}/{docType}/_search";
 
-            // Apply filter logic 
-            SetSortFilters();
-            SetFilters();
-
-            string json = await ToJson(_configuration, jsonFileName);
+            string jsonTemplate = ResourceFileHelper.ReadFile(jsonFileName);
+            string json = await ToJson(_configuration, jsonTemplate);
 
             string jsonResult = await new ElasticHttpHelper(_configuration).QueryElasticSearch(json, url);
             return JsonConvert.DeserializeObject<ElasticSearchResponse>(jsonResult);
