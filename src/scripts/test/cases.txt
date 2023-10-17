@@ -66,15 +66,3 @@ $(PROTOCOL)$(HOST)/api/SystemSettings/BuildInfo
 # $(PROTOCOL)$(HOST)/api/SavedJobs
 # $(PROTOCOL)$(HOST)/api/Users
 
-
-
-
-
-
-
-
-
-
-
-
-
