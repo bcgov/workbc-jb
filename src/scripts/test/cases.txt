@@ -1,0 +1,80 @@
+PROTOCOL=https://
+
+# static assets
+$(PROTOCOL)$(HOST)/assets/icons/alert.svg
+$(PROTOCOL)$(HOST)/assets/icons/arrow-right.svg
+$(PROTOCOL)$(HOST)/assets/icons/caret.svg
+$(PROTOCOL)$(HOST)/assets/icons/checkbox-checked.svg
+$(PROTOCOL)$(HOST)/assets/icons/checkbox.svg
+$(PROTOCOL)$(HOST)/assets/icons/chev-blue.svg
+$(PROTOCOL)$(HOST)/assets/icons/chev-white.svg
+$(PROTOCOL)$(HOST)/assets/icons/info-blue.svg
+$(PROTOCOL)$(HOST)/assets/icons/map-pin.svg
+$(PROTOCOL)$(HOST)/assets/icons/minus-blue.svg
+$(PROTOCOL)$(HOST)/assets/icons/plus-blue.svg
+$(PROTOCOL)$(HOST)/assets/icons/print.svg
+$(PROTOCOL)$(HOST)/assets/icons/save.svg
+$(PROTOCOL)$(HOST)/assets/icons/select-button-large-blue.svg
+$(PROTOCOL)$(HOST)/assets/images/icons/radio-selected.png
+$(PROTOCOL)$(HOST)/assets/images/icons/radio.png
+$(PROTOCOL)$(HOST)/bootstrap/bootstrap.min.css?v=ee0a738d43f6c56e6155c30eeb348eb0c8db44dc
+$(PROTOCOL)$(HOST)/dist/jb-search/fontawesome-webfont.woff2?v=4.7.0
+$(PROTOCOL)$(HOST)/dist/jb-search/main-es2017.js?v=ee0a738d43f6c56e6155c30eeb348eb0c8db44dc
+$(PROTOCOL)$(HOST)/dist/jb-search/polyfills-es2017.js?v=ee0a738d43f6c56e6155c30eeb348eb0c8db44dc
+$(PROTOCOL)$(HOST)/dist/jb-search/runtime-es2017.js?v=ee0a738d43f6c56e6155c30eeb348eb0c8db44dc
+$(PROTOCOL)$(HOST)/dist/jb-search/styles.css?v=ee0a738d43f6c56e6155c30eeb348eb0c8db44dc
+
+# Anonymous API endpoints
+$(PROTOCOL)$(HOST)/api/career-compass/ExploreBCRegions/1
+$(PROTOCOL)$(HOST)/api/career-compass/ExploreBCRegions
+$(PROTOCOL)$(HOST)/api/Location/countries
+$(PROTOCOL)$(HOST)/api/Location/provinces
+$(PROTOCOL)$(HOST)/api/Location/all
+$(PROTOCOL)$(HOST)/api/Location/regions
+$(PROTOCOL)$(HOST)/api/Location/cities/Vancouver/false
+$(PROTOCOL)$(HOST)/api/Location/cities/Vancouver/true
+$(PROTOCOL)$(HOST)/api/Location/regions/Vancouver
+
+# Search endpoint POST
+$(PROTOCOL)$(HOST)/api/Search/JobSearch POST {"Page":1,"PageSize":20,"SalaryMin":"","SalaryMax":"","Keyword":"","SearchInField":"all","SearchJobTypeFullTime":false,"SearchJobTypePartTime":false,"SearchJobTypeLeadingToFullTime":false,"SearchJobTypePermanent":false,"SearchJobTypeTemporary":false,"SearchJobTypeCasual":false,"SearchJobTypeSeasonal":false,"SearchJobTypeDay":false,"SearchJobTypeEarly":false,"SearchJobTypeEvening":false,"SearchJobTypeFlexible":false,"SearchJobTypeMorning":false,"SearchJobTypeNight":false,"SearchJobTypeOnCall":false,"SearchJobTypeOvertime":false,"SearchJobTypeShift":false,"SearchJobTypeTbd":false,"SearchJobTypeWeekend":false,"SearchJobTypeOnSite":false,"SearchJobTypeHybrid":false,"SearchJobTypeTravelling":false,"SearchJobTypeVirtual":false,"SearchDateSelection":0,"SearchJobEducationLevel":[],"SalaryType":4,"SearchLocationDistance":-1,"SearchLocations":[],"SearchSalaryConditions":[],"SortOrder":11,"SearchIndustry":[],"SearchIsApprentice":false,"SearchIsVeterans":false,"SearchIsIndigenous":false,"SearchIsMatureWorkers":false,"SearchIsNewcomers":false,"SearchIsPeopleWithDisabilities":false,"SearchIsStudents":false,"SearchIsVisibleMinority":false,"SearchIsYouth":false,"SearchIsPostingsInEnglish":true,"SearchIsPostingsInEnglishAndFrench":false,"NocCode":"","SearchNocField":"","SearchJobSource":"0","SearchExcludePlacementAgencyJobs":false}{"Page":1,"PageSize":20,"SalaryMin":"","SalaryMax":"","Keyword":"","SearchInField":"all","SearchJobTypeFullTime":false,"SearchJobTypePartTime":false,"SearchJobTypeLeadingToFullTime":false,"SearchJobTypePermanent":false,"SearchJobTypeTemporary":false,"SearchJobTypeCasual":false,"SearchJobTypeSeasonal":false,"SearchJobTypeDay":false,"SearchJobTypeEarly":false,"SearchJobTypeEvening":false,"SearchJobTypeFlexible":false,"SearchJobTypeMorning":false,"SearchJobTypeNight":false,"SearchJobTypeOnCall":false,"SearchJobTypeOvertime":false,"SearchJobTypeShift":false,"SearchJobTypeTbd":false,"SearchJobTypeWeekend":false,"SearchJobTypeOnSite":false,"SearchJobTypeHybrid":false,"SearchJobTypeTravelling":false,"SearchJobTypeVirtual":false,"SearchDateSelection":0,"SearchJobEducationLevel":[],"SalaryType":4,"SearchLocationDistance":-1,"SearchLocations":[],"SearchSalaryConditions":[],"SortOrder":11,"SearchIndustry":[],"SearchIsApprentice":false,"SearchIsVeterans":false,"SearchIsIndigenous":false,"SearchIsMatureWorkers":false,"SearchIsNewcomers":false,"SearchIsPeopleWithDisabilities":false,"SearchIsStudents":false,"SearchIsVisibleMinority":false,"SearchIsYouth":false,"SearchIsPostingsInEnglish":true,"SearchIsPostingsInEnglishAndFrench":false,"NocCode":"","SearchNocField":"","SearchJobSource":"0","SearchExcludePlacementAgencyJobs":false}
+$(PROTOCOL)$(HOST)/api/Search/JobSearch/en POST {"Page":1,"PageSize":20,"SalaryMin":"","SalaryMax":"","Keyword":"","SearchInField":"all","SearchJobTypeFullTime":false,"SearchJobTypePartTime":false,"SearchJobTypeLeadingToFullTime":false,"SearchJobTypePermanent":false,"SearchJobTypeTemporary":false,"SearchJobTypeCasual":false,"SearchJobTypeSeasonal":false,"SearchJobTypeDay":false,"SearchJobTypeEarly":false,"SearchJobTypeEvening":false,"SearchJobTypeFlexible":false,"SearchJobTypeMorning":false,"SearchJobTypeNight":false,"SearchJobTypeOnCall":false,"SearchJobTypeOvertime":false,"SearchJobTypeShift":false,"SearchJobTypeTbd":false,"SearchJobTypeWeekend":false,"SearchJobTypeOnSite":false,"SearchJobTypeHybrid":false,"SearchJobTypeTravelling":false,"SearchJobTypeVirtual":false,"SearchDateSelection":0,"SearchJobEducationLevel":[],"SalaryType":4,"SearchLocationDistance":-1,"SearchLocations":[],"SearchSalaryConditions":[],"SortOrder":11,"SearchIndustry":[],"SearchIsApprentice":false,"SearchIsVeterans":false,"SearchIsIndigenous":false,"SearchIsMatureWorkers":false,"SearchIsNewcomers":false,"SearchIsPeopleWithDisabilities":false,"SearchIsStudents":false,"SearchIsVisibleMinority":false,"SearchIsYouth":false,"SearchIsPostingsInEnglish":true,"SearchIsPostingsInEnglishAndFrench":false,"NocCode":"","SearchNocField":"","SearchJobSource":"0","SearchExcludePlacementAgencyJobs":false}{"Page":1,"PageSize":20,"SalaryMin":"","SalaryMax":"","Keyword":"","SearchInField":"all","SearchJobTypeFullTime":false,"SearchJobTypePartTime":false,"SearchJobTypeLeadingToFullTime":false,"SearchJobTypePermanent":false,"SearchJobTypeTemporary":false,"SearchJobTypeCasual":false,"SearchJobTypeSeasonal":false,"SearchJobTypeDay":false,"SearchJobTypeEarly":false,"SearchJobTypeEvening":false,"SearchJobTypeFlexible":false,"SearchJobTypeMorning":false,"SearchJobTypeNight":false,"SearchJobTypeOnCall":false,"SearchJobTypeOvertime":false,"SearchJobTypeShift":false,"SearchJobTypeTbd":false,"SearchJobTypeWeekend":false,"SearchJobTypeOnSite":false,"SearchJobTypeHybrid":false,"SearchJobTypeTravelling":false,"SearchJobTypeVirtual":false,"SearchDateSelection":0,"SearchJobEducationLevel":[],"SalaryType":4,"SearchLocationDistance":-1,"SearchLocations":[],"SearchSalaryConditions":[],"SortOrder":11,"SearchIndustry":[],"SearchIsApprentice":false,"SearchIsVeterans":false,"SearchIsIndigenous":false,"SearchIsMatureWorkers":false,"SearchIsNewcomers":false,"SearchIsPeopleWithDisabilities":false,"SearchIsStudents":false,"SearchIsVisibleMinority":false,"SearchIsYouth":false,"SearchIsPostingsInEnglish":true,"SearchIsPostingsInEnglishAndFrench":false,"NocCode":"","SearchNocField":"","SearchJobSource":"0","SearchExcludePlacementAgencyJobs":false}
+$(PROTOCOL)$(HOST)/api/Search/JobSearch/fr POST {"Page":1,"PageSize":20,"SalaryMin":"","SalaryMax":"","Keyword":"","SearchInField":"all","SearchJobTypeFullTime":false,"SearchJobTypePartTime":false,"SearchJobTypeLeadingToFullTime":false,"SearchJobTypePermanent":false,"SearchJobTypeTemporary":false,"SearchJobTypeCasual":false,"SearchJobTypeSeasonal":false,"SearchJobTypeDay":false,"SearchJobTypeEarly":false,"SearchJobTypeEvening":false,"SearchJobTypeFlexible":false,"SearchJobTypeMorning":false,"SearchJobTypeNight":false,"SearchJobTypeOnCall":false,"SearchJobTypeOvertime":false,"SearchJobTypeShift":false,"SearchJobTypeTbd":false,"SearchJobTypeWeekend":false,"SearchJobTypeOnSite":false,"SearchJobTypeHybrid":false,"SearchJobTypeTravelling":false,"SearchJobTypeVirtual":false,"SearchDateSelection":0,"SearchJobEducationLevel":[],"SalaryType":4,"SearchLocationDistance":-1,"SearchLocations":[],"SearchSalaryConditions":[],"SortOrder":11,"SearchIndustry":[],"SearchIsApprentice":false,"SearchIsVeterans":false,"SearchIsIndigenous":false,"SearchIsMatureWorkers":false,"SearchIsNewcomers":false,"SearchIsPeopleWithDisabilities":false,"SearchIsStudents":false,"SearchIsVisibleMinority":false,"SearchIsYouth":false,"SearchIsPostingsInEnglish":true,"SearchIsPostingsInEnglishAndFrench":false,"NocCode":"","SearchNocField":"","SearchJobSource":"0","SearchExcludePlacementAgencyJobs":false}{"Page":1,"PageSize":20,"SalaryMin":"","SalaryMax":"","Keyword":"","SearchInField":"all","SearchJobTypeFullTime":false,"SearchJobTypePartTime":false,"SearchJobTypeLeadingToFullTime":false,"SearchJobTypePermanent":false,"SearchJobTypeTemporary":false,"SearchJobTypeCasual":false,"SearchJobTypeSeasonal":false,"SearchJobTypeDay":false,"SearchJobTypeEarly":false,"SearchJobTypeEvening":false,"SearchJobTypeFlexible":false,"SearchJobTypeMorning":false,"SearchJobTypeNight":false,"SearchJobTypeOnCall":false,"SearchJobTypeOvertime":false,"SearchJobTypeShift":false,"SearchJobTypeTbd":false,"SearchJobTypeWeekend":false,"SearchJobTypeOnSite":false,"SearchJobTypeHybrid":false,"SearchJobTypeTravelling":false,"SearchJobTypeVirtual":false,"SearchDateSelection":0,"SearchJobEducationLevel":[],"SalaryType":4,"SearchLocationDistance":-1,"SearchLocations":[],"SearchSalaryConditions":[],"SortOrder":11,"SearchIndustry":[],"SearchIsApprentice":false,"SearchIsVeterans":false,"SearchIsIndigenous":false,"SearchIsMatureWorkers":false,"SearchIsNewcomers":false,"SearchIsPeopleWithDisabilities":false,"SearchIsStudents":false,"SearchIsVisibleMinority":false,"SearchIsYouth":false,"SearchIsPostingsInEnglish":true,"SearchIsPostingsInEnglishAndFrench":false,"NocCode":"","SearchNocField":"","SearchJobSource":"0","SearchExcludePlacementAgencyJobs":false}
+$(PROTOCOL)$(HOST)/api/Search/GetLocationInformation POST "39202997"
+$(PROTOCOL)$(HOST)/api/Search/GetMapData POST {"Page":1,"PageSize":20,"SalaryMin":"","SalaryMax":"","Keyword":"","SearchInField":"all","SearchJobTypeFullTime":false,"SearchJobTypePartTime":false,"SearchJobTypeLeadingToFullTime":false,"SearchJobTypePermanent":false,"SearchJobTypeTemporary":false,"SearchJobTypeCasual":false,"SearchJobTypeSeasonal":false,"SearchJobTypeDay":false,"SearchJobTypeEarly":false,"SearchJobTypeEvening":false,"SearchJobTypeFlexible":false,"SearchJobTypeMorning":false,"SearchJobTypeNight":false,"SearchJobTypeOnCall":false,"SearchJobTypeOvertime":false,"SearchJobTypeShift":false,"SearchJobTypeTbd":false,"SearchJobTypeWeekend":false,"SearchJobTypeOnSite":false,"SearchJobTypeHybrid":false,"SearchJobTypeTravelling":false,"SearchJobTypeVirtual":false,"SearchDateSelection":0,"SearchJobEducationLevel":[],"SalaryType":4,"SearchLocationDistance":-1,"SearchLocations":[],"SearchSalaryConditions":[],"SortOrder":11,"SearchIndustry":[],"SearchIsApprentice":false,"SearchIsVeterans":false,"SearchIsIndigenous":false,"SearchIsMatureWorkers":false,"SearchIsNewcomers":false,"SearchIsPeopleWithDisabilities":false,"SearchIsStudents":false,"SearchIsVisibleMinority":false,"SearchIsYouth":false,"SearchIsPostingsInEnglish":true,"SearchIsPostingsInEnglishAndFrench":false,"NocCode":"","SearchNocField":"","SearchJobSource":"0","SearchExcludePlacementAgencyJobs":false}{"Page":1,"PageSize":20,"SalaryMin":"","SalaryMax":"","Keyword":"","SearchInField":"all","SearchJobTypeFullTime":false,"SearchJobTypePartTime":false,"SearchJobTypeLeadingToFullTime":false,"SearchJobTypePermanent":false,"SearchJobTypeTemporary":false,"SearchJobTypeCasual":false,"SearchJobTypeSeasonal":false,"SearchJobTypeDay":false,"SearchJobTypeEarly":false,"SearchJobTypeEvening":false,"SearchJobTypeFlexible":false,"SearchJobTypeMorning":false,"SearchJobTypeNight":false,"SearchJobTypeOnCall":false,"SearchJobTypeOvertime":false,"SearchJobTypeShift":false,"SearchJobTypeTbd":false,"SearchJobTypeWeekend":false,"SearchJobTypeOnSite":false,"SearchJobTypeHybrid":false,"SearchJobTypeTravelling":false,"SearchJobTypeVirtual":false,"SearchDateSelection":0,"SearchJobEducationLevel":[],"SalaryType":4,"SearchLocationDistance":-1,"SearchLocations":[],"SearchSalaryConditions":[],"SortOrder":11,"SearchIndustry":[],"SearchIsApprentice":false,"SearchIsVeterans":false,"SearchIsIndigenous":false,"SearchIsMatureWorkers":false,"SearchIsNewcomers":false,"SearchIsPeopleWithDisabilities":false,"SearchIsStudents":false,"SearchIsVisibleMinority":false,"SearchIsYouth":false,"SearchIsPostingsInEnglish":true,"SearchIsPostingsInEnglishAndFrench":false,"NocCode":"","SearchNocField":"","SearchJobSource":"0","SearchExcludePlacementAgencyJobs":false}
+
+# Search endpoint GET
+$(PROTOCOL)$(HOST)/api/Search/GetJobDetail?jobId=39202997&language=en&isToggle=true
+$(PROTOCOL)$(HOST)/api/Search/SearchNocCodes/3012
+$(PROTOCOL)$(HOST)/api/Search/SearchNocCodes?startsWith=3012
+$(PROTOCOL)$(HOST)/api/Search/GetJobXML?jobId=39202997
+$(PROTOCOL)$(HOST)/api/Search/GetTotalJobs
+$(PROTOCOL)$(HOST)/api/Search/GetTotalJobs?language=en
+$(PROTOCOL)$(HOST)/api/Search/GetTotalJobs?language=fr
+$(PROTOCOL)$(HOST)/api/Search/GetTotalJobs/en
+$(PROTOCOL)$(HOST)/api/Search/GetTotalJobs/fr
+
+$(PROTOCOL)$(HOST)/api/security-questions
+$(PROTOCOL)$(HOST)/api/SystemSettings/ClientSettings
+$(PROTOCOL)$(HOST)/api/SystemSettings/Version
+$(PROTOCOL)$(HOST)/api/SystemSettings/BuildInfo
+
+# Disabled - Authentication required endpoints
+# $(PROTOCOL)$(HOST)/api/career-profiles
+# $(PROTOCOL)$(HOST)/api/industry-profiles
+# $(PROTOCOL)$(HOST)/api/job-alerts
+# $(PROTOCOL)$(HOST)/api/recommended-jobs
+# $(PROTOCOL)$(HOST)/api/SavedJobs
+# $(PROTOCOL)$(HOST)/api/Users
+
+
+
+
+
+
+
+
+
+
+
+
+
