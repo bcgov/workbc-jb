@@ -58,7 +58,7 @@ $(PROTOCOL)$(HOST)/api/SystemSettings/ClientSettings
 $(PROTOCOL)$(HOST)/api/SystemSettings/Version
 $(PROTOCOL)$(HOST)/api/SystemSettings/BuildInfo
 
-# Disabled - Authentication required endpoints
+# Disabled - Endpoints that require authentication
 # $(PROTOCOL)$(HOST)/api/career-profiles
 # $(PROTOCOL)$(HOST)/api/industry-profiles
 # $(PROTOCOL)$(HOST)/api/job-alerts
