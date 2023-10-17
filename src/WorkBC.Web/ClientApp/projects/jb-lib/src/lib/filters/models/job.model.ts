@@ -75,7 +75,7 @@ export class RecommendedJobFilter {
     const properties = Object.getOwnPropertyNames(this);
     let count = 0;
     for (const name of properties) {
-      if (name.startsWith('filter') && 
+      if (name.startsWith('filter') &&
           Object.prototype.hasOwnProperty.call(this, name) &&
           this[name] === true) {
         count++;
@@ -226,7 +226,7 @@ export class Job extends RecommendedJob {
     // This is a workaround for not being able to overload constructors
     // in TypeScript (i.e. this class has no empty constructor)
     if (jobDetail) {
-      const j = jobDetail; 
+      const j = jobDetail;
       for (const property in j) {
         this[property] = j[property];
       }
@@ -283,7 +283,7 @@ export class Job extends RecommendedJob {
       dateNow.setHours(0, 0, 0, 0);
       const expireDate = new Date(this.ExpireDate);
       expireDate.setHours(0, 0, 0, 0);
-      const diffDays = (expireDate.getTime() - dateNow.getTime()) / oneDay;
+      const diffDays = Math.round((expireDate.getTime() - dateNow.getTime()) / oneDay);
       result = diffDays;
     }
     return result;
