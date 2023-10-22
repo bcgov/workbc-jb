@@ -21,6 +21,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
 	  <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
+	  <PackageReference Include="RichardSzalay.MockHttp" Version="7.0.0" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <PrivateAssets>all</PrivateAssets>
@@ -38,6 +39,7 @@
     <ProjectReference Include="..\WorkBC.ElasticSearch.Indexing\WorkBC.ElasticSearch.Indexing.csproj" />
     <ProjectReference Include="..\WorkBC.ElasticSearch.Models\WorkBC.ElasticSearch.Models.csproj" />
     <ProjectReference Include="..\WorkBC.ElasticSearch.Search\WorkBC.ElasticSearch.Search.csproj" />
+    <ProjectReference Include="..\WorkBC.Importers.Federal\WorkBC.Importers.Federal.csproj" />
   </ItemGroup>
 
   <ItemGroup>

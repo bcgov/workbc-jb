@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Xml;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Serilog;
 using WorkBC.Data;
 using WorkBC.Data.Model.JobBoard;
 using WorkBC.ElasticSearch.Indexing.Services;
 using WorkBC.Importers.Federal.Models;
-using WorkBC.Importers.Federal.Settings;
-using WorkBC.Shared.Settings;
 using JobSource = WorkBC.Shared.Constants.JobSource;
 
 namespace WorkBC.Importers.Federal.Services
@@ -22,33 +16,22 @@ namespace WorkBC.Importers.Federal.Services
     {
         private const int MaxErrors = 25; // allow up to this many errors per run
         private readonly JobBoardContext _dbContext;
-        private readonly FederalSettings _federalSettings;
         private readonly Dictionary<ImportedJobFederal, DateTime> _lstUpdate =
             new Dictionary<ImportedJobFederal, DateTime>();
-        private readonly ProxySettings _proxySettings;
         private int _errorCount;
         private Dictionary<long, DateTime> _existingJobsDict = new Dictionary<long, DateTime>();
         private List<JobPosting> _lstInsert = new List<JobPosting>();
         private List<ImportedJobFederal> _lstPurge = new List<ImportedJobFederal>();
-        private XmlDocument _xmlDocumentEnglish = new XmlDocument();
-        private XmlDocument _xmlDocumentFrench = new XmlDocument();
         private readonly ILogger _logger;
         private readonly CommandLineOptions _options;
+        private readonly FederalApiService _apiService;
 
-        public XmlImportService(IConfiguration configuration, CommandLineOptions options, ILogger logger)
+        public XmlImportService(FederalApiService apiService, JobBoardContext dbContext, CommandLineOptions options, ILogger logger)
         {
-            string connectionString = configuration.GetConnectionString("DefaultConnection");
-            _dbContext = new JobBoardContext(connectionString);
+            _dbContext = dbContext;
             _logger = logger;
             _options = options;
-
-            //get API settings
-            _federalSettings = new FederalSettings();
-            configuration.GetSection("FederalSettings").Bind(_federalSettings);
-
-            //get Proxy settings
-            _proxySettings = new ProxySettings();
-            configuration.GetSection("ProxySettings").Bind(_proxySettings);
+            _apiService = apiService;
         }
 
         public async Task ProcessJobs(List<JobPosting> apiJobList)
@@ -225,9 +208,9 @@ namespace WorkBC.Importers.Federal.Services
                         }
 
                         // get french and english job descriptions from Federal Job Board API
-                        await GetXmlContent(job.Id);
+                        var (xmlEnglish, xmlFrench) = await _apiService.GetEnglishAndFrenchJobDetails(job.Id);
 
-                        if (_xmlDocumentEnglish != null)
+                        if (xmlEnglish != null)
                         {
                             //Create DB object
                             DateTime now = DateTime.Now;
@@ -238,8 +221,8 @@ namespace WorkBC.Importers.Federal.Services
                                 DateFirstImported = existingJobId?.DateFirstImported ?? now,
                                 DateLastImported = now,
                                 ApiDate = job.FileUpdateDate,
-                                JobPostEnglish = _xmlDocumentEnglish.OuterXml,
-                                JobPostFrench = _xmlDocumentFrench.OuterXml,
+                                JobPostEnglish = xmlEnglish.OuterXml,
+                                JobPostFrench = xmlFrench.OuterXml,
                                 JobId = job.Id,
                                 ReIndexNeeded = true
                             };
@@ -258,7 +241,7 @@ namespace WorkBC.Importers.Federal.Services
                             }
 
                             // update display until
-                            federalJob.DisplayUntil = GetXmlDisplayUntil(federalJob.JobPostEnglish);
+                            federalJob.DisplayUntil = FederalApiService.GetXmlDisplayUntil(federalJob.JobPostEnglish);
 
                             //save to DB
 
@@ -319,20 +302,20 @@ namespace WorkBC.Importers.Federal.Services
                         }
 
                         // get french and english job descriptions from Federal Job Board API
-                        await GetXmlContent(federalJob.JobId);
+                        var (xmlEnglish, xmlFrench) = await _apiService.GetEnglishAndFrenchJobDetails(federalJob.JobId);
 
-                        if (_xmlDocumentEnglish != null)
+                        if (xmlEnglish != null)
                         {
                             //update fields
                             federalJob.ApiDate = jobEntry.Value;
                             federalJob.DateLastImported = DateTime.Now;
 
                             //update xml content
-                            federalJob.JobPostEnglish = _xmlDocumentEnglish.OuterXml;
-                            federalJob.JobPostFrench = _xmlDocumentFrench.OuterXml;
+                            federalJob.JobPostEnglish = xmlEnglish.OuterXml;
+                            federalJob.JobPostFrench = xmlFrench.OuterXml;
 
                             // update display until
-                            federalJob.DisplayUntil = GetXmlDisplayUntil(federalJob.JobPostEnglish);
+                            federalJob.DisplayUntil = FederalApiService.GetXmlDisplayUntil(federalJob.JobPostEnglish);
 
                             //update record
                             federalJob.ReIndexNeeded = true;
@@ -360,196 +343,6 @@ namespace WorkBC.Importers.Federal.Services
 
             // new line at the end of this step
             Console.WriteLine();
-        }
-
-        /// <summary>
-        ///     Get XML data from URL response
-        /// </summary>
-        private async Task<XmlDocument> GetWebResponse(string url)
-        {
-            var xmlData = new XmlDocument();
-            var responseFromServer = string.Empty;
-
-            try
-            {
-                var handler = new HttpClientHandler();
-
-                if (_proxySettings.UseProxy)
-                {
-                    handler.Proxy = new WebProxy(_proxySettings.ProxyHost, _proxySettings.ProxyPort)
-                    {
-                        BypassProxyOnLocal = true
-                    };
-                }
-
-                if (_proxySettings.IgnoreSslErrors)
-                {
-                    handler.ClientCertificateOptions = ClientCertificateOption.Manual;
-                    handler.ServerCertificateCustomValidationCallback =
-                        (httpRequestMessage, cert, cetChain, policyErrors) => true;
-                }
-
-                handler.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
-
-                //Create new web request to URL
-                using (var httpClient = new HttpClient(handler))
-                {
-                    // set timeout to 5 seconds
-                    httpClient.Timeout = new TimeSpan(0,0,5);
-
-                    httpClient.DefaultRequestHeaders.Add("Cookie", _federalSettings.AuthCookie);
-
-                    try
-                    {
-                        //Read the web response from URL
-                        HttpResponseMessage response = await httpClient.GetAsync(url);
-                        //Save response
-                        responseFromServer = await response.Content.ReadAsStringAsync();
-                    }
-                    catch
-                    {
-                        Console.Write("-WAIT_5_SECONDS-");
-                        await Task.Delay(5000); // wait 5 seconds and try again
-                        //Read the web response from URL
-                        HttpResponseMessage response = await httpClient.GetAsync(url);
-                        //Save response
-                        responseFromServer = await response.Content.ReadAsStringAsync();
-                    }
-                }
-
-                //load web request to xml
-                xmlData.LoadXml(responseFromServer);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine();
-                if (responseFromServer.Contains("502 Proxy Error"))
-                {
-                    // 99% of the time "502 Proxy Error" is the error we get.  It seems to be a problem 
-                    // with a proxy server that protects the Federal solr API.
-                    _logger.Warning("URL: " + url);
-                    _logger.Warning("MESSAGE: 502 Proxy Error");
-                }
-                else
-                {
-                    _logger.Error("URL: " + url);
-                    _logger.Error("STACKTRACE: " + ex);
-                    _logger.Error("RESPONSE: " + responseFromServer);
-                }
-                xmlData = null;
-            }
-
-            //return xml
-            return xmlData;
-        }
-
-        /// <summary>
-        ///     Get a list of all the job Id's available on the federal website.
-        /// </summary>
-        public async Task<List<JobPosting>> GetAllJobPostingItems()
-        {
-            var lstJobPostings = new List<JobPosting>();
-
-            try
-            {
-                //get all job posting ID's from URL
-                var province = "/en/bc";
-                XmlDocument xmlData = await GetWebResponse(_federalSettings.FederalJobXmlRoot + province + "?includevirtual=true");
-
-                //loop through nodes and create a list of "JobPosting" objects
-                if (xmlData != null)
-                {
-                    //Get the root element
-                    XmlElement root = xmlData.DocumentElement;
-
-                    //Number of jobs in this XML
-                    var numberOfJobsFound =
-                        Convert.ToInt32(root.SelectSingleNode("/SolrResponse/Header/numFound").InnerText);
-
-                    if (numberOfJobsFound > 0)
-                    {
-                        //Find all documents
-                        XmlNodeList nodes = root.SelectNodes("/SolrResponse/Documents/Document");
-
-                        //loop through all documents
-                        foreach (XmlNode node in nodes)
-                        {
-                            //create new JobPosting
-                            var jp = new JobPosting
-                            {
-                                FileUpdateDate = Convert.ToDateTime(node["file_update_date"].InnerText),
-                                Id = Convert.ToInt32(node["jobs_id"].InnerText)
-                            };
-
-                            //add to list to return
-                            lstJobPostings.Add(jp);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("ERROR - GetAllJobPostingItems() : " + ex.Message);
-            }
-
-            //return list
-            return lstJobPostings;
-        }
-
-        /// <summary>
-        ///     Get XML for english and french job details from Federal Job API
-        /// </summary>
-        private async Task GetXmlContent(long jobId)
-        {
-            _xmlDocumentEnglish = null;
-            _xmlDocumentFrench = null;
-            var tasks = new Task<XmlDocument>[2];
-            
-            tasks[0] = GetWebResponse($"{_federalSettings.FederalJobXmlRoot}/en/{jobId}.xml");
-            tasks[1] = GetWebResponse($"{_federalSettings.FederalJobXmlRoot}/fr/{jobId}.xml");
-            
-            await Task.WhenAll(tasks);
-            _xmlDocumentEnglish = tasks[0].Result;
-            _xmlDocumentFrench = tasks[1].Result;
-        }
-
-        private DateTime? GetXmlDisplayUntil(string xml)
-        {
-            //return value - can be null
-            DateTime? dt = null;
-
-            //Xml document used to read xml
-            var xmlDoc = new XmlDocument();
-
-            //Load XML data in object
-            xmlDoc.LoadXml(xml);
-
-            if (xmlDoc.ChildNodes.Count > 0)
-            {
-                //Get the root element
-                XmlElement root = xmlDoc.DocumentElement;
-
-                //Number of jobs in this XML
-                //It should be 1
-                var numberOfJobsFound =
-                    Convert.ToInt32(root.SelectSingleNode("/SolrResponse/Header/numFound").InnerText);
-
-                if (numberOfJobsFound == 1)
-                {
-                    //Read XML Node
-                    XmlNode xmlJobNode = root.SelectSingleNode("/SolrResponse/Documents/Document");
-
-                    //If we have a node
-                    if (xmlJobNode != null)
-                    {
-                        //set date object
-                        dt = Convert.ToDateTime(xmlJobNode["display_until"].InnerText);
-                    }
-                }
-            }
-
-            //return object
-            return dt;
         }
 
         public void MigrateDb()
