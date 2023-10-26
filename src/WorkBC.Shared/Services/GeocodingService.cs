@@ -4,10 +4,8 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using WorkBC.Data;
 using WorkBC.Data.Model.JobBoard;
 using WorkBC.Shared.Settings;
 
@@ -15,32 +13,17 @@ namespace WorkBC.Shared.Services
 {
     public class GeocodingService : IGeocodingService
     {
-        private readonly JobBoardContext _dbContext;
         private readonly ILogger<IGeocodingService> _logger;
         private readonly IConfiguration _configuration;
 
-        public GeocodingService(JobBoardContext dbContext, IConfiguration configuration,
+        public GeocodingService(IConfiguration configuration,
             ILogger<IGeocodingService> logger = null)
         {
-            _dbContext = dbContext;
             _logger = logger;
             _configuration = configuration;
         }
 
         public async Task<GeocodedLocationCache> GetLocation(string location)
-        {
-            GeocodedLocationCache cachedLocation =
-                await _dbContext.GeocodedLocationCache.FirstOrDefaultAsync(g => g.Name == location);
-
-            if (cachedLocation != null)
-            {
-                return cachedLocation;
-            }
-
-            return await CreateLocation(location);
-        }
-
-        private async Task<GeocodedLocationCache> CreateLocation(string location)
         {
             //Get the long and lat of the current location
             (string lat, string lon, string city, string frenchCity, string province) geo =
@@ -48,7 +31,6 @@ namespace WorkBC.Shared.Services
 
             if (geo.lat != null && geo.lon != null)
             {
-                //Save to database
                 var glc = new GeocodedLocationCache
                 {
                     DateGeocoded = DateTime.Now,
@@ -59,11 +41,6 @@ namespace WorkBC.Shared.Services
                     FrenchCity = geo.frenchCity,
                     Province = geo.province
                 };
-
-                _dbContext.GeocodedLocationCache.Add(glc);
-                await _dbContext.SaveChangesAsync();
-
-                //return location
                 return glc;
             }
 
