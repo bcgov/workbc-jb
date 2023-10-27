@@ -24,4 +24,4 @@ COPY ./load-test.sh /app
 
 ENV BASE_URL $BASE_URL
 
-CMD ["/bin/bash"]
+CMD ["BASE_URL=${BASE_URL}","/app/load-test.sh"]

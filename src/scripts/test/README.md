@@ -21,13 +21,16 @@ make
 sudo make install
 ```
 
-# Running siege locally
+# Running siege locally targeting remote API
 ```shell
 BASE_URL=<insert-host-here> ././load-test.sh
 ```
 
 # Getting Started
 ```
+cp .env.sample .env
+# edit .env and provide the api root URL to test
+ 
 docker-compose up
 docker-compose exec test bash
 ./load-test.sh > siege.log 2>&1
