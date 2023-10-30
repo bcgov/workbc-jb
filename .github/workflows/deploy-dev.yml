@@ -15,6 +15,10 @@ env:
   TG_SRC_PATH: terraform
   TFC_WORKSPACE: dev
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   # workaround for the intermittent skip issue        
   get_workflow_conclusion:
@@ -42,11 +46,12 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
       
-      - uses: hashicorp/setup-terraform@v1
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          terraform_version: ${{ env.TF_VERSION }}
-          cli_config_credentials_token: ${{ secrets.TFC_TEAM_TOKEN }}
-
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN_TO_USE_DEV }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          
       - uses: peter-murray/terragrunt-github-action@v1.0.0
         with:
           terragrunt_version: ${{ env.TG_VERSION }}

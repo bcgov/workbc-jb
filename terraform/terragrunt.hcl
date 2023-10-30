@@ -12,12 +12,12 @@ generate "remote_state" {
   if_exists = "overwrite"
   contents  = <<EOF
 terraform {
-  backend "remote" {
-    hostname = "${local.tfc_hostname}"
-    organization = "${local.tfc_organization}"
-    workspaces {
-      name = "${local.project}-${local.environment}-jb"
-    }
+  backend "s3" {
+    bucket = "terraform-remote-state-${local.project}-${local.environment}"
+    key = "workbc-jb.tfstate"
+    region = "ca-central-1"
+    dynamodb_table = "terraform-remote-state-lock-${local.project}"
+    encrypt = true
   }
 }
 EOF
@@ -39,9 +39,6 @@ generate "provider" {
   contents  = <<EOF
   provider "aws" {
     region  = var.aws_region
-    assume_role {
-      role_arn = "arn:aws:iam::$${var.target_aws_account_id}:role/BCGOV_$${var.target_env}_Automation_Admin_Role"
-    }
   }
 EOF
 }
