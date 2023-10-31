@@ -88,7 +88,6 @@ export class ResultsComponent implements OnInit {
   mappedJobCount = 0;
   results: Job[];
   mainFilterModel: MainFilterModel;
-  justLoaded = false;
 
   // pagination control
   @ViewChild('pagination')
@@ -104,7 +103,7 @@ export class ResultsComponent implements OnInit {
   markers: google.maps.Marker[];
 
   //reference to the clusters on the map
-  markerCluster: MarkerClusterer; 
+  markerCluster: MarkerClusterer;
 
   //Show map on screen
   showMap = false;
@@ -194,14 +193,6 @@ export class ResultsComponent implements OnInit {
           this.mainFilterModel.pagination.currentPage = 1;
           this.filterService.setFilters();
         }
-
-        // scroll to the searchSrollAnchor
-        if (!this.justLoaded) {
-          this.filterService.scrollIntoView();
-        }
-
-        // don't scroll to the searchSrollAnchor the first time the page loads
-        this.justLoaded = false;
 
         //paging
         this.paginationElement.setResultCount(this.resultsCount);
@@ -362,7 +353,7 @@ export class ResultsComponent implements OnInit {
 
           //add "click" event to marker
           google.maps.event.addListener(marker, 'click', () => {
-            this.onMarkerClick(marker); 
+            this.onMarkerClick(marker);
           });
 
           return marker;
@@ -432,7 +423,7 @@ export class ResultsComponent implements OnInit {
                   There are ${jobIdMarkers.length} jobs at this location
                   <img src="${this.globalService.getApiBaseUrl()}assets/icons/arrow-right.svg" width="14px" height="14px">
                </div>
-               <div id="jobDetails" hidden class="p-1">`; 
+               <div id="jobDetails" hidden class="p-1">`;
           }
 
           for (let i = 0; i < result.length; i++) {
