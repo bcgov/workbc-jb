@@ -185,7 +185,6 @@ namespace WorkBC.Web
             services.AddScoped<ILogger<IGeocodingService>, Logger<IGeocodingService>>();
             services.AddScoped<IGeocodingApiService, GeocodingService>();
             services.AddScoped<IGeocodingService, GeocodingCachingService>();
-            
             services.AddScoped<INocSearchService, NocSearchService>();
             services.AddScoped<ISavedJobsService, SavedJobsService>();
             services.AddScoped<IRecommendedJobsService, RecommendedJobsService>();
