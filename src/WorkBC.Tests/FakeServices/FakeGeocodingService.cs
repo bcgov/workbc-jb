@@ -6,7 +6,7 @@ using WorkBC.Shared.Services;
 
 namespace WorkBC.Tests.FakeServices
 {
-    public class FakeGeocodingService : IGeocodingService
+    public class FakeGeocodingService : IGeocodingApiService
     {
         private readonly IConfiguration _configuration;
 

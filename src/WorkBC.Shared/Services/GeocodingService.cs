@@ -11,7 +11,7 @@ using WorkBC.Shared.Settings;
 
 namespace WorkBC.Shared.Services
 {
-    public class GeocodingService : IGeocodingService
+    public class GeocodingService : IGeocodingApiService
     {
         private readonly ILogger<IGeocodingService> _logger;
         private readonly IConfiguration _configuration;

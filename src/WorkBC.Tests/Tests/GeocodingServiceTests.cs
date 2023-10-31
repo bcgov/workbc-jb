@@ -17,7 +17,7 @@ namespace WorkBC.Tests.Tests
     {
         //Properties
         private readonly GeocodingCachingService _geocodingCachingService;
-        private IGeocodingService _geocodingService;
+        private IGeocodingApiService _geocodingService;
         private JobBoardContext _dbContext;
         private readonly GeocodedLocationCache _deltaLowercase = new GeocodedLocationCache
         {
@@ -84,7 +84,7 @@ namespace WorkBC.Tests.Tests
         [Fact(DisplayName = "Location names are matched to the cache using using a case-insensitive comparison")]
         public async Task LocationNamesAreMatchedUsingUppercase()
         {
-            var mockGeoService = new Mock<IGeocodingService>();
+            var mockGeoService = new Mock<IGeocodingApiService>();
             var localCachingService = new GeocodingCachingService(_dbContext, mockGeoService.Object);
             await localCachingService.SetLocation(_deltaLowercase);
             var result = await localCachingService.GetLocation("Delta, BC");

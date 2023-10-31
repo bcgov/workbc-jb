@@ -10,10 +10,10 @@ namespace WorkBC.Shared.Services
     {
         private readonly JobBoardContext _dbContext;
         private readonly ILogger<IGeocodingService> _logger;
-        private readonly IGeocodingService _geocodingService;
+        private readonly IGeocodingApiService _geocodingService;
 
         // constructor
-        public GeocodingCachingService(JobBoardContext dbContext, IGeocodingService geocodingService,
+        public GeocodingCachingService(JobBoardContext dbContext, IGeocodingApiService geocodingService,
             ILogger<IGeocodingService> logger = null)
         {
             _dbContext = dbContext;
