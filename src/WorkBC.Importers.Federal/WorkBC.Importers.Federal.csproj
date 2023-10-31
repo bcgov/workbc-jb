@@ -9,6 +9,7 @@
 	<Company>WorkBC</Company>
 	<Product>WorkBC Job Board</Product>
 	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	<Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
