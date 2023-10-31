@@ -18,18 +18,19 @@ namespace WorkBC.ElasticSearch.Indexing.Services
         private const int BenefitsSkillCategoryId = 102001;
         private const string VirtualJobBasedIn_EN = "Virtual job based in";
         private const string VirtualJobBasedIn_FR = "Emploi virtuel basé à";
-        private readonly IGeocodingService _geocodingService;
+        private readonly IGeocodingService _geocodingCachingService;
 
 
         public XmlParsingServiceFederal(IConfiguration configuration) : base(configuration)
         {
-            _geocodingService = new GeocodingService(JobBoardContext, configuration);
+            var geoService = new GeocodingService(configuration);
+            _geocodingCachingService = new GeocodingCachingService(JobBoardContext, geoService);
         }
 
         public XmlParsingServiceFederal(List<Data.Model.JobBoard.Location> duplicateCities,
             Dictionary<string, string> uniqueCities, List<NocCode> nocCodes, IGeocodingService geocodingService) : base(duplicateCities, uniqueCities, nocCodes)
         {
-            this._geocodingService = geocodingService;
+            this._geocodingCachingService = geocodingService;
         }
 
         public ElasticSearchJob ConvertToElasticJob(string federalXml, bool isFrench = false)
@@ -346,13 +347,13 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                         : string.Empty;
 
                     string postalCodeKey = employerPostalCode + ", CANADA";
-                    GeocodedLocationCache cacheLocation = _geocodingService.GetLocation(postalCodeKey).Result;
+                    GeocodedLocationCache cacheLocation = _geocodingCachingService.GetLocation(postalCodeKey).Result;
 
                     if (cacheLocation == null && employerPostalCode.Length == 6)
                     {
                         string employerPostalCode2 = employerPostalCode.Substring(0, 3);
                         postalCodeKey = employerPostalCode2 + ", CANADA";
-                        cacheLocation = _geocodingService.GetLocation(postalCodeKey).Result;
+                        cacheLocation = _geocodingCachingService.GetLocation(postalCodeKey).Result;
                     }
 
                     if (cacheLocation == null)
