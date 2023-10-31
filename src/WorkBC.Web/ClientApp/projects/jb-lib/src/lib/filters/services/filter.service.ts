@@ -1527,7 +1527,7 @@ export class FilterService extends BaseService {
       case 'postal': {
         const postals = value.split(',');
         for (let k = 0; k < postals.length; k++) {
-          // only set the top cityOrPosal filter if the postal code is in the
+          // only set the top cityOrPostal filter if the postal code is in the
           // first location position (i.e. if the array is currently empty)
           if (!mainFilters.locationFields.length) {
             if (!mainFilters.keywordFilters.cityOrPostal.length) {
@@ -1642,40 +1642,5 @@ export class FilterService extends BaseService {
       result = locationPath.substring(locationPath.indexOf(';'));
     }
     return result;
-  }
-
-  get requireScrollFix() {
-    try {
-      //const isOpera = !!(window as any).opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-      //const isEdge = navigator.userAgent.indexOf("Edge") > -1;
-      //const isChrome = !!(window as any).chrome && !isOpera && !isEdge;
-      //const isFirefox = typeof (window as any).InstallTrigger !== 'undefined';
-      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
-      const result = isSafari && (
-        navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPhone/i));
-      return result;
-
-    } catch (e) {
-      alert(e.message);
-    }
-  }
-
-  scrollIntoView(dropdownMenuId = '', elementId = 'searchScrollAnchor'): void {
-    // Note: This only impacts mobile, since #searchScrollAnchor is hidden using 
-    // class="d-md-none" (scrollIntoView doesn't work on a hidden element)
-
-    const htmlElement = document.getElementById(elementId);
-
-    if (htmlElement) {
-      if (this.requireScrollFix && dropdownMenuId) {
-        const dropdownMenu = document.getElementById(dropdownMenuId);
-        const y = htmlElement.offsetTop - dropdownMenu?.offsetHeight + 20;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }
-      else {
-        htmlElement.scrollIntoView(); // If not scroll into view as usual.
-      }
-    }
   }
 }
