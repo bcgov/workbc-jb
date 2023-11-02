@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -6,14 +7,15 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using WorkBC.Data;
 using WorkBC.Data.Model.JobBoard;
+using WorkBC.ElasticSearch.Indexing.Settings;
 using WorkBC.Shared.Services;
+using WorkBC.Shared.Settings;
 using WorkBC.Tests.FakeServices;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace WorkBC.Tests.Tests
 {
-    public class GeocodingServiceTests : TestsBase
+    public class GeocodingServiceTests
     {
         //Properties
         private readonly GeocodingCachingService _geocodingCachingService;
@@ -35,14 +37,28 @@ namespace WorkBC.Tests.Tests
         };
 
         // Constructor
-        public GeocodingServiceTests(ITestOutputHelper output) : base(output)
+        public GeocodingServiceTests()
         {
+            IConfigurationBuilder builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", true, true)
+                .AddUserSecrets<TestsBase>()
+                .AddEnvironmentVariables();
+
+            var configuration = builder.Build();
+
+            var indexSettings = new IndexSettings();
+            var connectionSettings = new ConnectionSettings();
+
+            configuration.GetSection("IndexSettings").Bind(indexSettings);
+            configuration.GetSection("ConnectionStrings").Bind(connectionSettings);
+            
             // Get database connection string from appsettings.json
-            string connectionString = Configuration.GetConnectionString("DefaultConnection");
+            string connectionString = configuration.GetConnectionString("DefaultConnection");
             _dbContext = new JobBoardContext(connectionString);
             
             //Services
-            _geocodingService = new FakeGeocodingService(Configuration);
+            _geocodingService = new FakeGeocodingService(configuration);
             var logger = new LoggerFactory().CreateLogger<IGeocodingService>();
             _geocodingCachingService = new GeocodingCachingService(_dbContext, _geocodingService, logger);
         }
