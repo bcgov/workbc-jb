@@ -3,20 +3,26 @@ using System.Threading.Tasks;
 using WorkBC.ElasticSearch.Models.Filters;
 using WorkBC.ElasticSearch.Models.JobAttributes;
 using WorkBC.ElasticSearch.Search.Queries;
+using WorkBC.Tests.FakeServices;
 using WorkBC.Tests.Helpers;
 using Xunit;
-using Xunit.Abstractions;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace WorkBC.Tests.Tests
 {
-    public class SearchTests : TestsBase
+    public class SearchTests : IClassFixture<ElasticSearchTestFixture>
     {
+        
         //Properties
         private readonly SearchTestHelpers _searchHelper;
+        private readonly FakeGeocodingService _fakeGeocodingService;
+        private readonly IConfiguration _configuration;
 
-        public SearchTests(ITestOutputHelper output) : base(output)
+        public SearchTests(ElasticSearchTestFixture elasticSearchTestFixture)
         {
-            _searchHelper = new SearchTestHelpers(GeocodingService, Configuration);
+            _configuration = TestsHelper.GetConfiguration();
+            _fakeGeocodingService = new FakeGeocodingService(_configuration);
+            _searchHelper = new SearchTestHelpers(_fakeGeocodingService, _configuration);
         }
 
         [Theory(DisplayName = "Find a Federal and Wanted job in the index")]
@@ -66,10 +72,10 @@ namespace WorkBC.Tests.Tests
         public async Task FindJobByNocCode(string nocCode)
         {
             //Create an instance with the filters required
-            var esq = new JobSearchQuery(GeocodingService, Configuration, GetFiltersForJobNocField(nocCode));
+            var esq = new JobSearchQuery(_fakeGeocodingService, _configuration, GetFiltersForJobNocField(nocCode));
 
             //return results
-            List<Source> result = await QueryElasticSearch(esq);
+            List<Source> result = await TestsHelper.QueryElasticSearch(esq);
 
             //We have 2 jobs with this NOC code in the fixtures
             Assert.True(result.Count == 3,
@@ -85,10 +91,10 @@ namespace WorkBC.Tests.Tests
         public async Task FindJobsByJobSource(string sourceId)
         {
             //Create an instance with the filters required
-            var esq = new JobSearchQuery(GeocodingService, Configuration, GetFiltersForJobSource(sourceId));
+            var esq = new JobSearchQuery(_fakeGeocodingService, _configuration, GetFiltersForJobSource(sourceId));
 
             //return results
-            List<Source> result = await QueryElasticSearch(esq);
+            List<Source> result = await TestsHelper.QueryElasticSearch(esq);
 
             Assert.True(result.Count > 0, $"Job for Job Source code {sourceId} did not return results");
         }
@@ -100,10 +106,10 @@ namespace WorkBC.Tests.Tests
         public async Task SearchJobByAllFields(string searchText)
         {
             //Create an instance with the filters required
-            var esq = new JobSearchQuery(GeocodingService, Configuration, GetFiltersForJobsWithAll(searchText));
+            var esq = new JobSearchQuery(_fakeGeocodingService, _configuration, GetFiltersForJobsWithAll(searchText));
 
             //return results
-            List<Source> result = await QueryElasticSearch(esq);
+            List<Source> result = await TestsHelper.QueryElasticSearch(esq);
 
             //There should be results
             Assert.True(result.Count > 0, $"Jobs for \"{searchText}\" across all fields did not return results");
@@ -122,10 +128,10 @@ namespace WorkBC.Tests.Tests
         public async Task FindJobByPostalOrCity(string region, string city, string postal, int radius)
         {
             //Create an instance with the filters required
-            var esq = new JobSearchQuery(GeocodingService, Configuration, GetFiltersForJobsByCityOrPostal(region, city, postal, radius));
+            var esq = new JobSearchQuery(_fakeGeocodingService, _configuration, GetFiltersForJobsByCityOrPostal(region, city, postal, radius));
 
             //return results
-            List<Source> result = await QueryElasticSearch(esq);
+            List<Source> result = await TestsHelper.QueryElasticSearch(esq);
 
             Assert.True(result.Count > 0, "Jobs for (" + city + "," + region + ") did not return any results");
         }
@@ -134,10 +140,10 @@ namespace WorkBC.Tests.Tests
         public async Task FindJobByMultipleCities()
         {
             //Create an instance with the filters required
-            var esq = new JobSearchQuery(GeocodingService, Configuration, GetFiltersForJobsByMultipleCities());
+            var esq = new JobSearchQuery(_fakeGeocodingService, _configuration, GetFiltersForJobsByMultipleCities());
 
             //return results
-            List<Source> result = await QueryElasticSearch(esq);
+            List<Source> result = await TestsHelper.QueryElasticSearch(esq);
 
             Assert.True(result.Count > 0, "Jobs for list of cities did not return any results");
         }
@@ -146,10 +152,10 @@ namespace WorkBC.Tests.Tests
         public async Task FindJobByMultiplePostalCodes()
         {
             //Create an instance with the filters required
-            var esq = new JobSearchQuery(GeocodingService, Configuration, GetFiltersForJobsByMultiplePostalCodes());
+            var esq = new JobSearchQuery(_fakeGeocodingService, _configuration, GetFiltersForJobsByMultiplePostalCodes());
 
             //return results
-            List<Source> result = await QueryElasticSearch(esq);
+            List<Source> result = await TestsHelper.QueryElasticSearch(esq);
 
             Assert.True(result.Count > 0, "Jobs for list of cities did not return any results");
         }
@@ -166,10 +172,10 @@ namespace WorkBC.Tests.Tests
         public async Task SearchJobByTitle()
         {
             //Create an instance with the filters required
-            var esq = new JobSearchQuery(GeocodingService, Configuration, GetFiltersForJobsWithTitle());
+            var esq = new JobSearchQuery(_fakeGeocodingService, _configuration, GetFiltersForJobsWithTitle());
 
             //return results
-            List<Source> result = await QueryElasticSearch(esq);
+            List<Source> result = await TestsHelper.QueryElasticSearch(esq);
 
             //There should be results
             Assert.True(result.Count == 1, "Jobs for job title 'long haul truck driver' did not return results");
@@ -179,10 +185,10 @@ namespace WorkBC.Tests.Tests
         public async Task SearchJobForEmployer()
         {
             //Create an instance with the filters required
-            var esq = new JobSearchQuery(GeocodingService, Configuration, GetFiltersForJobsWithEmployer());
+            var esq = new JobSearchQuery(_fakeGeocodingService, _configuration, GetFiltersForJobsWithEmployer());
 
             //return results
-            List<Source> result = await QueryElasticSearch(esq);
+            List<Source> result = await TestsHelper.QueryElasticSearch(esq);
 
             //There should be results
             Assert.True(result.Count == 1, "Jobs for employer 'Persia Food Products Inc.' did not return results");
@@ -192,10 +198,10 @@ namespace WorkBC.Tests.Tests
         public async Task SearchJobsExcludingPlacementAgencyJobs()
         {
             //Create an instance with the filters required
-            var esq = new JobSearchQuery(GeocodingService, Configuration, GetFiltersForJobsExcludingPlacementAgencies());
+            var esq = new JobSearchQuery(_fakeGeocodingService, _configuration, GetFiltersForJobsExcludingPlacementAgencies());
 
             //return results
-            List<Source> result = await QueryElasticSearch(esq);
+            List<Source> result = await TestsHelper.QueryElasticSearch(esq);
 
             //ensure that specific job is not in result set
             Assert.DoesNotContain(result, j => j.JobId == 30696242);

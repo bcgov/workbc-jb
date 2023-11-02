@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,12 +16,13 @@ using WorkBC.Shared.Settings;
 using WorkBC.Tests.FakeServices;
 using WorkBC.Tests.Fixtures;
 using WorkBC.Tests.Helpers;
+using Xunit;
 using Xunit.Abstractions;
 using Location = WorkBC.Data.Model.JobBoard.Location;
 
 namespace WorkBC.Tests.Tests
 {
-    public abstract class TestsBase : IDisposable
+    public class ElasticSearchTestFixture : IDisposable
     {
         protected readonly IConfiguration Configuration;
 
@@ -29,14 +30,15 @@ namespace WorkBC.Tests.Tests
         protected readonly ElasticSearchSetupHelpers ElasticService;
         protected readonly IGeocodingService GeocodingService;
 
-        protected TestsBase(ITestOutputHelper output)
+        // Constructor
+        public ElasticSearchTestFixture()
         {
             #region AppSettings
 
             IConfigurationBuilder builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true)
-                .AddUserSecrets<TestsBase>()
+                .AddUserSecrets<TestsHelper>()
                 .AddEnvironmentVariables();
 
             IConfiguration configuration = builder.Build();
@@ -93,27 +95,6 @@ namespace WorkBC.Tests.Tests
             ElasticService.DestroyUnitTestIndex();
         }
 
-        #region Helpers
 
-        protected async Task<List<Source>> QueryElasticSearch(JobSearchQuery esq)
-        {
-            //Get search results from Elastic search
-            ElasticSearchResponse results = await esq.GetSearchResults();
-
-            //Read results from Elastic
-            if (results != null)
-            {
-                if (results.Hits != null && results.Hits.HitsHits != null)
-                {
-                    //Return results to test
-                    return results.Hits.HitsHits.Select(hit => hit.Source).ToArray().ToList();
-                }
-            }
-
-            //If no results, return empty result set
-            return new List<Source>();
-        }
-
-        #endregion
     }
 }

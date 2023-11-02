@@ -45,7 +45,9 @@ namespace WorkBC.Tests.Helpers
         public async Task<List<Source>> GetJobsWithEmploymentGroup(bool isApprentice, bool isIndigenous, bool isMatureWorker, bool isNewcomer, bool isPeopleWithDisabilities, bool isStudents, bool isVeterans, bool isVisibleMinority, bool isYouth)
         {
             //Create an instance with the filters required
-            JobSearchQuery esq = new JobSearchQuery(_geocodingService, _configuration, GetFiltersForJobByEmployerGroup(isApprentice, isIndigenous, isMatureWorker, isNewcomer, isPeopleWithDisabilities, isStudents, isVeterans, isVisibleMinority, isYouth));
+            var filters = GetFiltersForJobByEmployerGroup(isApprentice, isIndigenous, isMatureWorker, isNewcomer,
+                isPeopleWithDisabilities, isStudents, isVeterans, isVisibleMinority, isYouth);
+            var esq = new JobSearchQuery(_geocodingService, _configuration, filters);
 
             //return results
             return await QueryElasticSearch(esq);

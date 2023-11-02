@@ -151,7 +151,8 @@ namespace WorkBC.Shared.Utilities
                 }
                 else if (!result.IsSuccessStatusCode)
                 {
-                    throw new Exception($"Elasticsearch returned a {result.StatusCode} status code");
+                    throw new Exception($"Elasticsearch returned a {result.StatusCode} " +
+                                        $"status code: {url} JSON {json}");
                 }
 
                 return await result.Content.ReadAsStringAsync();
