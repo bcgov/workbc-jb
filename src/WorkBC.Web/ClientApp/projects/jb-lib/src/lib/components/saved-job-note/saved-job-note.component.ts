@@ -14,10 +14,10 @@ export class SavedJobNoteComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<SavedJobNoteComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {
-      isExpired: boolean,
+    @Inject(MAT_DIALOG_DATA) public data: { 
+      isExpired: boolean, 
       savedJobNoteModel: SavedJobNoteModel
-    },
+    }, 
     private jobService: JobService) { }
 
   ngOnInit(): void {

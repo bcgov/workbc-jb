@@ -1,12 +1,12 @@
 <div class="job-item print-no-break">
-  <div class="row">
+  <div class="row" [ngClass]="{'expired': isExpired }">
     <div class="col-12 col-lg-8 job-info">
       <div class="title">
-        <a *ngIf="item.IsFederalJob" [attr.href]="jobDetailsUrl">
+        <a *ngIf="item.IsFederalJob" [attr.href]="isExpired ? null : jobDetailsUrl">
           {{item.Title}}
-        </a>
+        </a> <!--[routerLink]="['/job-details',item.JobId]" [class.disabled]="isExpired ? true : null"-->
         <a *ngIf="!item.IsFederalJob" (click)="openModal($event)" style="cursor: pointer;"
-           [attr.href]="item.ExternalSource?.Source[0].Url">
+           [attr.href]="isExpired ? null : item.ExternalSource?.Source[0].Url">
           {{item.Title}}
         </a>
         <lib-svg-icon *ngIf="!isProduction"
@@ -40,27 +40,27 @@
     <div class="col-12 col-lg-2 cta-contain">
       <div class="expiry" *ngIf="item.IsFederalJob">
         <div class="expires-in">
-          <strong>{{"Expires in " + item.ExpiresIn + " days"}}</strong>
+          <strong>{{isExpired ? "Expired" : "Expires in " + item.ExpiresIn + " days"}}</strong>
         </div>
         <div class="expiry-date text-nowrap">
-          Expires:
+          Expires: 
           <span aria-hidden="true">{{item.ExpireDate | date:'yyyy-MM-dd'}}</span>
           <span class="sr-only">{{item.ExpireDate | date:'MMMM d, yyyy'}}</span>
         </div>
         <div class="post-date text-nowrap">
-          Posted:
+          Posted: 
           <span aria-hidden="true">{{item.DatePosted | date:'yyyy-MM-dd'}}</span>
           <span class="sr-only">{{item.DatePosted | date:'MMMM d, yyyy'}}</span>
         </div>
         <div class="post-date text-nowrap">
-          Last Updated:
+          Last Updated: 
           <span aria-hidden="true">{{item.LastUpdated | date:'yyyy-MM-dd'}}</span>
           <span class="sr-only">{{item.LastUpdated | date:'MMMM d, yyyy'}}</span>
         </div>
       </div>
       <!-- if there is no expiry date, render posted date on it's own -->
       <div class="post-date" *ngIf="!item.IsFederalJob">
-        Posted:
+        Posted: 
         <span aria-hidden="true">{{item.DatePosted | date:'yyyy-MM-dd'}}</span>
         <span class="sr-only">{{item.DatePosted | date:'MMMM d, yyyy'}}</span>
       </div>
