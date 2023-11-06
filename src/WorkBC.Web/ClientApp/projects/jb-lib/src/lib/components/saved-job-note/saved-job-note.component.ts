@@ -15,6 +15,7 @@ export class SavedJobNoteComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<SavedJobNoteComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {
+      isExpired: boolean,
       savedJobNoteModel: SavedJobNoteModel
     },
     private jobService: JobService) { }
@@ -27,20 +28,26 @@ export class SavedJobNoteComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  saveNote(event: Event): void {
+  saveNote(event: Event, isExpired: boolean): void {
     event.preventDefault();
-    if (this.note !== this.data.savedJobNoteModel.note) {
-      this.jobService.saveJobNote(this.data.savedJobNoteModel)
-        .subscribe(() => {
-          this.dialogRef.close({ updatedNote: this.data.savedJobNoteModel.note });
-        });
-    } else {
-      this.close();
+    if (!isExpired) {
+      if (this.note !== this.data.savedJobNoteModel.note) {
+        this.jobService.saveJobNote(this.data.savedJobNoteModel)
+          .subscribe(() => {
+            this.dialogRef.close({ updatedNote: this.data.savedJobNoteModel.note });
+          });
+      } else {
+        this.close();
+      }
     }
   }
 
   deleteNote(event: Event): void {
     this.data.savedJobNoteModel.note = '';
-    this.saveNote(event);
+    this.saveNote(event, false);
+  }
+
+  get isExpired(): boolean {
+    return this.data.isExpired;
   }
 }

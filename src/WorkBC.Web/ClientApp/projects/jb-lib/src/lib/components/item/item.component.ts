@@ -47,6 +47,28 @@ export class ItemComponent {
     return this.inSavedJobsView ? '14px' : '12px';
   }
 
+  get isExpired(): boolean {
+    let result = false;
+    if (this.item) {
+      result = this.inSavedJobsView && !this.item.IsActive;
+      if (!result && this.item.ExpireDate) {
+        const offSet = new Date().getTimezoneOffset();
+        const offSetHours = offSet / 60 - 1;
+        const offSetMinutes = offSet % 60;
+        const today = new Date();
+        // Get the time zone offset by adding/subtracting hours to "today", then set today time
+        // to end-of-day for purposes of this calculation
+        today.setHours(today.getHours() + offSetHours);
+        today.setMinutes(today.getMinutes() + offSetMinutes);
+        today.setHours(23, 59, 59, 0);
+        // Expire date is always the local computer time (assumed to be the time the user is in)
+        const expireDate = new Date(this.item.ExpireDate);
+        result = expireDate < today;
+      }
+    }
+    return result;
+  }
+
   get addOrView(): string {
     return this.item.Note ? 'View' : 'Add';
   }
@@ -69,44 +91,49 @@ export class ItemComponent {
   }
 
   openModal(event: MouseEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    const modalRef = this.modalService.open(ExternalJobModalComponent, {
-      container: 'app-root',
-      size: 'lg',
-      centered: true
-    });
-    modalRef.componentInstance.jobUrl = this.item.ExternalSource.Source[0].Url;
-    modalRef.componentInstance.jobName = this.item.Title;
-    modalRef.componentInstance.jobOrigin = this.item.ExternalSource.Source[0].Source;
+    if (!this.isExpired) {
+      event.preventDefault();
+      event.stopPropagation();
+      const modalRef = this.modalService.open(ExternalJobModalComponent, {
+        container: 'app-root',
+        size: 'lg',
+        centered: true
+      });
+      modalRef.componentInstance.jobUrl = this.item.ExternalSource.Source[0].Url;
+      modalRef.componentInstance.jobName = this.item.Title;
+      modalRef.componentInstance.jobOrigin = this.item.ExternalSource.Source[0].Source;
+    }
   }
 
   open(jobId) {
-    this.http
-      .get<string>(
-        this.globalService.getApiBaseUrl() +
-        'api/Search/GetJobXml?jobId=' +
-        jobId
-      )
-      .subscribe(result => {
-        this.xml = result;
+    if (!this.isExpired) {
+      this.http
+        .get<string>(
+          this.globalService.getApiBaseUrl() +
+          'api/Search/GetJobXml?jobId=' +
+          jobId
+        )
+        .subscribe(result => {
+          this.xml = result;
 
-        const modalRefXml = this.modalService.open(XmlJobModalComponent, {
-          container: 'app-root',
-          size: 'lg',
-          centered: true
+          const modalRefXml = this.modalService.open(XmlJobModalComponent, {
+            container: 'app-root',
+            size: 'lg',
+            centered: true
+          });
+          modalRefXml.componentInstance.jobXml = this.xml;
+          modalRefXml.componentInstance.jobId = jobId;
         });
-        modalRefXml.componentInstance.jobXml = this.xml;
-        modalRefXml.componentInstance.jobId = jobId;
-      });
+    }
   }
 
   addOrViewNote(event: Event) {
     event.preventDefault();
-    if (this.item.Note) {
+    if (!this.isExpired || this.item.Note) {
       this.dialog.open(SavedJobNoteComponent, {
         data: {
           jobId: this.item.JobId,
+          isExpired: this.isExpired,
           savedJobNoteModel: new SavedJobNoteModel(this.item.JobId, '', this.item.Note)
         },
         width: '85%',
@@ -120,7 +147,7 @@ export class ItemComponent {
   }
 
   get isDisabled(): boolean {
-    return !this.item.Note;
+    return this.isExpired && !this.item.Note;
   }
 
   deleteJob(event: Event) {

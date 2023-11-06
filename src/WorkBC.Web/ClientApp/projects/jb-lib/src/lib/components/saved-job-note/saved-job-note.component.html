@@ -12,11 +12,11 @@
 </div>
 <div class="modal-footer">
   <mat-dialog-actions align="end">
-    <a [attr.href]="'#'" class="btn btn-continue" (click)="saveNote($event)"
-      style="margin-right: 0">Save note
+    <a [attr.href]="isExpired ? null : '#'" class="btn btn-continue" (click)="saveNote($event, isExpired)"
+       *ngIf="!isExpired" style="margin-right: 0">Save note
     </a>
     <a href="#" class="btn btn-continue btn-delete" (click)="deleteNote($event)" *ngIf="note"
-      style="margin-right: 0; margin-left: 15px;">
+       style="margin-right: 0; margin-left: 15px;">
       Delete
     </a>
   </mat-dialog-actions>
