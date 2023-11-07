@@ -159,6 +159,10 @@ namespace WorkBC.Web
                 ServiceLifetime.Scoped));
 
             services.AddMvc(options => options.EnableEndpointRouting = false);
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(BadHttpRequestExceptionFilter));
+            });
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -268,7 +272,7 @@ namespace WorkBC.Web
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 });
             }
-
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles(new StaticFileOptions
             {
