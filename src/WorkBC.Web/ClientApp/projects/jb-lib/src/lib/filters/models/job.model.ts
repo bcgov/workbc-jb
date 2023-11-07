@@ -274,7 +274,8 @@ export class Job extends RecommendedJob {
     return result;
   }
 
-  //ExpiresIn: number;
+  //ExpiresIn: returns an integer that represents the number
+  // of days between now and the job expiry date;
   get ExpiresIn(): number {
     const oneDay = 86400000;
     let result = -1;
@@ -282,7 +283,7 @@ export class Job extends RecommendedJob {
       const dateNow = new Date();
       dateNow.setHours(0, 0, 0, 0);
       const expireDate = new Date(this.ExpireDate);
-      expireDate.setHours(0, 0, 0, 0);
+      expireDate.setHours(23, 59, 59, 0);
       const diffDays = Math.round((expireDate.getTime() - dateNow.getTime()) / oneDay);
       result = diffDays;
     }
