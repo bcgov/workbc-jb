@@ -272,7 +272,7 @@ namespace WorkBC.Web
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 });
             }
-            
+
             app.UseHttpsRedirection();
             app.UseStaticFiles(new StaticFileOptions
             {
