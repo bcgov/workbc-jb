@@ -133,12 +133,8 @@ namespace WorkBC.ElasticSearch.Models.Filters
 
         [DefaultValue(false)]
         public bool SalaryBracket6 { get; set; }
-
-        [DefaultValue(false)]
-        public bool SearchSalaryUnknown { get; set; }
-
         
-        [DefaultValue(1)]
+        /// <example></example>
         public string SalaryMin { get; set; }
 
         /// <example></example>
