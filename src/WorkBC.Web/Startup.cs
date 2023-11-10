@@ -159,10 +159,6 @@ namespace WorkBC.Web
                 ServiceLifetime.Scoped));
 
             services.AddMvc(options => options.EnableEndpointRouting = false);
-            services.AddMvc(options =>
-            {
-                options.Filters.Add(typeof(BadHttpRequestExceptionFilter));
-            });
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
