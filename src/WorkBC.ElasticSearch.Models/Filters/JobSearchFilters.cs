@@ -137,7 +137,8 @@ namespace WorkBC.ElasticSearch.Models.Filters
         [DefaultValue(false)]
         public bool SearchSalaryUnknown { get; set; }
 
-        /// <example></example>
+        
+        [DefaultValue(1)]
         public string SalaryMin { get; set; }
 
         /// <example></example>
