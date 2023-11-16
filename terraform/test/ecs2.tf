@@ -305,6 +305,7 @@ resource "aws_cloudwatch_event_rule" "cron2" {
 	name = "notifications_schedule"
 	# send notification every day at 6 AM PST
 	schedule_expression = "cron(0 13 * * ? *)"
+	is_enabled = false
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task2" {
