@@ -52,17 +52,12 @@ export class ItemComponent {
     if (this.item) {
       result = this.inSavedJobsView && !this.item.IsActive;
       if (!result && this.item.ExpireDate) {
-        const offSet = new Date().getTimezoneOffset();
-        const offSetHours = offSet / 60 - 1;
-        const offSetMinutes = offSet % 60;
         const today = new Date();
-        // Get the time zone offset by adding/subtracting hours to "today", then set today to "0, 0, 0, 0" the start of the day for purposes of this calculation
-        today.setHours(today.getHours() + offSetHours);
-        today.setMinutes(today.getMinutes() + offSetMinutes);
         today.setHours(0, 0, 0, 0);
-        // Expire date is always the local computer time (assumed to be the time the user is in)
+
         const expireDate = new Date(this.item.ExpireDate);
-        result = expireDate < today;
+        expireDate.setHours(23, 59, 59, 0);
+        result = expireDate.getTime() < today.getTime();
       }
     }
     return result;
