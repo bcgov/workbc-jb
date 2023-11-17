@@ -175,11 +175,13 @@ namespace WorkBC.ElasticSearch.Search.Queries
             #endregion
 
             #region Salary search
+            
+            // to be in compliance with legislation, all jobs returned must have a posted salary
+            var jsonSalaryFilter = "{ \"range\": { \"Salary\": { \"gte\": 1 } } }";
 
-            if (_filters.SearchSalaryUnknown || (SalarySearchType != SalaryType.NONE && SalaryRanges.Count > 0))
+            if (SalarySearchType != SalaryType.NONE && SalaryRanges.Count > 0)
             {
-                var jsonSalaryFilter = "";
-
+                jsonSalaryFilter = "";
                 var k = 0;
                 foreach (KeyValuePair<string, string> salaryRange in SalaryRanges)
                 {
@@ -206,22 +208,11 @@ namespace WorkBC.ElasticSearch.Search.Queries
 
                     k++;
                 }
-
-                if (_filters.SearchSalaryUnknown)
-                {
-                    if (k > 0)
-                    {
-                        jsonSalaryFilter += ",";
-                    }
-
-                    // You can't search for null so we search in SalarySort.Descending instead.  
-                    // The indexer sets this field to -99999999 for jobs with no salary.
-                    jsonSalaryFilter += "{ \"range\": { \"SalarySort.Descending\": { \"lte\": -99999999 } } }";
-                }
-
-                filterGroups.Add(jsonSalaryFilter);
             }
+            
+            filterGroups.Add(jsonSalaryFilter);
 
+            // filter for benefits
             if (SearchSalaryConditions != null && SearchSalaryConditions.Count > 0)
             {
                 var jsonBenefits = string.Empty;

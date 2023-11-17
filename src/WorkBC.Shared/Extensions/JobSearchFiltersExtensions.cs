@@ -347,11 +347,6 @@ namespace WorkBC.Shared.Extensions
                 salaryBracketList.Add(6);
             }
 
-            if (filters.SearchSalaryUnknown)
-            {
-                salaryBracketList.Add(7);
-            }
-
             if (salaryBracketList.Any())
             {
                 salaryParams += $"salaryrange={string.Join(",", salaryBracketList)};";
