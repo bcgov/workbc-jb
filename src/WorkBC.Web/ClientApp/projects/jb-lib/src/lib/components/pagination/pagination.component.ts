@@ -114,7 +114,7 @@ export class PaginationComponent implements OnInit {
       }
     }
     //check for the last two pages
-    else if (this.vm.currentPage + _pagesThreshold >= this.pageCount) {
+    else if (this.vm.currentPage + _pagesThreshold <= this.pageCount) {
       this.pages = new Array<number>();
       for (let i = this.pageCount - _pagesVisible; i < this.pageCount; i++) {
         if (i + 1 > 0) {
