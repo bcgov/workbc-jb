@@ -17,11 +17,6 @@ export class BaseFilterComponent {
     if (this.ngbDropdown) {
       this.ngbDropdown.close();
     }
-
-    // Make sure dropdown is completely closed before scroll into view
-    setTimeout(() => {
-      this.filterService.scrollIntoView(dropdownMenuId);
-    }, 0);
   }
 }
 
