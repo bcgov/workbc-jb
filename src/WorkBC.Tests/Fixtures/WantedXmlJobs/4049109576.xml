@@ -19,7 +19,7 @@
     </location>
   </locations>
   <salaries>
-    <salary id="2" type="Modeled" value="42000" />
+    <salary id="2" type="Posted" value="42000" />
   </salaries>
   <jobtypes>
     <jobtype id="4" label="Full-Time" /><jobtype id="1" label="Permanent" />
