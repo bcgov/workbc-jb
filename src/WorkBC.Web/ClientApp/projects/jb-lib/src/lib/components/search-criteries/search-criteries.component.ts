@@ -42,7 +42,7 @@ export class SearchCriteriesComponent {
 
   clearAll(): void {
     this.cleared.emit();
-    this.filterService.removeFilter("page")
+    this.removeFilter("page")
     this.filterService.setBookmarkableUrl(null, this.inJobAlert, this.router.url);
   }
 }
