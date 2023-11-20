@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WorkBC.Data;
 using WorkBC.Data.Enums;
-using WorkBC.Data.Model.JobBoard;
 
 namespace WorkBC.Admin.Services
 {
@@ -180,9 +179,11 @@ namespace WorkBC.Admin.Services
         {
             get
             {
-                List<int> years = _jobBoardContext.Jobs.Select(j => j.DateFirstImported.Year).Distinct().OrderBy(y => y).ToList();
-
-                // years = years.Prepend(years.Min() - 1).ToList();
+                List<int> years = _jobBoardContext.Jobs
+                    .GroupBy(j => j.DateFirstImported.Year)
+                    .Select(g => g.Key)
+                    .OrderBy(y => y)
+                    .ToList();
 
                 if (DateTime.Now.Month >= 4)
                 {
