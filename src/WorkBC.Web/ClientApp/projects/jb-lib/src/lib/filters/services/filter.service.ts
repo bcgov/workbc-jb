@@ -854,6 +854,9 @@ export class FilterService extends BaseService {
     //reset sorting order
     mainFilters.sortOrder = 11; //relevance
 
+    //reset pagination
+    mainFilters.pagination.currentPage = 1;
+
     this.update(mainFilters);
   }
 
