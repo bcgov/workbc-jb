@@ -92,6 +92,29 @@
           <input type="text" class="form-control" aria-label="Custom salary range maximum amount" placeholder="unlimited" [(ngModel)]="vm.maxAmount"
                  (keyup)="onMaxAmountChange($event.target.value)" [disabled]="!vm.amountRange6" />
         </div>
+        <div class="salary-ranges above-tooltip">
+          <div class="check-group">
+            <input type="checkbox" [(ngModel)]="vm.searchSalaryUnknown" name="searchSalaryUnknown"
+                   id="searchSalaryUnknown" />
+            <div class="checkbox-icons">
+              <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+              <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
+            </div>
+            <label class="form-check-label" for="searchSalaryUnknown">Unknown salaries</label>
+            <button type="button" class="tooltip-icon" placement="bottom" (click)="salaryTip.toggle()"
+                    [autoClose]="'outside'" [ngbPopover]="SalaryUnknownPopContent" [triggers]="getPopoverTriggers()" #salaryTip="ngbPopover">
+              <lib-svg-icon icon="info-blue" width="20px" height="20px" class="info"></lib-svg-icon>
+              <span class="sr-only">
+                {{unknownSalaries}}
+              </span>
+              <ng-template #SalaryUnknownPopContent>
+                {{unknownSalaries}}
+                <!-- empty link fixes mobile issue requiring double-tab -->
+                <a href="#" tabindex="-1" aria-hidden="true"></a>
+              </ng-template>
+            </button>
+          </div>
+        </div>
       </div>
       <div class="col-lg-7">
         <div class="salary-filter-types">
