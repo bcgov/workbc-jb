@@ -130,7 +130,7 @@ namespace WorkBC.Importers.Federal.Services
             _logger.Information($"{await _dbContext.ImportedJobsFederal.CountAsync()} jobs in ImportedJobsFederal after import");
         }
 
-        private async Task PurgeJobs()
+        public async Task PurgeJobs()
         {
             try
             {
@@ -201,7 +201,7 @@ namespace WorkBC.Importers.Federal.Services
             }
         }
 
-        private async Task InsertJobs()
+        public async Task InsertJobs()
         {
             if (_lstInsert.Any())
             {
@@ -224,8 +224,8 @@ namespace WorkBC.Importers.Federal.Services
                             continue;
                         }
 
-                        // get french and english job descriptions from Federal Job Board API
-                        await GetXmlContent(job.Id);
+                        //get XML from URL if needed
+                        await GetXmlContent(job.Id, true, true);
 
                         if (_xmlDocumentEnglish != null)
                         {
@@ -301,7 +301,7 @@ namespace WorkBC.Importers.Federal.Services
             Console.WriteLine();
         }
 
-        private async Task UpdateJobs()
+        public async Task UpdateJobs()
         {
             foreach (KeyValuePair<ImportedJobFederal, DateTime> jobEntry in _lstUpdate.Take(_options.MaxJobs))
             {
@@ -318,8 +318,8 @@ namespace WorkBC.Importers.Federal.Services
                             continue;
                         }
 
-                        // get french and english job descriptions from Federal Job Board API
-                        await GetXmlContent(federalJob.JobId);
+                        //get XML from URL if needed
+                        await GetXmlContent(federalJob.JobId, true, true);
 
                         if (_xmlDocumentEnglish != null)
                         {
@@ -497,23 +497,25 @@ namespace WorkBC.Importers.Federal.Services
         }
 
         /// <summary>
-        ///     Get XML for english and french job details from Federal Job API
+        ///     Get job XML if the job should not be skipped
         /// </summary>
-        private async Task GetXmlContent(long jobId)
+        private async Task GetXmlContent(long jobId, bool importEnglish, bool importFrench)
         {
             _xmlDocumentEnglish = null;
             _xmlDocumentFrench = null;
-            var tasks = new Task<XmlDocument>[2];
-            
-            tasks[0] = GetWebResponse($"{_federalSettings.FederalJobXmlRoot}/en/{jobId}.xml");
-            tasks[1] = GetWebResponse($"{_federalSettings.FederalJobXmlRoot}/fr/{jobId}.xml");
-            
-            await Task.WhenAll(tasks);
-            _xmlDocumentEnglish = tasks[0].Result;
-            _xmlDocumentFrench = tasks[1].Result;
+
+            if (importEnglish)
+            {
+                _xmlDocumentEnglish = await GetWebResponse($"{_federalSettings.FederalJobXmlRoot}/en/{jobId}.xml");
+            }
+
+            if (importFrench)
+            {
+                _xmlDocumentFrench = await GetWebResponse($"{_federalSettings.FederalJobXmlRoot}/fr/{jobId}.xml");
+            }
         }
 
-        private DateTime? GetXmlDisplayUntil(string xml)
+        public DateTime? GetXmlDisplayUntil(string xml)
         {
             //return value - can be null
             DateTime? dt = null;
