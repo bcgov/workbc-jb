@@ -547,6 +547,24 @@ namespace WorkBC.Shared.Extensions
             {
                 moreParams += "jobsource=2;";
             }
+            
+            // Job source =  Federal Jobs (other job boards)
+            if (filters.SearchJobSource == "3")
+            {
+                moreParams += "jobsource=3;";
+            }
+            
+            // Job source =  Municipal Jobs (other job boards)
+            if (filters.SearchJobSource == "4")
+            {
+                moreParams += "jobsource=4;";
+            }
+            
+            // Job source =  Provincial Jobs (other job boards)
+            if (filters.SearchJobSource == "5")
+            {
+                moreParams += "jobsource=5;";
+            }
 
             return moreParams;
         }
