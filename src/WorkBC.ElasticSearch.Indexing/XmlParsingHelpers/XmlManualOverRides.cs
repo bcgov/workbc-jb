@@ -12,7 +12,8 @@ namespace WorkBC.ElasticSearch.Indexing.ParsingHelpers
         public static Dictionary<string, string> AlternateCityNames = new Dictionary<string, string>
         {
             {"one hundred mile house", "100 Mile House"},
-            {"queen charlotte", "Queen Charlotte City"},
+            {"queen charlotte", "Daajing Giids ( Queen Charlotte City )"},
+            {"queen charlotte city", "Daajing Giids ( Queen Charlotte City )"},
             {"cowichan valley a", "Lake Cowichan"},
             {"cowichan", "Lake Cowichan"},
             {"denny island", "Bella Bella"},
