@@ -170,7 +170,7 @@ export class Job extends RecommendedJob {
     if (savedJob) {
       this.City = savedJob.city;
       this.DatePosted = savedJob.datePosted.toString();
-      this.ExpireDate = savedJob.expireDate.toString();
+      this.ExpireDate = savedJob.expireDate.toString() + "-08:00"
       this.EmployerName = savedJob.employerName;
       this.JobId = savedJob.jobId.toString();
       this.SalarySummary = savedJob.salarySummary;
