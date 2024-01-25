@@ -485,7 +485,7 @@ export class FilterService extends BaseService {
 
   /**
    * Processes a removal tag for a checkbox option. Sets the model property to
-   * false when a checbox filter is removed, and removes the value of the checkbox
+   * false when a checkbox filter is removed, and removes the value of the checkbox
    * from an optional list property.  Also removes the selection from the bookmarkable
    * URL parameters.
    */
@@ -539,9 +539,9 @@ export class FilterService extends BaseService {
   }
 
   /**
-   * Sets the removal tags, url paramaters, and an optional list property. Uses
+   * Sets the removal tags, url parameters, and an optional list property. Uses
    * a set of checkbox filters (defined in a javascript object) and the current
-   * fitler model state.
+   * filter model state.
    */
   addFilters(groupDef: Array<CheckboxCategory>, filter: unknown, redirect: string): string {
     const mainFilters = this.currentFilter;
@@ -584,6 +584,9 @@ export class FilterService extends BaseService {
     const pos = mainFilters.activeFilters.indexOf(filter);
     if (pos > -1) {
       mainFilters.removeActiveFilter(filter);
+
+      //reset to page 1 when any filter is changed
+      mainFilters.pagination.currentPage = 1;
 
       if (filter.indexOf('Date ') === 0) {
         mainFilters.dateFilters.rangeSelected = 0;
