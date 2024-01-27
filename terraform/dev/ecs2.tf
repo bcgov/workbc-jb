@@ -298,7 +298,7 @@ resource "aws_ecs_task_definition" "notify-job" {
 resource "aws_cloudwatch_event_rule" "cron2" {
 	name = "notifications_schedule"
 	schedule_expression = "cron(0 13 * * ? *)"
-	is_enabled = true
+	is_enabled = false
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task2" {
