@@ -1,5 +1,5 @@
 <div class="job-item print-no-break">
-  <div class="row" [ngClass]="{'expired': isExpired }">
+  <div class="row">
     <div class="col-12 col-lg-8 job-info">
       <div class="title">
         <a *ngIf="item.IsFederalJob" [attr.href]="isExpired ? null : jobDetailsUrl">
@@ -10,7 +10,7 @@
           {{item.Title}}
         </a>
         <lib-svg-icon *ngIf="!isProduction"
-                      icon="info-blue" width="12px" height="12px" (click)="open(item.JobId)"></lib-svg-icon>
+          icon="info-blue" width="12px" height="12px" (click)="open(item.JobId)"></lib-svg-icon>
       </div>
       <div class="company" *ngIf="item.EmployerName">
         <strong>{{item.EmployerName}}</strong>
@@ -40,7 +40,7 @@
     <div class="col-12 col-lg-2 cta-contain">
       <div class="expiry" *ngIf="item.IsFederalJob">
         <div class="expires-in">
-          <strong>{{isExpired ? "Expired" : "Expires in " + item.ExpiresIn + " days"}}</strong>
+          <strong>{{"Expires in " + item.ExpiresIn + " days"}}</strong>
         </div>
         <div class="expiry-date text-nowrap">
           Expires:
