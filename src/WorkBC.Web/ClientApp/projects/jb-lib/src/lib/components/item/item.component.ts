@@ -52,9 +52,12 @@ export class ItemComponent {
     if (this.item) {
       result = this.inSavedJobsView && !this.item.IsActive;
       if (!result && this.item.ExpireDate) {
-        const today = new Date(); // user's local time zone
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
         const expireDate = new Date(this.item.ExpireDate);
-        result = expireDate.getDate() < today.getDate();
+        expireDate.setHours(23, 59, 59, 0);
+        result = expireDate.getTime() < today.getTime();
       }
     }
     return result;
