@@ -54,7 +54,7 @@ export class ItemComponent {
       if (!result && this.item.ExpireDate) {
         const today = new Date(); // user's local time zone
         const expireDate = new Date(this.item.ExpireDate);
-        result = expireDate < today;
+        result = expireDate.getDate() < today.getDate();
       }
     }
     return result;
