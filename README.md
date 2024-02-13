@@ -5,6 +5,7 @@
 # Code Structure
 
 See [Workstation_Setup.md](docs/Workstation_Setup.md) for instructions related to developer workstation setup.
+See [Linux_Setup.md](docs/Linux_Setup.md) for instructions related to Linux developer setup.
 
 ## Website Projects
 
@@ -24,13 +25,13 @@ See [Workstation_Setup.md](docs/Workstation_Setup.md) for instructions related t
 * [WorkBC.Indexers.Wanted](src/WorkBC.Indexers.Wanted) - Parses XML in the ImportedJobsWanted table and indexes jobs in Elasticsearch
 * [WorkBC.Notifications.JobAlerts](src/WorkBC.Notifications.JobAlerts) - Sends daily emails for job alerts
 
-## Other Projects 
+## Other Projects
 
 * [WorkBC.Data](src/WorkBC.Data) - Entity Framework models & migrations
 * [WorkBC.Elasticsearch.Indexing](src/WorkBC.Elasticsearch.Indexing) - XML parsing logic and other shared code used by Importers and Indexers projects
 * [WorkBC.ElasticSearch.Models](src/WorkBC.ElasticSearch.Models) - Strongly typed objects used for Elasticsearch documents & requests (serializing, deserializing, searching)
 * [WorkBC.ElasticSearch.Search](src/WorkBC.ElasticSearch.Search) - Library for building Elasticsearch queries based on the job board search interface
-* [WorkBC.Shared](src/WorkBC.Shared) - Miscellaneous helpers, constants, extensions, shared by different projects 
+* [WorkBC.Shared](src/WorkBC.Shared) - Miscellaneous helpers, constants, extensions, shared by different projects
 * [WorkBC.Tests](src/WorkBC.Tests) - C# unit tests & integration tests (xunit)
 
 ## License
