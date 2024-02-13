@@ -2,7 +2,7 @@
 
 - `cd src`
 - `docker-compose -f docker-compose.yml -f docker-compose.linux-dev.yml up`
-- `docker-compose exec -T mssql /opt/mssql-tools/bin/sqlcmd -U sa -P 18^fh4M08aB@`
+- `docker-compose -f docker-compose.linux-dev.yml exec mssql /opt/mssql-tools/bin/sqlcmd -U sa -P 18^fh4M08aB@`
 ```
 create database WorkBC_jobboard_dev;
 go
