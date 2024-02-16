@@ -1,5 +1,29 @@
 version: '3'
 services:
+  web:
+    volumes:
+      - ./WorkBC.Web/appsettings.linux.json:/app/appsettings.json
+  admin:
+    volumes:
+      - ./WorkBC.Admin/appsettings.linux.json:/app/appsettings.json
+  importers-wanted:
+    volumes:
+      - ./WorkBC.Importers.Wanted/appsettings.linux.json:/app/appsettings.json
+  importers-federal:
+    volumes:
+      - ./WorkBC.Importers.Federal/appsettings.linux.json:/app/appsettings.json
+  indexers-federal:
+    volumes:
+      - ./WorkBC.Indexers.Federal/appsettings.linux.json:/app/appsettings.json
+  indexers-wanted:
+    volumes:
+      - ./WorkBC.Indexers.Wanted/appsettings.linux.json:/app/appsettings.json
+  notifications-job-alerts:
+    volumes:
+      - ./WorkBC.Notifications.JobAlerts/appsettings.linux.json:/app/appsettings.json
+  migration-runner:
+    volumes:
+      - ./WorkBC.Web/appsettings.linux.json:/app/appsettings.json
   elasticsearch:
     image: elasticsearch:7.17.8
     ports:

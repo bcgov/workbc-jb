@@ -15,7 +15,7 @@ create user jobboard for login jobboard;
 alter role [db_owner] add member [jobboard];
 go
 ```
-- Stop the containers and re-up to run the Job Board data migrations - allow 30 minutes running time.
+- Stop the containers and restart to run the Job Board data migrations - allow 15 minutes running time for the `WorkBC_JobBoard_DEV` to be fully populated.
 - `docker cp /path/to/WorkBC_Enterprise_DEV.bak src-mssql-1:/var/opt/mssql/data/WorkBC_Enterprise_DEV.bak`
 - `docker-compose -f docker-compose.linux-dev.yml exec mssql /opt/mssql-tools/bin/sqlcmd -U sa -P 18^fh4M08aB@`
 ```
