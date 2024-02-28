@@ -728,7 +728,7 @@ namespace WorkBC.ElasticSearch.Search.Queries
                     case "3":
                         // federal government
                         //These are an option on the Federal Job Bank and should be available through the federal XML feed.
-                        jsonJobSource = "{ \"match_phrase_prefix\": { \"ExternalSource.Source.Url\": \"https://emploisfp-psjobs.cfp-psc.gc.ca\" } }";
+                        jsonJobSource = "{\"nested\": {\"path\": \"ExternalSource\",\"query\": {\"bool\": {\"should\": [{\"match_phrase\": {\"ExternalSource.Source.Url\":  \"https://emploisfp-psjobs.cfp-psc.gc.ca\"}}]}}}}";
                         break;
                     case "4":
                         // municipal government
