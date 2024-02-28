@@ -31,7 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Fixtures\FederalXmlJobs\" />
-    <Folder Include="Fixtures\WantedXmlJobs\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -78,6 +77,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Fixtures\WantedXmlJobs\4049816178.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\WantedXmlJobs\6111648176.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
