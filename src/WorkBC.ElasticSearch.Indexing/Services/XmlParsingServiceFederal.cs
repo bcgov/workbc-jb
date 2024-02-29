@@ -374,7 +374,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                         }
                         else
                         {
-                            if (cacheLocation.City == null && cacheLocation.Province == null)
+                            if (cacheLocation.City == null && cacheLocation.Province == null && ! string.IsNullOrWhiteSpace(employerPostalCode))
                             {
                                 switch (employerPostalCode[..1])
                                 {
