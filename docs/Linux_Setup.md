@@ -25,4 +25,4 @@ move 'WorkBCEnterprise_log' to '/var/opt/mssql/data/WorkBC_Enterprise_DEV.ldf'
 go
 ```
 - Download SSOT dump at https://github.com/bcgov/workbc-ssot/blob/master/ssot-full.sql.gz
-- `gunzip -k -c ssot-full.sql.gz | docker-compose exec -T postgres psql --username workbc ssot && docker-compose kill -s SIGUSR1 ssot`
+- `gunzip -k -c ssot-full.sql.gz | docker-compose -f docker-compose.yml -f docker-compose.linux-dev.yml exec -T postgres psql --username workbc ssot && docker-compose -f docker-compose.yml -f docker-compose.linux-dev.yml kill -s SIGUSR1 ssot`
