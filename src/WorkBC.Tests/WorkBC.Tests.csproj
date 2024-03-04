@@ -30,10 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Fixtures\FederalXmlJobs\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\WorkBC.ElasticSearch.Indexing\WorkBC.ElasticSearch.Indexing.csproj" />
     <ProjectReference Include="..\WorkBC.ElasticSearch.Models\WorkBC.ElasticSearch.Models.csproj" />
     <ProjectReference Include="..\WorkBC.ElasticSearch.Search\WorkBC.ElasticSearch.Search.csproj" />
@@ -68,6 +64,21 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Fixtures\FederalXmlJobs\31387859.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\FederalXmlJobs\39879152.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\FederalXmlJobs\40098629.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\FederalXmlJobs\40104984.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\FederalXmlJobs\40207035.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\FederalXmlJobs\40387120.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Fixtures\WantedXmlJobs\4049109571.xml">
