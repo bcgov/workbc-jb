@@ -41,10 +41,7 @@ namespace WorkBC.Admin.Areas.Jobs.Controllers
         {
             // action inside a standard controller
             (IList<JobSearchViewModel> tempResult,
-                int filteredResultsCount,
-                int totalResultsCount,
-                int totalExternalCount,
-                int totalFederalCount) = await _service.Search(model);
+                int filteredResultsCount) = await _service.Search(model);
 
             var result = new List<JobSearchViewModel>(tempResult.Count);
 
@@ -57,11 +54,8 @@ namespace WorkBC.Admin.Areas.Jobs.Controllers
             {
                 // this is what datatables wants sending back
                 draw = model.Draw,
-                recordsTotal = totalResultsCount,
                 recordsFiltered = filteredResultsCount,
-                data = result,
-                totalExternal = totalExternalCount,
-                totalFederal = totalFederalCount
+                data = result
             });
         }
     }
