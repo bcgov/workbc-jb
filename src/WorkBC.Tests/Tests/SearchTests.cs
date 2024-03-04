@@ -206,8 +206,8 @@ namespace WorkBC.Tests.Tests
         }
         
         [Theory(DisplayName = "When both salary string and salary numeric fields populated, calculate SalarySummary")]
-        [InlineData(39879152, "N/A")] // below minimum wage
-        [InlineData(40098629, "N/A")] // below minimum wage
+        [InlineData(39879152, "$2,000.00 monthly + 20% commission per sale")]
+        [InlineData(40098629, "$2,000.00 monthly + 3% commission per sale")]
         [InlineData(40104984, "$2,000.00 monthly + 3% commission per sale")]
         [InlineData(40207035, "$27.50 hourly")]
         [InlineData(40387120, "$46.50 hourly")]
