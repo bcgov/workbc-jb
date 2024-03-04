@@ -139,9 +139,16 @@ namespace WorkBC.Data
             // indexes for sorting job seekers on the admin screen
 
             // Status
-            modelBuilder.Entity<JobSeeker>()
-                .HasIndex(x => new { x.AccountStatus, x.LastName, x.FirstName })
-                .IncludeProperties(x => new { x.Email });
+            /*    modelBuilder.Entity<JobSeeker>()
+                   .HasIndex(x => new { x.AccountStatus, x.LastName, x.FirstName })
+                   .IncludeProperties(modelBuilder.Entity<>(x => new { x.Email }));
+
+
+                *
+                * NpgsqlIndexBuilderExtensions.IncludeProperties(
+       modelBuilder.Entity<Blog>().HasIndex(f => f.Name),
+       f => f.Description);
+               
 
             // First Name
             modelBuilder.Entity<JobSeeker>()
@@ -167,6 +174,8 @@ namespace WorkBC.Data
             modelBuilder.Entity<JobSeeker>()
                 .HasIndex(x => new { x.DateRegistered })
                 .IncludeProperties(x => new { x.LastName, x.FirstName, x.Email, x.AccountStatus });
+                
+                 */
 
             modelBuilder
                 .Entity<AdminUser>()

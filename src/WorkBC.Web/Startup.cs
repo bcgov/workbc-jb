@@ -72,6 +72,9 @@ namespace WorkBC.Web
                 options.UseSqlServer(
                     Configuration.GetConnectionString("EnterpriseConnection")),
                 ServiceLifetime.Transient);
+            
+            services.AddDbContext<SsotContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("SsotConnection")), ServiceLifetime.Transient);
 
             services.AddDefaultIdentity<JobSeeker>(options =>
             {

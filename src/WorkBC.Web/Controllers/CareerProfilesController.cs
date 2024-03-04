@@ -23,11 +23,11 @@ namespace WorkBC.Web.Controllers
     public class CareerProfilesController : ControllerBase
     {
         private readonly JobBoardContext _context;
-        private readonly EnterpriseContext _enterpriseContext;
+        private readonly SsotContext _enterpriseContext;
         private readonly IConfiguration _configuration;
         private readonly IGeocodingService _geocodingService;
 
-        public CareerProfilesController(JobBoardContext context, EnterpriseContext enterpriseContext,
+        public CareerProfilesController(JobBoardContext context, SsotContext enterpriseContext,
             IConfiguration configuration, IGeocodingService geocodingService)
         {
             _context = context;

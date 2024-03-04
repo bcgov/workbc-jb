@@ -19,13 +19,13 @@ namespace WorkBC.Web.Controllers
     public class IndustryProfilesController : ControllerBase
     {
         private readonly JobBoardContext _context;
-        private readonly EnterpriseContext _enterpriseContext;
+        private readonly SsotContext _ssotContext;
         private readonly IConfiguration _configuration;
 
-        public IndustryProfilesController(JobBoardContext context, EnterpriseContext enterpriseContext, IConfiguration configurtion)
+        public IndustryProfilesController(JobBoardContext context, SsotContext ssotContext, IConfiguration configurtion)
         {
             _context = context;
-            _enterpriseContext = enterpriseContext;
+            _ssotContext = ssotContext;
             _configuration = configurtion;
         }
 
@@ -44,6 +44,7 @@ namespace WorkBC.Web.Controllers
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true, Duration = 0)]
         public async Task<ActionResult<IEnumerable<IndustryProfileModel>>> GetSavedIndustryProfilesAsync()
         {
+            Console.WriteLine("DEBUG - inside GetSavedIndustryProfilesAsync()");
             var savedIndustryProfiles = await _context.SavedIndustryProfiles
                 .Where(x => x.AspNetUserId == UserId && !x.IsDeleted)
                 .ToListAsync();
@@ -61,7 +62,7 @@ namespace WorkBC.Web.Controllers
             //    ? await GetIndustryIdsAndJobCounts()
             //    : new Dictionary<int, IndustryProfileModel>();
 
-            var query = from p in _enterpriseContext.IndustryProfiles
+            var query = from p in _ssotContext.IndustryProfiles
                         where savedIndustryProfilesDict.Keys.Contains(p.IndustryProfileId)
                         orderby p.PageTitle
                         select new IndustryProfileModel
@@ -103,7 +104,7 @@ namespace WorkBC.Web.Controllers
             var lstNaics = naicsId.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string naics in lstNaics)
             {
-                int industryProfileId = (from profile in _enterpriseContext.IndustryProfiles
+                int industryProfileId = (from profile in _ssotContext.IndustryProfiles
                                          where profile.NaicsId == Convert.ToInt32(naics)
                                          select profile.IndustryProfileId).FirstOrDefault();
 
@@ -141,7 +142,7 @@ namespace WorkBC.Web.Controllers
         {
             //find the industry profile id based on the naics code
             int industryProfileId = (
-                from profile in _enterpriseContext.IndustryProfiles
+                from profile in _ssotContext.IndustryProfiles
                 where profile.NaicsId == naicsId
                 select profile.IndustryProfileId
             ).FirstOrDefault();
