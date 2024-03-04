@@ -1,0 +1,130 @@
+<SolrResponse>
+   <Header>
+      <status>0</status>
+      <QTime>1</QTime>
+      <numFound>1</numFound>
+   </Header>
+   <Documents>
+      <Document>
+         <jobs_id>40207035</jobs_id>
+         <skill_level>B</skill_level>
+         <remote_cd>2781279</remote_cd>
+         <title>office administrative assistant</title>
+         <work_period_cd>F</work_period_cd>
+         <employer_type_id>0</employer_type_id>
+         <edulevel_cd>C</edulevel_cd>
+         <wage_class>D</wage_class>
+         <employer_id>309374</employer_id>
+         <lang>en</lang>
+         <skill_categories><skill_category id="100003">
+  <name>Education</name>
+  <options>
+    <option_name id="los">Secondary (high) school graduation certificate</option_name>
+  </options>
+</skill_category>
+<skill_category id="29">
+  <name>Tasks</name>
+  <options>
+    <option_name id="15537">Answer telephone and relay telephone calls and messages</option_name>
+    <option_name id="15539">Answer electronic enquiries</option_name>
+    <option_name id="15540">Compile data, statistics and other information</option_name>
+    <option_name id="23484">Arrange travel, related itineraries and make reservations</option_name>
+    <option_name id="26222">Open and distribute regular and electronic incoming mail and other material and co-ordinate the flow of information</option_name>
+    <option_name id="26250">Set up and maintain manual and computerized information filing systems</option_name>
+    <option_name id="1087">Type and proofread correspondence, forms and other documents</option_name>
+  </options>
+</skill_category>
+<skill_category id="100001">
+  <name>Experience</name>
+  <options>
+    <option_name id="16715">1 year to less than 2 years</option_name>
+  </options>
+</skill_category>
+<skill_category id="100000">
+  <name>Workplace information</name>
+  <options>
+    <option_name id="15141">Virtual job</option_name>
+  </options>
+</skill_category>
+</skill_categories>
+         <job_source_id>16</job_source_id>
+         <work_term_cd>P</work_term_cd>
+         <work_lang_cd>E</work_lang_cd>
+         <app_methods><app_resumesharing>0</app_resumesharing><app_online></app_online><app_email>jobsatrjplumbing@yahoo.com</app_email><app_phone><app_phone_number></app_phone_number><app_phone_ext></app_phone_ext><app_phone_start_bus_hours></app_phone_start_bus_hours><app_phone_end_bus_hours></app_phone_end_bus_hours></app_phone><app_fax></app_fax><app_person><app_person_street></app_person_street><app_person_room></app_person_room><app_person_city></app_person_city><app_person_province></app_person_province><app_person_country></app_person_country><app_person_pstlcd></app_person_pstlcd><app_person_start_bus_hours></app_person_start_bus_hours><app_person_end_bus_hours></app_person_end_bus_hours></app_person><app_mail><app_mail_street></app_mail_street><app_mail_room></app_mail_room><app_mail_city></app_mail_city><app_mail_province></app_mail_province><app_mail_country></app_mail_country><app_mail_pstlcd></app_mail_pstlcd></app_mail></app_methods>
+         <naics_id>43</naics_id>
+         <hours>30 hours per week</hours>
+         <wagehourly_class>D</wagehourly_class>
+         <employer_name_string>RJ Plumbing and Heating Ltd.</employer_name_string>
+         <employer_name_case>RJ Plumbing and Heating Ltd.</employer_name_case>
+         <num_positions>1</num_positions>
+         <start_date/>
+         <noc2016>1241</noc2016>
+         <noc2021>13110</noc2021>
+         <job_senior_flag>false</job_senior_flag>
+         <job_canadian_citizen_flag>false</job_canadian_citizen_flag>
+         <various_location_flag>false</various_location_flag>
+         <job_student_flag>false</job_student_flag>
+         <job_recruiter_flag>false</job_recruiter_flag>
+         <job_youth_flag>false</job_youth_flag>
+         <job_apprentice_flag>false</job_apprentice_flag>
+         <job_global_applicant_flag>true</job_global_applicant_flag>
+         <job_disability_flag>false</job_disability_flag>
+         <job_aboriginal_flag>false</job_aboriginal_flag>
+         <program_title>false</program_title>
+         <job_vismin_flag>false</job_vismin_flag>
+         <job_general_flag>true</job_general_flag>
+         <job_newcomer_flag>false</job_newcomer_flag>
+         <job_veteran_flag>false</job_veteran_flag>
+         <los_id>2</los_id>
+         <postal_code_ind>0</postal_code_ind>
+         <experience_min>12</experience_min>
+         <date_posted>2024-02-05T14:39:00Z</date_posted>
+         <import_date>2024-02-05T14:39:23Z</import_date>
+         <file_update_date>2024-02-05T14:39:00Z</file_update_date>
+         <display_until>2024-03-06T14:39:00Z</display_until>
+         <salary_yearly>42900.0</salary_yearly>
+         <salary_hourly>27.5</salary_hourly>
+         <salary_weekly>825.0</salary_weekly>
+         <work_hours>30.0</work_hours>
+         <arr_app_methods>
+            <string>email</string>
+         </arr_app_methods>
+         <url>
+            <string>https://www.jobbank.gc.ca/jobsearch/jobposting/40207035</string>
+         </url>
+         <activity_type>
+            <string>1087</string>
+            <string>15141</string>
+            <string>15537</string>
+            <string>15539</string>
+            <string>15540</string>
+            <string>16715</string>
+            <string>23484</string>
+            <string>26222</string>
+            <string>26250</string>
+         </activity_type>
+         <noc_jobtitle_concordance_id>
+            <string>25599</string>
+         </noc_jobtitle_concordance_id>
+         <special_type>
+            <string>15141</string>
+         </special_type>
+         <employment_terms>
+            <string>Day</string>
+         </employment_terms>
+         <work_hour_term>
+            <string>D</string>
+            <string>K</string>
+         </work_hour_term>
+         <salary>
+            <string>$27.50 hourly</string>
+         </salary>
+         <employer_name>
+            <string>RJ Plumbing and Heating Ltd.</string>
+         </employer_name>
+         <category_type>
+            <string>100000</string>
+         </category_type>
+      </Document>
+   </Documents>
+</SolrResponse>

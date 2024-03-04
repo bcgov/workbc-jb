@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkBC.ElasticSearch.Models.Filters;
@@ -202,6 +203,19 @@ namespace WorkBC.Tests.Tests
 
             //There should be results
             Assert.True(result.Count > 0, "Jobs excluding agency jobs did not return results");
+        }
+        
+        [Theory(DisplayName = "When both salary string and salary numeric fields populated, calculate SalarySummary")]
+        [InlineData(39879152, "$2,000.00 monthly + 20% commission per sale")]
+        [InlineData(40098629, "$2,000.00 monthly + 3% commission per sale")]
+        [InlineData(40104984, "$2,000.00 monthly + 3% commission per sale")]
+        [InlineData(40207035, "$27.50 hourly")]
+        [InlineData(40387120, "$46.50 hourly")]
+        [InlineData(6111648176, "$82,795 annually")]
+        public async Task TestSalarySummaryCalculated(long jobId, string expected)
+        {
+            List<Source> result = await _searchHelper.GetJobsById(jobId);
+            Assert.Equivalent( expected, result[0].SalarySummary);
         }
 
         #region Filter setup
