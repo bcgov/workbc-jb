@@ -178,13 +178,6 @@ $(document).ready(function () {
             { className: "urls", "targets": [8] },
             { className: "actions", "targets": [9] }
         ]
-    }).on('xhr.dt', function (e, settings, json, xhr) {
-        if (json) {
-            //update filter totals
-            $('#spAll').html(numberWithCommas(json.totalExternal + json.totalFederal));
-            $('#spFederal').html(numberWithCommas(json.totalFederal));
-            $('#spExternal').html(numberWithCommas(json.totalExternal));
-        }
     }).on('page.dt', function () {
         $(".dataTables_paginate").addClass("wait");
         $(":focus").blur();

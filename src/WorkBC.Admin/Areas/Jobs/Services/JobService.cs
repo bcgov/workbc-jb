@@ -252,9 +252,9 @@ namespace WorkBC.Admin.Areas.Jobs.Services
                 .ToListAsync();
 
             // now just get the count of items (without the skip and take) - eg how many could be returned with filtering
-            int totalResultsCount = await queryable.CountAsync();
-            int totalFederalCount = await queryableNoFilter.CountAsync(q => q.JobSource.Name == "Federal");
-            int totalExternalCount = await queryableNoFilter.CountAsync(q => q.JobSource.Name == "Wanted");
+            int totalResultsCount = 0; // await queryable.CountAsync();
+            int totalFederalCount = 0; // await queryableNoFilter.CountAsync(q => q.JobSource.Name == "Federal");
+            int totalExternalCount = 0; // await queryableNoFilter.CountAsync(q => q.JobSource.Name == "Wanted");
 
             //total results found by applying the filter
             int filteredResultsCount = await queryable.CountAsync();
