@@ -8,7 +8,7 @@ namespace WorkBC.Data.Model.JobBoard
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [StringLength(3)]
+        [StringLength(4)]
         public string CategoryCode { get; set; }
 
         [Column(TypeName = "tinyint")]
