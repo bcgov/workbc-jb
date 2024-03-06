@@ -23,15 +23,15 @@ namespace WorkBC.Web.Controllers
     public class CareerProfilesController : ControllerBase
     {
         private readonly JobBoardContext _context;
-        private readonly EnterpriseContext _enterpriseContext;
+        private SsotApi _ssotApi;
         private readonly IConfiguration _configuration;
         private readonly IGeocodingService _geocodingService;
 
-        public CareerProfilesController(JobBoardContext context, EnterpriseContext enterpriseContext,
-            IConfiguration configuration, IGeocodingService geocodingService)
+        public CareerProfilesController(JobBoardContext context,
+            IConfiguration configuration, IGeocodingService geocodingService, SsotApi ssotApi)
         {
             _context = context;
-            _enterpriseContext = enterpriseContext;
+            _ssotApi = ssotApi;
             _configuration = configuration;
             _geocodingService = geocodingService;
         }
@@ -54,18 +54,7 @@ namespace WorkBC.Web.Controllers
 
             List<int> savedCareerProfilesIds = savedCareerProfilesDict.Select(s => s.Key).ToList();
 
-            IQueryable<CareerProfileModel> query = from p in _enterpriseContext.CareerProfiles
-                join n in _enterpriseContext.Nocs on p.NocId equals n.NocId
-                orderby n.NameEnglish
-                where savedCareerProfilesIds.Contains(p.CareerProfileId)
-                select new CareerProfileModel
-                {
-                    Id = savedCareerProfilesDict[p.CareerProfileId],
-                    Title = n.NameEnglish,
-                    NocCode = n.Noccode
-                };
-
-            return Ok(await query.ToListAsync());
+            return Ok(await _ssotApi.GetNocsByCareerProfileIds(savedCareerProfilesIds));
         }
 
         [HttpGet("total")]
@@ -160,12 +149,7 @@ namespace WorkBC.Web.Controllers
             foreach (string nocCode in nocList)
             {
                 //find the career profile id based on the noc code
-                int careerProfileId = (
-                    from profile in _enterpriseContext.CareerProfiles
-                    join nocCodes in _enterpriseContext.Nocs on profile.NocId equals nocCodes.NocId
-                    where nocCodes.Nocyear == 2011 && nocCodes.Noccode == nocCode.PadLeft(4,'0')
-                    select profile.CareerProfileId
-                ).FirstOrDefault();
+                var careerProfileId = await _ssotApi.GetCareerProfileByNoc(nocCode);
 
                 if (careerProfileId > 0)
                 {
@@ -202,10 +186,7 @@ namespace WorkBC.Web.Controllers
         public async Task<bool> GetCareerProfileStatus(int noc)
         {
             //find the career profile id based on the noc code
-            int careerProfileId = (from profile in _enterpriseContext.CareerProfiles
-                join nocCodes in _enterpriseContext.Nocs on profile.NocId equals nocCodes.NocId
-                where nocCodes.Nocyear == 2011 && nocCodes.Noccode == noc.ToString("0000")
-                select profile.CareerProfileId).FirstOrDefault();
+            var careerProfileId = await _ssotApi.GetCareerProfileByNoc(noc.ToString("0000"));
 
             if (careerProfileId > 0)
             {

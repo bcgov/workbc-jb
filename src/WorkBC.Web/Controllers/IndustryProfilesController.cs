@@ -19,13 +19,13 @@ namespace WorkBC.Web.Controllers
     public class IndustryProfilesController : ControllerBase
     {
         private readonly JobBoardContext _context;
-        private readonly EnterpriseContext _enterpriseContext;
+        private SsotApi _ssotApi;
         private readonly IConfiguration _configuration;
 
-        public IndustryProfilesController(JobBoardContext context, EnterpriseContext enterpriseContext, IConfiguration configurtion)
+        public IndustryProfilesController(JobBoardContext context, SsotApi ssotApi, IConfiguration configurtion)
         {
             _context = context;
-            _enterpriseContext = enterpriseContext;
+            _ssotApi = ssotApi;
             _configuration = configurtion;
         }
 
@@ -61,25 +61,7 @@ namespace WorkBC.Web.Controllers
             //    ? await GetIndustryIdsAndJobCounts()
             //    : new Dictionary<int, IndustryProfileModel>();
 
-            var query = from p in _enterpriseContext.IndustryProfiles
-                        where savedIndustryProfilesDict.Keys.Contains(p.IndustryProfileId)
-                        orderby p.PageTitle
-                        select new IndustryProfileModel
-                        {
-                            Id = savedIndustryProfilesDict[p.IndustryProfileId],
-                            Title = p.PageTitle,
-                            //Count = new Random().Next(2000)
-
-                            // todo: don't delete this until we confirm that we are not adding job search counts and links to saved industry profiles
-                            //Count = jobSearchInfo.ContainsKey(p.IndustryProfileId)
-                            //     ? jobSearchInfo[p.IndustryProfileId].Count
-                            //     : 0,
-                            //IndustryIds = jobSearchInfo.ContainsKey(p.IndustryProfileId)
-                            //     ? jobSearchInfo[p.IndustryProfileId].IndustryIds
-                            //     : ""
-                        };
-
-            return Ok(await query.ToListAsync());
+            return Ok(await _ssotApi.GetNocsByIndustryProfileIds(savedIndustryProfilesDict.Keys.ToList()));
         }
 
         [HttpDelete("{id}")]
@@ -103,9 +85,7 @@ namespace WorkBC.Web.Controllers
             var lstNaics = naicsId.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string naics in lstNaics)
             {
-                int industryProfileId = (from profile in _enterpriseContext.IndustryProfiles
-                                         where profile.NaicsId == Convert.ToInt32(naics)
-                                         select profile.IndustryProfileId).FirstOrDefault();
+                var industryProfileId = await _ssotApi.GetIndustryProfileByNoc(naics);
 
                 //find the industry profile id based on the naics code
                 SavedIndustryProfile savedIndustryProfile = _context.SavedIndustryProfiles
@@ -140,11 +120,7 @@ namespace WorkBC.Web.Controllers
         public async Task<bool> GetIndustryProfileStatus(int naicsId)
         {
             //find the industry profile id based on the naics code
-            int industryProfileId = (
-                from profile in _enterpriseContext.IndustryProfiles
-                where profile.NaicsId == naicsId
-                select profile.IndustryProfileId
-            ).FirstOrDefault();
+            var industryProfileId = await _ssotApi.GetIndustryProfileByNoc(naicsId.ToString("0000")); 
 
             if (industryProfileId > 0)
             {
