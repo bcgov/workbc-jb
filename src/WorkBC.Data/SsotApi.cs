@@ -1,24 +1,45 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using WorkBC.Data.Model.Ssot;
 
 namespace WorkBC.Data;
 
 public class SsotApi
 {
-    private string SsotApiBaseUrl;
-    private HttpClient HttpClient;
+    private readonly string _ssotApiBaseUrl;
+    private readonly HttpClient _httpClient;
 
     public SsotApi(IConfiguration configuration, HttpClient client)
     {
-        HttpClient = client;
-        SsotApiBaseUrl = configuration.GetConnectionString("SsotApiServer");
+        _httpClient = client;
+        _ssotApiBaseUrl = configuration.GetConnectionString("SsotApiServer");
     }
 
-    public async Task<List<object>> GetNocsByCareerProfileIds(List<int> ids)
+    public async Task<List<CareerProfile>> GetNocsByCareerProfileIds(List<int> careerProfileIds)
     {
-        // call out to a new /career_profile endpoint on the SSOT API
+        try
+        {
+            using (_httpClient)
+            {
+                var commaList = String.Join(",", careerProfileIds);
+                var endpoint = $"/career_profile?careerprofileid=in.({commaList})";
+                var response = await _httpClient.GetAsync(_ssotApiBaseUrl + endpoint);
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonString = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<List<CareerProfile>>(jsonString);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+        return new List<CareerProfile>();
         
         /*
          
@@ -26,18 +47,33 @@ public class SsotApi
 
         SELECT p.careerprofileid, n.nameenglish, n.noccode FROM edm_careerprofile p
         INNER JOIN edm_noc n ON p.noc_id = n.noc_id
-
-        WHERE p.careerprofileid IN (555,33, 390)
+        WHERE p.careerprofileid IN (careerProfileIds)
         ORDER BY n.NameEnglish
 
          */
-        return new List<object>(
-        );
+        
     }
     
-    public async Task<int> GetCareerProfileByNoc(string nocCode)
+    public async Task<int> GetCareerProfileIdByNoc(string nocCode)
     {
-        // call out to a /career_profile endpoint on the SSOT API
+        try
+        {
+            using (_httpClient)
+            {
+                var endpoint = $"/career_profile?noccode=eq.{nocCode}&limit=1";
+                var response = await _httpClient.GetAsync(_ssotApiBaseUrl + endpoint);
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonString = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<List<CareerProfile>>(jsonString)[0].careerprofileid;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+        return 0;
         
         /*
          
@@ -52,18 +88,68 @@ public class SsotApi
         return 13;
     }
     
-    public async Task<List<object>> GetNocsByIndustryProfileIds(List<int> ids)
+    public async Task<List<IndustryProfile>> GetNocsByIndustryProfileIds(List<int> industryProfileIds)
     {
-        // call out to a new /industry_profile endpoint on the SSOT API
-        return new List<object>(
-            
-        );
+        // call out to the /industry_profile endpoint on the SSOT API
+        
+        try
+        {
+            using (_httpClient)
+            {
+                var commaList = String.Join(",", industryProfileIds);
+                var endpoint = $"/industry_profile?industryprofileid=in.({commaList})";
+                var response = await _httpClient.GetAsync(_ssotApiBaseUrl + endpoint);
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonString = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<List<IndustryProfile>>(jsonString);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+        return new List<IndustryProfile>();
+        
+        /*
+        
+        SELECT industryprofileid, pagetitle FROM edm_industryprofiles p
+        WHERE IndustryProfileId IN (industryProfileIds) 
+        ORDER BY p.PageTitle
+         
+        */
+        
     }
     
-    public async Task<int> GetIndustryProfileByNoc(string nocCode)
+    public async Task<int> GetIndustryProfileIdByNaics(string naics)
     {
-        // call out to a /industry_profile endpoint on the SSOT API
-        return 13;
+        try
+        {
+            using (_httpClient)
+            {
+                var endpoint = $"/industry_profile?naics_id=eq.{naics}&limit=1";
+                var response = await _httpClient.GetAsync(_ssotApiBaseUrl + endpoint);
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonString = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<List<IndustryProfile>>(jsonString)[0].industryprofileid;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+        return 0;
+        /*
+
+         SELECT IndustryProfileId FROM edm_industryprofiles
+         WHERE NaicsId == naics
+         LIMIT 1;
+
+        */
+
     }
     
 }

@@ -149,7 +149,7 @@ namespace WorkBC.Web.Controllers
             foreach (string nocCode in nocList)
             {
                 //find the career profile id based on the noc code
-                var careerProfileId = await _ssotApi.GetCareerProfileByNoc(nocCode);
+                var careerProfileId = await _ssotApi.GetCareerProfileIdByNoc(nocCode);
 
                 if (careerProfileId > 0)
                 {
@@ -186,7 +186,7 @@ namespace WorkBC.Web.Controllers
         public async Task<bool> GetCareerProfileStatus(int noc)
         {
             //find the career profile id based on the noc code
-            var careerProfileId = await _ssotApi.GetCareerProfileByNoc(noc.ToString("0000"));
+            var careerProfileId = await _ssotApi.GetCareerProfileIdByNoc(noc.ToString("0000"));
 
             if (careerProfileId > 0)
             {

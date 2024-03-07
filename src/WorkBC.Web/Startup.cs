@@ -68,11 +68,6 @@ namespace WorkBC.Web
                     .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")), 
                 ServiceLifetime.Transient);
 
-            services.AddDbContext<EnterpriseContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("EnterpriseConnection")),
-                ServiceLifetime.Transient);
-
             services.AddDefaultIdentity<JobSeeker>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;
@@ -190,6 +185,7 @@ namespace WorkBC.Web
             services.AddScoped<IJobAlertsService, JobAlertsService>();
             services.AddSingleton<SystemSettingsService>();
             services.AddSingleton(Serilog.Log.Logger);
+            services.AddHttpClient<SsotApi>();
 
             if (_emailSettings.UseSmtp)
             {

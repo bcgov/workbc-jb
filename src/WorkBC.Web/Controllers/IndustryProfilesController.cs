@@ -85,7 +85,7 @@ namespace WorkBC.Web.Controllers
             var lstNaics = naicsId.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string naics in lstNaics)
             {
-                var industryProfileId = await _ssotApi.GetIndustryProfileByNoc(naics);
+                var industryProfileId = await _ssotApi.GetIndustryProfileIdByNaics(naics);
 
                 //find the industry profile id based on the naics code
                 SavedIndustryProfile savedIndustryProfile = _context.SavedIndustryProfiles
@@ -120,7 +120,7 @@ namespace WorkBC.Web.Controllers
         public async Task<bool> GetIndustryProfileStatus(int naicsId)
         {
             //find the industry profile id based on the naics code
-            var industryProfileId = await _ssotApi.GetIndustryProfileByNoc(naicsId.ToString("0000")); 
+            var industryProfileId = await _ssotApi.GetIndustryProfileIdByNaics(naicsId.ToString("0000")); 
 
             if (industryProfileId > 0)
             {
