@@ -61,7 +61,23 @@ namespace WorkBC.Web.Controllers
             //    ? await GetIndustryIdsAndJobCounts()
             //    : new Dictionary<int, IndustryProfileModel>();
 
-            return Ok(await _ssotApi.GetSavedIndustryProfiles(savedIndustryProfilesDict));
+            var industryProfiles = await _ssotApi.GetIndustryProfiles(savedIndustryProfilesDict.Keys.ToList());
+            
+            var results = new List<IndustryProfileModel>();
+            
+            if (industryProfiles.Count > 0)
+            {
+                foreach (var industryProfile in industryProfiles)
+                {
+                    results.Add(new IndustryProfileModel()
+                    {
+                        Id = savedIndustryProfilesDict[industryProfile.IndustryProfileId],
+                        Title = industryProfile.PageTitle
+                    });
+                }
+            }
+            
+            return Ok(results);
         }
 
         [HttpDelete("{id}")]

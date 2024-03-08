@@ -48,8 +48,8 @@ namespace WorkBC.Tests.Tests
             Assert.Equal(15, result);
         }
         
-        [Fact(DisplayName = "Test the GetSavedCareerProfiles() method returns saved career profiles")]
-        public async Task TestGetSavedCareerProfiles()
+        [Fact(DisplayName = "Test the GetCareerProfiles() method returns saved career profiles")]
+        public async Task TestGetCareerProfiles()
         {
             const string x = "[{\"CareerProfileId\": 15, \"NameEnglish\": \"some name\", \"Noccode\": \"22\"}," +
                              "{\"CareerProfileId\": 19, \"NameEnglish\": \"other name\", \"Noccode\": \"30\"}]";
@@ -58,15 +58,14 @@ namespace WorkBC.Tests.Tests
                 .When(BaseUrl + $"/career_profile?CareerProfileId=in.(15,19)")
                 .Respond("application/json", x);
 
-            var result = await _service.GetSavedCareerProfiles(
-                new Dictionary<int, int>() { { 15, 25585 }, { 19, 14444 } });
+            var result = await _service.GetCareerProfiles(new List<int>() { 15, 19 });
 
-            Assert.True(result.Count == 2, "GetSavedCareerProfiles did not return 2 records");
-            Assert.IsType<SavedCareerProfile>(result[0]);
-            Assert.Equivalent(new SavedCareerProfile() {
-                Id = 25585,
-                Title = "some name",
-                NocCode = "22"
+            Assert.True(result.Count == 2, "GetCareerProfiles did not return 2 records");
+            Assert.IsType<CareerProfile>(result[0]);
+            Assert.Equivalent(new CareerProfile() {
+                CareerProfileId = 15,
+                NameEnglish = "some name",
+                Noccode = "22"
             }, result[0]);
         }
         
@@ -86,21 +85,21 @@ namespace WorkBC.Tests.Tests
         [Fact(DisplayName = "Test the GetSavedIndustryProfiles() method returns saved industry profiles")]
         public async Task TestGetSavedIndustryProfiles()
         {
-            const string x = "[{\"IndustryProfileId\": 15, \"PageTitle\": \"professional services\", \"naics_id\": \"15\"}," +
-                             "{\"IndustryProfileId\": 16, \"PageTitle\": \"public administration\", \"naics_id\": \"16\"}]";
+            const string x = "[{\"IndustryProfileId\": 15, \"PageTitle\": \"professional services\", \"naics_id\": 15}," +
+                             "{\"IndustryProfileId\": 16, \"PageTitle\": \"public administration\", \"naics_id\": 16}]";
             
             _mockHttpMessageHandler
                 .When(BaseUrl + $"/industry_profile?IndustryProfileId=in.(15,16)")
                 .Respond("application/json", x);
 
-            var result = await _service.GetSavedIndustryProfiles(
-                new Dictionary<int, int>() { { 15, 23011 }, { 16, 23500 } });
+            var result = await _service.GetIndustryProfiles(new List<int>() { 15, 16 });
 
             Assert.True(result.Count == 2, "GetNocsByIndustryProfileIds() did not return 2 records");
-            Assert.IsType<SavedIndustryProfile>(result[0]);
-            Assert.Equivalent(new SavedIndustryProfile() {
-                Id = 23011,
-                Title = "professional services"
+            Assert.IsType<IndustryProfile>(result[0]);
+            Assert.Equivalent(new IndustryProfile() {
+                IndustryProfileId = 15,
+                PageTitle = "professional services",
+                naics_id = 15
             }, result[0]);
         }
 

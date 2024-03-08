@@ -20,36 +20,19 @@ public class SsotApi
         _ssotApiBaseUrl = configuration.GetConnectionString("SsotApiServer");
     }
 
-    public async Task<List<SavedCareerProfile>> GetSavedCareerProfiles(Dictionary<int, int> savedCareerProfilesDictionary)
+    public async Task<List<CareerProfile>> GetCareerProfiles(List<int> careerProfileIds)
     {
         try
         {
             using (_httpClient)
             {
-                var commaList = String.Join(",", savedCareerProfilesDictionary.Select(s => s.Key).ToList());
+                var commaList = String.Join(",", careerProfileIds);
                 var endpoint = $"/career_profile?CareerProfileId=in.({commaList})";
                 var response = await _httpClient.GetAsync(_ssotApiBaseUrl + endpoint);
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonString = await response.Content.ReadAsStringAsync();
-                    var careerProfiles = JsonConvert.DeserializeObject<List<CareerProfile>>(jsonString);
-                    
-                    var savedCareerProfiles = new List<SavedCareerProfile>();
-
-                    if (careerProfiles.Count > 0)
-                    {
-                        foreach (var careerProfile in careerProfiles)
-                        {
-                            savedCareerProfiles.Add(new SavedCareerProfile()
-                            {
-                                Id = savedCareerProfilesDictionary[careerProfile.CareerProfileId],
-                                Title = careerProfile.NameEnglish,
-                                NocCode = careerProfile.Noccode
-                            });
-                        }
-                    }
-
-                    return savedCareerProfiles;
+                    return JsonConvert.DeserializeObject<List<CareerProfile>>(jsonString);
                 }
             }
         }
@@ -57,7 +40,7 @@ public class SsotApi
         {
             Console.WriteLine(ex);
         }
-        return new List<SavedCareerProfile>();
+        return new List<CareerProfile>();
         
     }
     
@@ -84,35 +67,19 @@ public class SsotApi
 
     }
     
-    public async Task<List<SavedIndustryProfile>> GetSavedIndustryProfiles(Dictionary<int, int> savedIndustryProfilesDict)
+    public async Task<List<IndustryProfile>> GetIndustryProfiles(List<int> industryProfileIds)
     {
         try
         {
             using (_httpClient)
             {
-                var commaList = String.Join(",", savedIndustryProfilesDict.Keys.ToList());
+                var commaList = String.Join(",", industryProfileIds);
                 var endpoint = $"/industry_profile?IndustryProfileId=in.({commaList})";
                 var response = await _httpClient.GetAsync(_ssotApiBaseUrl + endpoint);
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonString = await response.Content.ReadAsStringAsync();
-                    var industryProfiles = JsonConvert.DeserializeObject<List<IndustryProfile>>(jsonString);
-
-                    var savedIndustryProfiles = new List<SavedIndustryProfile>();
-
-                    if (industryProfiles.Count > 0)
-                    {
-                        foreach (var industryProfile in industryProfiles)
-                        {
-                            savedIndustryProfiles.Add(new SavedIndustryProfile()
-                            {
-                                Id = savedIndustryProfilesDict[industryProfile.IndustryProfileId],
-                                Title = industryProfile.PageTitle
-                            });
-                        }
-                    }
-
-                    return savedIndustryProfiles;
+                    return JsonConvert.DeserializeObject<List<IndustryProfile>>(jsonString);
                 }
             }
         }
@@ -120,7 +87,7 @@ public class SsotApi
         {
             Console.WriteLine(ex);
         }
-        return new List<SavedIndustryProfile>();
+        return new List<IndustryProfile>();
         
     }
     
@@ -144,13 +111,6 @@ public class SsotApi
             Console.WriteLine(ex);
         }
         return 0;
-        /*
-
-         SELECT IndustryProfileId FROM edm_industryprofiles
-         WHERE NaicsId == naics
-         LIMIT 1;
-
-        */
 
     }
     

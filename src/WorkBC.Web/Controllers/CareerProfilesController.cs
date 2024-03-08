@@ -52,7 +52,25 @@ namespace WorkBC.Web.Controllers
                     s => s.First().Id
                 );
 
-            return Ok(await _ssotApi.GetSavedCareerProfiles(savedCareerProfilesDict));
+            var savedCareerProfilesIds = savedCareerProfilesDict.Select(s => s.Key).ToList();
+            var careerProfiles = await _ssotApi.GetCareerProfiles(savedCareerProfilesIds);
+            
+            var results = new List<CareerProfileModel>();
+
+            if (careerProfiles.Count > 0)
+            {
+               foreach (var careerProfile in careerProfiles)
+               {
+                   results.Add(new CareerProfileModel()
+                   {
+                       Id = savedCareerProfilesDict[careerProfile.CareerProfileId],
+                       Title = careerProfile.NameEnglish,
+                       NocCode = careerProfile.Noccode
+                   });
+               }
+            }
+            
+            return Ok(results);
         }
 
         [HttpGet("total")]
