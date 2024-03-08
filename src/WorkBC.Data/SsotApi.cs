@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -19,19 +20,36 @@ public class SsotApi
         _ssotApiBaseUrl = configuration.GetConnectionString("SsotApiServer");
     }
 
-    public async Task<List<CareerProfile>> GetNocsByCareerProfileIds(List<int> careerProfileIds)
+    public async Task<List<SavedCareerProfile>> GetSavedCareerProfiles(Dictionary<int, int> savedCareerProfilesDictionary)
     {
         try
         {
             using (_httpClient)
             {
-                var commaList = String.Join(",", careerProfileIds);
-                var endpoint = $"/career_profile?Id=in.({commaList})";
+                var commaList = String.Join(",", savedCareerProfilesDictionary.Select(s => s.Key).ToList());
+                var endpoint = $"/career_profile?CareerProfileId=in.({commaList})";
                 var response = await _httpClient.GetAsync(_ssotApiBaseUrl + endpoint);
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonString = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<CareerProfile>>(jsonString);
+                    var careerProfiles = JsonConvert.DeserializeObject<List<CareerProfile>>(jsonString);
+                    
+                    var savedCareerProfiles = new List<SavedCareerProfile>();
+
+                    if (careerProfiles.Count > 0)
+                    {
+                        foreach (var careerProfile in careerProfiles)
+                        {
+                            savedCareerProfiles.Add(new SavedCareerProfile()
+                            {
+                                Id = savedCareerProfilesDictionary[careerProfile.CareerProfileId],
+                                Title = careerProfile.NameEnglish,
+                                NocCode = careerProfile.Noccode
+                            });
+                        }
+                    }
+
+                    return savedCareerProfiles;
                 }
             }
         }
@@ -39,18 +57,7 @@ public class SsotApi
         {
             Console.WriteLine(ex);
         }
-        return new List<CareerProfile>();
-        
-        /*
-         
-        The API needs a view that returns the following:  
-
-        SELECT p.careerprofileid, n.nameenglish, n.noccode FROM edm_careerprofile p
-        INNER JOIN edm_noc n ON p.noc_id = n.noc_id
-        WHERE p.careerprofileid IN (careerProfileIds)
-        ORDER BY n.NameEnglish
-
-         */
+        return new List<SavedCareerProfile>();
         
     }
     
@@ -60,12 +67,12 @@ public class SsotApi
         {
             using (_httpClient)
             {
-                var endpoint = $"/career_profile?NocCode=eq.{nocCode}&limit=1";
+                var endpoint = $"/career_profile?Noccode=eq.{nocCode}&limit=1";
                 var response = await _httpClient.GetAsync(_ssotApiBaseUrl + endpoint);
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonString = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<CareerProfile>>(jsonString)[0].Id;
+                    return JsonConvert.DeserializeObject<List<CareerProfile>>(jsonString)[0].CareerProfileId;
                 }
             }
         }
@@ -74,35 +81,38 @@ public class SsotApi
             Console.WriteLine(ex);
         }
         return 0;
-        
-        /*
-         
-        The API needs a view that returns the following: 
-        
-        SELECT p.careerprofileid, n.nameenglish, n.noccode from edm_careerprofile p
-        INNER JOIN edm_noc n on p.noc_id = n.noc_id
-        WHERE n.noccode = '0632'
-        LIMIT 1;
-         
-        */
-        return 13;
+
     }
     
-    public async Task<List<IndustryProfile>> GetNocsByIndustryProfileIds(List<int> industryProfileIds)
+    public async Task<List<SavedIndustryProfile>> GetSavedIndustryProfiles(Dictionary<int, int> savedIndustryProfilesDict)
     {
-        // call out to the /industry_profile endpoint on the SSOT API
-        
         try
         {
             using (_httpClient)
             {
-                var commaList = String.Join(",", industryProfileIds);
-                var endpoint = $"/industry_profile?Id=in.({commaList})";
+                var commaList = String.Join(",", savedIndustryProfilesDict.Keys.ToList());
+                var endpoint = $"/industry_profile?IndustryProfileId=in.({commaList})";
                 var response = await _httpClient.GetAsync(_ssotApiBaseUrl + endpoint);
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonString = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<IndustryProfile>>(jsonString);
+                    var industryProfiles = JsonConvert.DeserializeObject<List<IndustryProfile>>(jsonString);
+
+                    var savedIndustryProfiles = new List<SavedIndustryProfile>();
+
+                    if (industryProfiles.Count > 0)
+                    {
+                        foreach (var industryProfile in industryProfiles)
+                        {
+                            savedIndustryProfiles.Add(new SavedIndustryProfile()
+                            {
+                                Id = savedIndustryProfilesDict[industryProfile.IndustryProfileId],
+                                Title = industryProfile.PageTitle
+                            });
+                        }
+                    }
+
+                    return savedIndustryProfiles;
                 }
             }
         }
@@ -110,15 +120,7 @@ public class SsotApi
         {
             Console.WriteLine(ex);
         }
-        return new List<IndustryProfile>();
-        
-        /*
-        
-        SELECT industryprofileid, pagetitle FROM edm_industryprofiles p
-        WHERE IndustryProfileId IN (industryProfileIds) 
-        ORDER BY p.PageTitle
-         
-        */
+        return new List<SavedIndustryProfile>();
         
     }
     
@@ -133,7 +135,7 @@ public class SsotApi
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonString = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<IndustryProfile>>(jsonString)[0].Id;
+                    return JsonConvert.DeserializeObject<List<IndustryProfile>>(jsonString)[0].IndustryProfileId;
                 }
             }
         }

@@ -39,29 +39,35 @@ namespace WorkBC.Tests.Tests
         public async Task TestGetCareerProfileIdByNoc()
         {
             _mockHttpMessageHandler
-                .When(BaseUrl + "/career_profile?NocCode=eq.22&limit=1")
+                .When(BaseUrl + "/career_profile?Noccode=eq.22&limit=1")
                 .Respond("application/json",
-                    "[{\"Id\": 15, \"Title\": \"some name\", \"NocCode\": \"22\"}]");
+                    "[{\"CareerProfileId\": 15, \"NameEnglish\": \"some name\", \"Noccode\": \"22\"}]");
 
             var result = await _service.GetCareerProfileIdByNoc("22");
 
-            Assert.True(result == 15, "GetCareerProfileIdByNoc did not return the correct value");
+            Assert.Equal(15, result);
         }
         
-        [Fact(DisplayName = "Test the GetNocsByCareerProfileIds() method returns the nocs")]
-        public async Task TestGetNocsByCareerProfileIds()
+        [Fact(DisplayName = "Test the GetSavedCareerProfiles() method returns saved career profiles")]
+        public async Task TestGetSavedCareerProfiles()
         {
-            const string x = "[{\"Id\": 15, \"Title\": \"some name\", \"NocCode\": \"22\"}," +
-                             "{\"Id\": 19, \"Title\": \"other name\", \"NocCode\": \"30\"}]";
+            const string x = "[{\"CareerProfileId\": 15, \"NameEnglish\": \"some name\", \"Noccode\": \"22\"}," +
+                             "{\"CareerProfileId\": 19, \"NameEnglish\": \"other name\", \"Noccode\": \"30\"}]";
             
             _mockHttpMessageHandler
-                .When(BaseUrl + $"/career_profile?Id=in.(15,19)")
+                .When(BaseUrl + $"/career_profile?CareerProfileId=in.(15,19)")
                 .Respond("application/json", x);
 
-            var result = await _service.GetNocsByCareerProfileIds(new List<int>() { 15, 19 });
+            var result = await _service.GetSavedCareerProfiles(
+                new Dictionary<int, int>() { { 15, 25585 }, { 19, 14444 } });
 
-            Assert.True(result.Count == 2, "GetNocsByCareerProfileIds did not return 2 records");
-            Assert.IsType<CareerProfile>(result[0]);
+            Assert.True(result.Count == 2, "GetSavedCareerProfiles did not return 2 records");
+            Assert.IsType<SavedCareerProfile>(result[0]);
+            Assert.Equivalent(new SavedCareerProfile() {
+                Id = 25585,
+                Title = "some name",
+                NocCode = "22"
+            }, result[0]);
         }
         
         [Fact(DisplayName = "Test the GetIndustryProfileIdByNaics() method returns the industry profile id")]
@@ -70,27 +76,32 @@ namespace WorkBC.Tests.Tests
             _mockHttpMessageHandler
                 .When(BaseUrl + "/industry_profile?naics_id=eq.15&limit=1")
                 .Respond("application/json",
-                    "[{\"Id\": 15, \"Title\": \"professional services\", \"naics_id\": \"15\"}]");
+                    "[{\"IndustryProfileId\": 15, \"PageTitle\": \"professional services\", \"naics_id\": \"15\"}]");
 
             var result = await _service.GetIndustryProfileIdByNaics("15");
 
             Assert.True(result == 15, "GetIndustryProfileIdByNaics() did not return the correct value");
         }
         
-        [Fact(DisplayName = "Test the GetNocsByIndustryProfileIds() method returns the nocs")]
-        public async Task TestGetNocsByIndustryProfileIds()
+        [Fact(DisplayName = "Test the GetSavedIndustryProfiles() method returns saved industry profiles")]
+        public async Task TestGetSavedIndustryProfiles()
         {
-            const string x = "[{\"Id\": 15, \"Title\": \"professional services\", \"naics_id\": \"15\"}," +
-                             "{\"Id\": 16, \"Title\": \"public administration\", \"naics_id\": \"16\"}]";
+            const string x = "[{\"IndustryProfileId\": 15, \"PageTitle\": \"professional services\", \"naics_id\": \"15\"}," +
+                             "{\"IndustryProfileId\": 16, \"PageTitle\": \"public administration\", \"naics_id\": \"16\"}]";
             
             _mockHttpMessageHandler
-                .When(BaseUrl + $"/industry_profile?Id=in.(15,16)")
+                .When(BaseUrl + $"/industry_profile?IndustryProfileId=in.(15,16)")
                 .Respond("application/json", x);
 
-            var result = await _service.GetNocsByIndustryProfileIds(new List<int>() { 15, 16 });
+            var result = await _service.GetSavedIndustryProfiles(
+                new Dictionary<int, int>() { { 15, 23011 }, { 16, 23500 } });
 
             Assert.True(result.Count == 2, "GetNocsByIndustryProfileIds() did not return 2 records");
-            Assert.IsType<IndustryProfile>(result[0]);
+            Assert.IsType<SavedIndustryProfile>(result[0]);
+            Assert.Equivalent(new SavedIndustryProfile() {
+                Id = 23011,
+                Title = "professional services"
+            }, result[0]);
         }
 
     }

@@ -52,9 +52,7 @@ namespace WorkBC.Web.Controllers
                     s => s.First().Id
                 );
 
-            List<int> savedCareerProfilesIds = savedCareerProfilesDict.Select(s => s.Key).ToList();
-
-            return Ok(await _ssotApi.GetNocsByCareerProfileIds(savedCareerProfilesIds));
+            return Ok(await _ssotApi.GetSavedCareerProfiles(savedCareerProfilesDict));
         }
 
         [HttpGet("total")]

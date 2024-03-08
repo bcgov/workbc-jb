@@ -2,9 +2,9 @@
 {
     public partial class IndustryProfile
     {
-        public int Id { get; set; }
+        public int IndustryProfileId { get; set; }
         public int naics_id { get; set; }
-        public string Title { get; set; }
+        public string PageTitle { get; set; }
         
     }
 }

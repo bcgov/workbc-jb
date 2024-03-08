@@ -61,7 +61,7 @@ namespace WorkBC.Web.Controllers
             //    ? await GetIndustryIdsAndJobCounts()
             //    : new Dictionary<int, IndustryProfileModel>();
 
-            return Ok(await _ssotApi.GetNocsByIndustryProfileIds(savedIndustryProfilesDict.Keys.ToList()));
+            return Ok(await _ssotApi.GetSavedIndustryProfiles(savedIndustryProfilesDict));
         }
 
         [HttpDelete("{id}")]
