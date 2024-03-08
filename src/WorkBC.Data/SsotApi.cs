@@ -26,7 +26,7 @@ public class SsotApi
             using (_httpClient)
             {
                 var commaList = String.Join(",", careerProfileIds);
-                var endpoint = $"/career_profile?careerprofileid=in.({commaList})";
+                var endpoint = $"/career_profile?Id=in.({commaList})";
                 var response = await _httpClient.GetAsync(_ssotApiBaseUrl + endpoint);
                 if (response.IsSuccessStatusCode)
                 {
@@ -60,12 +60,12 @@ public class SsotApi
         {
             using (_httpClient)
             {
-                var endpoint = $"/career_profile?noccode=eq.{nocCode}&limit=1";
+                var endpoint = $"/career_profile?NocCode=eq.{nocCode}&limit=1";
                 var response = await _httpClient.GetAsync(_ssotApiBaseUrl + endpoint);
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonString = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<CareerProfile>>(jsonString)[0].careerprofileid;
+                    return JsonConvert.DeserializeObject<List<CareerProfile>>(jsonString)[0].Id;
                 }
             }
         }
@@ -97,7 +97,7 @@ public class SsotApi
             using (_httpClient)
             {
                 var commaList = String.Join(",", industryProfileIds);
-                var endpoint = $"/industry_profile?industryprofileid=in.({commaList})";
+                var endpoint = $"/industry_profile?Id=in.({commaList})";
                 var response = await _httpClient.GetAsync(_ssotApiBaseUrl + endpoint);
                 if (response.IsSuccessStatusCode)
                 {
@@ -133,7 +133,7 @@ public class SsotApi
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonString = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<IndustryProfile>>(jsonString)[0].industryprofileid;
+                    return JsonConvert.DeserializeObject<List<IndustryProfile>>(jsonString)[0].Id;
                 }
             }
         }

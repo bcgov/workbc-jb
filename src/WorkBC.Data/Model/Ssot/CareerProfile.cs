@@ -4,8 +4,8 @@ namespace WorkBC.Data.Model.Ssot
 {
     public partial class CareerProfile
     {
-        public int careerprofileid { get; set; }
-        public int noc_id { get; set; }
-        public int noc { get; set; }
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string NocCode { get; set; }
     }
 }
