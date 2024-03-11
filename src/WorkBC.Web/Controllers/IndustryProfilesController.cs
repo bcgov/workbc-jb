@@ -65,16 +65,13 @@ namespace WorkBC.Web.Controllers
             
             var results = new List<IndustryProfileModel>();
             
-            if (industryProfiles.Count > 0)
+            foreach (var industryProfile in industryProfiles)
             {
-                foreach (var industryProfile in industryProfiles)
+                results.Add(new IndustryProfileModel()
                 {
-                    results.Add(new IndustryProfileModel()
-                    {
-                        Id = savedIndustryProfilesDict[industryProfile.IndustryProfileId],
-                        Title = industryProfile.PageTitle
-                    });
-                }
+                    Id = savedIndustryProfilesDict[industryProfile.IndustryProfileId],
+                    Title = industryProfile.PageTitle
+                });
             }
             
             return Ok(results);

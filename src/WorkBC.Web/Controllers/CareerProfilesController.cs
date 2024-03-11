@@ -57,17 +57,14 @@ namespace WorkBC.Web.Controllers
             
             var results = new List<CareerProfileModel>();
 
-            if (careerProfiles.Count > 0)
+            foreach (var careerProfile in careerProfiles)
             {
-               foreach (var careerProfile in careerProfiles)
-               {
-                   results.Add(new CareerProfileModel()
-                   {
-                       Id = savedCareerProfilesDict[careerProfile.CareerProfileId],
-                       Title = careerProfile.NameEnglish,
-                       NocCode = careerProfile.Noccode
-                   });
-               }
+                results.Add(new CareerProfileModel()
+                {
+                    Id = savedCareerProfilesDict[careerProfile.CareerProfileId],
+                    Title = careerProfile.NameEnglish,
+                    NocCode = careerProfile.Noccode
+                });
             }
             
             return Ok(results);
