@@ -4,7 +4,7 @@
     {
         //SQL Server connection string
         public string DefaultConnection { get; set; }
-        public string EnterpriseConnection { get; set; }
+        public string SsotApiServer { get; set; }
         public string ElasticSearchServer { get; set; }
     }
 }
