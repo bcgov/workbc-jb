@@ -19,10 +19,10 @@ namespace WorkBC.Data.Migrations
         public ModifySeedNocTables() : base()
         {
             _httpClient = new HttpClient();
-            _ssotBaseUrl = Environment.GetEnvironmentVariable("ASPNETCORE_SSOT_BASE_URL");
+            _ssotBaseUrl = Environment.GetEnvironmentVariable("SSOT_URL");
             if (_ssotBaseUrl == null)
             {
-                throw new Exception("ASPNETCORE_SSOT_BASE_URL not set");
+                throw new Exception("SSOT_URL not set");
             }
         }
         
@@ -39,13 +39,6 @@ namespace WorkBC.Data.Migrations
                 oldMaxLength: 4,
                 oldNullable: true);
 
-            migrationBuilder.AddColumn<string>(
-                name: "Noc2016",
-                table: "NocCodes",
-                type: "nvarchar(100)",
-                maxLength: 100,
-                nullable: true);
-
             migrationBuilder.AlterColumn<string>(
                 name: "CategoryCode",
                 table: "NocCategories",
@@ -56,21 +49,21 @@ namespace WorkBC.Data.Migrations
                 oldType: "nvarchar(3)",
                 oldMaxLength: 3);
             
-            // CAUTION - delete all data from the tables!!
-            migrationBuilder.Sql(@"DELETE FROM NocCategories");
-            migrationBuilder.Sql(@"DELETE FROM NocCodes"); 
-
-            // Seed Nocs
-            var allNocs = await GetAllNocs();
-            foreach (var noc in allNocs)
-            {
-                migrationBuilder.Sql(@"INSERT INTO [dbo].[NocCodes]
-                       ([Code],[Title],[FrenchTitle])
-                 VALUES
-                       (noc.noc_2021, noc.label, noc.label_fr)");
-            }
+            migrationBuilder.AddColumn<string>(
+                name: "NocCode",
+                table: "Jobs",
+                type: "nvarchar(5)",
+                maxLength: 5,
+                nullable: true);
             
-            // Seed NocCategories
+            migrationBuilder.AddColumn<string>(
+                name: "NocCode",
+                table: "JobVersions",
+                type: "nvarchar(5)",
+                maxLength: 5,
+                nullable: true);
+            
+            // Append to NocCategories table from SSOT API
             var allNocsCategories = await GetAllNocsCategories();
             foreach (var nocsCategory in allNocsCategories)
             {
@@ -80,34 +73,55 @@ namespace WorkBC.Data.Migrations
                        (nocsCategory.noc_2021, nocsCategory.level, nocsCategory.label)");
             }
             
+            // Append Nocs table from SSOT API
+            var allNocs = await GetAllNocs();
+            foreach (var noc in allNocs)
+            {
+                migrationBuilder.Sql(@"INSERT INTO [dbo].[NocCodes]
+                       ([Code],[Title],[FrenchTitle])
+                 VALUES
+                       (noc.noc_2021, noc.label, noc.label_fr)");
+            }
+            
+            // Populate new NocCode column in the Jobs table
+            migrationBuilder.Sql(@"INSERT INTO [dbo].[Jobs]
+                       ([NocCode])
+                 SELECT nc.Code FROM [WorkBC_JobBoard].[dbo].[Jobs] j INNER JOIN NocCodes nc ON j.NocCodeId = nc.Id;");
+            
+            
+            // Populate new NocCode column in the JobVersions table
+            migrationBuilder.Sql(@"INSERT INTO [dbo].[JobVersions]
+                       ([NocCode])
+                 SELECT nc.Code FROM [WorkBC_JobBoard].[dbo].[JobVersions] j INNER JOIN NocCodes nc ON j.NocCodeId = nc.Id;");
+            
+            // Drop old foreign keys
+            migrationBuilder.DropForeignKey("FK_Jobs_NocCodes_NocCodeId", "Jobs");
+            migrationBuilder.DropForeignKey("FK_JobVersions_NocCodes_NocCodeId", "JobVersions");
+
+            // Create new foreign keys
+            migrationBuilder.AddForeignKey(
+                name: "FK_Jobs_NocCodes_NocCode",
+                table: "Jobs",
+                column: "NocCode",
+                principalTable: "NocCodes",
+                principalColumn: "Code",
+                onDelete: ReferentialAction.Restrict);
+            
+            migrationBuilder.AddForeignKey(
+                name: "FK_JobVersions_NocCodes_NocCode",
+                table: "JobVersions",
+                column: "NocCode",
+                principalTable: "NocCodes",
+                principalColumn: "Code",
+                onDelete: ReferentialAction.Restrict);
+            
+            // The NocCodes.Id column is no longer needed
+            migrationBuilder.DropColumn(name: "Id", table: "NocCodes");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Noc2016",
-                table: "NocCodes");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Code",
-                table: "NocCodes",
-                type: "nvarchar(4)",
-                maxLength: 4,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(5)",
-                oldMaxLength: 5,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "CategoryCode",
-                table: "NocCategories",
-                type: "nvarchar(3)",
-                maxLength: 3,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(4)",
-                oldMaxLength: 4);
+            // this migration is too complicated to reverse, restore from backup instead
         }
         
         private async Task<List<Noc>> GetAllNocs()
