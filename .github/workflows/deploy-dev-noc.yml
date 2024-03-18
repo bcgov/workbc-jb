@@ -1,9 +1,9 @@
-name: Deploy Dev
+name: Deploy-Dev-NOC
 
 on:
   workflow_run:
     workflows:
-      - CI-AMS
+      - CI-NOC
     types:
       - completed
 
