@@ -1,7 +1,7 @@
 data "aws_region" "current" {}
 
-data "aws_iam_service_linked_role" "es" {
-	aws_service_name = "es.amazonaws.com"
+resource "aws_iam_service_linked_role" "es-noc" {
+	aws_service_name = "es_noc.amazonaws.com"
 }
 
 
@@ -20,7 +20,7 @@ resource "aws_elasticsearch_domain" "workbc-jb2-cluster" {
 			sort(module.network.aws_subnet_ids.app.ids)[0]
 		]
 
-		security_group_ids = [aws_security_group.es_security_group.id]
+		security_group_ids = [data.aws_security_group.es_security_group.id]
 	}
 	
 	advanced_options = {
@@ -32,7 +32,7 @@ resource "aws_elasticsearch_domain" "workbc-jb2-cluster" {
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Action": "es:*",
+            "Action": "es_noc:*",
             "Principal": "*",
             "Effect": "Allow",
             "Resource": "arn:aws:es:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:domain/workbc-jb2-cluster/*"
@@ -74,6 +74,6 @@ EOF
 		Domain = "WorkBCJBNOCCluster"
 	}
 	
-	depends_on = [aws_iam_service_linked_role.es]
+	depends_on = [aws_iam_service_linked_role.es-noc]
 }
 

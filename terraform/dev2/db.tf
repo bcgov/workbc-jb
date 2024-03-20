@@ -26,8 +26,8 @@ resource "aws_db_option_group" "mssql-og" {
 # SQL Server
 #TODO after db creation
 data "aws_db_instance" "mssql" {
-  identifier              = "ceu-mssql"
-  /*
+  db_instance_identifier = "ceu-mssql"
+  /*identifier              = "ceu-mssql"
   allocated_storage       = 300
   max_allocated_storage   = 600
   engine                  = "sqlserver-web"
