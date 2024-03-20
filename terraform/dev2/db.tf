@@ -5,9 +5,10 @@ data "aws_db_subnet_group" "data_subnet" {
 }
 
 # Option Group
-resource "aws_db_option_group" "mssql-og" {
+data "aws_db_option_group" "mssql-og" {
 	name = "ceu-mssql-og"
-	option_group_description = "Option for native backup and restore"
+	/*
+  option_group_description = "Option for native backup and restore"
 	engine_name = "sqlserver-web"
 	major_engine_version = "15.00"
 	
@@ -19,13 +20,16 @@ resource "aws_db_option_group" "mssql-og" {
 			value = aws_iam_role.mssql_native_backup_restore_role.arn
 		}
 	}
+  */
 }
 
 # SQL Server
 #TODO after db creation
-resource "aws_db_instance" "mssql" {
-  allocated_storage       = 100
-  max_allocated_storage   = 200
+data "aws_db_instance" "mssql" {
+  identifier              = "ceu-mssql"
+  /*
+  allocated_storage       = 300
+  max_allocated_storage   = 600
   engine                  = "sqlserver-web"
   engine_version	  = "15.00"
   instance_class          = "db.t3.small"
@@ -42,6 +46,7 @@ resource "aws_db_instance" "mssql" {
   option_group_name	  = aws_db_option_group.mssql-og.name
   timezone		  = "Pacific Standard Time"
   apply_immediately	  = true
+  */
 }
 
 # create this manually
