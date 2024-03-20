@@ -1,6 +1,15 @@
 data "aws_region" "current" {}
 
+data "aws_iam_roles" "es-role" {
+  name_regex = "AWSServiceRoleForAmazonElasticsearchService"
+}
+
+locals {
+  es_role_exists = can(data.aws_iam_roles.es-role.arns)
+}
+
 resource "aws_iam_service_linked_role" "es-noc" {
+	count = local.es_role_exists ? 0 : 1
 	aws_service_name = "es.amazonaws.com"
 }
 
