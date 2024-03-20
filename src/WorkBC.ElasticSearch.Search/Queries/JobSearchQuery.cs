@@ -737,7 +737,7 @@ namespace WorkBC.ElasticSearch.Search.Queries
                     case "5":
                         //BC provincial government
                         //These are jobs posted through the Provincial Government. This option may have to be removed if there is no identifier for provincial govt jobs from the federal XML or the external Job Posting API.
-                        jsonJobSource = "{ \"term\": { \"EmployerTypeId\": 3 } }";
+                        jsonJobSource = "{\"nested\": {\"path\": \"ExternalSource\",\"query\": {\"bool\": {\"should\": [{\"match_phrase\": {\"ExternalSource.Source.Url\":  \"https://bcpublicservice.hua.hrsmart.com\"}}]}}}}";
                         break;
                 }
 
