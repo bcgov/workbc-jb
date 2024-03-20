@@ -4,6 +4,7 @@ data "aws_db_subnet_group" "data_subnet" {
   name                   = "data-subnet"
 }
 
+/*
 # Option Group
 resource "aws_db_option_group" "mssql-og" {
 	name = "ceu-mssql-og"
@@ -20,11 +21,13 @@ resource "aws_db_option_group" "mssql-og" {
 		}
 	}
 }
+*/
 
 # SQL Server
 #TODO after db creation
-resource "aws_db_instance" "mssql" {
+data "aws_db_instance" "mssql" {
   identifier              = "ceu-mssql"
+  /*
   allocated_storage       = 300
   max_allocated_storage   = 600
   engine                  = "sqlserver-web"
@@ -42,6 +45,7 @@ resource "aws_db_instance" "mssql" {
   option_group_name	  = aws_db_option_group.mssql-og.name
   timezone		  = "Pacific Standard Time"
   apply_immediately	  = true
+  */
 }
 
 # create this manually

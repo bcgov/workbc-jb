@@ -13,7 +13,7 @@ data "aws_alb_listener" "front_end" {
 }
 
 resource "aws_alb_target_group" "web" {
-  name                 = "workbc-jb2-target-group-${substr(uuid(), 0, 3)}"
+  name                 = "workbc-jb2-tg-${substr(uuid(), 0, 3)}"
   port                 = 8081
   protocol             = "HTTP"
   vpc_id               = module.network.aws_vpc.id
@@ -40,7 +40,7 @@ resource "aws_alb_target_group" "web" {
 }
 
 resource "aws_alb_target_group" "admin" {
-  name                 = "workbc-jb2-admin-target-group-${substr(uuid(), 0, 3)}"
+  name                 = "workbc-jb2-admin-tg-${substr(uuid(), 0, 3)}"
   port                 = 8080
   protocol             = "HTTP"
   vpc_id               = module.network.aws_vpc.id

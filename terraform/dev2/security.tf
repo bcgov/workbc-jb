@@ -27,7 +27,7 @@ data "aws_security_group" "efs_security_group" {
   name        = "workbc-cc-efs-security-group"
 }
 
-resource "aws_security_group" "es_security_group" {
+data "aws_security_group" "es_security_group" {
 	name	=	"es_sg"
 	vpc_id	=	data.aws_vpc.main.id
 	
@@ -39,8 +39,8 @@ resource "aws_security_group" "es_security_group" {
 	}
 }
 	
-resource "aws_security_group" "redis_security_group" {
-	name	=	"redis2_sg"
+data "aws_security_group" "redis_security_group" {
+	name	=	"redis_sg"
 	vpc_id	=	data.aws_vpc.main.id
 	
 	ingress {
@@ -51,7 +51,7 @@ resource "aws_security_group" "redis_security_group" {
 	}
 }
 
-resource "aws_security_group" "mssql_security_group" {
+data "aws_security_group" "mssql_security_group" {
 	name	=	"mssql_sg"
 	vpc_id	=	data.aws_vpc.main.id
 	

@@ -15,7 +15,7 @@ resource "aws_elasticache_replication_group" "jb_redis_rg" {
 	}
 	
 	subnet_group_name		=	aws_elasticache_subnet_group.default.name
-	security_group_ids		=	[aws_security_group.redis_security_group.id]
+	security_group_ids		=	[data.aws_security_group.redis_security_group.id]
 }
 
 resource "aws_elasticache_cluster" "replica" {
@@ -25,6 +25,6 @@ resource "aws_elasticache_cluster" "replica" {
 }
 
 resource "aws_elasticache_subnet_group" "default" {
-	name		=	"redis-subnet-group"
+	name		=	"redis-subnet-group-jb-noc"
 	subnet_ids	=	module.network.aws_subnet_ids.app.ids
 }
