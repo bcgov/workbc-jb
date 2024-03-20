@@ -8,7 +8,7 @@ resource "aws_elasticache_replication_group" "jb_redis_rg" {
 	node_type			=	"cache.t2.micro"
 	num_cache_clusters		=	2
 	parameter_group_name		=	"default.redis6.x"
-	engine_version = 6.x
+	engine_version = "6.x"
 	port				=	6379
 	
 	lifecycle {
