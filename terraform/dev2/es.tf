@@ -1,7 +1,7 @@
 data "aws_region" "current" {}
 
 resource "aws_iam_service_linked_role" "es-noc" {
-	aws_service_name = "es_noc.amazonaws.com"
+	aws_service_name = "es.amazonaws.com"
 }
 
 
