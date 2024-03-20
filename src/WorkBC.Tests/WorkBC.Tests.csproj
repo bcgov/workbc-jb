@@ -93,6 +93,9 @@
     <None Update="Fixtures\WantedXmlJobs\6111648176.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Fixtures\WantedXmlJobs\6111613763.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
