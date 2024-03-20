@@ -25,7 +25,7 @@ resource "aws_cloudfront_distribution" "workbc-jb-noc-adm" {
 
   enabled         = true
   is_ipv6_enabled = true
-  comment         = "JobBoard Admin"
+  comment         = "WorkBC NOC JobBoard Admin"
 
   default_cache_behavior {
     allowed_methods = [

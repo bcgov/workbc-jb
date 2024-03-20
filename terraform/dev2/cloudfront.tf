@@ -23,14 +23,14 @@ resource "aws_cloudfront_distribution" "workbc-jb-noc" {
 	
 	custom_header {
 	  name = "X-Forwarded-Host"
-	  value = "dev-noc-api-jobboard.workbc.ca"
+	  value = "devnoc-api-jobboard.workbc.ca"
 	}
 	
   }
 
   enabled         = true
   is_ipv6_enabled = true
-  comment         = "JobBoard API"
+  comment         = "WorkBC NOC JobBoard API"
 
   default_cache_behavior {
     allowed_methods = [
@@ -76,7 +76,7 @@ resource "aws_cloudfront_distribution" "workbc-jb-noc" {
 
   tags = var.common_tags
   
-  aliases = ["dev-noc-api-jobboard.workbc.ca"]
+  aliases = ["devnoc-api-jobboard.workbc.ca"]
 
   viewer_certificate {
     acm_certificate_arn = "arn:aws:acm:us-east-1:873424993519:certificate/d624b356-1ebd-496c-b4da-ba9b489baafc"
