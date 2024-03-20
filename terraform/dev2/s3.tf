@@ -1,13 +1,14 @@
-resource "aws_s3_bucket" "workbc_jb_s3" {
+/*
+data "aws_s3_bucket" "workbc_jb_s3" {
   bucket = "workbc-jobboard-bucket"
 }
 
-resource "aws_s3_bucket_acl" "workbc_s3_acl" {
-  bucket = aws_s3_bucket.workbc_jb_s3.id
+data "aws_s3_bucket_acl" "workbc_s3_acl" {
+  bucket = data.aws_s3_bucket.workbc_jb_s3.id
   acl    = "private"
 }
 
-resource "aws_s3_bucket_policy" "allow_access_from_other_accounts" {
+data "aws_s3_bucket_policy" "allow_access_from_other_accounts" {
   bucket = aws_s3_bucket.workbc_jb_s3.id
   policy = data.aws_iam_policy_document.allow_access_from_other_accounts.json
 }
@@ -70,3 +71,4 @@ data "aws_iam_policy_document" "allow_access_from_other_accounts" {
   }
 }
 
+*/
