@@ -269,7 +269,7 @@ resource "aws_ecs_task_definition" "notify-job" {
 			},
 			{
 				name = "AppSettings__JbSearchUrl",
-				value = "https://devnov.workbc.ca/search-and-prepare-job/find-jobs"
+				value = "https://devnoc.workbc.ca/search-and-prepare-job/find-jobs"
 			},
 			{
 				name = "AppSettings__SendEmailTestingTo",
