@@ -10,4 +10,6 @@
 ### To test the migration locally
 - Change directory to: `.\src`
 - Run the migration using: `dotnet ef database update --project WorkBC.Data --startup-project WorkBC.Web --context JobBoardContext`
+- At least one migration requires access to the Single Source of Truth (SSOT) API. Set the SSOT_URL using:
 
+  ```$Env:SSOT_URL = 'http:\\localhost:3000'```
