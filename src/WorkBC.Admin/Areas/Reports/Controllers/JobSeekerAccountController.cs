@@ -65,10 +65,13 @@ namespace WorkBC.Admin.Areas.Reports.Controllers
             
             The data required for this report is generated from a stored procedure
             called, usp_GenerateJobSeekerStats.  The stored procedure is run on the
-            7th, 14th, 21st, 27th of each month plus the very last day of the month. 
-            It can be executed from the command line as follows:
+            7th, 14th, 21st, 28th of each month plus the very last day of the month. 
+            It can be executed from PowerShell as follows:
             
-            sqlcmd -S <computer-name>\<instance> -d '<database-name>' -q "EXEC dbo.usp_GenerateJobSeekerStats '2024-03-07'"
+            sqlcmd -S <computer-name>\<instance> -d '<database-name>' -q "EXEC dbo.usp_GenerateJobSeekerStats '$([datetime]::now.tostring("yyyy-MM-dd"))'"
+            
+            From bash use:
+            sqlcmd -S <computer-name>\<instance> -d '<database-name>' -q "EXEC dbo.usp_GenerateJobSeekerStats '$(date +%F)'"
             
             */
 
