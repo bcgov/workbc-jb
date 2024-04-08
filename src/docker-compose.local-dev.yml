@@ -10,7 +10,6 @@ services:
       xpack.security.enabled: 'false'
   kibana:
     image: kibana:7.17.8
-    scale: 0
     ports:
       - 5601:5601
   postgres:
