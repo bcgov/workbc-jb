@@ -136,7 +136,7 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
 * Load SSOT dump into Postgres database:
     ```
     cd src
-    Get-Content \path\to\ssot-full.sql | docker-compose -f docker-compose.local-dev.yml exec -T postgres psql --username workbc ssot
+    cmd /c "docker-compose -f docker-compose.local-dev.yml exec -T postgres psql --username workbc ssot < path\to\ssot-full.sql"
     docker-compose -f docker-compose.local-dev.yml kill -s SIGUSR1 ssot
     ```
 * Verify that the SSOT API endpoints are appearing at http://localhost:3000 and http://localhost:8888
@@ -145,7 +145,7 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
 * You see error complaining about user `ssot_readonly` not found. This can happen if the SSOT init script didn't run upon container start. To fix this:
     ```
     cd src
-    Get-Content .\scripts\postgres-init\init.sql | docker-compose -f docker-compose.local-dev.yml exec -T postgres psql --username workbc ssot
+    cmd /c "docker-compose -f docker-compose.local-dev.yml exec -T postgres psql --username workbc ssot < .\scripts\postgres-init\init.sql"
     ```
 then retry the steps above.
 
