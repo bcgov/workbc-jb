@@ -86,6 +86,7 @@ namespace WorkBC.Data
         public DbSet<NocCategory> NocCategories { get; set; }
 
         public DbSet<NocCode> NocCodes { get; set; }
+        public DbSet<NocCode2021> NocCodes2021 { get; set; } 
 
         public DbSet<Province> Provinces { get; set; }
 
