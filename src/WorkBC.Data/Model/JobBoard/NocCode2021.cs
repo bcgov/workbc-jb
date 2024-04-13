@@ -7,7 +7,7 @@ namespace WorkBC.Data.Model.JobBoard
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public short Id { get; set; }
+        public int Id { get; set; }
 
         [StringLength(5)]
         public string Code { get; set; }
