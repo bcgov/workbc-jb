@@ -14,4 +14,4 @@
 - 
 ### To set the Environment variable for SSOT URL before the running the migrations for addition of 2021 NOC Codes.
 - At least one migration requires access to the Single Source of Truth (SSOT) API. Set the SSOT_URL using the following command:
- `$Env:SSOT_URL = 'http://localhost:3000/nocs?noc_level=eq.4'`
+ `$Env:SSOT_URL = 'http://localhost:3000'`

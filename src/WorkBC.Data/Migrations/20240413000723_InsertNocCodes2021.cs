@@ -14,12 +14,16 @@ namespace WorkBC.Data.Migrations
     public partial class InsertNocCodes2021 : Migration
     {
         private readonly HttpClient _httpClient;
+        private readonly string _ssotBaseUrl;
         private readonly string _ssotUrl;
+
 
         public InsertNocCodes2021() : base()
         {
             _httpClient = new HttpClient();
-            _ssotUrl = Environment.GetEnvironmentVariable("SSOT_URL");
+            _ssotBaseUrl = Environment.GetEnvironmentVariable("SSOT_URL");
+            _ssotUrl = _ssotBaseUrl + "/nocs_nocs";
+           
             if (_ssotUrl == null)
             {
                 throw new Exception("SSOT_URL not set");
@@ -27,23 +31,24 @@ namespace WorkBC.Data.Migrations
         }
         protected async override void Up(MigrationBuilder migrationBuilder)
         {
-            var allNocs = await GetNocCodes2021(_ssotUrl);
+            var allNocs = await GetNocCodes2021(_ssotUrl);            
 
-            foreach (var nocs in allNocs)
+            foreach (var noc in allNocs)
             {
-
-                if (!String.IsNullOrEmpty(nocs.noc_2021))
+                if (!String.IsNullOrEmpty(noc.noc_2021))
                 {
-                        int.TryParse(nocs.noc_2021, out int id);
+                    //The field 'Id' is derived from the field 'Code' and is not an auto-generated Identity field.
+                    int.TryParse(noc.noc_2021.ToString(), out int id);                   
 
-                        string code = nocs.noc_2021.ToString();
-                        string title = nocs.label_en.ToString();
-                        string frenchTitle = nocs.label_fr.ToString();
+                    string code = noc.noc_2021.ToString();
+                    string title = noc.label.ToString();
+                    string frenchTitle = noc.label_fr.ToString();
 
-                        migrationBuilder.InsertData(
-                            table: "NocCodes2021",
-                            columns: new[] { "Id", "Code", "Title", "FrenchTitle" },
-                            values: new object[] { id, code, title, frenchTitle });
+                    //Writing the data to the table dbo.NocCodes2021
+                    migrationBuilder.InsertData(
+                        table: "NocCodes2021",
+                        columns: new[] { "Id", "Code", "Title", "FrenchTitle" },
+                        values: new object[] { id, code, title, frenchTitle });
 
                 }
 
@@ -53,7 +58,7 @@ namespace WorkBC.Data.Migrations
         }
 
         protected async override void Down(MigrationBuilder migrationBuilder)
-        {
+        {            
             //Truncate table- delete all records
             migrationBuilder.Sql(@"TRUNCATE TABLE [dbo].[NocCodes2021]");
         }
@@ -86,14 +91,13 @@ namespace WorkBC.Data.Migrations
 
             return newSSOTCodes;
 
-
         }
 
     }
     public class NocCodeSSOT
     {
         public string noc_2021 { get; set; }
-        public string label_en { get; set; }
+        public string label { get; set; }
         public string label_fr { get; set; }
 
     }
