@@ -155,13 +155,16 @@ namespace WorkBC.Importers.Wanted.Services
             {
                 //job id
                 var id = Convert.ToInt64(node.Attributes["id"].InnerText);
-                jobIds.Add(id);
+
                 // hash id
                 var hashId = Convert.ToInt64(node.Attributes["hash"].InnerText);
 
                 //load job
                 ImportedJobWanted wantedJob =
                     await _dbContext.ImportedJobsWanted.FirstOrDefaultAsync(j => j.JobId == id);
+
+                // check if the job deleted
+                var isDeleted = _dbContext.DeletedJobs.Count(dj => dj.JobId == id);
 
                 ImportedJobWanted hashMatch = null;
 
@@ -186,65 +189,70 @@ namespace WorkBC.Importers.Wanted.Services
                 newAttribute.Value = id.ToString();
                 node.Attributes.Append(newAttribute);
 
-                //if the job exists, update it
-                if (wantedJob != null)
+                if (isDeleted == 0)
                 {
-                    if (wantedJob.ApiDate !=
-                        Convert.ToDateTime(node.SelectSingleNode("dates").Attributes["refreshed"].InnerText))
+                    jobIds.Add(id);
+
+                    //if the job exists, update it
+                    if (wantedJob != null)
                     {
-                        //UPDATE
-                        wantedJob.ApiDate =
-                            Convert.ToDateTime(node.SelectSingleNode("dates").Attributes["refreshed"].InnerText);
-                        wantedJob.JobPostEnglish = node.OuterXml;
-                        wantedJob.DateLastImported = DateTime.Now;
-                        wantedJob.ReIndexNeeded = true;
+                        if (wantedJob.ApiDate !=
+                            Convert.ToDateTime(node.SelectSingleNode("dates").Attributes["refreshed"].InnerText))
+                        {
+                            //UPDATE
+                            wantedJob.ApiDate =
+                                Convert.ToDateTime(node.SelectSingleNode("dates").Attributes["refreshed"].InnerText);
+                            wantedJob.JobPostEnglish = node.OuterXml;
+                            wantedJob.DateLastImported = DateTime.Now;
+                            wantedJob.ReIndexNeeded = true;
 
-                        //DB update
-                        _dbContext.ImportedJobsWanted.Update(wantedJob);
-                        await _dbContext.SaveChangesAsync();
+                            //DB update
+                            _dbContext.ImportedJobsWanted.Update(wantedJob);
+                            await _dbContext.SaveChangesAsync();
 
-                        Console.Write(hashMatch != null ? "H" : "U");
+                            Console.Write(hashMatch != null ? "H" : "U");
+                        }
+                        else
+                        {
+                            //SKIP
+                            Console.Write("S");
+                        }
                     }
                     else
                     {
-                        //SKIP
-                        Console.Write("S");
-                    }
-                }
-                else
-                {
-                    //save to db
-                    DateTime now = DateTime.Now;
-                    JobId existingJobId = _dbContext.JobIds.FirstOrDefault(j => j.Id == id);
+                        //save to db
+                        DateTime now = DateTime.Now;
+                        JobId existingJobId = _dbContext.JobIds.FirstOrDefault(j => j.Id == id);
 
-                    var wanted = new ImportedJobWanted
-                    {
-                        JobId = id,
-                        JobPostEnglish = node.OuterXml,
-                        DateFirstImported = existingJobId?.DateFirstImported ?? now,
-                        DateLastImported = now,
-                        ApiDate = Convert.ToDateTime(node.SelectSingleNode("dates").Attributes["refreshed"]
-                            .InnerText),
-                        ReIndexNeeded = true,
-                        HashId = hashId
-                    };
-
-                    // add the job to the JobIds table
-                    if (existingJobId == null)
-                    {
-                        var jobId = new JobId
+                        var wanted = new ImportedJobWanted
                         {
-                            Id = id,
-                            DateFirstImported = now,
-                            JobSourceId = JobSource.Wanted
+                            JobId = id,
+                            JobPostEnglish = node.OuterXml,
+                            DateFirstImported = existingJobId?.DateFirstImported ?? now,
+                            DateLastImported = now,
+                            ApiDate = Convert.ToDateTime(node.SelectSingleNode("dates").Attributes["refreshed"]
+                                .InnerText),
+                            ReIndexNeeded = true,
+                            HashId = hashId
                         };
-                        await _dbContext.JobIds.AddAsync(jobId);
-                        await _dbContext.SaveChangesAsync();
-                    }
 
-                    await _dbContext.ImportedJobsWanted.AddAsync(wanted);
-                    await _dbContext.SaveChangesAsync();
-                    Console.Write("I");
+                        // add the job to the JobIds table
+                        if (existingJobId == null)
+                        {
+                            var jobId = new JobId
+                            {
+                                Id = id,
+                                DateFirstImported = now,
+                                JobSourceId = JobSource.Wanted
+                            };
+                            await _dbContext.JobIds.AddAsync(jobId);
+                            await _dbContext.SaveChangesAsync();
+                        }
+
+                        await _dbContext.ImportedJobsWanted.AddAsync(wanted);
+                        await _dbContext.SaveChangesAsync();
+                        Console.Write("I");
+                    }
                 }
             }
 
