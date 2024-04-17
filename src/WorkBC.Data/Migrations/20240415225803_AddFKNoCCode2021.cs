@@ -23,16 +23,6 @@ namespace WorkBC.Data.Migrations
                 maxLength: 5,
                 nullable: true);
 
-            //// Populate new NocCodeId2021 column in the Jobs table
-            //migrationBuilder.Sql(@"INSERT INTO [dbo].[Jobs]
-            //           ([NocCodeId2021])
-            //     SELECT nc.Code FROM [dbo].[Jobs] j INNER JOIN NocCodes2021 nc ON j.NocCodeId2021 = nc.Id;");
-
-            ////Populate new NocCodeId2021 column in the JobVersions table
-            //migrationBuilder.Sql(@"INSERT INTO [dbo].[JobVersions]
-            //           ([NocCode])
-            //     SELECT nc.Code FROM [dbo].[JobVersions] j INNER JOIN NocCodes nc ON j.NocCodeId2021 = nc.Id;");
-
             //Create new foreign keys
             migrationBuilder.AddForeignKey(
                 name: "FK_Jobs_NocCodes2021_NocCodeId2021",

@@ -22,12 +22,12 @@ namespace WorkBC.Data.Migrations
         {
             _httpClient = new HttpClient();
             _ssotBaseUrl = Environment.GetEnvironmentVariable("SSOT_URL");
-            _ssotUrl = _ssotBaseUrl + "/nocs_nocs";
-           
-            if (_ssotUrl == null)
+            if (_ssotBaseUrl == null)
             {
                 throw new Exception("SSOT_URL not set");
             }
+            _ssotUrl = _ssotBaseUrl + "/nocs_nocs";           
+
         }
         protected async override void Up(MigrationBuilder migrationBuilder)
         {
