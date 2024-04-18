@@ -73,6 +73,7 @@ namespace WorkBC.Importers.Federal.Services
                             JobSourceId = JobSource.Federal,
                             IndustryId = job.IndustryId,
                             NocCodeId = job.NocCodeId,
+                            NocCodeId2021 = job.NocCodeId2021,
                             IsActive = true,
                             PositionsAvailable = job.PositionsAvailable,
                             LocationId = job.LocationId,
