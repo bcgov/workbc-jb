@@ -275,6 +275,33 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                             #endregion
 
+                            #region Noc code 2021
+
+                            string noc2021 = nocNode == null ? "" : nocNode.Attributes["code"].InnerText;
+                            var nocInt2021 = 0;
+                            if (!string.IsNullOrEmpty(noc2021))
+                            {
+                                //conver to int
+                                int.TryParse(noc, out nocInt2021);
+
+                                // make sure the code is valid
+                                if (NocCodes2021.All(c => c.Id != nocInt2021))
+                                {
+                                    nocInt2021 = 0;
+                                }
+
+                                //set job noc code
+                                job.Noc2021 = nocInt2021 == 0 ? (int?)null : nocInt2021;
+                            }
+
+                            if (nocInt2021 > 0)
+                            {
+                                job.NocGroup = GetNocGroup(nocInt2021);
+                                job.NocJobTitle = nocNode.Attributes["label"].InnerText.Replace("\u200B", ""); // remove zero width space;;
+                            }
+
+                            #endregion
+
                             #region Job title
 
                             if (xmlJobNode.SelectSingleNode("title").Attributes["value"] != null &&
