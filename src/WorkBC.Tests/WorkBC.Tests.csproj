@@ -30,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Fixtures\FederalXmlJobs\" />
     <Folder Include="Fixtures\WantedXmlJobs\" />
   </ItemGroup>
 
@@ -42,6 +41,9 @@
 
   <ItemGroup>
     <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\FederalXmlJobs\39900323.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Fixtures\FederalXmlJobs\30674932.xml">

@@ -14,7 +14,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
         {
         }
 
-        public XmlParsingServiceWanted(List<Data.Model.JobBoard.Location> duplicateCities, Dictionary<string, string> uniqueCities, List<NocCode> nocCodes ): base(duplicateCities, uniqueCities, nocCodes)
+        public XmlParsingServiceWanted(List<Data.Model.JobBoard.Location> duplicateCities, Dictionary<string, string> uniqueCities, List<NocCode> nocCodes, List<NocCode2021> nocCodes2021) : base(duplicateCities, uniqueCities, nocCodes, nocCodes2021)
         {
         }
 
@@ -275,32 +275,32 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                             #endregion
 
-                            //#region Noc code 2021
+                            #region Noc code 2021
 
-                            //string noc2021 = nocNode == null ? "" : nocNode.Attributes["code"].InnerText;
-                            //var nocInt2021 = 0;
-                            //if (!string.IsNullOrEmpty(noc2021))
-                            //{
-                            //    //conver to int
-                            //    int.TryParse(noc, out nocInt2021);
+                            string noc2021 = nocNode == null ? "" : nocNode.Attributes["code"].InnerText;
+                            var nocInt2021 = 0;
+                            if (!string.IsNullOrEmpty(noc2021))
+                            {
+                                //conver to int
+                                int.TryParse(noc, out nocInt2021);
 
-                            //    // make sure the code is valid
-                            //    if (NocCodes2021.All(c => c.Id != nocInt2021))
-                            //    {
-                            //        nocInt2021 = 0;
-                            //    }
+                                // make sure the code is valid
+                                if (NocCodes2021.All(c => c.Id != nocInt2021))
+                                {
+                                    nocInt2021 = 0;
+                                }
 
-                            //    //set job noc code
-                            //    job.Noc2021 = nocInt2021 == 0 ? (int?)null : nocInt2021;
-                            //}
+                                //set job noc code
+                                job.Noc2021 = nocInt2021 == 0 ? (int?)null : nocInt2021;
+                            }
 
-                            //if (nocInt2021 > 0)
-                            //{
-                            //    job.NocGroup = GetNocGroup(nocInt2021);
-                            //    job.NocJobTitle = nocNode.Attributes["label"].InnerText.Replace("\u200B", ""); // remove zero width space;;
-                            //}
+                            if (nocInt2021 > 0)
+                            {
+                                job.NocGroup = GetNocGroup(nocInt2021);
+                                job.NocJobTitle = nocNode.Attributes["label"].InnerText.Replace("\u200B", ""); // remove zero width space;;
+                            }
 
-                            //#endregion
+                            #endregion
 
                             #region Job title
 

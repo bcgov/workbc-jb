@@ -5,6 +5,11 @@ namespace WorkBC.Tests.Fixtures
 {
     public static class NocFixture
     {
+        public static List<NocCode2021> NocCodes2021 =>
+         new List<NocCode2021>
+            {
+                new NocCode2021 {Code = "21234", Id= 21234, Title= "Web developers and programmers"},
+            };
         public static List<NocCode> NocCodes =>
             new List<NocCode>
             {
