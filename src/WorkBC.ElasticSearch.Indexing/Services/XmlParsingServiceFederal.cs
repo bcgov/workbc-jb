@@ -27,7 +27,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
         }
 
         public XmlParsingServiceFederal(List<Data.Model.JobBoard.Location> duplicateCities,
-            Dictionary<string, string> uniqueCities, List<NocCode> nocCodes, IGeocodingService geocodingService) : base(duplicateCities, uniqueCities, nocCodes)
+            Dictionary<string, string> uniqueCities, List<NocCode> nocCodes, List<NocCode2021> nocCodes2021, IGeocodingService geocodingService) : base(duplicateCities, uniqueCities, nocCodes, nocCodes2021)
         {
             this._geocodingService = geocodingService;
         }
@@ -68,19 +68,23 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 // get noc code
                 var noc = Convert.ToInt16(xmlJobNode["noc2016"].InnerText);
 
-                //get noc 2021 code
-                var noc2021 = Convert.ToInt32(xmlJobNode["noc2021"].InnerText);
-
                 // make sure the code is valid
                 if (NocCodes.All(c => c.Id != noc))
                 {
                     noc = 0;
                 }
 
-                // make sure the code 2021 is valid
-                if (NocCodes2021.All(c => c.Id != noc2021))
-                {                    
-                    noc2021 = 0;
+
+                //get noc 2021 code
+                var noc2021 = 0;
+                if (xmlJobNode["noc2021"] != null)
+                {
+                    noc2021 = Convert.ToInt32(xmlJobNode["noc2021"].InnerText);
+                    // make sure the code 2021 is valid
+                    if (NocCodes2021.All(c => c.Id != noc2021))
+                    {
+                        noc2021 = 0;
+                    }
                 }
 
                 job = new ElasticSearchJob
