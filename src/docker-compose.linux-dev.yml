@@ -1,0 +1,79 @@
+version: '3'
+services:
+  web:
+    volumes:
+      - ./WorkBC.Web/appsettings.linux.json:/app/appsettings.json
+  admin:
+    volumes:
+      - ./WorkBC.Admin/appsettings.linux.json:/app/appsettings.json
+  importers-wanted:
+    volumes:
+      - ./WorkBC.Importers.Wanted/appsettings.linux.json:/app/appsettings.json
+  importers-federal:
+    volumes:
+      - ./WorkBC.Importers.Federal/appsettings.linux.json:/app/appsettings.json
+  indexers-federal:
+    volumes:
+      - ./WorkBC.Indexers.Federal/appsettings.linux.json:/app/appsettings.json
+  indexers-wanted:
+    volumes:
+      - ./WorkBC.Indexers.Wanted/appsettings.linux.json:/app/appsettings.json
+  notifications-job-alerts:
+    volumes:
+      - ./WorkBC.Notifications.JobAlerts/appsettings.linux.json:/app/appsettings.json
+  migration-runner:
+    volumes:
+      - ./WorkBC.Web/appsettings.linux.json:/app/appsettings.json
+  elasticsearch:
+    image: elasticsearch:7.17.8
+    ports:
+      - 9200:9200
+    environment:
+      discovery.type: 'single-node'
+      xpack.security.enabled: 'false'
+  kibana:
+    image: kibana:7.17.8
+    ports:
+      - 5601:5601
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    ports:
+      - 1433:1433
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "18^fh4M08aB@"
+    volumes:
+      - mssql_data:/var/opt/mssql/data
+  postgres:
+    image: postgres:15.5-bookworm
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ssot
+      POSTGRES_USER: workbc
+      POSTGRES_PASSWORD: workbc
+    volumes:
+      - "pg_data:/var/lib/postgresql/data"
+      - "./scripts/postgres-init:/docker-entrypoint-initdb.d"
+  ssot:
+    image: postgrest/postgrest
+    ports:
+      - "3000:3000"
+    environment:
+      PGRST_DB_URI: postgres://workbc:workbc@postgres:5432/ssot
+      PGRST_DB_SCHEMA: public
+      PGRST_DB_ANON_ROLE: ssot_readonly
+      PGRST_OPENAPI_SERVER_PROXY_URI: http://localhost:3000
+    depends_on:
+      - postgres
+  swagger:
+    image: swaggerapi/swagger-ui
+    ports:
+      - "8888:8080"
+    environment:
+      API_URL: http://localhost:3000/
+    depends_on:
+      - ssot
+volumes:
+  mssql_data:
+  pg_data:
