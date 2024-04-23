@@ -18,13 +18,20 @@ namespace WorkBC.Shared.Services
         private readonly JobBoardContext _dbContext;
         private readonly ILogger<IGeocodingService> _logger;
         private readonly IConfiguration _configuration;
+        private readonly HttpClient _httpClient;
 
         public GeocodingService(JobBoardContext dbContext, IConfiguration configuration,
-            ILogger<IGeocodingService> logger = null)
+            ILogger<IGeocodingService> logger=null, HttpClient client=null)
         {
             _dbContext = dbContext;
             _logger = logger;
             _configuration = configuration;
+
+            var proxySettings = new ProxySettings();
+            _configuration.GetSection("ProxySettings").Bind(proxySettings);
+
+            //create persistent HttpClient if not provided as a dependency
+            _httpClient = client ?? CreateHttpClient(proxySettings);
         }
 
         public async Task<GeocodedLocationCache> GetLocation(string location)
@@ -170,50 +177,49 @@ namespace WorkBC.Shared.Services
             return city;
         }
 
+        private static HttpClient CreateHttpClient(ProxySettings proxySettings)
+        {
+            var handler = new HttpClientHandler();
+
+            if (proxySettings.UseProxy)
+            {
+                handler.Proxy = new WebProxy(proxySettings.ProxyHost, proxySettings.ProxyPort)
+                {
+                    BypassProxyOnLocal = true
+                };
+            }
+
+            if (proxySettings.IgnoreSslErrors)
+            {
+                handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+                handler.ServerCertificateCustomValidationCallback =
+                    (httpRequestMessage, cert, cetChain, policyErrors) => true;
+            }
+
+            return new HttpClient(handler);
+        }
+
         /// <summary>
         ///     Get XML data from URL response
         /// </summary>
         private async Task<XDocument> GetWebResponse(string url, bool isFrench = false)
         {
-            var proxySettings = new ProxySettings();
-            _configuration.GetSection("ProxySettings").Bind(proxySettings);
 
             try
             {
                 //response from server
                 string responseFromServer;
 
-                var handler = new HttpClientHandler();
-
-                if (proxySettings.UseProxy)
+                if (isFrench)
                 {
-                    handler.Proxy = new WebProxy(proxySettings.ProxyHost, proxySettings.ProxyPort)
-                    {
-                        BypassProxyOnLocal = true
-                    };
+                    url += "&language=fr";
                 }
 
-                if (proxySettings.IgnoreSslErrors)
-                {
-                    handler.ClientCertificateOptions = ClientCertificateOption.Manual;
-                    handler.ServerCertificateCustomValidationCallback =
-                        (httpRequestMessage, cert, cetChain, policyErrors) => true;
-                }
+                //Read the web response from URL
+                HttpResponseMessage response = await _httpClient.GetAsync(url);
 
-                //Create new web request to URL
-                using (var httpClient = new HttpClient(handler))
-                {
-                    if (isFrench)
-                    {
-                        url += "&language=fr";
-                    }
-
-                    //Read the web response from URL
-                    HttpResponseMessage response = await httpClient.GetAsync(url);
-
-                    //Save response
-                    responseFromServer = await response.Content.ReadAsStringAsync();
-                }
+                //Save response
+                responseFromServer = await response.Content.ReadAsStringAsync();
 
                 //load web request to xml
                 return XDocument.Parse(responseFromServer);
