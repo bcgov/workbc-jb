@@ -27,10 +27,9 @@ namespace WorkBC.Data.Migrations
 
         protected async override void Down(MigrationBuilder migrationBuilder)
         {
-            //Truncate table- delete all records
-            migrationBuilder.Sql(@"TRUNCATE TABLE [dbo].[NocCodes2021]");
+            //Obsolete migration: Relevant code moved to 20240411194800_AddNocCodes2021.cs
         }
-   
+
 
     }
 

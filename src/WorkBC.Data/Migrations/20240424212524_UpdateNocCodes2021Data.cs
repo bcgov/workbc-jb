@@ -47,17 +47,21 @@ namespace WorkBC.Data.Migrations
 
         protected async override void Down(MigrationBuilder migrationBuilder)
         {
+            //Set the NocCodeId2021 column to NULL in Jobs and JobVersions table.
+            migrationBuilder.Sql(@"Update [dbo].[Jobs] Set NocCodeId2021 = NULL");
+            migrationBuilder.Sql(@"Update [dbo].[JobVersions] Set NocCodeId2021 = NULL");
 
+            //Delete all records
+            migrationBuilder.Sql(@"Delete from [dbo].[NocCodes2021]");
         }
         public List<NocCodeSSOT> GetNocCodes2021()
         {
 
             List<NocCodeSSOT> newSSOTCodes = new List<NocCodeSSOT>();
-            string fileName = "C:\\Users\\SunanditaS\\source\\repos\\workbc-jb\\src\\WorkBC.Data\\Data\\ssot_nocs.json";
-            string jsonString = File.ReadAllText(fileName);
+            //Read the ssot_nocs json file from the path:~\workbc-jb\src\WorkBC.Web
+            string jsonString = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "ssot_nocs.json"));
             // convert string to stream
             byte[] byteArray = Encoding.UTF8.GetBytes(jsonString);
-            //byte[] byteArray = Encoding.ASCII.GetBytes(contents);
             MemoryStream jsonStream = new MemoryStream(byteArray);
 
             newSSOTCodes = JsonSerializer.Deserialize<List<NocCodeSSOT>>(jsonStream);
