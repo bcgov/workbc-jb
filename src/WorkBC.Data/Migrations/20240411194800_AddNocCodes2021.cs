@@ -26,8 +26,6 @@ namespace WorkBC.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            //Truncate table- delete all records
-            migrationBuilder.Sql(@"TRUNCATE TABLE [dbo].[NocCodes2021]");
             migrationBuilder.DropTable(
                 name: "NocCodes2021");
         }
