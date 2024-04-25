@@ -10,6 +10,37 @@ services:
       xpack.security.enabled: 'false'
   kibana:
     image: kibana:7.17.8
-    scale: 0
     ports:
       - 5601:5601
+  postgres:
+    image: postgres:15.5-bookworm
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ssot
+      POSTGRES_USER: workbc
+      POSTGRES_PASSWORD: workbc
+    volumes:
+      - "pg_data:/var/lib/postgresql/data"
+      - "./scripts/postgres-init:/docker-entrypoint-initdb.d"
+  ssot:
+    image: postgrest/postgrest
+    ports:
+      - "3000:3000"
+    environment:
+      PGRST_DB_URI: postgres://workbc:workbc@postgres:5432/ssot
+      PGRST_DB_SCHEMA: public
+      PGRST_DB_ANON_ROLE: ssot_readonly
+      PGRST_OPENAPI_SERVER_PROXY_URI: http://localhost:3000
+    depends_on:
+      - postgres
+  swagger:
+    image: swaggerapi/swagger-ui
+    ports:
+      - "8888:8080"
+    environment:
+      API_URL: http://localhost:3000/
+    depends_on:
+      - ssot
+volumes:
+  pg_data:

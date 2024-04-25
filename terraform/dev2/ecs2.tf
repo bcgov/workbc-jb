@@ -1,0 +1,319 @@
+# scheduled task
+resource "aws_ecs_task_definition" "import-job" {
+  family                   = "workbc-jb2-importer-task"
+  execution_role_arn       = data.aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn            = data.aws_iam_role.workbc_jb_container_role.arn
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = var.fargate_cpu
+  memory                   = var.fargate_memory
+  tags                     = var.common_tags
+
+  container_definitions = jsonencode([
+	{
+		essential   = false
+		name        = "wanted-importer"
+		image       = "${var.app_repo}/jb-importers-wanted:${var.app_version}"
+		networkMode = "awsvpc"
+		
+		logConfiguration = {
+			logDriver = "awslogs"
+			options = {
+				awslogs-create-group  = "true"
+				awslogs-group         = "/ecs/workbc-jb-noc-wanted-importer"
+				awslogs-region        = var.aws_region
+				awslogs-stream-prefix = "ecs"
+			}
+		}		
+
+		
+		environment = [
+			{
+				name = "ConnectionStrings__DefaultConnection",
+				value = "${local.df_conn}"
+			},
+			{
+				name = "ConnectionStrings__EnterpriseConnection",
+				value = "${local.ent_conn}"
+			}
+		]
+		secrets = [
+			{
+				name = "WantedSettings__PassKey",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:wanted_pk::"
+			}
+		]
+	},
+	{
+		essential   = false
+		name        = "wanted-indexer"
+		image       = "${var.app_repo}/jb-indexers-wanted:${var.app_version}"
+		networkMode = "awsvpc"
+		
+		logConfiguration = {
+			logDriver = "awslogs"
+			options = {
+				awslogs-create-group  = "true"
+				awslogs-group         = "/ecs/workbc-jb-noc-wanted-indexer"
+				awslogs-region        = var.aws_region
+				awslogs-stream-prefix = "ecs"
+			}
+		}		
+
+		
+		environment = [
+			{
+				name = "ConnectionStrings__DefaultConnection",
+				value = "${local.df_conn}"
+			},
+			{
+				name = "ConnectionStrings__EnterpriseConnection",
+				value = "${local.ent_conn}"
+			},
+			{
+				name = "ConnectionStrings__ElasticSearchServer",
+				value = "${local.es_conn}"
+			}
+		]
+		secrets = [
+			{
+				name = "IndexSettings__ElasticUser",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_username::"
+			},
+			{
+				name = "IndexSettings__ElasticPassword",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_password::"
+			}
+		]
+		dependsOn = [
+			{
+				containerName = "wanted-importer"
+				condition = "COMPLETE"
+			}
+		]
+	},
+	{
+		essential   = false
+		name        = "federal-importer"
+		image       = "${var.app_repo}/jb-importers-federal:${var.app_version}"
+		networkMode = "awsvpc"
+		
+		logConfiguration = {
+			logDriver = "awslogs"
+			options = {
+				awslogs-create-group  = "true"
+				awslogs-group         = "/ecs/workbc-jb-noc-federal-importer"
+				awslogs-region        = var.aws_region
+				awslogs-stream-prefix = "ecs"
+			}
+		}		
+
+		
+		environment = [
+			{
+				name = "ConnectionStrings__DefaultConnection",
+				value = "${local.df_conn}"
+			},
+			{
+				name = "ConnectionStrings__EnterpriseConnection",
+				value = "${local.ent_conn}"
+			}
+		]
+		secrets = [
+			{
+				name = "AppSettings__GoogleMapsIPApi",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:gm_ip::"
+			},
+			{
+				name = "FederalSettings__AuthCookie",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:fed_auth::"
+			}
+		]
+		dependsOn = [
+			{
+				containerName = "wanted-indexer"
+				condition = "COMPLETE"
+			}
+		]
+	},
+	{
+		essential   = true
+		name        = "federal-indexer"
+		image       = "${var.app_repo}/jb-indexers-federal:${var.app_version}"
+		networkMode = "awsvpc"
+		
+		logConfiguration = {
+			logDriver = "awslogs"
+			options = {
+				awslogs-create-group  = "true"
+				awslogs-group         = "/ecs/workbc-jb-noc-federal-indexer"
+				awslogs-region        = var.aws_region
+				awslogs-stream-prefix = "ecs"
+			}
+		}		
+
+		
+		environment = [
+			{
+				name = "ConnectionStrings__DefaultConnection",
+				value = "${local.df_conn}"
+			},
+			{
+				name = "ConnectionStrings__EnterpriseConnection",
+				value = "${local.ent_conn}"
+			},
+			{
+				name = "ConnectionStrings__ElasticSearchServer",
+				value = "${local.es_conn}"
+			}
+		]
+		secrets = [
+			{
+				name = "IndexSettings__ElasticUser",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_username::"
+			},
+			{
+				name = "IndexSettings__ElasticPassword",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_password::"
+			},
+			{
+				name = "AppSettings__GoogleMapsIPApi",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:gm_ip::"
+			}
+		]
+		dependsOn = [
+			{
+				containerName = "federal-importer"
+				condition = "COMPLETE"
+			}
+		]
+	}
+  ])
+  
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "X86_64"
+  }
+}
+
+resource "aws_cloudwatch_event_rule" "cron" {
+	name = "importer_schedule"
+	schedule_expression = "cron(0 2,8,14,20 * * ? *)"
+}
+
+resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
+  arn      = aws_ecs_cluster.jobboard.arn
+  rule     = aws_cloudwatch_event_rule.cron.id
+  role_arn = data.aws_iam_role.workbc_jb_events_role.arn
+
+  ecs_target {
+    task_count          = 1
+    task_definition_arn = trimsuffix(aws_ecs_task_definition.import-job.arn, ":${aws_ecs_task_definition.import-job.revision}")
+    launch_type         = "FARGATE"
+    network_configuration {
+      assign_public_ip = false
+      security_groups  = [data.aws_security_group.app.id]
+      subnets          = module.network.aws_subnet_ids.app.ids
+    }
+  }
+}
+
+resource "aws_ecs_task_definition" "notify-job" {
+  family                   = "workbc-jb2-notifications-task"
+  execution_role_arn       = data.aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn            = data.aws_iam_role.workbc_jb_container_role.arn
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = var.fargate_cpu
+  memory                   = var.fargate_memory
+  tags                     = var.common_tags
+
+  container_definitions = jsonencode([
+	{
+		essential   = true
+		name        = "notifications"
+		image       = "${var.app_repo}/jb-notifications:${var.app_version}"
+		networkMode = "awsvpc"
+		
+		logConfiguration = {
+			logDriver = "awslogs"
+			options = {
+				awslogs-create-group  = "true"
+				awslogs-group         = "/ecs/workbc-jb-noc-notifications"
+				awslogs-region        = var.aws_region
+				awslogs-stream-prefix = "ecs"
+			}
+		}		
+
+		
+		environment = [
+			{
+				name = "ConnectionStrings__DefaultConnection",
+				value = "${local.df_conn}"
+			},
+			{
+				name = "ConnectionStrings__EnterpriseConnection",
+				value = "${local.ent_conn}"
+			},
+			{
+				name = "ConnectionStrings__ElasticSearchServer",
+				value = "${local.es_conn}"
+			},
+			{
+				name = "EmailSettings__UseSes",
+				value = "true"
+			},
+			{
+				name = "EmailSettings__FromEmail",
+				value = "noreply@workbc.ca"
+			},
+			{
+				name = "AppSettings__JbSearchUrl",
+				value = "https://devnoc.workbc.ca/search-and-prepare-job/find-jobs"
+			},
+			{
+				name = "AppSettings__SendEmailTestingTo",
+				value = "LMI.Support@gov.bc.ca"
+			}
+		]
+		secrets = [
+			{
+				name = "IndexSettings__ElasticUser",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_username::"
+			},
+			{
+				name = "IndexSettings__ElasticPassword",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_password::"
+			}
+		]
+	}	
+  ])
+  
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "X86_64"
+  }
+}
+
+resource "aws_cloudwatch_event_rule" "cron2" {
+	name = "notifications_schedule"
+	schedule_expression = "cron(0 13 * * ? *)"
+	is_enabled = false
+}
+
+resource "aws_cloudwatch_event_target" "ecs_scheduled_task2" {
+  arn      = aws_ecs_cluster.jobboard.arn
+  rule     = aws_cloudwatch_event_rule.cron2.id
+  role_arn = data.aws_iam_role.workbc_jb_events_role.arn
+
+  ecs_target {
+    task_count          = 1
+    task_definition_arn = aws_ecs_task_definition.notify-job.arn
+    launch_type         = "FARGATE"
+    network_configuration {
+      assign_public_ip = false
+      security_groups  = [data.aws_security_group.app.id]
+      subnets          = module.network.aws_subnet_ids.app.ids
+    }
+  }
+}

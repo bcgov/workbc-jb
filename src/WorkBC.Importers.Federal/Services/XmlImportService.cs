@@ -34,8 +34,9 @@ namespace WorkBC.Importers.Federal.Services
         private XmlDocument _xmlDocumentFrench = new XmlDocument();
         private readonly ILogger _logger;
         private readonly CommandLineOptions _options;
+        private readonly HttpClient _httpClient;
 
-        public XmlImportService(IConfiguration configuration, CommandLineOptions options, ILogger logger)
+        public XmlImportService(IConfiguration configuration, CommandLineOptions options, ILogger logger, HttpClient client=null)
         {
             string connectionString = configuration.GetConnectionString("DefaultConnection");
             _dbContext = new JobBoardContext(connectionString);
@@ -49,6 +50,9 @@ namespace WorkBC.Importers.Federal.Services
             //get Proxy settings
             _proxySettings = new ProxySettings();
             configuration.GetSection("ProxySettings").Bind(_proxySettings);
+
+            //create persistent HttpClient if not provided as a dependency
+            _httpClient = client ?? CreateHttpClient(_proxySettings, _federalSettings);
         }
 
         public async Task ProcessJobs(List<JobPosting> apiJobList)
@@ -225,7 +229,7 @@ namespace WorkBC.Importers.Federal.Services
                         }
 
                         //get XML from URL if needed
-                        await GetXmlContent(job.Id, true, true);
+                        await GetXmlContent(job.Id);
 
                         if (_xmlDocumentEnglish != null)
                         {
@@ -319,7 +323,7 @@ namespace WorkBC.Importers.Federal.Services
                         }
 
                         //get XML from URL if needed
-                        await GetXmlContent(federalJob.JobId, true, true);
+                        await GetXmlContent(federalJob.JobId);
 
                         if (_xmlDocumentEnglish != null)
                         {
@@ -362,6 +366,35 @@ namespace WorkBC.Importers.Federal.Services
             Console.WriteLine();
         }
 
+        private static HttpClient CreateHttpClient(ProxySettings proxySettings, FederalSettings federalSettings)
+        {
+            var handler = new HttpClientHandler();
+
+            if (proxySettings.UseProxy)
+            {
+                handler.Proxy = new WebProxy(proxySettings.ProxyHost, proxySettings.ProxyPort)
+                {
+                    BypassProxyOnLocal = true
+                };
+            }
+
+            if (proxySettings.IgnoreSslErrors)
+            {
+                handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+                handler.ServerCertificateCustomValidationCallback =
+                    (httpRequestMessage, cert, cetChain, policyErrors) => true;
+            }
+
+            handler.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
+            var client = new HttpClient(handler);
+
+            // set timeout to 5 seconds
+            client.Timeout = new TimeSpan(0,0,5);
+
+            client.DefaultRequestHeaders.Add("Cookie", federalSettings.AuthCookie);
+            return client;
+        }
+
         /// <summary>
         ///     Get XML data from URL response
         /// </summary>
@@ -372,49 +405,22 @@ namespace WorkBC.Importers.Federal.Services
 
             try
             {
-                var handler = new HttpClientHandler();
 
-                if (_proxySettings.UseProxy)
+                try
                 {
-                    handler.Proxy = new WebProxy(_proxySettings.ProxyHost, _proxySettings.ProxyPort)
-                    {
-                        BypassProxyOnLocal = true
-                    };
+                    //Read the web response from URL
+                    HttpResponseMessage response = await _httpClient.GetAsync(url);
+                    //Save response
+                    responseFromServer = await response.Content.ReadAsStringAsync();
                 }
-
-                if (_proxySettings.IgnoreSslErrors)
+                catch
                 {
-                    handler.ClientCertificateOptions = ClientCertificateOption.Manual;
-                    handler.ServerCertificateCustomValidationCallback =
-                        (httpRequestMessage, cert, cetChain, policyErrors) => true;
-                }
-
-                handler.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
-
-                //Create new web request to URL
-                using (var httpClient = new HttpClient(handler))
-                {
-                    // set timeout to 5 seconds
-                    httpClient.Timeout = new TimeSpan(0,0,5);
-
-                    httpClient.DefaultRequestHeaders.Add("Cookie", _federalSettings.AuthCookie);
-
-                    try
-                    {
-                        //Read the web response from URL
-                        HttpResponseMessage response = await httpClient.GetAsync(url);
-                        //Save response
-                        responseFromServer = await response.Content.ReadAsStringAsync();
-                    }
-                    catch
-                    {
-                        Console.Write("-WAIT_5_SECONDS-");
-                        await Task.Delay(5000); // wait 5 seconds and try again
-                        //Read the web response from URL
-                        HttpResponseMessage response = await httpClient.GetAsync(url);
-                        //Save response
-                        responseFromServer = await response.Content.ReadAsStringAsync();
-                    }
+                    Console.Write("-WAIT_5_SECONDS-");
+                    await Task.Delay(5000); // wait 5 seconds and try again
+                    //Read the web response from URL
+                    HttpResponseMessage response = await _httpClient.GetAsync(url);
+                    //Save response
+                    responseFromServer = await response.Content.ReadAsStringAsync();
                 }
 
                 //load web request to xml
@@ -499,20 +505,19 @@ namespace WorkBC.Importers.Federal.Services
         /// <summary>
         ///     Get job XML if the job should not be skipped
         /// </summary>
-        private async Task GetXmlContent(long jobId, bool importEnglish, bool importFrench)
+        private async Task GetXmlContent(long jobId)
         {
             _xmlDocumentEnglish = null;
             _xmlDocumentFrench = null;
 
-            if (importEnglish)
-            {
-                _xmlDocumentEnglish = await GetWebResponse($"{_federalSettings.FederalJobXmlRoot}/en/{jobId}.xml");
-            }
+            var tasks = new Task<XmlDocument>[2];
 
-            if (importFrench)
-            {
-                _xmlDocumentFrench = await GetWebResponse($"{_federalSettings.FederalJobXmlRoot}/fr/{jobId}.xml");
-            }
+            tasks[0] = GetWebResponse($"{_federalSettings.FederalJobXmlRoot}/en/{jobId}.xml");
+            tasks[1] = GetWebResponse($"{_federalSettings.FederalJobXmlRoot}/fr/{jobId}.xml");
+
+            await Task.WhenAll(tasks);
+            _xmlDocumentEnglish = tasks[0].Result;
+            _xmlDocumentFrench = tasks[1].Result;
         }
 
         public DateTime? GetXmlDisplayUntil(string xml)
