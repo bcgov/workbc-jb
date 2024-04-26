@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using WorkBC.Data;
+using WorkBC.Data.Model.JobBoard;
 using WorkBC.Web.Services;
+using System.Linq;
 
 namespace WorkBC.Web.Controllers
 {
@@ -12,11 +15,13 @@ namespace WorkBC.Web.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly SystemSettingsService _settingsService;
+        private readonly JobBoardContext _context;
 
-        public SystemSettingsController(SystemSettingsService settingsService, IConfiguration configuration)
+        public SystemSettingsController(SystemSettingsService settingsService, IConfiguration configuration,JobBoardContext context)
         {
             _settingsService = settingsService;
             _configuration = configuration;
+            _context = context;
         }
 
         [EnableCors("_API")]
@@ -62,6 +67,21 @@ namespace WorkBC.Web.Controllers
                     BuildDate = _configuration["Version:BuildDate"]
                 }
             );
+        }
+
+        [HttpGet]
+        public IActionResult DebugInfo()
+        {
+            var query = from p in _context.NocCodes2021
+                        select new NocCode2021
+                        {
+                            Id = p.Id,
+                            Code = p.Code,
+                            Title = p.Title,
+                            FrenchTitle = p.FrenchTitle,
+                        };
+
+            return Ok( query.ToList());
         }
     }
 }
