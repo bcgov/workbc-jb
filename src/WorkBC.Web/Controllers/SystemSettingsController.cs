@@ -68,20 +68,5 @@ namespace WorkBC.Web.Controllers
                 }
             );
         }
-
-        [HttpGet]
-        public IActionResult DebugInfo()
-        {
-            var query = from p in _context.NocCodes2021
-                        select new NocCode2021
-                        {
-                            Id = p.Id,
-                            Code = p.Code,
-                            Title = p.Title,
-                            FrenchTitle = p.FrenchTitle,
-                        };
-
-            return Ok( query.ToList());
-        }
     }
 }

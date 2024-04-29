@@ -17,7 +17,7 @@ namespace WorkBC.Data.Migrations
         {
 
         }
-        protected async override void Up(MigrationBuilder migrationBuilder)
+        protected override void Up(MigrationBuilder migrationBuilder)
         {
 
             var allNocs = GetNocCodes2021();
@@ -45,7 +45,7 @@ namespace WorkBC.Data.Migrations
 
         }
 
-        protected async override void Down(MigrationBuilder migrationBuilder)
+        protected override void Down(MigrationBuilder migrationBuilder)
         {
             //Set the NocCodeId2021 column to NULL in Jobs and JobVersions table.
             migrationBuilder.Sql(@"Update [dbo].[Jobs] Set NocCodeId2021 = NULL");
