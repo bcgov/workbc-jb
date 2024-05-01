@@ -140,7 +140,7 @@ namespace WorkBC.Importers.Wanted.Services
 
                     if (elasticJob?.JobId != null && job != null)
                     {
-                        bool needsNewVersion = CopyElasticJob(elasticJob, job);
+                        bool needsNewVersion = CopyElasticJobWanted(elasticJob, job);
 
                         job.LastUpdated = elasticJob.LastUpdated ?? importedJob.DateLastImported;
                         //job.DateFirstImported = importedJob.DateFirstImported;  /* Don't change DateFirstImported or it will mess up reports!! */

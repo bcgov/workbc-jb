@@ -167,6 +167,68 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             return newVersion;
         }
 
+        protected bool CopyElasticJobWanted(ElasticSearchJob elasticJob, Job job)
+        {
+            int locationId;
+            if (elasticJob.WorkplaceType?.Id == (int)WorkplaceTypeId.Virtual)
+            {
+                locationId = VirtualJobsLocationId;
+            }
+            else
+            {
+                if (elasticJob.City == null || elasticJob.City.Length == 0)
+                {
+                    locationId = 0;
+                }
+                else
+                {
+                    locationId = elasticJob.City.Length > 1
+                        ? MultipleLocationsId
+                        : GetBestAvailableLocationId(elasticJob.City[0]);
+                }
+            }
+
+
+            bool newVersion = job.NocCodeId != (short?)elasticJob.Noc
+                              || job.IndustryId != (short?)(elasticJob.NaicsId == 0 ? (int?)null : elasticJob.NaicsId)
+                              || job.LocationId != locationId
+                              || job.PositionsAvailable != (short)elasticJob.PositionsAvailable
+                              || job.DatePosted != elasticJob.DatePosted
+                              || job.ActualDatePosted != elasticJob.ActualDatePosted
+                              || !job.IsActive;
+
+
+            var code2016 = (short?)elasticJob.Noc;
+            // get the NoC Code 2021 value for the corresponding 2016 value.
+            var record = DbContext.NocCodes2021
+                .FirstOrDefault(n => n.Code2016.Contains(job.NocCodeId.ToString()));
+            string code2021 = new string(" ");
+            if (record != null)
+            {
+                code2021 = record.Code;
+
+                Console.WriteLine("code2021:" + code2021);
+
+                job.NocCodeId2021 = Convert.ToInt32(code2021 == " " ? 0 : code2021);
+            }
+
+            job.EmployerName = elasticJob.EmployerName.Truncate(100);
+            job.City = string.Join(", ", elasticJob.City ?? new string[] { }).Truncate(120);
+            job.Title = elasticJob.Title.Truncate(300);
+            job.NocCodeId = (short?)elasticJob.Noc;
+            job.DatePosted = elasticJob.DatePosted;
+            job.ActualDatePosted = elasticJob.ActualDatePosted;
+            job.ExpireDate = elasticJob.ExpireDate ?? DateTime.Now.AddDays(_wantedJobExpiryDays);
+            job.PositionsAvailable = (short)elasticJob.PositionsAvailable;
+            job.Salary = elasticJob.Salary;
+            job.SalarySummary = elasticJob.SalarySummary;
+            job.IndustryId = (short?)(elasticJob.NaicsId == 0 ? (int?)null : elasticJob.NaicsId);
+            job.LocationId = locationId;
+            job.IsActive = true;
+
+            return newVersion;
+        }
+
         protected void IncrementJobVersion(Job job)
         {
             DateTime now = DateTime.Now;
