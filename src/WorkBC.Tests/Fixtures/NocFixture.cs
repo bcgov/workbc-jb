@@ -12,6 +12,7 @@ namespace WorkBC.Tests.Fixtures
                 new NocCode2021 {Code = "74102", Code2016 = "7514", Id= 74102, Title= "Driver - Richmond"},
                 new NocCode2021 {Code = "52120", Code2016 = "5241", Id= 52120, Title= "Graphic Designer"},
                 new NocCode2021 {Code = "63200", Code2016 = "6322", Id= 63200, Title= "Cook"},
+                new NocCode2021 {Code = "11100", Code2016 = "1111,1114", Id= 11100, Title= "Financial insurance advisor"}
             };
         public static List<NocCode> NocCodes =>
             new List<NocCode>
