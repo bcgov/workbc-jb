@@ -76,9 +76,9 @@ namespace WorkBC.Tests.Tests
                 $"Job for NOC code {nocCode} did not return 3 results, but {result.Count} results");
         }
 
-        [Theory(DisplayName = "Find jobs based on a NOC code 2021")]
+        [Theory(DisplayName = "Find jobs based on a NOC code 2021 from a federal source")]
         [InlineData("21234")]
-        public async Task FindJobByNocCode2021(string nocCode2021)
+        public async Task FindJobByNocCode2021Federal(string nocCode2021)
         {
             //Create an instance with the filters required
             var esq = new JobSearchQuery(GeocodingService, Configuration, GetFiltersForJobNocField2021(nocCode2021));
@@ -94,7 +94,8 @@ namespace WorkBC.Tests.Tests
         [Theory(DisplayName = "Find jobs based on a NOC code 2021 derived from a TalentNeuron source")]
         [InlineData("11202")]
         [InlineData("74102")]
-        [InlineData("63200")]
+        [InlineData("52120")]
+        [InlineData("11100")]
         public async Task FindJobByNocCode2021Wanted(string nocCode2021)
         {
             //Create an instance with the filters required
