@@ -27,10 +27,10 @@ namespace WorkBC.Data.Migrations
             //by retrieving the corresponding 2021 NOC code from JobBoard.NocCodes2021
             //via JobBoard.SavedCareerProfiles.EDM_CareerProfile_CareerProfileId which matches the JobBoard.NocCodes2021.Code2016
             migrationBuilder.Sql(
-                  @"  Update [WorkBC_jobboard_dev].[dbo].[SavedCareerProfiles]
+                  @"  Update [dbo].[SavedCareerProfiles]
                       Set NocCodeId2021 = (
-                      Select Code from [WorkBC_jobboard_dev].[dbo].NocCodes2021 nc 
-                      where ((Select CAST(EDM_CareerProfile_CareerProfileId As varchar) from [WorkBC_jobboard_dev].[dbo].[SavedCareerProfiles]) in (nc.Code2016))
+                      Select Code from [dbo].NocCodes2021 nc 
+                      where ((Select CAST(EDM_CareerProfile_CareerProfileId As varchar) from [dbo].[SavedCareerProfiles]) in (nc.Code2016))
                       )
                   GO");
 
@@ -56,8 +56,8 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.Sql(
             @"Update [dbo].[SavedCareerProfiles]
               Set EDM_CareerProfile_CareerProfileId = (
-              Select Code2016 from [WorkBC_jobboard_dev].[dbo].NocCodes2021 nc 
-              where ((Select NocCodeId2021 from [WorkBC_jobboard_dev].[dbo].[SavedCareerProfiles]) in (nc.Code))
+              Select Code2016 from [dbo].NocCodes2021 nc 
+              where ((Select NocCodeId2021 from [dbo].[SavedCareerProfiles]) in (nc.Code))
               )
               GO");
 
