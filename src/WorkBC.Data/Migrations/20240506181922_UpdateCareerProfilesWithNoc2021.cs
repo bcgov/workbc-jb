@@ -19,9 +19,18 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AddColumn<string>(
             name: "NocCodeId2021",
             table: "SavedCareerProfiles",
-            type: "nvarchar(5)",
+            type: "int",
             maxLength: 5,
             nullable: true);
+
+            //Add Foreign Key FK_SavedCareerProfiles_NocCodes2021_Id
+            migrationBuilder.AddForeignKey(
+            name: "FK_SavedCareerProfiles_NocCodes2021_Id",
+            table: "SavedCareerProfiles",
+            column: "NocCodeId2021",
+            principalTable: "NocCodes2021",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
 
             //Populate all existing JobBoard.SavedCareerProfiles.NocCodeId2021 columns
             //by retrieving the corresponding 2021 NOC code from JobBoard.NocCodes2021
@@ -43,6 +52,10 @@ namespace WorkBC.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+            name: "FK_SavedCareerProfiles_NocCodes2021_Id",
+            table: "SavedCareerProfiles");
+
             //Add older column to dbo.SavedCareeProfiles tables.
             migrationBuilder.AddColumn<string>(
             name: "EDM_CareerProfile_CareerProfileId",
