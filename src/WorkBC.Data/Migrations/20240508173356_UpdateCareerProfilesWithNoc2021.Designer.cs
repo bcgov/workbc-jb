@@ -12,7 +12,7 @@ using WorkBC.Data;
 namespace WorkBC.Data.Migrations
 {
     [DbContext(typeof(JobBoardContext))]
-    [Migration("20240506181922_UpdateCareerProfilesWithNoc2021")]
+    [Migration("20240508173356_UpdateCareerProfilesWithNoc2021")]
     partial class UpdateCareerProfilesWithNoc2021
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
