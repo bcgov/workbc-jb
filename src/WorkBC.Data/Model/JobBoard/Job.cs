@@ -37,6 +37,14 @@ namespace WorkBC.Data.Model.JobBoard
         public virtual NocCode NocCode { get; set; }
 
         /// <summary>
+        ///     2021 Noc Code
+        /// </summary>
+        public int? NocCodeId2021 { get; set; }
+
+        [ForeignKey("NocCodeId2021")]
+        public virtual NocCode2021 NocCode2021 { get; set; }
+
+        /// <summary>
         ///     Industry code
         /// </summary>
         public short? IndustryId { get; set; }

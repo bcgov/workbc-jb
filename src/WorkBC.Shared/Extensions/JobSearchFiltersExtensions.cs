@@ -524,6 +524,12 @@ namespace WorkBC.Shared.Extensions
                 moreParams += $"noc={filters.SearchNocField};";
             }
 
+            // 2021 NOC code
+            if (!string.IsNullOrEmpty(filters.SearchNoc2021Field))
+            {
+                moreParams += $"noc={filters.SearchNoc2021Field};";
+            }
+
             // Job posting language = English and French
             if (filters.SearchIsPostingsInEnglishAndFrench)
             {

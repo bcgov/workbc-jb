@@ -141,6 +141,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             }
 
             bool newVersion = job.NocCodeId != (short?)elasticJob.Noc
+                              || job.NocCodeId2021 != elasticJob.Noc2021
                               || job.IndustryId != (short?)(elasticJob.NaicsId == 0 ? (int?)null : elasticJob.NaicsId)
                               || job.LocationId != locationId
                               || job.PositionsAvailable != (short)elasticJob.PositionsAvailable
@@ -152,6 +153,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             job.City = string.Join(", ", elasticJob.City ?? new string[] { }).Truncate(120);
             job.Title = elasticJob.Title.Truncate(300);
             job.NocCodeId = (short?)elasticJob.Noc;
+            job.NocCodeId2021 = elasticJob.Noc2021;
             job.DatePosted = elasticJob.DatePosted;
             job.ActualDatePosted = elasticJob.ActualDatePosted;
             job.ExpireDate = elasticJob.ExpireDate ?? DateTime.Now.AddDays(_wantedJobExpiryDays);
@@ -161,7 +163,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             job.IndustryId = (short?)(elasticJob.NaicsId == 0 ? (int?)null : elasticJob.NaicsId);
             job.LocationId = locationId;
             job.IsActive = true;
-
+            
             return newVersion;
         }
 
@@ -204,7 +206,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     LocationId = job.LocationId,
                     IsCurrentVersion = true,
                     VersionNumber = (short) (oldVersion.VersionNumber + 1)
-                };
+                };                
             }
             else
             {
@@ -218,6 +220,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     JobSourceId = job.JobSourceId,
                     IndustryId = job.IndustryId,
                     NocCodeId = job.NocCodeId,
+                    NocCodeId2021 = job.NocCodeId2021,
                     IsActive = true,
                     PositionsAvailable = job.PositionsAvailable,
                     LocationId = job.LocationId,
