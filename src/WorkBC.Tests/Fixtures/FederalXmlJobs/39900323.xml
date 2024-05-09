@@ -1,0 +1,304 @@
+<SolrResponse>
+	<Header>
+		<status>0</status>
+		<QTime>0</QTime>
+		<numFound>1</numFound>
+	</Header>
+	<Documents>
+		<Document>
+			<jobs_id>39900323</jobs_id>
+			<skill_level>A</skill_level>
+			<remote_cd>2700410</remote_cd>
+			<title>Web developer</title>
+			<work_period_cd>F</work_period_cd>
+			<employer_type_id>0</employer_type_id>
+			<edulevel_cd>U</edulevel_cd>
+			<wage_class>C</wage_class>
+			<postal_code>V2T5W8</postal_code>
+			<region_spelling>abbotsford</region_spelling>
+			<employer_id>286709</employer_id>
+			<lang>en</lang>
+			<employer_postal_code>V2T5W8</employer_postal_code>
+			<job_source_id>16</job_source_id>
+			<work_term_cd>P</work_term_cd>
+			<work_lang_cd>E</work_lang_cd>
+			<app_methods>
+				<app_resumesharing>0</app_resumesharing>
+				<app_online></app_online>
+				<app_email>helptechnoloop@gmail.com</app_email>
+				<app_phone>
+					<app_phone_number></app_phone_number>
+					<app_phone_ext></app_phone_ext>
+					<app_phone_start_bus_hours></app_phone_start_bus_hours>
+					<app_phone_end_bus_hours></app_phone_end_bus_hours>
+				</app_phone>
+				<app_fax></app_fax>
+				<app_person>
+					<app_person_street></app_person_street>
+					<app_person_room></app_person_room>
+					<app_person_city></app_person_city>
+					<app_person_province></app_person_province>
+					<app_person_country></app_person_country>
+					<app_person_pstlcd></app_person_pstlcd>
+					<app_person_start_bus_hours></app_person_start_bus_hours>
+					<app_person_end_bus_hours></app_person_end_bus_hours>
+				</app_person>
+				<app_mail>
+					<app_mail_street></app_mail_street>
+					<app_mail_room></app_mail_room>
+					<app_mail_city></app_mail_city>
+					<app_mail_province></app_mail_province>
+					<app_mail_country></app_mail_country>
+					<app_mail_pstlcd></app_mail_pstlcd>
+				</app_mail>
+			</app_methods>
+			<naics_id>31</naics_id>
+			<hours>35 to 40 hours per week</hours>
+			<wagehourly_class>C</wagehourly_class>
+			<employer_name_case>Technoloop solutions inc</employer_name_case>
+			<employer_name_string>Technoloop solutions inc</employer_name_string>
+			<num_positions>2</num_positions>
+			<skill_categories>
+				<skill_category id="100003">
+					<name>Education</name>
+					<options>
+						<option_name id="los">Bachelor's degree</option_name>
+						<option_name> or equivalent experience</option_name>
+					</options>
+				</skill_category>
+				<skill_category id="2">
+					<name>Work setting</name>
+					<options>
+						<option_name id="16418">Relocation costs not covered by employer</option_name>
+						<option_name id="15170">Willing to relocate</option_name>
+						<option_name id="15316">Help desk</option_name>
+						<option_name id="12476">Consulting firm</option_name>
+					</options>
+				</skill_category>
+				<skill_category id="29">
+					<name>Tasks</name>
+					<options>
+						<option_name id="20864">Consult with clients to develop and document Website requirements</option_name>
+						<option_name id="15413">Write, modify, integrate and test software code</option_name>
+						<option_name id="19282">Maintain existing computer programs by making modifications as required</option_name>
+						<option_name id="19833">Prepare mock-ups and storyboards</option_name>
+						<option_name id="15415">Communicate technical problems, processes and solutions</option_name>
+						<option_name id="23441">Develop Website architecture and determine hardware and software requirements</option_name>
+						<option_name id="15416">Prepare reports, manuals and other documentation on the status, operation and maintenance of software</option_name>
+						<option_name id="20897">Source, select and organize information for inclusion and design the appearance, layout and flow of the Website</option_name>
+						<option_name id="15417">Assist in the collection and documentation of user's requirements</option_name>
+						<option_name id="20903">Create and optimize content for Website using a variety of graphics, database, animation and other software</option_name>
+						<option_name id="15418">Assist in the development of logical and physical specifications</option_name>
+						<option_name id="17371">Research and evaluate a variety of interactive media software products</option_name>
+						<option_name id="20867">Lead and co-ordinate multidisciplinary teams to develop Website graphics, content, capacity and interactivity</option_name>
+						<option_name id="15419">Research and evaluate a variety of software products</option_name>
+						<option_name id="20969">Program animation software to predefined specifications for interactive CDs, DVDs, video game cartridges and Internet-based applications</option_name>
+						<option_name id="29212">Conduct tests and perform security and quality controls</option_name>
+						<option_name id="29197">Plan, design, write, modify, integrate and test Web-site related code</option_name>
+						<option_name id="15422">Program special effects software for film and video applications</option_name>
+						<option_name id="20963">Write, modify, integrate and test software code for e-commerce and other Internet applications</option_name>
+					</options>
+				</skill_category>
+				<skill_category id="60">
+					<name>Computer and technology knowledge</name>
+					<options>
+						<option_name id="15255">Networking software</option_name>
+						<option_name id="15257">Networking hardware</option_name>
+						<option_name id="11698">DHTML</option_name>
+						<option_name id="9551">HTML</option_name>
+						<option_name id="15266">Servers</option_name>
+						<option_name id="10385">Flash</option_name>
+						<option_name id="424">XML</option_name>
+					</options>
+				</skill_category>
+				<skill_category id="285">
+					<name>Security and safety</name>
+					<options>
+						<option_name id="16640">Criminal record check</option_name>
+					</options>
+				</skill_category>
+				<skill_category id="287">
+					<name>Work conditions and physical capabilities</name>
+					<options>
+						<option_name id="15144">Fast-paced environment</option_name>
+						<option_name id="15146">Work under pressure</option_name>
+						<option_name id="20822">Tight deadlines</option_name>
+						<option_name id="15149">Repetitive tasks</option_name>
+						<option_name id="15150">Handling heavy loads</option_name>
+						<option_name id="15152">Physically demanding</option_name>
+						<option_name id="15153">Manual dexterity</option_name>
+						<option_name id="15155">Attention to detail</option_name>
+						<option_name id="15157">Ability to distinguish between colours</option_name>
+						<option_name id="15159">Sound discrimination</option_name>
+						<option_name id="15160">Sitting</option_name>
+						<option_name id="15161">Combination of sitting, standing, walking</option_name>
+						<option_name id="15163">Standing for extended periods</option_name>
+						<option_name id="15166">Bending, crouching, kneeling</option_name>
+					</options>
+				</skill_category>
+				<skill_category id="291">
+					<name>Personal suitability</name>
+					<options>
+						<option_name id="23526">Accurate</option_name>
+						<option_name id="23541">Client focus</option_name>
+						<option_name id="23547">Dependability</option_name>
+						<option_name id="23520">Efficient interpersonal skills</option_name>
+						<option_name id="23532">Excellent oral communication</option_name>
+						<option_name id="23535">Excellent written communication</option_name>
+						<option_name id="23515">Initiative</option_name>
+						<option_name id="23550">Judgement</option_name>
+						<option_name id="23559">Organized</option_name>
+						<option_name id="23529">Team player</option_name>
+					</options>
+				</skill_category>
+				<skill_category id="100001">
+					<name>Experience</name>
+					<options>
+						<option_name id="16715">1 year to less than 2 years</option_name>
+					</options>
+				</skill_category>
+			</skill_categories>
+			<start_date />
+			<noc2016>2175</noc2016>
+			<noc2021>21234</noc2021>
+			<job_senior_flag>false</job_senior_flag>
+			<job_canadian_citizen_flag>false</job_canadian_citizen_flag>
+			<various_location_flag>false</various_location_flag>
+			<job_student_flag>false</job_student_flag>
+			<job_recruiter_flag>false</job_recruiter_flag>
+			<job_youth_flag>false</job_youth_flag>
+			<job_apprentice_flag>false</job_apprentice_flag>
+			<job_global_applicant_flag>true</job_global_applicant_flag>
+			<job_disability_flag>false</job_disability_flag>
+			<job_aboriginal_flag>false</job_aboriginal_flag>
+			<program_title>false</program_title>
+			<job_vismin_flag>false</job_vismin_flag>
+			<job_general_flag>true</job_general_flag>
+			<job_newcomer_flag>false</job_newcomer_flag>
+			<job_veteran_flag>false</job_veteran_flag>
+			<latlng_variance>1</latlng_variance>
+			<los_id>8</los_id>
+			<postal_code_ind>1</postal_code_ind>
+			<experience_min>12</experience_min>
+			<date_posted>2023-12-29T14:04:00Z</date_posted>
+			<import_date>2024-04-18T18:04:50Z</import_date>
+			<file_update_date>2024-04-18T17:34:00Z</file_update_date>
+			<display_until>2024-04-27T14:04:00Z</display_until>
+			<salary_yearly>70070.0</salary_yearly>
+			<salary_hourly>38.5</salary_hourly>
+			<salary_weekly>1347.5</salary_weekly>
+			<work_hours>35.0</work_hours>
+			<city_name>
+				<string>Abbotsford</string>
+			</city_name>
+			<arr_app_methods>
+				<string>email</string>
+			</arr_app_methods>
+			<lmi_geoarea_cd>
+				<string>25565</string>
+			</lmi_geoarea_cd>
+			<url>
+				<string>https://www.jobbank.gc.ca/jobsearch/jobposting/39900323</string>
+			</url>
+			<activity_type>
+				<string>424</string>
+				<string>9551</string>
+				<string>10385</string>
+				<string>11698</string>
+				<string>12476</string>
+				<string>15144</string>
+				<string>15146</string>
+				<string>15149</string>
+				<string>15150</string>
+				<string>15152</string>
+				<string>15153</string>
+				<string>15155</string>
+				<string>15157</string>
+				<string>15159</string>
+				<string>15160</string>
+				<string>15161</string>
+				<string>15163</string>
+				<string>15166</string>
+				<string>15170</string>
+				<string>15255</string>
+				<string>15257</string>
+				<string>15266</string>
+				<string>15316</string>
+				<string>15413</string>
+				<string>15415</string>
+				<string>15416</string>
+				<string>15417</string>
+				<string>15418</string>
+				<string>15419</string>
+				<string>15422</string>
+				<string>16418</string>
+				<string>16640</string>
+				<string>16715</string>
+				<string>17371</string>
+				<string>19282</string>
+				<string>19833</string>
+				<string>20822</string>
+				<string>20864</string>
+				<string>20867</string>
+				<string>20897</string>
+				<string>20903</string>
+				<string>20963</string>
+				<string>20969</string>
+				<string>23441</string>
+				<string>23515</string>
+				<string>23520</string>
+				<string>23526</string>
+				<string>23529</string>
+				<string>23532</string>
+				<string>23535</string>
+				<string>23541</string>
+				<string>23547</string>
+				<string>23550</string>
+				<string>23559</string>
+				<string>29197</string>
+				<string>29212</string>
+				<string>101010</string>
+			</activity_type>
+			<latlng>
+				<string>49.071365,-122.359067</string>
+			</latlng>
+			<latlng_rpt>
+				<string>49.071365,-122.359067</string>
+			</latlng_rpt>
+			<city_id>
+				<string>22369</string>
+			</city_id>
+			<noc_jobtitle_concordance_id>
+				<string>17892</string>
+			</noc_jobtitle_concordance_id>
+			<special_type>
+				<string>101010</string>
+			</special_type>
+			<major_city_id>
+				<string>22369</string>
+			</major_city_id>
+			<employment_terms>
+				<string>Day</string>
+				<string>Evening</string>
+				<string>Morning</string>
+			</employment_terms>
+			<work_hour_term>
+				<string>M</string>
+				<string>D</string>
+				<string>E</string>
+			</work_hour_term>
+			<province_cd>
+				<string>BC</string>
+			</province_cd>
+			<salary>
+				<string>$38.50 hourly</string>
+			</salary>
+			<employer_name>
+				<string>Technoloop solutions inc</string>
+			</employer_name>
+			<category_type>
+				<string>101000</string>
+			</category_type>
+		</Document>
+	</Documents>
+</SolrResponse>
