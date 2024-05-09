@@ -29,7 +29,7 @@ resource "aws_ecs_task_definition" "app" {
 		name        = "migration"
 		image       = "${var.app_repo}/jb-migration:${var.app_version}"
 		networkMode = "awsvpc"
-		
+
 		logConfiguration = {
 			logDriver = "awslogs"
 			options = {
@@ -38,7 +38,7 @@ resource "aws_ecs_task_definition" "app" {
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
-		}		
+		}
 
 		environment = [
 			{
@@ -61,7 +61,7 @@ resource "aws_ecs_task_definition" "app" {
 		name        = "web"
 		image       = "${var.app_repo}/jb:${var.app_version}"
 		networkMode = "awsvpc"
-		
+
 		logConfiguration = {
 			logDriver = "awslogs"
 			options = {
@@ -70,7 +70,7 @@ resource "aws_ecs_task_definition" "app" {
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
-		}		
+		}
 
 		portMappings = [
 			{
@@ -79,7 +79,7 @@ resource "aws_ecs_task_definition" "app" {
 				containerPort = 8081
 			}
 		]
-		
+
 		environment = [
 			{
 				name = "ConnectionStrings__DefaultConnection",
@@ -104,7 +104,7 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "EmailSettings__FromEmail",
 				value = "noreply@workbc.ca"
-			},			
+			},
 			{
 				name = "ASPNETCORE_URLS",
 				value = "http://*:8081"
@@ -169,7 +169,7 @@ resource "aws_ecs_task_definition" "app" {
 		name        = "admin"
 		image       = "${var.app_repo}/jb-admin:${var.app_version}"
 		networkMode = "awsvpc"
-		
+
 		logConfiguration = {
 			logDriver = "awslogs"
 			options = {
@@ -178,7 +178,7 @@ resource "aws_ecs_task_definition" "app" {
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
-		}		
+		}
 
 		portMappings = [
 			{
@@ -187,7 +187,7 @@ resource "aws_ecs_task_definition" "app" {
 				containerPort = 8080
 			}
 		]
-		
+
 		environment = [
 			{
 				name = "ConnectionStrings__DefaultConnection",
@@ -273,7 +273,7 @@ resource "aws_ecs_task_definition" "app" {
 		name        = "cli"
 		image       = "${var.app_repo}/jb-cli:${var.app_version}"
 		networkMode = "awsvpc"
-		
+
 		logConfiguration = {
 			logDriver = "awslogs"
 			options = {
@@ -282,7 +282,7 @@ resource "aws_ecs_task_definition" "app" {
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
-		}		
+		}
 
 		environment = [
 			{
@@ -343,7 +343,7 @@ resource "aws_ecs_task_definition" "app" {
 		]
 	}
   ])
-  
+
   runtime_platform {
     operating_system_family = "LINUX"
     cpu_architecture        = "X86_64"
@@ -380,7 +380,7 @@ resource "aws_ecs_service" "jobboard" {
     container_name   = "web"
     container_port   = "8081"
   }
-  
+
   load_balancer {
     target_group_arn = aws_alb_target_group.admin.id
     container_name   = "admin"
