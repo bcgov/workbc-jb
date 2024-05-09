@@ -263,6 +263,45 @@ namespace WorkBC.Web.Controllers
             ).ToList();
         }
 
+
+        [HttpGet("topjobs/{noc}")]
+        [AllowAnonymous]
+        public async Task<List<CareerProfileTopJobsModel>> GetTopJobsByNoc2021(int noc2021)
+        {
+            // Create a search filter to get the newest 4 jobs for a specific NOC code.
+            // (we will only display 3 jobs, but if there's 4 jobs available we know to display
+            // additional text in Kentico)
+            var filters = new JobSearchFilters
+            {
+                Page = 1,
+                PageSize = 4,
+                SortOrder = 1, // Posted date newest first
+                SearchNoc2021Field = noc2021.ToString(),
+            };
+
+            // run the query
+            Source[] jobs = await RunElasticQuery(filters);
+
+            if (!jobs.Any())
+            {
+                return new List<CareerProfileTopJobsModel>();
+            }
+
+            // return the list of jobs
+            return jobs.Select(
+                job => new CareerProfileTopJobsModel
+                {
+                    JobId = job.JobId,
+                    DatePosted = job.DatePosted.Value.ToString("MMMM dd, yyyy"),
+                    Employer = job.EmployerName,
+                    JobTitle = job.Title,
+                    Location = string.Join(", ", job.City),
+                    ExternalUrl = job.ExternalSource?.Source?.FirstOrDefault()?.Url ?? "",
+                    ExteralSource = job.ExternalSource?.Source?.FirstOrDefault()?.Source ?? ""
+                }
+            ).ToList();
+        }
+
         private async Task<Source[]> RunElasticQuery(JobSearchFilters filters)
         {
             //Search object that we will use to search Elastic Search

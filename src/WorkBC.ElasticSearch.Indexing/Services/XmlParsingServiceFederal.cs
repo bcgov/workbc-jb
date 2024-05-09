@@ -27,7 +27,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
         }
 
         public XmlParsingServiceFederal(List<Data.Model.JobBoard.Location> duplicateCities,
-            Dictionary<string, string> uniqueCities, List<NocCode> nocCodes, IGeocodingService geocodingService) : base(duplicateCities, uniqueCities, nocCodes)
+            Dictionary<string, string> uniqueCities, List<NocCode> nocCodes, List<NocCode2021> nocCodes2021, IGeocodingService geocodingService) : base(duplicateCities, uniqueCities, nocCodes, nocCodes2021)
         {
             this._geocodingService = geocodingService;
         }
@@ -74,6 +74,19 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     noc = 0;
                 }
 
+
+                //get noc 2021 code
+                var noc2021 = 0;
+                if (xmlJobNode["noc2021"] != null)
+                {
+                    noc2021 = Convert.ToInt32(xmlJobNode["noc2021"].InnerText);
+                    // make sure the code 2021 is valid
+                    if (NocCodes2021.All(c => c.Id != noc2021))
+                    {
+                        noc2021 = 0;
+                    }
+                }
+
                 job = new ElasticSearchJob
                 {
                     JobId = xmlJobNode["jobs_id"].InnerText,
@@ -117,6 +130,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     LastUpdated = Convert.ToDateTime(xmlJobNode["file_update_date"].InnerText),
                     PositionsAvailable = Convert.ToInt32(xmlJobNode["num_positions"].InnerText),
                     Noc = noc == 0 ? (int?)null : noc,
+                    Noc2021 = noc2021 == 0 ? (int?)null : noc2021,
                     IsVariousLocation = Convert.ToBoolean(xmlJobNode["various_location_flag"].InnerText),
                     ProgramName = xmlJobNode["program_name"] != null
                         ? xmlJobNode["program_name"].InnerText
@@ -613,6 +627,14 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 #region Noc
 
                 job.NocGroup = GetNocGroup(job.Noc, isFrench);
+                job.NocJobTitle = job.Title;
+
+                #endregion
+
+
+                #region Noc2021
+
+                job.NocGroup = GetNocGroup(job.Noc2021, isFrench);
                 job.NocJobTitle = job.Title;
 
                 #endregion

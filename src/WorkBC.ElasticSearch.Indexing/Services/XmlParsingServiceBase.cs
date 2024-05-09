@@ -16,6 +16,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
         protected readonly List<Data.Model.JobBoard.Location> DuplicateCities;
         protected readonly List<string> DuplicateCityNames;
         protected readonly List<NocCode> NocCodes;
+        protected readonly List<NocCode2021> NocCodes2021;
         protected readonly Dictionary<string, string> UniqueCities;
 
         protected int WantedJobExpiryDays { get; set; }
@@ -44,16 +45,18 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             UniqueCities = cityService.GetUniqueCitiesForIndexing().Result;
             DuplicateCities = cityService.GetDuplicateCitiesForIndexing().Result;
             NocCodes = JobBoardContext.NocCodes.ToList();
+            NocCodes2021 = JobBoardContext.NocCodes2021.ToList();
             // store the cities for quick lookup during indexing
             DuplicateCityNames = DuplicateCities.Select(c => c.City.ToLower()).Distinct().ToList();
         }
 
         protected XmlParsingServiceBase(List<Data.Model.JobBoard.Location> duplicateCities,
-            Dictionary<string, string> uniqueCities, List<NocCode> nocCodes)
+            Dictionary<string, string> uniqueCities, List<NocCode> nocCodes, List<NocCode2021> nocCodes2021)
         {
             UniqueCities = uniqueCities;
             DuplicateCities = duplicateCities;
             NocCodes = nocCodes;
+            NocCodes2021 = nocCodes2021;
             // store the cities for quick lookup during indexing
             DuplicateCityNames = DuplicateCities.Select(c => c.City.ToLower()).Distinct().ToList();
             WantedJobExpiryDays = General.DefaultWantedJobExpiryDays;

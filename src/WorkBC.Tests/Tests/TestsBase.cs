@@ -60,9 +60,10 @@ namespace WorkBC.Tests.Tests
             Dictionary<string, string> uniqueCities = FakeCityService.GetUiqueCitiesForIndexing();
             List<Location> duplicateCities = FakeCityService.GetDuplicateCitiesForIndexing();
             List<NocCode> lstNocs = NocFixture.NocCodes;
+            List<NocCode2021> lstNocs2021 = NocFixture.NocCodes2021;
 
-            var xmlServiceFederal = new XmlParsingServiceFederal(duplicateCities, uniqueCities, lstNocs, GeocodingService);
-            var xmlServiceWanted = new XmlParsingServiceWanted(duplicateCities, uniqueCities, lstNocs);
+            var xmlServiceFederal = new XmlParsingServiceFederal(duplicateCities, uniqueCities, lstNocs, lstNocs2021, GeocodingService);
+            var xmlServiceWanted = new XmlParsingServiceWanted(duplicateCities, uniqueCities, lstNocs, lstNocs2021);
 
             ElasticService = new ElasticSearchSetupHelpers(
                 Configuration,
