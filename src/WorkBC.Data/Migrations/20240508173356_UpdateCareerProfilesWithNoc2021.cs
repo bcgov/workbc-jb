@@ -1,11 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
-using System.Text;
-using System;
-using WorkBC.Data.Model.Enterprise;
-using WorkBC.Data.Model.JobBoard;
 
 #nullable disable
 
@@ -15,7 +8,7 @@ namespace WorkBC.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            ////Add new columns to dbo.SavedCareeProfiles tables.
+            //Add new columns to dbo.SavedCareeProfiles tables.
             migrationBuilder.AddColumn<string>(
             name: "NocCodeId2021",
             table: "SavedCareerProfiles",
@@ -23,7 +16,7 @@ namespace WorkBC.Data.Migrations
             maxLength: 5,
             nullable: true);
 
-            //////Add Foreign Key FK_SavedCareerProfiles_NocCodes2021_Id
+            //Add Foreign Key FK_SavedCareerProfiles_NocCodes2021_Id
             migrationBuilder.AddForeignKey(
             name: "FK_SavedCareerProfiles_NocCodes2021_Id",
             table: "SavedCareerProfiles",
@@ -33,9 +26,9 @@ namespace WorkBC.Data.Migrations
             onDelete: ReferentialAction.Cascade);
 
 
-            ////Populate all existing JobBoard.SavedCareerProfiles.NocCodeId2021 columns
-            ////by retrieving the corresponding 2021 NOC code from JobBoard.NocCodes2021
-            ////via JobBoard.SavedCareerProfiles.EDM_CareerProfile_CareerProfileId which matches the JobBoard.NocCodes2021.Code2016
+            //Populate all existing JobBoard.SavedCareerProfiles.NocCodeId2021 columns
+            //by retrieving the corresponding 2021 NOC code from JobBoard.NocCodes2021
+            //via JobBoard.SavedCareerProfiles.EDM_CareerProfile_CareerProfileId which matches the JobBoard.NocCodes2021.Code2016
             migrationBuilder.Sql(
                   @"Update SavedCareerProfiles
                     Set NocCodeId2021 = nc.Id
@@ -44,7 +37,7 @@ namespace WorkBC.Data.Migrations
                     on nc.Code2016 LIKE CONCAT('%', CAST(cp.EDM_CareerProfile_CareerProfileId as nvarchar), '%') 
                     GO");
 
-            //////Drop the older redundant column after populating NocCodeId2021 column.
+            //Drop the older redundant column after populating NocCodeId2021 column.
             migrationBuilder.DropColumn(
             name: "EDM_CareerProfile_CareerProfileId",
             table: "SavedCareerProfiles");
@@ -53,12 +46,12 @@ namespace WorkBC.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            ////Drop the Foreign Key
+            //Drop the Foreign Key
             migrationBuilder.DropForeignKey(
             name: "FK_SavedCareerProfiles_NocCodes2021_Id",
             table: "SavedCareerProfiles");
 
-            ////Add older column to dbo.SavedCareeProfiles tables.
+            //Add older column to dbo.SavedCareeProfiles tables.
             migrationBuilder.AddColumn<string>(
             name: "EDM_CareerProfile_CareerProfileId",
             table: "SavedCareerProfiles",
@@ -76,7 +69,7 @@ namespace WorkBC.Data.Migrations
               On cp.NocCodeId2021 = nc.Id
               GO");
 
-            ////Drop the new column after adding the older column for Noc Codes.
+            //Drop the new column after adding the older column for Noc Codes.
             migrationBuilder.DropColumn(
             name: "NocCodeId2021",
             table: "SavedCareerProfiles");
