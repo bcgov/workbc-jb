@@ -52,24 +52,24 @@ namespace WorkBC.Data.Migrations
             table: "NocCodes2021");
         }
 
-        public List<NocCodeSSOT1> GetNocCodes2016()
+        public List<NocCodeSSOTwith2016> GetNocCodes2016()
         {
 
-            List<NocCodeSSOT1> newSSOTCodes = new List<NocCodeSSOT1>();
+            List<NocCodeSSOTwith2016> newSSOTCodes = new List<NocCodeSSOTwith2016>();
             //Read the ssot_nocs json file from the path:~\workbc-jb\src\WorkBC.Web
             string jsonString = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "ssot_nocs.json"));
             // convert string to stream
             byte[] byteArray = Encoding.UTF8.GetBytes(jsonString);
             MemoryStream jsonStream = new MemoryStream(byteArray);
 
-            newSSOTCodes = JsonSerializer.Deserialize<List<NocCodeSSOT1>>(jsonStream);
+            newSSOTCodes = JsonSerializer.Deserialize<List<NocCodeSSOTwith2016>>(jsonStream);
 
             return newSSOTCodes;
 
         }
     }
 
-    public class NocCodeSSOT1
+    public class NocCodeSSOTwith2016
     {
         public string noc_2021 { get; set; }
         public string label { get; set; }
