@@ -1409,9 +1409,9 @@ namespace WorkBC.Data.Migrations
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("CareerProfileId")
+                    b.Property<int>("NocCodeId2021")
                         .HasColumnType("int")
-                        .HasColumnName("EDM_CareerProfile_CareerProfileId");
+                        .HasColumnName("NocCodeId2021");
 
                     b.Property<DateTime?>("DateDeleted")
                         .HasColumnType("datetime2");

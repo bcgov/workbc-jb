@@ -46,7 +46,7 @@ namespace WorkBC.Web.Controllers
                 .ToListAsync();
 
             var savedCareerProfilesDict = savedCareerProfiles
-                .GroupBy(s => s.CareerProfileId)
+                .GroupBy(s => s.Id)
                 .ToDictionary(
                     s => s.Key,
                     s => s.First().Id
@@ -54,15 +54,15 @@ namespace WorkBC.Web.Controllers
 
             List<int> savedCareerProfilesIds = savedCareerProfilesDict.Select(s => s.Key).ToList();
 
-            IQueryable<CareerProfileModel> query = from p in _enterpriseContext.CareerProfiles
-                join n in _enterpriseContext.Nocs on p.NocId equals n.NocId
-                orderby n.NameEnglish
-                where savedCareerProfilesIds.Contains(p.CareerProfileId)
+            IQueryable<CareerProfileModel> query = from p in _context.SavedCareerProfiles
+                join n in _context.NocCodes2021 on p.NocCodeId2021 equals n.Id
+                orderby n.Title
+                where savedCareerProfilesIds.Contains(p.Id)
                 select new CareerProfileModel
                 {
-                    Id = savedCareerProfilesDict[p.CareerProfileId],
-                    Title = n.NameEnglish,
-                    NocCode = n.Noccode
+                    Id = savedCareerProfilesDict[p.Id],
+                    Title = n.Title,
+                    NocCode = n.Code
                 };
 
             return Ok(await query.ToListAsync());
@@ -172,7 +172,7 @@ namespace WorkBC.Web.Controllers
                     SavedCareerProfile savedCareerProfile = _context.SavedCareerProfiles
                         .FirstOrDefault(x =>
                             x.AspNetUserId == UserId &&
-                            x.CareerProfileId == careerProfileId &&
+                            x.NocCodeId2021 == careerProfileId &&
                             !x.IsDeleted);
 
                     if (savedCareerProfile == null)
@@ -181,7 +181,7 @@ namespace WorkBC.Web.Controllers
                         var profile = new SavedCareerProfile
                         {
                             AspNetUserId = UserId,
-                            CareerProfileId = careerProfileId,
+                            NocCodeId2021 = careerProfileId,
                             DateDeleted = null,
                             DateSaved = DateTime.Now,
                             IsDeleted = false
@@ -212,7 +212,7 @@ namespace WorkBC.Web.Controllers
                 SavedCareerProfile savedCareerProfile = await _context.SavedCareerProfiles
                     .FirstOrDefaultAsync(x =>
                         x.AspNetUserId == UserId &&
-                        x.CareerProfileId == careerProfileId &&
+                        x.NocCodeId2021 == careerProfileId &&
                         !x.IsDeleted);
 
                 if (savedCareerProfile != null)
