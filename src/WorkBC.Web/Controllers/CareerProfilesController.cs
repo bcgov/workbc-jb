@@ -161,7 +161,7 @@ namespace WorkBC.Web.Controllers
                 int careerProfileId = (
                     from profile in _context.SavedCareerProfiles
                     join nocCodes in _context.NocCodes2021 on profile.NocCodeId2021 equals nocCodes.Id
-                    where nocCodes.Code == nocCode
+                    where nocCodes.Code == nocCode && profile.AspNetUserId == UserId
                     select profile.Id
                 ).FirstOrDefault();
 
