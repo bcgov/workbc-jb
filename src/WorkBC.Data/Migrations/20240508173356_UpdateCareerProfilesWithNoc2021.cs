@@ -8,7 +8,7 @@ namespace WorkBC.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            //Add new columns to dbo.SavedCareeProfiles tables.
+            //Add new columns to dbo.SavedCareerProfiles tables.
             migrationBuilder.AddColumn<string>(
             name: "NocCodeId2021",
             table: "SavedCareerProfiles",
