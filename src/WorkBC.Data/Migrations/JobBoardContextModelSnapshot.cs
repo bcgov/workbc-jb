@@ -442,6 +442,10 @@ namespace WorkBC.Data.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<string>("TitleBC")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Industries");
@@ -1450,9 +1454,9 @@ namespace WorkBC.Data.Migrations
                     b.Property<DateTime>("DateSaved")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IndustryProfileId")
-                        .HasColumnType("int")
-                        .HasColumnName("EDM_IndustryProfile_IndustryProfileId");
+                    b.Property<short>("IndustryId")
+                        .HasColumnType("smallint")
+                        .HasColumnName("IndustryId");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -1687,17 +1691,6 @@ namespace WorkBC.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Id");
-                });
-
-            modelBuilder.Entity("WorkBC.Data.Model.JobBoard.IndustryNaics", b =>
-                {
-                    b.HasOne("WorkBC.Data.Model.JobBoard.Industry", "Industry")
-                        .WithMany()
-                        .HasForeignKey("IndustryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Industry");
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.Job", b =>
