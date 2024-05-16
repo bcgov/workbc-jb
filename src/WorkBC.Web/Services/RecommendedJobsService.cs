@@ -310,7 +310,7 @@ namespace WorkBC.Web.Services
 
             var reasons = new List<string>();
 
-            if (result.Noc != null)
+            if (!string.IsNullOrEmpty(result.Noc))
             {
                 short noc = short.Parse(result.Noc);
                 if (AccountCriteria.NocCodes.ContainsKey(noc))
