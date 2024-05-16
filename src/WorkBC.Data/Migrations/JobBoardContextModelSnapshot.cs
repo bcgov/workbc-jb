@@ -519,6 +519,9 @@ namespace WorkBC.Data.Migrations
                     b.Property<short?>("NocCodeId")
                         .HasColumnType("smallint");
 
+                    b.Property<int?>("NocCodeId2021")
+                        .HasColumnType("int");
+
                     b.Property<string>("OriginalSource")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -558,6 +561,8 @@ namespace WorkBC.Data.Migrations
                     b.HasIndex("LocationId");
 
                     b.HasIndex("NocCodeId");
+
+                    b.HasIndex("NocCodeId2021");
 
                     b.ToTable("Jobs");
                 });
@@ -1075,6 +1080,9 @@ namespace WorkBC.Data.Migrations
                     b.Property<short?>("NocCodeId")
                         .HasColumnType("smallint");
 
+                    b.Property<int?>("NocCodeId2021")
+                        .HasColumnType("int");
+
                     b.Property<short>("PositionsAvailable")
                         .HasColumnType("smallint");
 
@@ -1088,6 +1096,8 @@ namespace WorkBC.Data.Migrations
                     b.HasIndex("LocationId");
 
                     b.HasIndex("NocCodeId");
+
+                    b.HasIndex("NocCodeId2021");
 
                     b.HasIndex("JobId", "VersionNumber")
                         .IsUnique();
@@ -1196,6 +1206,28 @@ namespace WorkBC.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("NocCodes");
+                });
+
+            modelBuilder.Entity("WorkBC.Data.Model.JobBoard.NocCode2021", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<string>("FrenchTitle")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NocCodes2021");
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.Province", b =>
@@ -1692,6 +1724,10 @@ namespace WorkBC.Data.Migrations
                         .WithMany()
                         .HasForeignKey("NocCodeId");
 
+                    b.HasOne("WorkBC.Data.Model.JobBoard.NocCode2021", "NocCode2021")
+                        .WithMany()
+                        .HasForeignKey("NocCodeId2021");
+
                     b.Navigation("Id");
 
                     b.Navigation("Industry");
@@ -1701,6 +1737,8 @@ namespace WorkBC.Data.Migrations
                     b.Navigation("Location");
 
                     b.Navigation("NocCode");
+
+                    b.Navigation("NocCode2021");
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.JobAlert", b =>
@@ -1855,6 +1893,10 @@ namespace WorkBC.Data.Migrations
                         .WithMany()
                         .HasForeignKey("NocCodeId");
 
+                    b.HasOne("WorkBC.Data.Model.JobBoard.NocCode2021", "NocCode2021")
+                        .WithMany()
+                        .HasForeignKey("NocCodeId2021");
+
                     b.Navigation("Industry");
 
                     b.Navigation("Job");
@@ -1862,6 +1904,8 @@ namespace WorkBC.Data.Migrations
                     b.Navigation("Location");
 
                     b.Navigation("NocCode");
+
+                    b.Navigation("NocCode2021");
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.JobView", b =>

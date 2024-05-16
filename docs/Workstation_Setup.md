@@ -1,4 +1,4 @@
-# WorkBC Job board Visual Studio Setup 
+# WorkBC Job board Visual Studio Setup
 
 ### 1. Prerequisites
 * NodeJS 14
@@ -44,14 +44,14 @@ There are two type of databases in the project:
     * This will be used when doing searches on the website for jobs.
 * SQL Server database
     * This will be used to save profiles, and any other database activities.
-    * A record of the XML for the jobs will also be saved in the SQL database. 
+    * A record of the XML for the jobs will also be saved in the SQL database.
 
 ### Setup
 * Follow steps 1c to get Elastic Search services up and running
 * Open Microsoft SQL Server Management Studio
 * Connect to your localhost server
 * Create a new database called "WorkBC_jobboard_dev"
-* Download the backup database, saving it inside your MS SQL server instance 
+* Download the backup database, saving it inside your MS SQL server instance
 _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Backup \\files\Personal\\[Windows Username]\WorkBC_Enterprise_DEV.bak)_
   * Backup is located on the Stuart server here: ```H:\Backups\STUART$SQL2017\WorkBC_Enterprise_DEV\FULL```
 * Go back to Microsoft SQL Server Management Studio and right-click on Databases and “Restore Database…”
@@ -82,13 +82,13 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
    * Click the “Apply” button to save the configuration and close the popup
 * Open Services app in Windows
 * Find “SQL Server” instance, right click on it and select “Restart”
-* Next we need to run the SQL migrations to create the database tables for the new job board database. 
+* Next we need to run the SQL migrations to create the database tables for the new job board database.
     * Open the solution in Visual Studio
     * Go to Visual Studios > Tools > NuGet Package Manager > Package Manager Console
     * ```update-database -context jobboardcontext```
 
 * Run the dll files in each following folders:
-    * NOTE: The Federal API whitelisted an IP, if it fails the IP is wrong where the request is coming from. 
+    * NOTE: The Federal API whitelisted an IP, if it fails the IP is wrong where the request is coming from.
     * WorkBC.Importers.Federal\bin\Debug\net6.0 (Import Federal jobs to the SQL database)
     ```.\WorkBC.Importers.Federal.exe```
       * Note that this first task takes a long time. It also has a max of 20,000 records. When I ran this, I ended up having to run it twice to capture all 25,000 records required.
@@ -105,7 +105,7 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
 * Open PowerShell and run ```npm install```
 * Run the following command to build the JbAccount, Jblib, and JbSearch Angular projects. It will be watching for any changes and recompile when any changes are made while running:
     * ```npm run watchAll```
-    
+
 * Open the project solution file in Visual Studio
 * Ensure that the "WorkBC.Web" project is set as the startup project
 * Run the project with or without debugging
@@ -113,28 +113,48 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
 ### 5. Running the Admin web project (MVC project)
 
 * Browse to the "WorkBC.admin" project on disk.
-* Open PowerShell and runn the following commands:
+* Open PowerShell and run the following commands:
     * ```npm install```
     * ```npm run watch```
 * Open the Visual Studio solution in Visual Studio
 * Set the "WorkBC.admin" project as the startup project inside Visual Studio
 * Run the project
-* Notes: 
-    * The database migrations for the admin site are run automatically 
+* Notes:
+    * The database migrations for the admin site are run automatically
     * Database migrations can be run from the indexers by using ```--migrate``` - this is good for debugging.
 
 **Common issues:**
 * The styling is not displaying correctly
-    * This is usually because webpack did not run, you need to run webpack to compile the css for the admin project. 
+    * This is usually because webpack did not run, you need to run webpack to compile the css for the admin project.
 * CSS changes isn't showing on the site
-    * Webpack needs to run in order for your change to display. 
+    * Webpack needs to run in order for your change to display.
+
+### 6. Running the SSOT
+
+* Download SSOT dump at https://github.com/bcgov/workbc-ssot/blob/master/ssot-full.sql.gz
+* Unzip it to `ssot-full.sql`
+* Load SSOT dump into Postgres database:
+    ```
+    cd src
+    cmd /c "docker-compose -f docker-compose.local-dev.yml exec -T postgres psql --username workbc ssot < path\to\ssot-full.sql"
+    docker-compose -f docker-compose.local-dev.yml kill -s SIGUSR1 ssot
+    ```
+* Verify that the SSOT API endpoints are appearing at http://localhost:3000 and http://localhost:8888
+
+**Common issues:**
+* You see error complaining about user `ssot_readonly` not found. This can happen if the SSOT init script didn't run upon container start. To fix this:
+    ```
+    cd src
+    cmd /c "docker-compose -f docker-compose.local-dev.yml exec -T postgres psql --username workbc ssot < .\scripts\postgres-init\init.sql"
+    ```
+then retry the steps above.
 
 ### 6. Running with Docker Desktop
 
 * Get the key/value pairs from the "ENV" tab of the spredsheet in step 2 above, and put them into a file in /src called `.env`
     * You might need to change the Server name in ConnectionStrings__DefaultConnection, ConnectionStrings__EnterpriseConnection and ConnectionStrings__MigrationRunnerConnection to include an instance name if your SQL server was installed with an instance name (e.g. localhost\SQLEXPRESS)
 * Create a user account in SQL Server called "jobboard" with the password "password"
-* Add this user to the db_owner role on WorkBC_jobboard_dev and WorkBC_enterprise_dev 
+* Add this user to the db_owner role on WorkBC_jobboard_dev and WorkBC_enterprise_dev
 * Run these commands from powershell
     ```
     cd /src
@@ -193,6 +213,5 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
     dotnet EFMigrationRunner.dll
     ```
 
-* Linux command are case sensitive.  
+* Linux commands are case sensitive.
 * You can use `--help` to see more options e.g. `dotnet WorkBC.Indexers.Federal.dll --help`
-

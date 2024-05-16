@@ -1,0 +1,9 @@
+{
+  "/api": {
+    "target": "https://workbc-jb.b89n0c-dev.nimbus.cloud.gov.bc.ca/",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+    }
+  }
+}

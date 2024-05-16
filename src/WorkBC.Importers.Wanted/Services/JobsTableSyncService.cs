@@ -83,6 +83,7 @@ namespace WorkBC.Importers.Wanted.Services
                             JobSourceId = JobSource.Wanted,
                             IndustryId = job.IndustryId,
                             NocCodeId = job.NocCodeId == 0 ? null : job.NocCodeId,
+                            NocCodeId2021 = job.NocCodeId2021 == 0 ? null : job.NocCodeId2021,
                             IsActive = true,
                             PositionsAvailable = job.PositionsAvailable,
                             LocationId = job.LocationId,
