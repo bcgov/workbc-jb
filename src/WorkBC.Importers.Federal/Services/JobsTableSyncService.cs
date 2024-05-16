@@ -120,29 +120,32 @@ namespace WorkBC.Importers.Federal.Services
                     string xmlString = importedJob.JobPostEnglish;
 
                     ElasticSearchJob elasticJob = _xmlParsingService.ConvertToElasticJob(xmlString);
-
-                    bool needsNewVersion = CopyElasticJob(elasticJob, job);
-
-                    job.LastUpdated = elasticJob.LastUpdated ?? importedJob.DateLastImported;
-                    //job.DateFirstImported = importedJob.DateFirstImported;  /* Don't change DateFirstImported or it will mess up reports!! */
-                    job.DateLastImported = importedJob.DateLastImported;
-
-                    SetJobTypeFlags(xmlString, job);
-
-                    using (var trans = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                    
+                    if (elasticJob != null)
                     {
-                        if (needsNewVersion)
+                        bool needsNewVersion = CopyElasticJob(elasticJob, job);
+                        
+                        job.LastUpdated = elasticJob.LastUpdated ?? importedJob.DateLastImported;
+                        //job.DateFirstImported = importedJob.DateFirstImported;  /* Don't change DateFirstImported or it will mess up reports!! */
+                        job.DateLastImported = importedJob.DateLastImported;
+
+                        SetJobTypeFlags(xmlString, job);
+
+                        using (var trans = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                         {
-                            IncrementJobVersion(job);
+                            if (needsNewVersion)
+                            {
+                                IncrementJobVersion(job);
+                            }
+
+                            DbContext.Jobs.Update(job);
+
+                            Console.Write("U");
+
+                            await DbContext.SaveChangesAsync();
+
+                            trans.Complete();
                         }
-
-                        DbContext.Jobs.Update(job);
-
-                        Console.Write("U");
-
-                        await DbContext.SaveChangesAsync();
-
-                        trans.Complete();
                     }
                 }
             }

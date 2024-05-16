@@ -1,0 +1,152 @@
+<SolrResponse>
+   <Header>
+      <status>0</status>
+      <QTime>1</QTime>
+      <numFound>1</numFound>
+   </Header>
+   <Documents>
+      <Document>
+         <jobs_id>40104984</jobs_id>
+         <skill_level>C</skill_level>
+         <remote_cd>2766471</remote_cd>
+         <title>import sales representative</title>
+         <work_period_cd>L</work_period_cd>
+         <employer_type_id>0</employer_type_id>
+         <edulevel_cd>S</edulevel_cd>
+         <wage_class>E</wage_class>
+         <postal_code>V7C4N1</postal_code>
+         <region_spelling>Richmond</region_spelling>
+         <employer_id>98354</employer_id>
+         <lang>en</lang>
+         <employer_postal_code>V7C4N1</employer_postal_code>
+         <skill_categories><skill_category id="100003">
+  <name>Education</name>
+  <options>
+    <option_name id="los">College, CEGEP or other non-university certificate or diploma from a program of 3 months to less than 1 year</option_name>
+    <option_name> or equivalent experience</option_name>
+  </options>
+</skill_category>
+<skill_category id="103000">
+  <name>Screening questions</name>
+  <options>
+    <option_name id="103000">Are you currently legally able to work in Canada?</option_name>
+    <option_name id="103007">Do you have previous experience in this field of employment?</option_name>
+  </options>
+</skill_category>
+<skill_category id="100001">
+  <name>Experience</name>
+  <options>
+    <option_name id="16717">3 years to less than 5 years</option_name>
+  </options>
+</skill_category>
+<skill_category id="100000">
+  <name>Workplace information</name>
+  <options>
+    <option_name id="100001">On the road job</option_name>
+  </options>
+</skill_category>
+</skill_categories>
+         <job_source_id>16</job_source_id>
+         <work_term_cd>P</work_term_cd>
+         <work_lang_cd>B</work_lang_cd>
+         <app_methods><app_resumesharing>0</app_resumesharing><app_online></app_online><app_email>helenz@mppl.ca</app_email><app_phone><app_phone_number></app_phone_number><app_phone_ext></app_phone_ext><app_phone_start_bus_hours></app_phone_start_bus_hours><app_phone_end_bus_hours></app_phone_end_bus_hours></app_phone><app_fax></app_fax><app_person><app_person_street></app_person_street><app_person_room></app_person_room><app_person_city></app_person_city><app_person_province></app_person_province><app_person_country></app_person_country><app_person_pstlcd></app_person_pstlcd><app_person_start_bus_hours></app_person_start_bus_hours><app_person_end_bus_hours></app_person_end_bus_hours></app_person><app_mail><app_mail_street></app_mail_street><app_mail_room></app_mail_room><app_mail_city></app_mail_city><app_mail_province></app_mail_province><app_mail_country></app_mail_country><app_mail_pstlcd></app_mail_pstlcd></app_mail></app_methods>
+         <naics_id>25</naics_id>
+         <hours>20 to 30 hours per week</hours>
+         <wagehourly_class>D</wagehourly_class>
+         <employer_name_string>Moshe Paper and Packaging Ltd.</employer_name_string>
+         <employer_name_case>Moshe Paper and Packaging Ltd.</employer_name_case>
+         <num_positions>2</num_positions>
+         <start_date/>
+         <noc2016>6411</noc2016>
+         <noc2021>64101</noc2021>
+         <job_senior_flag>false</job_senior_flag>
+         <job_canadian_citizen_flag>true</job_canadian_citizen_flag>
+         <various_location_flag>false</various_location_flag>
+         <job_student_flag>false</job_student_flag>
+         <job_recruiter_flag>false</job_recruiter_flag>
+         <job_youth_flag>false</job_youth_flag>
+         <job_apprentice_flag>false</job_apprentice_flag>
+         <job_global_applicant_flag>false</job_global_applicant_flag>
+         <job_disability_flag>false</job_disability_flag>
+         <job_aboriginal_flag>false</job_aboriginal_flag>
+         <program_title>false</program_title>
+         <job_vismin_flag>false</job_vismin_flag>
+         <job_general_flag>true</job_general_flag>
+         <job_newcomer_flag>false</job_newcomer_flag>
+         <job_veteran_flag>false</job_veteran_flag>
+         <latlng_variance>1</latlng_variance>
+         <los_id>5</los_id>
+         <postal_code_ind>1</postal_code_ind>
+         <experience_min>36</experience_min>
+         <date_posted>2024-01-24T13:41:00Z</date_posted>
+         <import_date>2024-01-24T13:41:16Z</import_date>
+         <file_update_date>2024-01-24T13:41:00Z</file_update_date>
+         <display_until>2024-02-21T13:41:00Z</display_until>
+         <salary_yearly>24000.0</salary_yearly>
+         <salary_hourly>25.0</salary_hourly>
+         <salary_weekly>460.27</salary_weekly>
+         <work_hours>20.0</work_hours>
+         <city_name>
+            <string>Richmond</string>
+         </city_name>
+         <arr_app_methods>
+            <string>email</string>
+         </arr_app_methods>
+         <lmi_geoarea_cd>
+            <string>25565</string>
+         </lmi_geoarea_cd>
+         <url>
+            <string>https://www.jobbank.gc.ca/jobsearch/jobposting/40104984</string>
+         </url>
+         <activity_type>
+            <string>16717</string>
+            <string>100001</string>
+            <string>103000</string>
+            <string>103007</string>
+         </activity_type>
+         <latlng_rpt>
+            <string>49.172435,-123.15119</string>
+         </latlng_rpt>
+         <latlng>
+            <string>49.172435,-123.15119</string>
+         </latlng>
+         <salary_conditions>
+            <string>Minimum wage is guaranteed</string>
+         </salary_conditions>
+         <city_id>
+            <string>22359</string>
+         </city_id>
+         <noc_jobtitle_concordance_id>
+            <string>23204</string>
+         </noc_jobtitle_concordance_id>
+         <special_type>
+            <string>100001</string>
+            <string>103000</string>
+            <string>103007</string>
+         </special_type>
+         <major_city_id>
+            <string>22359</string>
+         </major_city_id>
+         <employment_terms>
+            <string>Day</string>
+            <string>Flexible Hours</string>
+         </employment_terms>
+         <work_hour_term>
+            <string>D</string>
+            <string>F</string>
+         </work_hour_term>
+         <province_cd>
+            <string>BC</string>
+         </province_cd>
+         <salary>
+            <string>$2,000.00 monthly + 3% commission per sale</string>
+         </salary>
+         <employer_name>
+            <string>Moshe Paper and Packaging Ltd.</string>
+         </employer_name>
+         <category_type>
+            <string>100000</string>
+         </category_type>
+      </Document>
+   </Documents>
+</SolrResponse>

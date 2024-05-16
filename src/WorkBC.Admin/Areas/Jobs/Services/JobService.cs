@@ -23,7 +23,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
 {
     public interface IJobService
     {
-        Task<(IList<JobSearchViewModel> result, int filteredResultsCount, int totalResultsCount, int totalExternalCount, int totalFederalCount)> Search(DataTablesModel model);
+        Task<(IList<JobSearchViewModel> result, int filteredResultsCount)> Search(DataTablesModel model);
 
         Task DeleteJob(long jobId, int currentAdminUserId);
     }
@@ -41,10 +41,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
 
 
         public async Task<(IList<JobSearchViewModel> result, 
-            int filteredResultsCount, 
-            int totalResultsCount, 
-            int totalExternalCount, 
-            int totalFederalCount)> Search(DataTablesModel model)
+            int filteredResultsCount)> Search(DataTablesModel model)
         {
             string searchBy = model.Search.Value;
             int take = model.Length;
@@ -68,10 +65,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
 
             // search the database taking into consideration table sorting and paging
             (List<JobSearchViewModel> result, 
-                    int filteredResultsCount,
-                    int totalResultsCount, 
-                    int totalExternalCount, 
-                    int totalFederalCount) = await GetDataFromDatabase(searchBy, take, skip, sortBy, sortDir, filter);
+                    int filteredResultsCount) = await GetDataFromDatabase(searchBy, take, skip, sortBy, sortDir, filter);
 
             if (result == null)
             {
@@ -79,7 +73,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
                 result = new List<JobSearchViewModel>();
             }
 
-            return (result, filteredResultsCount, totalResultsCount, totalExternalCount, totalFederalCount);
+            return (result, filteredResultsCount);
         }
 
         public async Task DeleteJob(long jobId, int currentAdminUserId)
@@ -208,10 +202,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
         }
 
         private async Task<(List<JobSearchViewModel> result,
-                int filteredResultsCount,
-                int totalResultsCount,
-                int totalExternalCount,
-                int totalFederalCount)>
+                int filteredResultsCount)>
             GetDataFromDatabase(string searchBy, int take, int skip, string sortBy, bool sortDir, string filter)
         {
             if (string.IsNullOrEmpty(sortBy))
@@ -250,16 +241,11 @@ namespace WorkBC.Admin.Areas.Jobs.Services
                     OriginalSource = m.OriginalSource
                 })
                 .ToListAsync();
-
-            // now just get the count of items (without the skip and take) - eg how many could be returned with filtering
-            int totalResultsCount = await queryable.CountAsync();
-            int totalFederalCount = await queryableNoFilter.CountAsync(q => q.JobSource.Name == "Federal");
-            int totalExternalCount = await queryableNoFilter.CountAsync(q => q.JobSource.Name == "Wanted");
-
+            
             //total results found by applying the filter
             int filteredResultsCount = await queryable.CountAsync();
 
-            return (result, filteredResultsCount, totalResultsCount, totalExternalCount, totalFederalCount);
+            return (result, filteredResultsCount);
         }
 
         private IQueryable<Job> FilterJobs(string searchBy, string filter)

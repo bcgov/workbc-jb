@@ -737,7 +737,7 @@ namespace WorkBC.ElasticSearch.Search.Queries
                     case "3":
                         // federal government
                         //These are an option on the Federal Job Bank and should be available through the federal XML feed.
-                        jsonJobSource = "{ \"term\": { \"EmployerTypeId\": 2 } }";
+                        jsonJobSource = "{\"nested\": {\"path\": \"ExternalSource\",\"query\": {\"bool\": {\"should\": [{\"match_phrase\": {\"ExternalSource.Source.Url\":  \"https://emploisfp-psjobs.cfp-psc.gc.ca\"}}]}}}}";
                         break;
                     case "4":
                         // municipal government
@@ -746,7 +746,7 @@ namespace WorkBC.ElasticSearch.Search.Queries
                     case "5":
                         //BC provincial government
                         //These are jobs posted through the Provincial Government. This option may have to be removed if there is no identifier for provincial govt jobs from the federal XML or the external Job Posting API.
-                        jsonJobSource = "{ \"term\": { \"EmployerTypeId\": 3 } }";
+                        jsonJobSource = "{\"nested\": {\"path\": \"ExternalSource\",\"query\": {\"bool\": {\"should\": [{\"match_phrase\": {\"ExternalSource.Source.Url\":  \"https://bcpublicservice.hua.hrsmart.com\"}}]}}}}";
                         break;
                 }
 

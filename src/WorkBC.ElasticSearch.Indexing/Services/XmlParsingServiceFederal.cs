@@ -388,7 +388,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                         }
                         else
                         {
-                            if (cacheLocation.City == null && cacheLocation.Province == null)
+                            if (cacheLocation.City == null && cacheLocation.Province == null && ! string.IsNullOrWhiteSpace(employerPostalCode))
                             {
                                 switch (employerPostalCode[..1])
                                 {
@@ -692,12 +692,14 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     }
                 }
 
-                // change the the summary to N/A on jobs that have invalid salary information (e.g. below minimum wage)
+                // In the event that the jobs have invalid salary information (e.g. below minimum wage),
+                // default to showing the salary string. Provincial legislation prohibits displaying
+                // jobs without a salary
                 if (job.Salary == null &&
                     (xmlJobNode["salary_yearly"] != null || xmlJobNode["salary_hourly"] != null))
                 {
-                    job.SalarySummary = "N/A";
-                    job.SalaryDescription = "N/A";
+                    job.SalarySummary = xmlJobNode.SelectSingleNode("salary/string").InnerText;
+                    job.SalaryDescription = xmlJobNode.SelectSingleNode("salary/string").InnerText;
                 }
 
                 #region Apply person information
