@@ -52,7 +52,7 @@ namespace WorkBC.Web.Controllers
                     s => s.First().Id
                 );
 
-        //The title published on the UI is the BC manadated one.
+        //The title published on the UI is the BC mandated one.
         var query = from p in _context.Industries
                         where savedIndustryProfilesDict.Keys.Contains(p.Id)
                         orderby p.Title
