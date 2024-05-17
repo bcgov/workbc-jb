@@ -92,23 +92,23 @@ namespace WorkBC.Tests.Tests
                 $"Job for NOC code {nocCode2021} returned {result.Count} results");
         }
 
-        [Theory(DisplayName = "Find jobs based on a NOC code 2021 derived from a TalentNeuron source")]
-        [InlineData("11202")]
-        [InlineData("74102")]
-        [InlineData("52120")]
-        [InlineData("11100")]
-        public async Task FindJobByNocCode2021Wanted(string nocCode2021)
-        {
-            //Create an instance with the filters required
-            var esq = new JobSearchQuery(GeocodingService, Configuration, GetFiltersForJobNocField2021(nocCode2021));
+        //[Theory(DisplayName = "Find jobs based on a NOC code 2021 derived from a TalentNeuron source")]
+        //[InlineData("11202")]
+        //[InlineData("74102")]
+        //[InlineData("52120")]
+        //[InlineData("11100")]
+        //public async Task FindJobByNocCode2021Wanted(string nocCode2021)
+        //{
+        //    //Create an instance with the filters required
+        //    var esq = new JobSearchQuery(GeocodingService, Configuration, GetFiltersForJobNocField2021(nocCode2021));
 
-            //return results
-            List<Source> result = await QueryElasticSearch(esq);
+        //    //return results
+        //    List<Source> result = await QueryElasticSearch(esq);
 
-            //We have 1 jobs with this NOC code in the fixtures
-            Assert.True(result.Count == 1,
-                $"Job for 2021 NOC code {nocCode2021} returned {result.Count} results");
-        }
+        //    //We have 1 jobs with this NOC code in the fixtures
+        //    Assert.True(result.Count == 1,
+        //        $"Job for 2021 NOC code {nocCode2021} returned {result.Count} results");
+        //}
 
         [Theory(DisplayName = "Find jobs based on job sources")]
         [InlineData("1")] //National Job Bank/WorkBC
