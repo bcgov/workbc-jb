@@ -1217,9 +1217,9 @@ namespace WorkBC.Data.Migrations
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)");
 
-                    //b.Property<string>("Code2016")
-                    //    .HasMaxLength(30)
-                    //    .HasColumnType("nvarchar(30)");
+                    b.Property<string>("Code2016")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("FrenchTitle")
                         .HasMaxLength(250)

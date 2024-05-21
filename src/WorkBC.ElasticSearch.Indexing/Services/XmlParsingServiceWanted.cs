@@ -275,10 +275,10 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                             #endregion
 
-                            //#region Noc code 2021                           
-                            ////set job noc code 2021
-                            //job.Noc2021 = GetNoc2021from2016value(job.Noc.ToString());
-                            //#endregion
+                            #region Noc code 2021                           
+                            //set job noc code 2021
+                            job.Noc2021 = GetNoc2021from2016value(job.Noc.ToString());
+                            #endregion
 
                             #region Job title
 
