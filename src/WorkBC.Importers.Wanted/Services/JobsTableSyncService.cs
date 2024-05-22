@@ -31,7 +31,9 @@ namespace WorkBC.Importers.Wanted.Services
         {
             List<long> jobsToImport = DbContext.ImportedJobsWanted
                 .Where(ij =>
-                    !ij.IsFederalOrWorkBc && DbContext.Jobs.All(j => j.JobId != ij.JobId) &&
+                    !ij.IsFederalOrWorkBc && 
+                    DbContext.Jobs.All(j => j.JobId != ij.JobId) &&
+                    DbContext.DeletedJobs.All(dj => dj.JobId != ij.JobId) &&
                     ij.ApiDate.AddDays(_jobExpiryDays) > DateTime.Now)
                 .Select(ij => ij.JobId)
                 .ToList();
@@ -121,6 +123,7 @@ namespace WorkBC.Importers.Wanted.Services
             List<long> jobsToUpdate = (from ij in DbContext.ImportedJobsWanted
                 join j in DbContext.Jobs on ij.JobId equals j.JobId
                 where !ij.IsFederalOrWorkBc 
+                      && DbContext.DeletedJobs.All(dj => dj.JobId != ij.JobId)
                       && (j.DateLastImported != ij.DateLastImported || !j.IsActive || _commandLineOptions.ReImport)
                 select ij.JobId).ToList();
 

@@ -138,7 +138,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                                     {
                                         decimal salaryAmount = decimal.Parse(salary.Attributes["value"].Value);
                                         job.Salary = salaryAmount;
-                                        job.SalarySummary = $"{salaryAmount:C0} annually";
+                                        job.SalarySummary = $"${salaryAmount:#,##0} annually";
                                     }
                                 }
                             }
