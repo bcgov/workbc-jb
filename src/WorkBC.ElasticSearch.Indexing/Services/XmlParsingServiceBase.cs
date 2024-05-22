@@ -210,7 +210,8 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             if (String.IsNullOrEmpty(nocId))
             {
                 return null;
-            }
+            }         
+
 
             try
             {
