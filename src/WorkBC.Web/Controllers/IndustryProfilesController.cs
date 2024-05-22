@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using WorkBC.Data;
 using WorkBC.Data.Model.JobBoard;
-using WorkBC.ElasticSearch.Search.Queries;
 using WorkBC.Web.Models;
 
 namespace WorkBC.Web.Controllers
@@ -19,13 +18,11 @@ namespace WorkBC.Web.Controllers
     public class IndustryProfilesController : ControllerBase
     {
         private readonly JobBoardContext _context;
-        private readonly EnterpriseContext _enterpriseContext;
         private readonly IConfiguration _configuration;
 
-        public IndustryProfilesController(JobBoardContext context, EnterpriseContext enterpriseContext, IConfiguration configurtion)
+        public IndustryProfilesController(JobBoardContext context, IConfiguration configurtion)
         {
             _context = context;
-            _enterpriseContext = enterpriseContext;
             _configuration = configurtion;
         }
 
@@ -49,34 +46,20 @@ namespace WorkBC.Web.Controllers
                 .ToListAsync();
 
             var savedIndustryProfilesDict = savedIndustryProfiles
-                .GroupBy(s => s.IndustryProfileId)
+                .GroupBy(s => s.IndustryId)
                 .ToDictionary(
                     s => s.Key,
                     s => s.First().Id
                 );
 
-            // todo: don't delete this until we confirm that we are not adding job search counts and links to saved industry profiles
-            // get job counts and industry Id mappings 
-            //Dictionary<int, IndustryProfileModel> jobSearchInfo = savedIndustryProfiles.Any()
-            //    ? await GetIndustryIdsAndJobCounts()
-            //    : new Dictionary<int, IndustryProfileModel>();
-
-            var query = from p in _enterpriseContext.IndustryProfiles
-                        where savedIndustryProfilesDict.Keys.Contains(p.IndustryProfileId)
-                        orderby p.PageTitle
+        //The title published on the UI is the BC mandated one.
+        var query = from p in _context.Industries
+                        where savedIndustryProfilesDict.Keys.Contains(p.Id)
+                        orderby p.Title
                         select new IndustryProfileModel
                         {
-                            Id = savedIndustryProfilesDict[p.IndustryProfileId],
-                            Title = p.PageTitle,
-                            //Count = new Random().Next(2000)
-
-                            // todo: don't delete this until we confirm that we are not adding job search counts and links to saved industry profiles
-                            //Count = jobSearchInfo.ContainsKey(p.IndustryProfileId)
-                            //     ? jobSearchInfo[p.IndustryProfileId].Count
-                            //     : 0,
-                            //IndustryIds = jobSearchInfo.ContainsKey(p.IndustryProfileId)
-                            //     ? jobSearchInfo[p.IndustryProfileId].IndustryIds
-                            //     : ""
+                            Id = savedIndustryProfilesDict[p.Id],
+                            Title = p.TitleBC
                         };
 
             return Ok(await query.ToListAsync());
@@ -96,31 +79,34 @@ namespace WorkBC.Web.Controllers
             return Ok(await _context.SaveChangesAsync());
         }
 
+        //Save the IndustryProfile based on the IndustryId in JobBoard database.
         // POST: api/industry-profiles/Save/1
-        [HttpPost("save/{naicsId}")]
-        public async Task<bool> SaveIndustryProfile(string naicsId)
+        [HttpPost("save/{industryId}")]
+        public async Task<bool> SaveIndustryProfile(string industryId)
         {
-            var lstNaics = naicsId.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string naics in lstNaics)
+            var lstIds = industryId.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string id in lstIds)
             {
-                int industryProfileId = (from profile in _enterpriseContext.IndustryProfiles
-                                         where profile.NaicsId == Convert.ToInt32(naics)
-                                         select profile.IndustryProfileId).FirstOrDefault();
+                //find if the industry id passed is valid.
+                int validId = (from p in _context.Industries
+                                  where p.Id == Convert.ToInt16(id)
+                                  orderby p.Title
+                                  select p.Id).FirstOrDefault();
 
-                //find the industry profile id based on the naics code
+                //find the industry profile based on the industry id for this user.
                 SavedIndustryProfile savedIndustryProfile = _context.SavedIndustryProfiles
                     .FirstOrDefault(x =>
                         x.AspNetUserId == UserId &&
-                        x.IndustryProfileId == industryProfileId &&
+                        x.IndustryId == Convert.ToInt16(id) &&
                         !x.IsDeleted);
 
-                if (savedIndustryProfile == null && industryProfileId > 0)
+                if (validId > 0 && savedIndustryProfile == null)
                 {
                     //only add industry profile if it does not exist for this job-seeker
                     var profile = new SavedIndustryProfile
                     {
                         AspNetUserId = UserId,
-                        IndustryProfileId = industryProfileId,
+                        IndustryId = Convert.ToInt16(id),
                         DateDeleted = null,
                         DateSaved = DateTime.Now,
                         IsDeleted = false
@@ -135,23 +121,16 @@ namespace WorkBC.Web.Controllers
         }
 
         // GET: api/industry-profile/Status/1
-        [HttpGet("status/{naicsId}")]
+        [HttpGet("status/{industryId}")]
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true, Duration = 0)]
-        public async Task<bool> GetIndustryProfileStatus(int naicsId)
+        public async Task<bool> GetIndustryProfileStatus(int industryId)
         {
-            //find the industry profile id based on the naics code
-            int industryProfileId = (
-                from profile in _enterpriseContext.IndustryProfiles
-                where profile.NaicsId == naicsId
-                select profile.IndustryProfileId
-            ).FirstOrDefault();
-
-            if (industryProfileId > 0)
+            if (industryId > 0)
             {
                 SavedIndustryProfile savedIndustryProfile = await _context.SavedIndustryProfiles
                     .FirstOrDefaultAsync(x =>
                         x.AspNetUserId == UserId &&
-                        x.IndustryProfileId == industryProfileId &&
+                        x.IndustryId == industryId &&
                         !x.IsDeleted);
 
                 if (savedIndustryProfile != null)
@@ -163,38 +142,6 @@ namespace WorkBC.Web.Controllers
 
             return false;
         }
-
-        // todo: don't delete this until we confirm that we are not adding job search counts and links to saved industry profiles
-        // /// <summary>
-        // ///     Returns a dictionary with the information needed to display job counts and links to search results
-        // ///     for each industry profile
-        // /// </summary>
-        //private async Task<Dictionary<int, IndustryProfileModel>> GetIndustryIdsAndJobCounts()
-        //{
-        //    // get counts from Elasticsearch
-        //    dynamic esr = await new IndustryAggregationQuery().GetResultsFromElasticSearch(_configuration);
-
-        //    // create a dictionary from the Elasticsearch results
-        //    var counts = new Dictionary<int, int>();
-        //    foreach (dynamic industry in esr.aggregations.industries.buckets)
-        //    {
-        //        counts.Add((int)industry.key, (int)industry.doc_count);
-        //    }
-
-        //    // get the Naics to IndustryId mappings
-        //    List<IndustryNaics> naicsMapping = await _context.IndustryNaics.ToListAsync();
-
-        //    // combine the Naics to IndustryId mappings with the Elasticsearch results
-        //    return naicsMapping.GroupBy(n => n.NaicsId)
-        //        .ToDictionary(
-        //            g => (int)g.Key,
-        //            i => new IndustryProfileModel
-        //            {
-        //                IndustryIds = string.Join(",", i.Select(h => h.IndustryId)),
-        //                Count = i.Sum(h => counts.ContainsKey(h.IndustryId) ? counts[h.IndustryId] : 0)
-        //            }
-        //        );
-        //}
 
         private string UserId => HttpContext.User.Identity.Name;
     }
