@@ -49,6 +49,10 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "AppSettings__ApplyMigrations",
 				value = "true"
+			},
+			{
+				name = "SSOT_URL",
+				value = "http://internal-ssot-lb-283706636.ca-central-1.elb.amazonaws.com:3000"
 			}
 
 		]

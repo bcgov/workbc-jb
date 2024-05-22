@@ -1,0 +1,316 @@
+<SolrResponse>
+   <Header>
+      <status>0</status>
+      <QTime>0</QTime>
+      <numFound>1</numFound>
+   </Header>
+   <Documents>
+      <Document>
+         <jobs_id>39879152</jobs_id>
+         <skill_level>C</skill_level>
+         <remote_cd>2729012</remote_cd>
+         <title>freight forwarding services sales representative</title>
+         <work_period_cd>F</work_period_cd>
+         <employer_type_id>0</employer_type_id>
+         <edulevel_cd>S</edulevel_cd>
+         <wage_class>E</wage_class>
+         <postal_code>V6W0C4</postal_code>
+         <region_spelling>Richmond</region_spelling>
+         <employer_id>27015</employer_id>
+         <lang>en</lang>
+         <employer_postal_code>V6W0C4</employer_postal_code>
+         <job_source_id>16</job_source_id>
+         <work_term_cd>P</work_term_cd>
+         <work_lang_cd>E</work_lang_cd>
+         <app_methods><app_resumesharing>0</app_resumesharing><app_online></app_online><app_email>hr@novalinklogistics.com</app_email><app_phone><app_phone_number></app_phone_number><app_phone_ext></app_phone_ext><app_phone_start_bus_hours></app_phone_start_bus_hours><app_phone_end_bus_hours></app_phone_end_bus_hours></app_phone><app_fax></app_fax><app_person><app_person_street></app_person_street><app_person_room></app_person_room><app_person_city></app_person_city><app_person_province></app_person_province><app_person_country></app_person_country><app_person_pstlcd></app_person_pstlcd><app_person_start_bus_hours></app_person_start_bus_hours><app_person_end_bus_hours></app_person_end_bus_hours></app_person><app_mail><app_mail_street></app_mail_street><app_mail_room></app_mail_room><app_mail_city></app_mail_city><app_mail_province></app_mail_province><app_mail_country></app_mail_country><app_mail_pstlcd></app_mail_pstlcd></app_mail></app_methods>
+         <naics_id>27</naics_id>
+         <hours>40 hours per week</hours>
+         <wagehourly_class>E</wagehourly_class>
+         <employer_name_case>Novalink Logistics Inc</employer_name_case>
+         <employer_name_string>Novalink Logistics Inc</employer_name_string>
+         <num_positions>1</num_positions>
+         <skill_categories><skill_category id="100003">
+  <name>Education</name>
+  <options>
+    <option_name id="los">College/CEGEP</option_name>
+    <option_name> or equivalent experience</option_name>
+  </options>
+</skill_category>
+<skill_category id="1">
+  <name>Work site environment</name>
+  <options>
+    <option_name id="13767">Business</option_name>
+  </options>
+</skill_category>
+<skill_category id="29">
+  <name>Tasks</name>
+  <options>
+    <option_name id="15889">Prepare or oversee preparation of sales or other contracts</option_name>
+    <option_name id="15890">Represent companies that export and import products or services to and from foreign countries</option_name>
+    <option_name id="15891">Conduct sales transactions</option_name>
+    <option_name id="15892">Supervise activities of other sales representatives</option_name>
+    <option_name id="15893">Estimate or quote prices, credit or contract terms, warranties and delivery dates</option_name>
+    <option_name id="15894">Identify and solicit potential clients</option_name>
+    <option_name id="15895">Consult with clients after sale or signed contracts</option_name>
+    <option_name id="15896">Review and adapt information regarding product innovations, competitors and market conditions</option_name>
+    <option_name id="27326">Provide clients with presentations on the benefits and uses of goods or services</option_name>
+    <option_name id="18336">Advertise and/or promote products, sales or services</option_name>
+    <option_name id="16338">Provide customer service</option_name>
+  </options>
+</skill_category>
+<skill_category id="60">
+  <name>Computer and technology knowledge</name>
+  <options>
+    <option_name id="15273">Presentation software</option_name>
+    <option_name id="501">Word processing software</option_name>
+    <option_name id="15748">Electronic mail</option_name>
+    <option_name id="2165">Spreadsheet</option_name>
+    <option_name id="23667">MS Office</option_name>
+  </options>
+</skill_category>
+<skill_category id="285">
+  <name>Security and safety</name>
+  <options>
+    <option_name id="15075">Bondable</option_name>
+    <option_name id="16640">Criminal record check</option_name>
+    <option_name id="15086">Credit check</option_name>
+  </options>
+</skill_category>
+<skill_category id="286">
+  <name>Transportation/travel information</name>
+  <options>
+    <option_name id="15101">Own transportation</option_name>
+    <option_name id="15102">Own vehicle</option_name>
+    <option_name id="15126">Valid driver's licence</option_name>
+  </options>
+</skill_category>
+<skill_category id="287">
+  <name>Work conditions and physical capabilities</name>
+  <options>
+    <option_name id="15144">Fast-paced environment</option_name>
+    <option_name id="15155">Attention to detail</option_name>
+  </options>
+</skill_category>
+<skill_category id="291">
+  <name>Personal suitability</name>
+  <options>
+    <option_name id="23541">Client focus</option_name>
+    <option_name id="23520">Efficient interpersonal skills</option_name>
+    <option_name id="23532">Excellent oral communication</option_name>
+    <option_name id="23535">Excellent written communication</option_name>
+    <option_name id="23523">Flexibility</option_name>
+    <option_name id="23515">Initiative</option_name>
+    <option_name id="23559">Organized</option_name>
+    <option_name id="23529">Team player</option_name>
+    <option_name id="31524">Creativity</option_name>
+  </options>
+</skill_category>
+<skill_category id="103000">
+  <name>Screening questions</name>
+  <options>
+    <option_name id="103000">Are you currently legally able to work in Canada?</option_name>
+    <option_name id="103007">Do you have previous experience in this field of employment?</option_name>
+  </options>
+</skill_category>
+<skill_category id="100001">
+  <name>Experience</name>
+  <options>
+    <option_name id="16718">5 years or more</option_name>
+  </options>
+</skill_category>
+<skill_category id="102001">
+  <name>Health benefits</name>
+  <options>
+    <option_name id="102003">Dental plan</option_name>
+    <option_name id="102002">Disability benefits</option_name>
+    <option_name id="102001">Health care plan</option_name>
+    <option_name id="102030">Paramedical services coverage</option_name>
+    <option_name id="102008">Vision care benefits</option_name>
+  </options>
+</skill_category>
+<skill_category id="102002">
+  <name>Financial benefits</name>
+  <options>
+    <option_name id="102012">Bonus</option_name>
+  </options>
+</skill_category>
+<skill_category id="102003">
+  <name>Long term benefits</name>
+  <options>
+    <option_name id="102005">Life insurance</option_name>
+  </options>
+</skill_category>
+<skill_category id="102004">
+  <name>Other benefits</name>
+  <options>
+    <option_name id="102022">Free parking available</option_name>
+    <option_name id="102020">On-site recreation and activities</option_name>
+    <option_name id="102033">Parking available</option_name>
+    <option_name id="102035">Travel insurance</option_name>
+    <option_name id="102036">Wellness program</option_name>
+  </options>
+</skill_category>
+</skill_categories>
+         <start_date/>
+         <noc2016>6411</noc2016>
+         <noc2021>64101</noc2021>
+         <job_senior_flag>false</job_senior_flag>
+         <job_canadian_citizen_flag>true</job_canadian_citizen_flag>
+         <various_location_flag>false</various_location_flag>
+         <job_student_flag>false</job_student_flag>
+         <job_recruiter_flag>false</job_recruiter_flag>
+         <job_youth_flag>false</job_youth_flag>
+         <job_apprentice_flag>false</job_apprentice_flag>
+         <job_global_applicant_flag>false</job_global_applicant_flag>
+         <job_disability_flag>false</job_disability_flag>
+         <job_aboriginal_flag>false</job_aboriginal_flag>
+         <program_title>false</program_title>
+         <job_vismin_flag>false</job_vismin_flag>
+         <job_general_flag>true</job_general_flag>
+         <job_newcomer_flag>false</job_newcomer_flag>
+         <job_veteran_flag>false</job_veteran_flag>
+         <latlng_variance>1</latlng_variance>
+         <los_id>7</los_id>
+         <postal_code_ind>1</postal_code_ind>
+         <experience_min>60</experience_min>
+         <date_posted>2023-12-26T21:10:00Z</date_posted>
+         <import_date>2024-01-22T14:59:07Z</import_date>
+         <file_update_date>2024-01-22T14:59:00Z</file_update_date>
+         <display_until>2024-01-25T21:10:00Z</display_until>
+         <salary_yearly>24000.0</salary_yearly>
+         <salary_hourly>12.5</salary_hourly>
+         <salary_weekly>460.27</salary_weekly>
+         <work_hours>40.0</work_hours>
+         <city_name>
+            <string>Richmond</string>
+         </city_name>
+         <arr_app_methods>
+            <string>email</string>
+         </arr_app_methods>
+         <benefits>
+            <string>H</string>
+            <string>F</string>
+         </benefits>
+         <lmi_geoarea_cd>
+            <string>25565</string>
+         </lmi_geoarea_cd>
+         <url>
+            <string>https://www.jobbank.gc.ca/jobsearch/jobposting/39879152</string>
+         </url>
+         <activity_type>
+            <string>501</string>
+            <string>2165</string>
+            <string>13767</string>
+            <string>15075</string>
+            <string>15086</string>
+            <string>15101</string>
+            <string>15102</string>
+            <string>15126</string>
+            <string>15144</string>
+            <string>15155</string>
+            <string>15273</string>
+            <string>15748</string>
+            <string>15889</string>
+            <string>15890</string>
+            <string>15891</string>
+            <string>15892</string>
+            <string>15893</string>
+            <string>15894</string>
+            <string>15895</string>
+            <string>15896</string>
+            <string>16338</string>
+            <string>16640</string>
+            <string>16718</string>
+            <string>18336</string>
+            <string>23515</string>
+            <string>23520</string>
+            <string>23523</string>
+            <string>23529</string>
+            <string>23532</string>
+            <string>23535</string>
+            <string>23541</string>
+            <string>23559</string>
+            <string>23667</string>
+            <string>27326</string>
+            <string>31524</string>
+            <string>102001</string>
+            <string>102002</string>
+            <string>102003</string>
+            <string>102005</string>
+            <string>102008</string>
+            <string>102012</string>
+            <string>102020</string>
+            <string>102022</string>
+            <string>102030</string>
+            <string>102033</string>
+            <string>102035</string>
+            <string>102036</string>
+            <string>103000</string>
+            <string>103007</string>
+         </activity_type>
+         <latlng_rpt>
+            <string>49.1674911,-122.9920058</string>
+         </latlng_rpt>
+         <latlng>
+            <string>49.1674911,-122.9920058</string>
+         </latlng>
+         <salary_conditions>
+            <string>Minimum wage is guaranteed</string>
+         </salary_conditions>
+         <city_id>
+            <string>22359</string>
+         </city_id>
+         <noc_jobtitle_concordance_id>
+            <string>22302</string>
+         </noc_jobtitle_concordance_id>
+         <special_type>
+            <string>102001</string>
+            <string>102002</string>
+            <string>102003</string>
+            <string>102005</string>
+            <string>102008</string>
+            <string>102012</string>
+            <string>102020</string>
+            <string>102022</string>
+            <string>102030</string>
+            <string>102033</string>
+            <string>102035</string>
+            <string>102036</string>
+            <string>103000</string>
+            <string>103007</string>
+         </special_type>
+         <major_city_id>
+            <string>22359</string>
+         </major_city_id>
+         <employment_terms>
+            <string>Day</string>
+         </employment_terms>
+         <work_hour_term>
+            <string>D</string>
+         </work_hour_term>
+         <province_cd>
+            <string>BC</string>
+         </province_cd>
+         <salary>
+            <string>$2,000.00 monthly + 20% commission per sale</string>
+         </salary>
+         <employer_name>
+            <string>Novalink Logistics Inc</string>
+         </employer_name>
+         <category_type>
+            <string>102001</string>
+            <string>102001</string>
+            <string>102001</string>
+            <string>102003</string>
+            <string>102001</string>
+            <string>102002</string>
+            <string>102004</string>
+            <string>102004</string>
+            <string>102001</string>
+            <string>102004</string>
+            <string>102004</string>
+            <string>102004</string>
+         </category_type>
+      </Document>
+   </Documents>
+</SolrResponse>

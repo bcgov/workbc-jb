@@ -54,8 +54,8 @@ namespace WorkBC.Data.Migrations
 
         public List<NocCodeSSOTwith2016> GetNocCodes2016()
         {
-
             List<NocCodeSSOTwith2016> newSSOTCodes = new List<NocCodeSSOTwith2016>();
+
             //Read the ssot_nocs json file from the path:~\workbc-jb\src\WorkBC.Web
             string jsonString = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "ssot_nocs.json"));
             // convert string to stream
@@ -64,12 +64,14 @@ namespace WorkBC.Data.Migrations
 
             newSSOTCodes = JsonSerializer.Deserialize<List<NocCodeSSOTwith2016>>(jsonStream);
 
+
             return newSSOTCodes;
 
         }
     }
 
     public class NocCodeSSOTwith2016
+
     {
         public string noc_2021 { get; set; }
         public string label { get; set; }

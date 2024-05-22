@@ -212,6 +212,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 return null;
             }         
 
+
             try
             {
                 // get the NoC Code 2021 value for the corresponding 2016 value.

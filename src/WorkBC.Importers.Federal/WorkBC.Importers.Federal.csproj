@@ -8,6 +8,7 @@
 	<Authors>OXD</Authors>
 	<Company>WorkBC</Company>
 	<Product>WorkBC Job Board</Product>
+    <Version>1.0.1</Version>
 	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 

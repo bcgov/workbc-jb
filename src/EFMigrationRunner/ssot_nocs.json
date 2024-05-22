@@ -9,7 +9,7 @@
  {"noc_2021":"10029","label":"Other business services managers","label_fr":"Directeurs / directrices d'autres services aux entreprises","noc_2016":"0125"},
  {"noc_2021":"10030","label":"Telecommunication carriers managers","label_fr":"Directeurs / directrices d'entreprises de télécommunications","noc_2016":"0131"},
  {"noc_2021":"00010","label":"Legislators","label_fr":"Membres des corps législatifs","noc_2016":"0011"},
- {"noc_2021":"00018","label":"Senior managers - public and private sector","label_fr":"Cadres supérieurs / cadres supérieures - secteur public et privé","noc_2016":"0012"},
+ {"noc_2021":"00018","label":"Senior managers - public and private sector","label_fr":"Cadres supérieurs / cadres supérieures - secteur public et privé","noc_2016":"0012,0013,0014,0015,0016"},
  {"noc_2021":"10010","label":"Financial managers","label_fr":"Directeurs financiers / directrices financières","noc_2016":"0111"},
  {"noc_2021":"10011","label":"Human resources managers","label_fr":"Directeurs / directrices des ressources humaines","noc_2016":"0112"},
  {"noc_2021":"10012","label":"Purchasing managers","label_fr":"Directeurs / directrices des achats","noc_2016":"0113"},
