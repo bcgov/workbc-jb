@@ -1,4 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
+using System.Text;
+using System;
+using System.Linq;
 
 #nullable disable
 
@@ -32,27 +38,57 @@ namespace WorkBC.Data.Migrations
             principalColumn: "Id",
             onDelete: ReferentialAction.Cascade);
 
-            //Populate TitleBC column in dbo.Industries table.
-            migrationBuilder.Sql(
-            @"  Update [WorkBC_jobboard_dev].[dbo].Industries
+
+            var allNaics = GetEDMNaics();
+            var allIndustryProfiles = GetEDMIndustryProfiles();
+            var allIndustryNaics = GetEDMIndustryNaics();
+
+            var allIndustryNaicProfiles = new List<EDM_IndustryNaicsProfiles>(allNaics.Count +
+                                    allIndustryNaics.Count +
+                                    allIndustryProfiles.Count);
+
+            allNaics.ForEach(p => allIndustryNaicProfiles.Add(p));
+
+            foreach (var naic in allNaics)
+            {
+                if (!String.IsNullOrEmpty(naic.naics_id))
+                {
+                    //get the IndustryId for corresponidng Naics from 
+                    migrationBuilder.Sql("Select * from ");
+
+                    //Populate TitleBC column in dbo.Industries table.
+                    //migrationBuilder.UpdateData(
+                    //table: "Industries",
+                    //keyColumn: "Id",
+                    //keyValue: id,
+                    //column: "TitleBC",
+                    //value: naic.sector);
+
+                    //Populate TitleBC column in dbo.Industries table.
+                    migrationBuilder.Sql(
+                  @"  Update Industries
                   Set TitleBC = e.Sector
-                  From [WorkBC_jobboard_dev].[dbo].[Industries] i
-                  INNER JOIN [WorkBC_jobboard_dev].[dbo].[IndustryNaics] n
+                  From Industries i
+                  INNER JOIN IndustryNaics n
                   ON i.Id = n.IndustryId
                   INNER JOIN [WorkBC_Enterprise_DEV].[dbo].[EDM_NAICS] e
                   On e.NAICS_ID = n.NaicsId
                   Go");
+                }
+            }
+
+
 
             //Populate IndustryId column in dbo.SavedCareerProfile table.
             migrationBuilder.Sql(
-            @"  Update [WorkBC_jobboard_dev].[dbo].SavedIndustryProfiles
+            @"  Update SavedIndustryProfiles
                   Set IndustryId = n.IndustryId
                   From [WorkBC_jobboard_dev].[dbo].SavedIndustryProfiles scp
                   INNER JOIN [WorkBC_Enterprise_DEV].[dbo].EDM_IndustryProfile e
                   on scp.EDM_IndustryProfile_IndustryProfileId = e.IndustryProfileID
-                  INNER JOIN [WorkBC_jobboard_dev].[dbo].[IndustryNaics] n
+                  INNER JOIN IndustryNaics n
                   on n.NaicsId = e.NAICS_ID
-                  INNER JOIN [WorkBC_jobboard_dev].[dbo].[Industries] i
+                  INNER JOIN Industries i
                   on i.Id = n.IndustryId
                   Go");
 
@@ -124,14 +160,14 @@ namespace WorkBC.Data.Migrations
 
             //Restore the values of EDM_IndustryProfile_IndustryProfileId column in dbo.SavedIndustryProfiles table.
             migrationBuilder.Sql(
-            @"Update [WorkBC_jobboard_dev].[dbo].SavedIndustryProfiles
+            @"Update SavedIndustryProfiles
                   Set EDM_IndustryProfile_IndustryProfileId = e.IndustryProfileID
-                  From [WorkBC_jobboard_dev].[dbo].SavedIndustryProfiles scp
-                  INNER JOIN [WorkBC_jobboard_dev].[dbo].[IndustryNaics] n
+                  From SavedIndustryProfiles scp
+                  INNER JOIN IndustryNaics n
                   on scp.IndustryId = n.IndustryId
                   INNER JOIN [WorkBC_Enterprise_DEV].[dbo].EDM_IndustryProfile e
                   on e.NAICS_ID = n.NaicsId
-                  INNER JOIN [WorkBC_jobboard_dev].[dbo].[Industries] i
+                  INNER JOIN [Industries] i
                   on i.Id = n.IndustryId
                   Go");
 
@@ -149,5 +185,88 @@ namespace WorkBC.Data.Migrations
             name: "IndustryId",
             table: "SavedIndustryProfiles");
         }
+        public List<EDM_NAICS> GetEDMNaics()
+        {
+            List<EDM_NAICS> edm_naics = new List<EDM_NAICS>();
+
+            //Read the edm_naics json file from the path:~\workbc-jb\src\WorkBC.Web
+            string jsonString = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "edm_naics.json"));
+            // convert string to stream
+            byte[] byteArray = Encoding.UTF8.GetBytes(jsonString);
+            MemoryStream jsonStream = new MemoryStream(byteArray);
+
+            edm_naics = JsonSerializer.Deserialize<List<EDM_NAICS>>(jsonStream);
+
+
+            return edm_naics;
+
+        }
+
+        public List<EDM_INDUSTRYPROFILES> GetEDMIndustryProfiles()
+        {
+            List<EDM_INDUSTRYPROFILES> edm_ips = new List<EDM_INDUSTRYPROFILES>();
+
+            //Read the edm_industryprofiles json file from the path:~\workbc-jb\src\WorkBC.Web
+            string jsonString = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "edm_industryprofiles.json"));
+            // convert string to stream
+            byte[] byteArray = Encoding.UTF8.GetBytes(jsonString);
+            MemoryStream jsonStream = new MemoryStream(byteArray);
+
+            edm_ips = JsonSerializer.Deserialize<List<EDM_INDUSTRYPROFILES>>(jsonStream);
+
+
+            return edm_ips;
+        }
+
+        public List<EDM_IndustryNaics> GetEDMIndustryNaics()
+        {
+            List<EDM_IndustryNaics> edm_indNaics = new List<EDM_IndustryNaics>();
+
+            //Read the edm_industryprofiles json file from the path:~\workbc-jb\src\WorkBC.Web
+            string jsonString = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "edm_industryNaics.json"));
+            // convert string to stream
+            byte[] byteArray = Encoding.UTF8.GetBytes(jsonString);
+            MemoryStream jsonStream = new MemoryStream(byteArray);
+
+            edm_indNaics = JsonSerializer.Deserialize<List<EDM_IndustryNaics>>(jsonStream);
+
+
+            return edm_indNaics;
+        }
+    }
+    public class EDM_NAICS
+
+    {
+        public string naics_id { get; set; }
+        public string sector { get; set; }
+        public string sectorType { get; set; }
+        public string enabled { get; set; }
+
+    }
+
+    public class EDM_INDUSTRYPROFILES
+
+    {
+        public string industryProfileID { get; set; }
+        public string naics_id { get; set; }
+
+    }
+    public class EDM_IndustryNaics
+
+    {
+        public string industryId { get; set; }
+        public string naicsId { get; set; }
+
+    }
+    public class EDM_IndustryNaicsProfiles
+
+    {
+        public string industryId { get; set; }
+        public string naicsId { get; set; }
+        public string industryProfileID { get; set; }
+        public string sector { get; set; }
+        public string sectorType { get; set; }
+        public string enabled { get; set; }
+
     }
 }

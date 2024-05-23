@@ -1,0 +1,106 @@
+[
+  {
+    "IndustryId": 1,
+    "NaicsId": 2
+  },
+  {
+    "IndustryId": 1,
+    "NaicsId": 8
+  },
+  {
+    "IndustryId": 21,
+    "NaicsId": 13
+  },
+  {
+    "IndustryId": 22,
+    "NaicsId": 12
+  },
+  {
+    "IndustryId": 23,
+    "NaicsId": 4
+  },
+  {
+    "IndustryId": 24,
+    "NaicsId": 11
+  },
+  {
+    "IndustryId": 25,
+    "NaicsId": 18
+  },
+  {
+    "IndustryId": 26,
+    "NaicsId": 19
+  },
+  {
+    "IndustryId": 27,
+    "NaicsId": 17
+  },
+  {
+    "IndustryId": 28,
+    "NaicsId": 10
+  },
+  {
+    "IndustryId": 29,
+    "NaicsId": 6
+  },
+  {
+    "IndustryId": 30,
+    "NaicsId": 6
+  },
+  {
+    "IndustryId": 31,
+    "NaicsId": 15
+  },
+  {
+    "IndustryId": 32,
+    "NaicsId": 3
+  },
+  {
+    "IndustryId": 34,
+    "NaicsId": 5
+  },
+  {
+    "IndustryId": 35,
+    "NaicsId": 9
+  },
+  {
+    "IndustryId": 36,
+    "NaicsId": 10
+  },
+  {
+    "IndustryId": 37,
+    "NaicsId": 1
+  },
+  {
+    "IndustryId": 39,
+    "NaicsId": 16
+  },
+  {
+    "IndustryId": 40,
+    "NaicsId": 3
+  },
+  {
+    "IndustryId": 41,
+    "NaicsId": 3
+  },
+  {
+    "IndustryId": 42,
+    "NaicsId": 3
+  },
+  {
+    "IndustryId": 43,
+    "NaicsId": 14
+  },
+  {
+    "IndustryId": 44,
+    "NaicsId": 14
+  },
+  {
+    "IndustryId": 45,
+    "NaicsId": 14
+  },
+  {
+    "IndustryId": 46,
+    "NaicsId": 14
+  }
+]
