@@ -152,7 +152,6 @@ namespace WorkBC.Data.Migrations
                 string titlebc = x.naicsInd.allNaic.Sector;
                 int industryProfileId = x.indProfile.IndustryProfileID;
 
-                Console.WriteLine("In down: industryid" + industryId);
                 //Restore the values of EDM_IndustryProfile_IndustryProfileId column in dbo.SavedIndustryProfiles table.
                 migrationBuilder.UpdateData(
                 table: "SavedIndustryProfiles",
