@@ -1,4 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
+using System.Text;
+using System;
+using System.Linq;
+using WorkBC.Data.Model.Enterprise;
+using WorkBC.Data.Model.JobBoard;
 
 #nullable disable
 
@@ -32,30 +40,46 @@ namespace WorkBC.Data.Migrations
             principalColumn: "Id",
             onDelete: ReferentialAction.Cascade);
 
-            //Populate TitleBC column in dbo.Industries table.
-            migrationBuilder.Sql(
-            @"  Update [WorkBC_jobboard_dev].[dbo].Industries
-                  Set TitleBC = e.Sector
-                  From [WorkBC_jobboard_dev].[dbo].[Industries] i
-                  INNER JOIN [WorkBC_jobboard_dev].[dbo].[IndustryNaics] n
-                  ON i.Id = n.IndustryId
-                  INNER JOIN [WorkBC_Enterprise_DEV].[dbo].[EDM_NAICS] e
-                  On e.NAICS_ID = n.NaicsId
-                  Go");
 
-            //Populate IndustryId column in dbo.SavedCareerProfile table.
-            migrationBuilder.Sql(
-            @"  Update [WorkBC_jobboard_dev].[dbo].SavedIndustryProfiles
-                  Set IndustryId = n.IndustryId
-                  From [WorkBC_jobboard_dev].[dbo].SavedIndustryProfiles scp
-                  INNER JOIN [WorkBC_Enterprise_DEV].[dbo].EDM_IndustryProfile e
-                  on scp.EDM_IndustryProfile_IndustryProfileId = e.IndustryProfileID
-                  INNER JOIN [WorkBC_jobboard_dev].[dbo].[IndustryNaics] n
-                  on n.NaicsId = e.NAICS_ID
-                  INNER JOIN [WorkBC_jobboard_dev].[dbo].[Industries] i
-                  on i.Id = n.IndustryId
-                  Go");
+            var allNaics = GetEDMNaics();
+            var allIndustryProfiles = GetEDMIndustryProfiles();
+            var allIndustryNaics = GetJBIndustryNaics();
 
+            var allIndustryNaicProfiles = allNaics //EDM_NAICS list
+                .Join(allIndustryNaics, //Join with IndustryNaics list
+                      an => an.NAICS_ID,
+                      ain => ain.NaicsId,
+                      (an, ain) => new { allNaic = an, allIndnaic = ain })
+                .Join(allIndustryProfiles, //Join with EDM_IndustryProfiles list
+                      ni => ni.allNaic.NAICS_ID,
+                      ip => ip.NAICS_ID,
+                      (ni, ip) => new { naicsInd = ni, indProfile = ip })
+                ;
+
+            foreach (var x in allIndustryNaicProfiles)
+            {
+
+                //get the IndustryId for corresponidng Naics from the super list
+                short industryId = x.naicsInd.allIndnaic.IndustryId;
+                string titlebc = x.naicsInd.allNaic.Sector;
+                int industryProfileId = x.indProfile.IndustryProfileID;
+
+                //Populate TitleBC column in dbo.Industries table.
+                migrationBuilder.UpdateData(
+                table: "Industries",
+                keyColumn: "Id",
+                keyValue: industryId,
+                column: "TitleBC",
+                value: titlebc);
+
+                //Populate IndustryId column in dbo.SavedCareerProfile table.
+                migrationBuilder.UpdateData(
+                table: "SavedIndustryProfiles",
+                keyColumn: "EDM_IndustryProfile_IndustryProfileId",
+                keyValue: industryProfileId,
+                column: "IndustryId",
+                value: industryId);
+            }
             //Drop the older redundant column after populating IndustryId column.
             migrationBuilder.DropColumn(
             name: "EDM_IndustryProfile_IndustryProfileId",
@@ -69,6 +93,7 @@ namespace WorkBC.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+
             //Restore the dbo.IndustryNaics table with its contents.
             migrationBuilder.CreateTable(
             name: "IndustryNaics",
@@ -87,33 +112,6 @@ namespace WorkBC.Data.Migrations
                     principalColumn: "Id",
                     onDelete: ReferentialAction.Cascade);
             });
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (1,2)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (1,8)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (21,13)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (22,12)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (23,4)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (24,11)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (25,18)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (26,19)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (27,17)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (28,10)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (29,6)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (30,6)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (31,15)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (32,3)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (34,5)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (35,9)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (36,10)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (37,1)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (39,16)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (40,3)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (41,3)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (42,3)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (43,14)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (44,14)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (45,14)");
-            migrationBuilder.Sql("Insert Into IndustryNaics (IndustryId, NaicsId) Values (46,14)");
-
 
             //Restore older column to dbo.SavedIndustryProfiles tables.
             migrationBuilder.AddColumn<string>(
@@ -122,18 +120,46 @@ namespace WorkBC.Data.Migrations
             type: "int",
             nullable: true);
 
-            //Restore the values of EDM_IndustryProfile_IndustryProfileId column in dbo.SavedIndustryProfiles table.
-            migrationBuilder.Sql(
-            @"Update [WorkBC_jobboard_dev].[dbo].SavedIndustryProfiles
-                  Set EDM_IndustryProfile_IndustryProfileId = e.IndustryProfileID
-                  From [WorkBC_jobboard_dev].[dbo].SavedIndustryProfiles scp
-                  INNER JOIN [WorkBC_jobboard_dev].[dbo].[IndustryNaics] n
-                  on scp.IndustryId = n.IndustryId
-                  INNER JOIN [WorkBC_Enterprise_DEV].[dbo].EDM_IndustryProfile e
-                  on e.NAICS_ID = n.NaicsId
-                  INNER JOIN [WorkBC_jobboard_dev].[dbo].[Industries] i
-                  on i.Id = n.IndustryId
-                  Go");
+            var allNaics = GetEDMNaics();
+            var allIndustryProfiles = GetEDMIndustryProfiles();
+            var allIndustryNaics = GetJBIndustryNaics();
+
+
+
+            var allIndustryNaicProfiles = allNaics //EDM_NAICS list
+                .Join(allIndustryNaics, //Join with IndustryNaics list
+                      an => an.NAICS_ID,
+                      ain => ain.NaicsId,
+                      (an, ain) => new { allNaic = an, allIndnaic = ain })
+                .Join(allIndustryProfiles, //Join with EDM_IndustryProfiles list
+                      ni => ni.allNaic.NAICS_ID,
+                      ip => ip.NAICS_ID,
+                      (ni, ip) => new { naicsInd = ni, indProfile = ip })
+                ;
+            //Restore the contents of dbo.IndustryNaics table.
+            foreach (var x in allIndustryNaics)
+            {
+                migrationBuilder.InsertData("IndustryNaics",
+                new[] { "IndustryId", "NaicsId" },
+                new object[] { x.IndustryId, x.NaicsId });
+            }
+
+
+            foreach (var x in allIndustryNaicProfiles)
+            {
+                //get the IndustryId for corresponding Naics from the super list
+                short industryId = x.naicsInd.allIndnaic.IndustryId;
+                string titlebc = x.naicsInd.allNaic.Sector;
+                int industryProfileId = x.indProfile.IndustryProfileID;
+
+                //Restore the values of EDM_IndustryProfile_IndustryProfileId column in dbo.SavedIndustryProfiles table.
+                migrationBuilder.UpdateData(
+                table: "SavedIndustryProfiles",
+                keyColumn: "IndustryId",
+                keyValue: industryId,
+                column: "EDM_IndustryProfile_IndustryProfileId",
+                value: industryProfileId);
+            }
 
             //Drop the Foreign Key
             migrationBuilder.DropForeignKey(
@@ -149,5 +175,69 @@ namespace WorkBC.Data.Migrations
             name: "IndustryId",
             table: "SavedIndustryProfiles");
         }
+        public List<EDM_NAICS> GetEDMNaics()
+        {
+            //Read the edm_naics json file from the path:~\workbc-jb\src\WorkBC.Web
+            string jsonString = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "edm_naics.json"));
+            // convert string to stream
+            byte[] byteArray = Encoding.UTF8.GetBytes(jsonString);
+            MemoryStream jsonStream = new MemoryStream(byteArray);
+
+            List<EDM_NAICS> edm_naics = JsonSerializer.Deserialize<List<EDM_NAICS>>(jsonStream);
+
+            return edm_naics;
+
+        }
+
+        public List<EDM_INDUSTRYPROFILES> GetEDMIndustryProfiles()
+        {
+            //Read the edm_industryprofiles json file from the path:~\workbc-jb\src\WorkBC.Web
+            string jsonString = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "edm_industryprofiles.json"));
+            // convert string to stream
+            byte[] byteArray = Encoding.UTF8.GetBytes(jsonString);
+            MemoryStream jsonStream = new MemoryStream(byteArray);
+
+            List<EDM_INDUSTRYPROFILES> edm_ips = JsonSerializer.Deserialize<List<EDM_INDUSTRYPROFILES>>(jsonStream);
+
+
+            return edm_ips;
+        }
+
+        public List<JB_IndustryNaics> GetJBIndustryNaics()
+        {
+            //Read the jb_industryNaics json file from the path:~\workbc-jb\src\WorkBC.Web
+            string jsonString = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "jb_industryNaics.json"));
+            // convert string to stream
+            byte[] byteArray = Encoding.UTF8.GetBytes(jsonString);
+            MemoryStream jsonStream = new MemoryStream(byteArray);
+
+            List<JB_IndustryNaics> jb_indNaics = JsonSerializer.Deserialize<List<JB_IndustryNaics>>(jsonStream);
+
+
+            return jb_indNaics;
+        }
+}
+    public class EDM_NAICS
+
+    {
+        public int NAICS_ID { get; set; }
+        public string Sector { get; set; }
+        public bool Enabled { get; set; }
+
+    }
+
+    public class EDM_INDUSTRYPROFILES
+
+    {
+        public int IndustryProfileID { get; set; }
+        public int NAICS_ID { get; set; }
+
+    }
+    public class JB_IndustryNaics
+
+    {
+        public short IndustryId { get; set; }
+        public short NaicsId { get; set; }
+
     }
 }
