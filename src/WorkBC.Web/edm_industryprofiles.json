@@ -1,0 +1,82 @@
+[
+  {
+    "IndustryProfileID": 19,
+    "NAICS_ID": 0
+  },
+  {
+    "IndustryProfileID": 1,
+    "NAICS_ID": 1
+  },
+  {
+    "IndustryProfileID": 2,
+    "NAICS_ID": 2
+  },
+  {
+    "IndustryProfileID": 3,
+    "NAICS_ID": 3
+  },
+  {
+    "IndustryProfileID": 4,
+    "NAICS_ID": 4
+  },
+  {
+    "IndustryProfileID": 5,
+    "NAICS_ID": 5
+  },
+  {
+    "IndustryProfileID": 6,
+    "NAICS_ID": 6
+  },
+  {
+    "IndustryProfileID": 7,
+    "NAICS_ID": 7
+  },
+  {
+    "IndustryProfileID": 8,
+    "NAICS_ID": 8
+  },
+  {
+    "IndustryProfileID": 9,
+    "NAICS_ID": 9
+  },
+  {
+    "IndustryProfileID": 10,
+    "NAICS_ID": 10
+  },
+  {
+    "IndustryProfileID": 11,
+    "NAICS_ID": 11
+  },
+  {
+    "IndustryProfileID": 12,
+    "NAICS_ID": 12
+  },
+  {
+    "IndustryProfileID": 13,
+    "NAICS_ID": 13
+  },
+  {
+    "IndustryProfileID": 14,
+    "NAICS_ID": 14
+  },
+  {
+    "IndustryProfileID": 15,
+    "NAICS_ID": 15
+  },
+  {
+    "IndustryProfileID": 16,
+    "NAICS_ID": 16
+  },
+  {
+    "IndustryProfileID": 17,
+    "NAICS_ID": 17
+  },
+  {
+    "IndustryProfileID": 18,
+    "NAICS_ID": 18
+  },
+  {
+    "IndustryProfileID": 20,
+    "NAICS_ID": 19
+  }
+]
