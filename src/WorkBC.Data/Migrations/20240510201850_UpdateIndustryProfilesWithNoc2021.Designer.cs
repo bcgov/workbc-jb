@@ -444,6 +444,10 @@ namespace WorkBC.Data.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<string>("TitleBC")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Industries");
@@ -1462,6 +1466,10 @@ namespace WorkBC.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<short>("IndustryId")
+                    .HasColumnType("smallint")
+                    .HasColumnName("IndustryId");
 
                     b.HasKey("Id");
 
