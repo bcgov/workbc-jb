@@ -39,10 +39,9 @@
 	  <None Update="jb_industryNaics.json">
 		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="edm_industryprofile.json">
+	  <None Update="edm_industryprofiles.json">
 		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-		
+	  </None>		
 	</ItemGroup>
 
 </Project>
