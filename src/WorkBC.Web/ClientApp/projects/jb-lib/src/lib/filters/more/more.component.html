@@ -103,11 +103,11 @@
           </div>
         </div>
         <div class="col-lg-4">
-          <!-- 2016 NOC codes -->
+          <!-- 2021 NOC codes -->
           <div (mouseleave)="nocTip.close()">
             <div class="form-group form-group-with-icon">
               <label for="NOCcodes">
-                <strong>2016 NOC code:</strong>
+                <strong>2021 NOC code:</strong>
               </label>
               <button type="button" class="tooltip-icon" placement="bottom" (click)="nocTip.toggle()"
                       [autoClose]="'outside'" [ngbPopover]="NOCcodesPopContent" [triggers]="getNocTriggers()" #nocTip="ngbPopover">
@@ -133,10 +133,10 @@
               <div aria-live="polite">
                 <div class="text-danger error-block" *ngIf="invalidNoc">
                   Please select a NOC code or name from the drop-down list.
-                </div> 
+                </div>
               </div>
             </div>
-            
+
           </div>
           <!-- Job Source -->
           <div class="form-group form-group-with-icon">
