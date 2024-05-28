@@ -841,10 +841,10 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             var maxWeeklySalary = 100000m;
             var maxYearlySalary = 5000000m;
 
-            // Minimum is wage as of  June 2020. This doesn't have to be exact.  The purpose of
+            // Minimum is wage as at June 2024. This doesn't have to be exact.  The purpose of
             // this is to filter out some bad data coming from the national job bank, not to ensure,
             // that employers pay minimum wage.  
-            const decimal minimumWage = 14.60m;
+            const decimal minimumWage = 17.40m;
 
             // if hourly is going to appear on the job listing, then use hourly wage
             if (salaryString.ToLower().Contains("hour"))
