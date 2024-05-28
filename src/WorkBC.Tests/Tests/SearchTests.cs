@@ -238,7 +238,7 @@ namespace WorkBC.Tests.Tests
             //There should be results
             Assert.True(result.Count > 0, "Jobs excluding agency jobs did not return results");
         }
-        
+
         [Theory(DisplayName = "When both salary string and salary numeric fields populated, calculate SalarySummary")]
         [InlineData(39879152, "$2,000.00 monthly + 20% commission per sale")]
         [InlineData(40098629, "$2,000.00 monthly + 3% commission per sale")]
