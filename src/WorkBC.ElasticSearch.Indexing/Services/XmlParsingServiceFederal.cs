@@ -624,20 +624,19 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                 #endregion
 
-                #region Noc
-
-                job.NocGroup = GetNocGroup(job.Noc, isFrench);
-                job.NocJobTitle = job.Title;
-
-                #endregion
-
-
-                //#region Noc2021
+                //#region Noc
 
                 //job.NocGroup = GetNocGroup(job.Noc2021, isFrench);
                 //job.NocJobTitle = job.Title;
 
                 //#endregion
+
+                #region Noc2021
+
+                job.NocGroup = GetNocGroup2021(job.Noc2021, isFrench);
+                job.NocJobTitle = job.Title;
+
+                #endregion
 
                 #region Salary Description / Salary Summary
 
