@@ -633,7 +633,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                 #region Noc2021
 
-                job.NocGroup = GetNocGroup(job.Noc2021, isFrench);
+                job.NocGroup = GetNocGroup2021(job.Noc2021, isFrench);
                 job.NocJobTitle = job.Title;
 
                 #endregion
