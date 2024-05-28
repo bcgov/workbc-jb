@@ -18,7 +18,7 @@ export class KeyWordFilterModel {
 
   getLocationTag(): string {
     if (this.isPostal()) {
-      return getLocationInfo(this.radius, this.formatPostal()); 
+      return getLocationInfo(this.radius, this.formatPostal());
     } else {
       return 'Location: ' + this.cityOrPostal;
     }
@@ -51,7 +51,7 @@ export class LocationField {
     public postal = '',
     public region = '',
     public radius = -1
-  ) { }  
+  ) { }
 
   formatPostal(): string {
     return PostalCodeService.formatPostalCode(this.postal);
@@ -294,7 +294,7 @@ export class MainFilterModel {
     const split = result.startsWith('NOC ')
       ? result.split(' ')
       : ('NOC ' + result).split(' ');
-    result = split.length > 1 && !isNaN(split[1] as never) ? split[1] : '0000';
+    result = split.length > 1 && !isNaN(split[1] as never) ? split[1] : '00000';
     return result;
   }
 
@@ -486,7 +486,7 @@ export class MainFilterModel {
 
     if (this.jobTypeFilters.weekend !== filter.SearchJobTypeWeekend)
       this.jobTypeFilters.weekend = filter.SearchJobTypeWeekend;
-    
+
     if (this.jobTypeFilters.onSite !== filter.SearchJobTypeOnSite)
       this.jobTypeFilters.onSite = filter.SearchJobTypeOnSite;
 
