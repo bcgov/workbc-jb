@@ -210,7 +210,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 return string.Empty;
             }
 
-            string codeStr = nocId.ToString().PadLeft(4, '0');
+            string codeStr = nocId.ToString().PadLeft(5, '0');
 
             try
             {
