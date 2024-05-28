@@ -86,7 +86,7 @@ namespace WorkBC.Tests.Tests
         //    //return results
         //    List<Source> result = await QueryElasticSearch(esq);
 
-        //    //We have no job with this noc code in the fixtures. 
+        //    //We have no job with this noc code in the fixtures.
         //    Assert.True(result.Count == 0,
         //        $"Job for NOC code {nocCode} returned {result.Count} result");
         //}
@@ -102,7 +102,7 @@ namespace WorkBC.Tests.Tests
         //    //return results
         //    List<Source> result = await QueryElasticSearch(esq);
 
-        //    //We have 1 job with this NOC code in the fixtures. 
+        //    //We have 1 job with this NOC code in the fixtures.
         //    Assert.True(result.Count == 1,
         //        $"Job for NOC code {nocCode} returned {result.Count} result");
         //}
@@ -298,7 +298,7 @@ namespace WorkBC.Tests.Tests
             //There should be results
             Assert.True(result.Count > 0, "Jobs excluding agency jobs did not return results");
         }
-        
+
         [Theory(DisplayName = "When both salary string and salary numeric fields populated, calculate SalarySummary")]
         [InlineData(39879152, "$2,000.00 monthly + 20% commission per sale")]
         [InlineData(40098629, "$2,000.00 monthly + 3% commission per sale")]
@@ -326,19 +326,6 @@ namespace WorkBC.Tests.Tests
 
             return filters;
         }
-
-        //private JobSearchFilters GetFiltersForJobNocField2021(string nocCode2021)
-        //{
-        //    var filters = new JobSearchFilters
-        //    {
-        //        Page = 1,
-        //        PageSize = 20,
-        //        SearchLocations = new List<LocationField>(),
-        //        SearchNoc2021Field = nocCode2021
-        //    };
-
-        //    return filters;
-        //}
 
         private JobSearchFilters GetFiltersForJobSource(string sourceId)
         {
