@@ -1435,7 +1435,7 @@ export class FilterService extends BaseService {
 
       case 'noc':
         if (!isNaN(value)) {
-          value = ('0000' + value).slice(-4);
+          value = ('00000' + value).slice(-5);
           mainFilters.moreFilters.nocCode = value;
         }
         break;
