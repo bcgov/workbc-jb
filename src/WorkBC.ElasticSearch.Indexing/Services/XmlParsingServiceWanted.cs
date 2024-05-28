@@ -269,7 +269,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                             if (nocInt > 0)
                             {
-                                job.NocGroup = GetNocGroup(nocInt);
+                                job.NocGroup = GetNocGroup2021(nocInt);
                                 job.NocJobTitle = nocNode.Attributes["label"].InnerText.Replace("\u200B", ""); // remove zero width space;;
                             }
 

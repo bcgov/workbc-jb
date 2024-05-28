@@ -257,7 +257,7 @@ namespace WorkBC.Web.Controllers
                 Page = 1,
                 PageSize = 4,
                 SortOrder = 1, // Posted date newest first
-                SearchNoc2021Field = noc2021.ToString(),
+                SearchNocField = noc2021.ToString(),
             };
 
             // run the query
