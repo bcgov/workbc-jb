@@ -62,66 +62,6 @@ namespace WorkBC.Tests.Tests
                 "Jobs for " + (englishOnly ? "English only" : "English and French") + " did not return any results");
         }
 
-        //[Theory(DisplayName = "Find jobs based on a NOC code")]
-        //[InlineData("6322")]
-        //public async Task FindJobByNocCode(string nocCode)
-        //{
-        //    //Create an instance with the filters required
-        //    var esq = new JobSearchQuery(GeocodingService, Configuration, GetFiltersForJobNocField(nocCode));
-
-        //    //return results
-        //    List<Source> result = await QueryElasticSearch(esq);
-
-        //    //We have 2 jobs with this NOC code in the fixtures
-        //    Assert.True(result.Count == 3,
-        //        $"Job for NOC code {nocCode} did not return 3 results, but {result.Count} results");
-        //}
-        //[Theory(DisplayName = "Find jobs based on a NOC code which is the first one in 3 Noc Codes but has no corresponding job")]
-        //[InlineData("2171")]
-        //public async Task FindJobByNocCodeMultipleFirst(string nocCode)
-        //{
-        //    //Create an instance with the filters required
-        //    var esq = new JobSearchQuery(GeocodingService, Configuration, GetFiltersForJobNocField(nocCode));
-
-        //    //return results
-        //    List<Source> result = await QueryElasticSearch(esq);
-
-        //    //We have no job with this noc code in the fixtures. 
-        //    Assert.True(result.Count == 0,
-        //        $"Job for NOC code {nocCode} returned {result.Count} result");
-        //}
-
-
-        //[Theory(DisplayName = "Find jobs based on a NOC code which is the second one in 3 Noc Codes")]
-        //[InlineData("2172")]
-        //public async Task FindJobByNocCodeMultipleSecond(string nocCode)
-        //{
-        //    //Create an instance with the filters required
-        //   var esq = new JobSearchQuery(GeocodingService, Configuration, GetFiltersForJobNocField(nocCode));
-
-        //    //return results
-        //    List<Source> result = await QueryElasticSearch(esq);
-
-        //    //We have 1 job with this NOC code in the fixtures. 
-        //    Assert.True(result.Count == 1,
-        //        $"Job for NOC code {nocCode} returned {result.Count} result");
-        //}
-
-        //[Theory(DisplayName = "Find jobs based on a NOC code which is the last one in 3 Noc Codes")]
-        //[InlineData("2173")]
-        //public async Task FindJobByNocCodeMultipleLast(string nocCode)
-        //{
-        //    //Create an instance with the filters required
-        //    var esq = new JobSearchQuery(GeocodingService, Configuration, GetFiltersForJobNocField(nocCode));
-
-        //    //return results
-        //    List<Source> result = await QueryElasticSearch(esq);
-
-        //    //We have 1 job with this NOC code in the fixtures
-        //    Assert.True(result.Count == 1,
-        //        $"Job for NOC code {nocCode} returned {result.Count} result");
-        //}
-
         [Theory(DisplayName = "Find jobs based on a NOC code 2021 from a federal source")]
         [InlineData("21234")]
         public async Task FindJobByNocCode2021Federal(string nocCode2021)
@@ -326,19 +266,6 @@ namespace WorkBC.Tests.Tests
 
             return filters;
         }
-
-        //private JobSearchFilters GetFiltersForJobNocField2021(string nocCode2021)
-        //{
-        //    var filters = new JobSearchFilters
-        //    {
-        //        Page = 1,
-        //        PageSize = 20,
-        //        SearchLocations = new List<LocationField>(),
-        //        SearchNoc2021Field = nocCode2021
-        //    };
-
-        //    return filters;
-        //}
 
         private JobSearchFilters GetFiltersForJobSource(string sourceId)
         {
