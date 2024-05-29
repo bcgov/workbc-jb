@@ -22,7 +22,7 @@
         }
       },
       "filter": {
-        ##SYNONYM##,
+        "##SYNONYM##",
         "english_stop": {
           "type": "stop",
           "stopwords": "_english_"
@@ -249,6 +249,9 @@
         "type": "float"
       },
       "Noc": {
+        "type": "float"
+      },
+      "Noc2021": {
         "type": "float"
       },
       "NocGroup": {
