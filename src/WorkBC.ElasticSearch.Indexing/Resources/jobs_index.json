@@ -22,7 +22,7 @@
         }
       },
       "filter": {
-        "##SYNONYM##",
+        ##SYNONYM##,
         "english_stop": {
           "type": "stop",
           "stopwords": "_english_"
