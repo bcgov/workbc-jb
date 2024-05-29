@@ -76,8 +76,8 @@ export class RecommendedJobFilter {
     let count = 0;
     for (const name of properties) {
       if (name.startsWith('filter') &&
-          Object.prototype.hasOwnProperty.call(this, name) &&
-          this[name] === true) {
+        Object.prototype.hasOwnProperty.call(this, name) &&
+        this[name] === true) {
         count++;
       }
     }
@@ -156,6 +156,7 @@ export class JobBase {
 
 export class RecommendedJob extends JobBase {
   Noc: string;
+  Noc2021: string;
   Reason: string;
   Score: number;
 }
@@ -217,6 +218,7 @@ export class Job extends RecommendedJob {
 
       if ('Reason' in job) {
         this.Noc = job.Noc;
+        this.Noc2021 = job.Noc2021;
         this.Reason = job.Reason;
         this.Score = job.Score;
       }
