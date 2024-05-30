@@ -147,6 +147,7 @@ namespace WorkBC.Web.Services
                     City = j.City,
                     DatePosted = j.DatePosted,
                     NocCodeId = j.NocCodeId,
+                    NocCodeId2021 = j.NocCodeId2021,
                     EmployerName = j.EmployerName.ToLower(), // lowercase names for grouping
                     Title = j.Title.ToLower(), // lowercase names for grouping
                     IsActive = j.IsActive
@@ -163,6 +164,13 @@ namespace WorkBC.Web.Services
             Dictionary<short, int> nocCodes = savedJobs
                 .GroupBy(j => j.NocCodeId ?? 0)
                 .Select(g => new {Term = g.Key, Count = g.Count()})
+                .OrderByDescending(a => a.Count)
+                .ToDictionary(k => k.Term, v => v.Count);
+
+            // group the saved jobs by noc code 2021
+            Dictionary<int, int> nocCodes2021 = savedJobs
+                .GroupBy(j => j.NocCodeId2021 ?? 0)
+                .Select(g => new { Term = g.Key, Count = g.Count() })
                 .OrderByDescending(a => a.Count)
                 .ToDictionary(k => k.Term, v => v.Count);
 
@@ -191,6 +199,7 @@ namespace WorkBC.Web.Services
                 SavedJobIds = savedJobIds,
                 UserFlags = userFlags,
                 NocCodes = nocCodes,
+                NocCodes2021 = nocCodes2021,
                 Employers = employers,
                 Titles = titles,
             };
@@ -232,6 +241,7 @@ namespace WorkBC.Web.Services
             }
 
             filter.NocCodes = AccountCriteria.NocCodes;
+            filter.NocCodes2021 = AccountCriteria.NocCodes2021;
             filter.Titles = AccountCriteria.Titles;
             filter.Employers = AccountCriteria.Employers;
 
@@ -286,6 +296,7 @@ namespace WorkBC.Web.Services
                     IsFederalJob = result.IsFederalJob,
                     LastUpdated = result.LastUpdated,
                     Noc = result.Noc,
+                    Noc2021 = result.Noc2021,
                     PeriodOfEmployment = result.PeriodOfEmployment,
                     SalarySummary = result.SalarySummary,
                     Title = result.Title,
@@ -310,12 +321,12 @@ namespace WorkBC.Web.Services
 
             var reasons = new List<string>();
 
-            if (result.Noc != null)
+            if (result.Noc2021 != null)
             {
-                short noc = short.Parse(result.Noc);
-                if (AccountCriteria.NocCodes.ContainsKey(noc))
+                int noc = int.Parse(result.Noc2021);
+                if (AccountCriteria.NocCodes2021.ContainsKey(noc))
                 {
-                    int nocCount = AccountCriteria.NocCodes[noc];
+                    int nocCount = AccountCriteria.NocCodes2021[noc];
                     reasons.Add($"based on having the same NOC code as {nocCount.GetWord()} of your saved jobs");
                 }
             }
@@ -420,6 +431,7 @@ namespace WorkBC.Web.Services
     {
         public Dictionary<string, int> Titles { get; set; }
         public Dictionary<short, int> NocCodes { get; set; }
+        public Dictionary<int, int> NocCodes2021 { get; set; }
         public Dictionary<string, int> Employers { get; set; }
         public JobSeekerFlags UserFlags { get; set; }
         public string[] SavedJobIds { get; set; }

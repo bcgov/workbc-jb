@@ -153,19 +153,26 @@ namespace WorkBC.ElasticSearch.Search.Queries
                 cityFilterList.Add("{\"term\":{\"WorkplaceType.Id\":{\"value\":15141}}}");
             }
 
-
             // Noc Codes
             foreach (KeyValuePair<short, int> item in _filters.NocCodes)
             {
                 decimal boost = Boost.NocCodes + Boost.NocCountBonus * Convert.ToDecimal(item.Value);
-                short term = item.Key;
+                int term = item.Key;
                 shouldList.Add(@"{""term"":{""Noc"":{""value"":" + term + ",\"boost\":" + boost + "}}}");
             }
 
-            if (_filters.FilterSavedJobNocs && _filters.NocCodes.Count > 0)
+            // Noc Codes 2021
+            foreach (KeyValuePair<int, int> item in _filters.NocCodes2021)
             {
-                string list = string.Join(',', _filters.NocCodes.Select(n => "\"" + n.Key + "\""));
-                filterList.Add(@"{""terms"":{""Noc"":[" + list + "]}}");
+                decimal boost = Boost.NocCodes2021 + Boost.NocCountBonus * Convert.ToDecimal(item.Value);
+                int term = item.Key;
+                shouldList.Add(@"{""term"":{""Noc2021"":{""value"":" + term + ",\"boost\":" + boost + "}}}");
+            }
+
+            if (_filters.FilterSavedJobNocs && _filters.NocCodes2021.Count > 0)
+            {
+                string list = string.Join(',', _filters.NocCodes2021.Select(n => "\"" + n.Key + "\""));
+                filterList.Add(@"{""terms"":{""Noc2021"":[" + list + "]}}");
             }
 
             // Employer Names

@@ -15,6 +15,7 @@
         public const decimal Employers = 1m;
         public const decimal Titles = 1m;
         public const decimal NocCodes = 1m;
+        public const decimal NocCodes2021 = 1m;
 
         // e.g. Employers boost = 1 and EmployerCountBonus = 0.01m and the user has 2 saved jobs for this employer:  
         // - employer boost becomes 1 + (2 * 0.01) = 1.02
