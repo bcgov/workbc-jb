@@ -157,7 +157,7 @@ namespace WorkBC.ElasticSearch.Search.Queries
             foreach (KeyValuePair<short, int> item in _filters.NocCodes)
             {
                 decimal boost = Boost.NocCodes + Boost.NocCountBonus * Convert.ToDecimal(item.Value);
-                int term = item.Key;
+                short term = item.Key;
                 shouldList.Add(@"{""term"":{""Noc"":{""value"":" + term + ",\"boost\":" + boost + "}}}");
             }
 
