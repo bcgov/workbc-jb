@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -138,19 +139,20 @@ namespace WorkBC.Web.Services
         {
             // get the 200 most recent saved jobs for the user
             List<Job> savedJobs = await (from sj in _context.SavedJobs
-                join j in _context.Jobs on sj.JobId equals j.JobId
-                where sj.AspNetUserId == jobSeeker.Id && !sj.IsDeleted
-                orderby sj.Id descending
-                select new Job
-                {
-                    JobId = j.JobId,
-                    City = j.City,
-                    DatePosted = j.DatePosted,
-                    NocCodeId = j.NocCodeId,
-                    EmployerName = j.EmployerName.ToLower(), // lowercase names for grouping
-                    Title = j.Title.ToLower(), // lowercase names for grouping
-                    IsActive = j.IsActive
-                }).Take(Constants.MaxSavedJobs).Distinct().ToListAsync();
+                                         join j in _context.Jobs on sj.JobId equals j.JobId
+                                         where sj.AspNetUserId == jobSeeker.Id && !sj.IsDeleted
+                                         orderby sj.Id descending
+                                         select new Job
+                                         {
+                                             JobId = j.JobId,
+                                             City = j.City,
+                                             DatePosted = j.DatePosted,
+                                             //NocCodeId = j.NocCodeId,
+                                             NocCodeId2021 = j.NocCodeId2021,
+                                             EmployerName = j.EmployerName.ToLower(), // lowercase names for grouping
+                                             Title = j.Title.ToLower(), // lowercase names for grouping
+                                             IsActive = j.IsActive
+                                         }).Take(Constants.MaxSavedJobs).Distinct().ToListAsync();
 
             // get cityLabel, latitude, longitude
             string cityLabel = await GetUserLocationInfo(jobSeeker);
@@ -159,10 +161,17 @@ namespace WorkBC.Web.Services
             JobSeekerFlags userFlags =
                 await _context.JobSeekerFlags.FirstOrDefaultAsync(f => f.JobSeeker.Id == jobSeeker.Id);
 
-            // group the saved jobs by noc code
-            Dictionary<short, int> nocCodes = savedJobs
-                .GroupBy(j => j.NocCodeId ?? 0)
-                .Select(g => new {Term = g.Key, Count = g.Count()})
+            //// group the saved jobs by noc code
+            //Dictionary<short, int> nocCodes = savedJobs
+            //    .GroupBy(j => j.NocCodeId ?? 0)
+            //    .Select(g => new {Term = g.Key, Count = g.Count()})
+            //    .OrderByDescending(a => a.Count)
+            //    .ToDictionary(k => k.Term, v => v.Count);
+
+            // group the saved jobs by noc code 2021
+            Dictionary<int, int> nocCodes2021 = savedJobs
+                .GroupBy(j => j.NocCodeId2021 ?? 0)
+                .Select(g => new { Term = g.Key, Count = g.Count() })
                 .OrderByDescending(a => a.Count)
                 .ToDictionary(k => k.Term, v => v.Count);
 
@@ -190,7 +199,8 @@ namespace WorkBC.Web.Services
                 City = cityLabel,
                 SavedJobIds = savedJobIds,
                 UserFlags = userFlags,
-                NocCodes = nocCodes,
+                //NocCodes = nocCodes,
+                NocCodes2021 = nocCodes2021,
                 Employers = employers,
                 Titles = titles,
             };
@@ -231,7 +241,8 @@ namespace WorkBC.Web.Services
                 filter.City = AccountCriteria.City;
             }
 
-            filter.NocCodes = AccountCriteria.NocCodes;
+            //filter.NocCodes = AccountCriteria.NocCodes;
+            filter.NocCodes2021 = AccountCriteria.NocCodes2021;
             filter.Titles = AccountCriteria.Titles;
             filter.Employers = AccountCriteria.Employers;
 
@@ -285,7 +296,8 @@ namespace WorkBC.Web.Services
                     HoursOfWork = result.HoursOfWork,
                     IsFederalJob = result.IsFederalJob,
                     LastUpdated = result.LastUpdated,
-                    Noc = result.Noc,
+                    //Noc = result.Noc,
+                    Noc2021 = result.Noc2021,
                     PeriodOfEmployment = result.PeriodOfEmployment,
                     SalarySummary = result.SalarySummary,
                     Title = result.Title,
@@ -310,12 +322,12 @@ namespace WorkBC.Web.Services
 
             var reasons = new List<string>();
 
-            if (result.Noc != null)
-            {
-                short noc = short.Parse(result.Noc);
-                if (AccountCriteria.NocCodes.ContainsKey(noc))
+            if (result.Noc2021 != null)
+            {                
+                int noc= Int32.TryParse(result.Noc2021, out noc) ? noc : 0;
+                if (AccountCriteria.NocCodes2021.ContainsKey(noc))
                 {
-                    int nocCount = AccountCriteria.NocCodes[noc];
+                    int nocCount = AccountCriteria.NocCodes2021[noc];
                     reasons.Add($"based on having the same NOC code as {nocCount.GetWord()} of your saved jobs");
                 }
             }
@@ -407,8 +419,8 @@ namespace WorkBC.Web.Services
                 return "";
             }
 
-            string reason = reasons.Count == 1 
-                ? $"Recommended {reasons[0]}" 
+            string reason = reasons.Count == 1
+                ? $"Recommended {reasons[0]}"
                 : $"Recommended {string.Join(", ", reasons.Take(reasons.Count - 1))} and {reasons[^1]}";
 
             return reason.EndsWith(".") ? reason : $"{reason}.";
@@ -419,7 +431,8 @@ namespace WorkBC.Web.Services
     public class AccountCriteria
     {
         public Dictionary<string, int> Titles { get; set; }
-        public Dictionary<short, int> NocCodes { get; set; }
+        //public Dictionary<short, int> NocCodes { get; set; }
+        public Dictionary<int, int> NocCodes2021 { get; set; }
         public Dictionary<string, int> Employers { get; set; }
         public JobSeekerFlags UserFlags { get; set; }
         public string[] SavedJobIds { get; set; }
