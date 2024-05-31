@@ -153,14 +153,6 @@ namespace WorkBC.ElasticSearch.Search.Queries
                 cityFilterList.Add("{\"term\":{\"WorkplaceType.Id\":{\"value\":15141}}}");
             }
 
-            //// Noc Codes
-            //foreach (KeyValuePair<short, int> item in _filters.NocCodes)
-            //{
-            //    decimal boost = Boost.NocCodes + Boost.NocCountBonus * Convert.ToDecimal(item.Value);
-            //    short term = item.Key;
-            //    shouldList.Add(@"{""term"":{""Noc"":{""value"":" + term + ",\"boost\":" + boost + "}}}");
-            //}
-
             // Noc Codes 2021
             foreach (KeyValuePair<int, int> item in _filters.NocCodes2021)
             {
