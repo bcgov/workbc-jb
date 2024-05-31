@@ -23,7 +23,8 @@ namespace WorkBC.ElasticSearch.Models.Filters
 
         // Job seeker's filter data (scraped from saved jobs)
         public Dictionary<string, int> Titles { get; set; }
-        public Dictionary<short, int> NocCodes { get; set; }
+        //public Dictionary<short, int> NocCodes { get; set; }
+        public Dictionary<int, int> NocCodes2021 { get; set; }
         public Dictionary<string, int> Employers { get; set; }
 
         // Job seeker's filter data (scraped from user profile)

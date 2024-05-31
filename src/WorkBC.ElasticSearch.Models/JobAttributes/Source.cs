@@ -8,8 +8,8 @@ namespace WorkBC.ElasticSearch.Models.JobAttributes
 {
     public class Source
     {
-        [JsonIgnore]
-        private string _noc;
+        //[JsonIgnore]
+        //private string _noc;
         [JsonIgnore]
         private string _noc2021;
 
@@ -135,27 +135,27 @@ namespace WorkBC.ElasticSearch.Models.JobAttributes
         [JsonProperty("NocGroup", NullValueHandling = NullValueHandling.Ignore)]
         public string NocGroup { get; set; }
 
-        [JsonProperty("Noc", NullValueHandling = NullValueHandling.Ignore)]
-        public string Noc
-        {
-            get
-            {
-                const int nocLength = 4;
-                if (string.IsNullOrWhiteSpace(_noc))
-                {
-                    return string.Empty;
-                }
-                if (_noc.Length >= nocLength)
-                {
-                    return _noc;
-                }
-                var zeroes = new string('0', nocLength);
-                // pad the NOC with zeroes so it is always nocLength characters
-                var s = $"{zeroes}{_noc}";
-                return s.Substring(s.Length - nocLength, nocLength);
-            }
-            set { _noc = value; }
-        }
+        //[JsonProperty("Noc", NullValueHandling = NullValueHandling.Ignore)]
+        //public string Noc
+        //{
+        //    get
+        //    {
+        //        const int nocLength = 4;
+        //        if (string.IsNullOrWhiteSpace(_noc))
+        //        {
+        //            return string.Empty;
+        //        }
+        //        if (_noc.Length >= nocLength)
+        //        {
+        //            return _noc;
+        //        }
+        //        var zeroes = new string('0', nocLength);
+        //        // pad the NOC with zeroes so it is always nocLength characters
+        //        var s = $"{zeroes}{_noc}";
+        //        return s.Substring(s.Length - nocLength, nocLength);
+        //    }
+        //    set { _noc = value; }
+        //}
 
         [JsonProperty("Noc2021", NullValueHandling = NullValueHandling.Ignore)]
         public string Noc2021
