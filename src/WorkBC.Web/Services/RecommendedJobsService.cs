@@ -147,7 +147,6 @@ namespace WorkBC.Web.Services
                                              JobId = j.JobId,
                                              City = j.City,
                                              DatePosted = j.DatePosted,
-                                             //NocCodeId = j.NocCodeId,
                                              NocCodeId2021 = j.NocCodeId2021,
                                              EmployerName = j.EmployerName.ToLower(), // lowercase names for grouping
                                              Title = j.Title.ToLower(), // lowercase names for grouping
@@ -160,13 +159,6 @@ namespace WorkBC.Web.Services
             // get the user's groups (e.g. Indigenous)
             JobSeekerFlags userFlags =
                 await _context.JobSeekerFlags.FirstOrDefaultAsync(f => f.JobSeeker.Id == jobSeeker.Id);
-
-            //// group the saved jobs by noc code
-            //Dictionary<short, int> nocCodes = savedJobs
-            //    .GroupBy(j => j.NocCodeId ?? 0)
-            //    .Select(g => new {Term = g.Key, Count = g.Count()})
-            //    .OrderByDescending(a => a.Count)
-            //    .ToDictionary(k => k.Term, v => v.Count);
 
             // group the saved jobs by noc code 2021
             Dictionary<int, int> nocCodes2021 = savedJobs
@@ -199,7 +191,6 @@ namespace WorkBC.Web.Services
                 City = cityLabel,
                 SavedJobIds = savedJobIds,
                 UserFlags = userFlags,
-                //NocCodes = nocCodes,
                 NocCodes2021 = nocCodes2021,
                 Employers = employers,
                 Titles = titles,
@@ -241,7 +232,6 @@ namespace WorkBC.Web.Services
                 filter.City = AccountCriteria.City;
             }
 
-            //filter.NocCodes = AccountCriteria.NocCodes;
             filter.NocCodes2021 = AccountCriteria.NocCodes2021;
             filter.Titles = AccountCriteria.Titles;
             filter.Employers = AccountCriteria.Employers;
@@ -296,7 +286,6 @@ namespace WorkBC.Web.Services
                     HoursOfWork = result.HoursOfWork,
                     IsFederalJob = result.IsFederalJob,
                     LastUpdated = result.LastUpdated,
-                    //Noc = result.Noc,
                     Noc2021 = result.Noc2021,
                     PeriodOfEmployment = result.PeriodOfEmployment,
                     SalarySummary = result.SalarySummary,
@@ -431,7 +420,6 @@ namespace WorkBC.Web.Services
     public class AccountCriteria
     {
         public Dictionary<string, int> Titles { get; set; }
-        //public Dictionary<short, int> NocCodes { get; set; }
         public Dictionary<int, int> NocCodes2021 { get; set; }
         public Dictionary<string, int> Employers { get; set; }
         public JobSeekerFlags UserFlags { get; set; }
