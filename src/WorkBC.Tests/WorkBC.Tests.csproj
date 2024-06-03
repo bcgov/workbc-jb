@@ -85,6 +85,9 @@
 		<None Update="Fixtures\FederalXmlJobs\40207035.xml">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
+		<None Update="Fixtures\FederalXmlJobs\41176519.xml">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 		<None Update="Fixtures\FederalXmlJobs\40387120.xml">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
