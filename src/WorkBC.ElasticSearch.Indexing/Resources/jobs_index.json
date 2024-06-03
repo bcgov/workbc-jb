@@ -248,9 +248,7 @@
       "Salary": {
         "type": "float"
       },
-      "Noc": {
-        "type": "float"
-      },
+
       "Noc2021": {
         "type": "float"
       },
