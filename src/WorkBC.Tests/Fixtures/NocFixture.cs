@@ -13,8 +13,8 @@ namespace WorkBC.Tests.Fixtures
                 new NocCode2021 {Code = "52120", Code2016 = "5241", Id= 52120, Title= "Graphic Designer"},
                 new NocCode2021 {Code = "63200", Code2016 = "6322", Id= 63200, Title= "Cook"},
                 new NocCode2021 {Code = "11100", Code2016 = "1111,1114", Id= 11100, Title= "Financial insurance advisor"},
-                new NocCode2021 {Code = "21211", Code2016 = "2171,2172,2173", Id= 21211, Title= "Data scientists"}
-
+                new NocCode2021 {Code = "21211", Code2016 = "2171,2172,2173", Id= 21211, Title= "Data scientists"},
+                new NocCode2021 {Code = "00018", Code2016 = "0012,0013,0014,0015,0016", Id= 00018, Title= "Senior managers - public and private sector"}
             };
         public static List<NocCode> NocCodes =>
             new List<NocCode>
