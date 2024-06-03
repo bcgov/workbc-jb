@@ -55,7 +55,7 @@ namespace WorkBC.Web.Controllers
         //The title published on the UI is the BC mandated one.
         var query = from p in _context.Industries
                         where savedIndustryProfilesDict.Keys.Contains(p.Id)
-                        orderby p.Title
+                        orderby p.TitleBC
                         select new IndustryProfileModel
                         {
                             Id = savedIndustryProfilesDict[p.Id],
