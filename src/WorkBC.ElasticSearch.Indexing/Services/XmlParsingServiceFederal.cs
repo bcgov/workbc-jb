@@ -86,6 +86,17 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                         noc2021 = 0;
                     }
                 }
+                //Special case for NOC-387: The parser should convert any incoming NOC 00011-00015 into NOC 00018
+                //before attempting to locate it in the database. 
+
+                List<short> specialNocs = new List<short>();
+                short[] input = { 0012, 0013, 0014, 0015, 0016 };
+                specialNocs.AddRange(input);
+
+                if (specialNocs.Contains(noc))
+                {
+                    noc2021 = 00018;
+                }
 
                 job = new ElasticSearchJob
                 {
