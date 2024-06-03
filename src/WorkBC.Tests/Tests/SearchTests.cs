@@ -97,6 +97,22 @@ namespace WorkBC.Tests.Tests
 
 
         [Theory(DisplayName = "Find jobs based on a NOC code 2021 derived from a TalentNeuron source")]
+        [InlineData("00018")]
+        public async Task FindJobBySpecialNocCode2021Federal(string nocCode2021)
+        {
+            //Create an instance with the filters required
+            var esq = new JobSearchQuery(GeocodingService, Configuration, GetFiltersForJobNocField(nocCode2021));
+
+            //return results
+            List<Source> result = await QueryElasticSearch(esq);
+
+            //We have 1 jobs with this NOC code in the fixtures
+            Assert.True(result.Count == 1,
+                $"Job for NOC code {nocCode2021} returned {result.Count} results");
+        }
+
+
+        [Theory(DisplayName = "Find jobs based on a special case NOC code 2021 derived from a Federal source")]
         [InlineData("21211")]
         public async Task FindJobByNocCode2021WantedMultiple(string nocCode2021)
         {
