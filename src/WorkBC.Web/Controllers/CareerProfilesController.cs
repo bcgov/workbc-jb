@@ -23,15 +23,13 @@ namespace WorkBC.Web.Controllers
     public class CareerProfilesController : ControllerBase
     {
         private readonly JobBoardContext _context;
-        private readonly EnterpriseContext _enterpriseContext;
         private readonly IConfiguration _configuration;
         private readonly IGeocodingService _geocodingService;
 
-        public CareerProfilesController(JobBoardContext context, EnterpriseContext enterpriseContext,
+        public CareerProfilesController(JobBoardContext context,
             IConfiguration configuration, IGeocodingService geocodingService)
         {
             _context = context;
-            _enterpriseContext = enterpriseContext;
             _configuration = configuration;
             _geocodingService = geocodingService;
         }
@@ -46,7 +44,7 @@ namespace WorkBC.Web.Controllers
                 .ToListAsync();
 
             var savedCareerProfilesDict = savedCareerProfiles
-                .GroupBy(s => s.CareerProfileId)
+                .GroupBy(s => s.Id)
                 .ToDictionary(
                     s => s.Key,
                     s => s.First().Id
@@ -54,15 +52,15 @@ namespace WorkBC.Web.Controllers
 
             List<int> savedCareerProfilesIds = savedCareerProfilesDict.Select(s => s.Key).ToList();
 
-            IQueryable<CareerProfileModel> query = from p in _enterpriseContext.CareerProfiles
-                join n in _enterpriseContext.Nocs on p.NocId equals n.NocId
-                orderby n.NameEnglish
-                where savedCareerProfilesIds.Contains(p.CareerProfileId)
+            IQueryable<CareerProfileModel> query = from p in _context.SavedCareerProfiles
+                join n in _context.NocCodes2021 on p.NocCodeId2021 equals n.Id
+                orderby n.Title
+                where savedCareerProfilesIds.Contains(p.Id)
                 select new CareerProfileModel
                 {
-                    Id = savedCareerProfilesDict[p.CareerProfileId],
-                    Title = n.NameEnglish,
-                    NocCode = n.Noccode
+                    Id = savedCareerProfilesDict[p.Id],
+                    Title = n.Title,
+                    NocCode = n.Code
                 };
 
             return Ok(await query.ToListAsync());
@@ -79,11 +77,11 @@ namespace WorkBC.Web.Controllers
             return Ok(savedCareerProfiles.Count);
         }
 
-        // GET: api/CareerProfiles/5
+        // GET: api/career-profiles/6
         [HttpGet("{id}")]
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true, Duration = 0)]
         public async Task<ActionResult<SavedCareerProfile>> GetSavedCareerProfile(int id)
-        {
+            {
             var savedCareerProfile = await _context.SavedCareerProfiles.FindAsync(id);
 
             if (savedCareerProfile == null)
@@ -94,7 +92,7 @@ namespace WorkBC.Web.Controllers
             return savedCareerProfile;
         }
 
-        // PUT: api/CareerProfiles/5
+        // PUT: api/career-profiles/6
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSavedCareerProfile(int id, SavedCareerProfile savedCareerProfile)
         {
@@ -124,7 +122,7 @@ namespace WorkBC.Web.Controllers
             return NoContent();
         }
 
-        // POST: api/CareerProfiles
+        // POST: api/career-profiles
         [HttpPost]
         public async Task<ActionResult<SavedCareerProfile>> PostSavedCareerProfile(SavedCareerProfile savedCareerProfile)
         {
@@ -134,7 +132,7 @@ namespace WorkBC.Web.Controllers
             return CreatedAtAction("GetSavedCareerProfile", new { id = savedCareerProfile.Id }, savedCareerProfile);
         }
 
-        // DELETE: api/CareerProfiles/5
+        // DELETE: api/career-profiles/6
         [HttpDelete("{id}")]
         public async Task<ActionResult<SavedCareerProfile>> DeleteSavedCareerProfile(int id)
         {
@@ -152,36 +150,28 @@ namespace WorkBC.Web.Controllers
             return savedCareerProfile;
         }
 
-        // POST: api/CareerProfiles/Save/1234
+        // POST: api/career-profiles/Save/11101
         [HttpPost("save/{noc}")]
         public async Task<bool> SaveCareerProfile(string noc)
         {
             var nocList = noc.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string nocCode in nocList)
             {
-                //find the career profile id based on the noc code
+                //Find the saved career profile id based on the noc code 2021 which is 5 digits long.
                 int careerProfileId = (
-                    from profile in _enterpriseContext.CareerProfiles
-                    join nocCodes in _enterpriseContext.Nocs on profile.NocId equals nocCodes.NocId
-                    where nocCodes.Nocyear == 2011 && nocCodes.Noccode == nocCode.PadLeft(4,'0')
-                    select profile.CareerProfileId
+                    from profile in _context.SavedCareerProfiles
+                    join nocCodes in _context.NocCodes2021 on profile.NocCodeId2021 equals nocCodes.Id
+                    where nocCodes.Code == nocCode && profile.AspNetUserId == UserId
+                    select profile.Id
                 ).FirstOrDefault();
 
-                if (careerProfileId > 0)
+                if (careerProfileId == 0)
                 {
-                    SavedCareerProfile savedCareerProfile = _context.SavedCareerProfiles
-                        .FirstOrDefault(x =>
-                            x.AspNetUserId == UserId &&
-                            x.CareerProfileId == careerProfileId &&
-                            !x.IsDeleted);
-
-                    if (savedCareerProfile == null)
-                    {
                         //only add career profile if it does not exist for this job-seeker
                         var profile = new SavedCareerProfile
                         {
                             AspNetUserId = UserId,
-                            CareerProfileId = careerProfileId,
+                            NocCodeId2021 = Convert.ToInt32(nocCode),
                             DateDeleted = null,
                             DateSaved = DateTime.Now,
                             IsDeleted = false
@@ -189,38 +179,29 @@ namespace WorkBC.Web.Controllers
 
                         _context.SavedCareerProfiles.Add(profile);
                         await _context.SaveChangesAsync();
-                    }
+                    
                 }
             }
 
             return true;
         }
 
-        // GET: api/CareerProfiles/Status/1234
+        // GET: api/career-profiles/Status/11101
         [HttpGet("status/{noc}")]
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true, Duration = 0)]
         public async Task<bool> GetCareerProfileStatus(int noc)
         {
-            //find the career profile id based on the noc code
-            int careerProfileId = (from profile in _enterpriseContext.CareerProfiles
-                join nocCodes in _enterpriseContext.Nocs on profile.NocId equals nocCodes.NocId
-                where nocCodes.Nocyear == 2011 && nocCodes.Noccode == noc.ToString("0000")
-                select profile.CareerProfileId).FirstOrDefault();
-
-            if (careerProfileId > 0)
-            {
                 SavedCareerProfile savedCareerProfile = await _context.SavedCareerProfiles
                     .FirstOrDefaultAsync(x =>
                         x.AspNetUserId == UserId &&
-                        x.CareerProfileId == careerProfileId &&
+                        x.NocCodeId2021 == noc &&
                         !x.IsDeleted);
 
                 if (savedCareerProfile != null)
                 {
                     //this career profile is linked to this user
                     return true;
-                }
-            }
+                }            
 
             return false;
         }
@@ -276,7 +257,7 @@ namespace WorkBC.Web.Controllers
                 Page = 1,
                 PageSize = 4,
                 SortOrder = 1, // Posted date newest first
-                SearchNoc2021Field = noc2021.ToString(),
+                SearchNocField = noc2021.ToString(),
             };
 
             // run the query

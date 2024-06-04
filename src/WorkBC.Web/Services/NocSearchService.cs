@@ -22,11 +22,11 @@ namespace WorkBC.Web.Services
         public NocSearchService(JobBoardContext jobBoardContext)
         {
             _jobBoardContext = jobBoardContext;
-        }
+        } 
 
         public async Task<IEnumerable<NocCodeModel>> SearchNocCodes(string startsWith)
         {
-            return (await _jobBoardContext.NocCodes.AsNoTracking()
+            return (await _jobBoardContext.NocCodes2021.AsNoTracking()
                     .Where(x =>
                         MEF.Functions.Like(x.Code, startsWith + "%") ||
                         MEF.Functions.Like(x.Title, startsWith + "%") ||

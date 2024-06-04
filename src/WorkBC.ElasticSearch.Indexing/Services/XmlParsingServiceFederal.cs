@@ -19,6 +19,9 @@ namespace WorkBC.ElasticSearch.Indexing.Services
         private const string VirtualJobBasedIn_EN = "Virtual job based in";
         private const string VirtualJobBasedIn_FR = "Emploi virtuel basé à";
         private readonly IGeocodingService _geocodingService;
+        //NOC-387-Special case scenario fix for NOC 2021 codes 00011 to 00015
+        private List<int> specialNocs = new List<int>() { 00011, 00012, 00013, 00014, 00015 };
+
 
 
         public XmlParsingServiceFederal(IConfiguration configuration) : base(configuration)
@@ -74,12 +77,23 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     noc = 0;
                 }
 
+                //Special case for NOC-387: The parser should convert any incoming NOC 00011-00015 into NOC 00018
+                //before attempting to locate it in the database.
+
 
                 //get noc 2021 code
                 var noc2021 = 0;
                 if (xmlJobNode["noc2021"] != null)
                 {
                     noc2021 = Convert.ToInt32(xmlJobNode["noc2021"].InnerText);
+
+                    //Special case for NOC-387: The parser should convert any incoming NOC 00011-00015 into NOC 00018
+                    //before attempting to locate it in the database.
+
+                    if (specialNocs.Contains(noc2021))
+                    {
+                        noc2021 = 00018;
+                    }
                     // make sure the code 2021 is valid
                     if (NocCodes2021.All(c => c.Id != noc2021))
                     {
@@ -624,18 +638,17 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                 #endregion
 
-                #region Noc
-
-                job.NocGroup = GetNocGroup(job.Noc, isFrench);
-                job.NocJobTitle = job.Title;
-
-                #endregion
-
-
-                //#region Noc2021
+                //#region Noc
 
                 //job.NocGroup = GetNocGroup(job.Noc2021, isFrench);
                 //job.NocJobTitle = job.Title;
+
+                //#endregion
+
+                //#region Noc2021
+
+                job.NocGroup = GetNocGroup2021(job.Noc2021, isFrench);
+                job.NocJobTitle = job.Title;
 
                 //#endregion
 
