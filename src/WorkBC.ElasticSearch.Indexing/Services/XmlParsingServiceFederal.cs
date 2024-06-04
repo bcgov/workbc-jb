@@ -41,7 +41,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 //read XML to XmlDocument
                 var jobXml = new XmlDocument();
 
-                //Load job xml 
+                //Load job xml
                 jobXml.LoadXml(federalXml);
 
                 //Get the root element
@@ -97,7 +97,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                         ? xmlJobNode["employer_name_string"].InnerText.Trim()
                         : string.Empty,
                     EmployerTypeId = Convert.ToInt32(xmlJobNode["employer_type_id"].InnerText),
-                    Lang = xmlJobNode["lang"].InnerText, 
+                    Lang = xmlJobNode["lang"].InnerText,
                     WorkLangCd = new JobLanguage(),// xmlJobNode["work_lang_cd"].InnerText,
                     PostalCode = xmlJobNode["postal_code"] != null
                         ? xmlJobNode["postal_code"].InnerText
@@ -305,7 +305,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                             if (benefit.StartsWith("Rrsp") || benefit.StartsWith("Resp"))
                             {
                                 benefit = benefit
-                                    .Replace("Rrsp", "RRSP") 
+                                    .Replace("Rrsp", "RRSP")
                                     .Replace("Resp", "RESP");
                             }
 
@@ -319,11 +319,11 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     switch (name.ToLower())
                     {
                         case "education":
-                            //All Education categories should have the ID 195 (Feds) 
+                            //All Education categories should have the ID 195 (Feds)
                             id = 195;
                             break;
                         case "études":
-                            //All Education categories should have the ID 195 (Feds) 
+                            //All Education categories should have the ID 195 (Feds)
                             id = 195;
                             break;
                     }
@@ -843,7 +843,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
             // Minimum is wage as of  June 2020. This doesn't have to be exact.  The purpose of
             // this is to filter out some bad data coming from the national job bank, not to ensure,
-            // that employers pay minimum wage.  
+            // that employers pay minimum wage.
             const decimal minimumWage = 14.60m;
 
             // if hourly is going to appear on the job listing, then use hourly wage
