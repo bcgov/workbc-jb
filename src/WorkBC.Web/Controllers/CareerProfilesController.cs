@@ -40,7 +40,7 @@ namespace WorkBC.Web.Controllers
         public async Task<ActionResult<IEnumerable<CareerProfileModel>>> GetSavedCareerProfiles()
         {
             var savedCareerProfiles = await _context.SavedCareerProfiles
-                .Where(x => x.AspNetUserId == UserId && !x.IsDeleted)
+                .Where(x => x.AspNetUserId == UserId && !x.IsDeleted && x.NocCodeId2021 != null)
                 .ToListAsync();
 
             var savedCareerProfilesDict = savedCareerProfiles
@@ -71,7 +71,7 @@ namespace WorkBC.Web.Controllers
         public async Task<IActionResult> GetCareerProfilesTotalAsync()
         {
             var savedCareerProfiles = await _context.SavedCareerProfiles
-                .Where(x => x.AspNetUserId == UserId && !x.IsDeleted)
+                .Where(x => x.AspNetUserId == UserId && !x.IsDeleted && x.NocCodeId2021 != null)
                 .ToListAsync();
 
             return Ok(savedCareerProfiles.Count);

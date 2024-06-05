@@ -41,7 +41,13 @@
 	  </None>
 	  <None Update="edm_industryprofiles.json">
 		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>		
+	  </None>	
+	  <None Update="edm_nocs.json">
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="edm_careerprofiles.json">
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>
