@@ -12,7 +12,7 @@ namespace WorkBC.Data.Model.JobBoard
         public int Id { get; set; }
 
         [Column("NocCodeId2021")]
-        public int NocCodeId2021 { get; set; }
+        public int? NocCodeId2021 { get; set; }
 
         [ForeignKey("JobSeeker")]
         public string AspNetUserId { get; set; }
