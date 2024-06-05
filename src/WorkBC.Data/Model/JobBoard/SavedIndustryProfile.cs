@@ -10,8 +10,8 @@ namespace WorkBC.Data.Model.JobBoard
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Column("EDM_IndustryProfile_IndustryProfileId")]
-        public int IndustryProfileId { get; set; }
+        [Column("IndustryId")]
+        public short IndustryId { get; set; }
 
         [ForeignKey("JobSeeker")]
         public string AspNetUserId { get; set; }

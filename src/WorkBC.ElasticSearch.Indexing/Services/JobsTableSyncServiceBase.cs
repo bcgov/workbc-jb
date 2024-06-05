@@ -36,7 +36,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 _wantedJobExpiryDays = configuration.GetSection("WantedSettings").Exists()
                     ? int.Parse(configuration["WantedSettings:JobExpiryDays"])
                     : General.DefaultWantedJobExpiryDays;
-            } 
+            }
             catch
             {
                 _wantedJobExpiryDays = General.DefaultWantedJobExpiryDays;
@@ -55,7 +55,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     select j).ToList();
             }
             else // jobSourceId == JobSource.Federal
-            { 
+            {
                 jobsToDeactivate = (from j in DbContext.Jobs
                     where j.JobSourceId == JobSource.Federal && j.IsActive &&
                           !(from ij in DbContext.ImportedJobsFederal select ij.JobId).Contains(j.JobId)
@@ -163,7 +163,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             job.IndustryId = (short?)(elasticJob.NaicsId == 0 ? (int?)null : elasticJob.NaicsId);
             job.LocationId = locationId;
             job.IsActive = true;
-            
+
             return newVersion;
         }
 
@@ -206,7 +206,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     LocationId = job.LocationId,
                     IsCurrentVersion = true,
                     VersionNumber = (short) (oldVersion.VersionNumber + 1)
-                };                
+                };
             }
             else
             {
@@ -220,14 +220,14 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     JobSourceId = job.JobSourceId,
                     IndustryId = job.IndustryId,
                     NocCodeId = job.NocCodeId,
-                    NocCodeId2021 = job.NocCodeId2021,
+                    NocCodeId2021 = job.NocCodeId2021,                    
                     IsActive = true,
                     PositionsAvailable = job.PositionsAvailable,
                     LocationId = job.LocationId,
                     IsCurrentVersion = true,
                     VersionNumber = 1
                 };
-            }
+            }            
 
             DbContext.JobVersions.Add(newVersion);
         }
@@ -251,8 +251,8 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 return dateImported;
             }
 
-            return datePosted < dateImported.AddHours(-24) 
-                ? dateImported.AddHours(-24) 
+            return datePosted < dateImported.AddHours(-24)
+                ? dateImported.AddHours(-24)
                 : datePosted;
         }
 

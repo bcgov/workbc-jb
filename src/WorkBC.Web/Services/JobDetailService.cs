@@ -107,7 +107,7 @@ namespace WorkBC.Web.Services
                 Language = english ? "Language" : "Langue",
                 English = english ? "English" : "Anglais",
                 PositionsAvailable = english ? "Positions available" : "Postes disponibles",
-                NocGroup = english ? "2016 NOC group" : "Groupe CNP 2016",
+                NocGroup = english ? "2021 NOC group" : "Groupe CNP 2021",
                 Education = english ? "Education" : "Études",
                 ExpiresIn = english ? "Expires in" : "Expire dans",
                 Days = english ? "days" : "jours",
