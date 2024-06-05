@@ -153,12 +153,8 @@ namespace WorkBC.Data.Migrations
                 int industryProfileId = x.indProfile.IndustryProfileID;
 
                 //Restore the values of EDM_IndustryProfile_IndustryProfileId column in dbo.SavedIndustryProfiles table.
-                migrationBuilder.UpdateData(
-                table: "SavedIndustryProfiles",
-                keyColumn: "IndustryId",
-                keyValue: industryId,
-                column: "EDM_IndustryProfile_IndustryProfileId",
-                value: industryProfileId);
+                migrationBuilder.Sql("Update SavedIndustryProfiles SET EDM_IndustryProfile_IndustryProfileId =" +
+                    industryProfileId + "where IndustryId =" + industryId);
             }
 
             //Drop the Foreign Key

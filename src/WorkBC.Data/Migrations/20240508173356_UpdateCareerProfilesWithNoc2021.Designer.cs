@@ -1415,6 +1415,9 @@ namespace WorkBC.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("EDM_CareerProfile_CareerProfileId");
 
+                    b.Property<int>("NocCodeId2021")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("DateDeleted")
                         .HasColumnType("datetime2");
 
