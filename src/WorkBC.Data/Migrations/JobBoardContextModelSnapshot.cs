@@ -1414,7 +1414,8 @@ namespace WorkBC.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("NocCodeId2021")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("NocCodeId2021");
 
                     b.Property<DateTime?>("DateDeleted")
                         .HasColumnType("datetime2");
