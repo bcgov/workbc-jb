@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkBC.Data;
 
@@ -11,9 +12,10 @@ using WorkBC.Data;
 namespace WorkBC.Data.Migrations
 {
     [DbContext(typeof(JobBoardContext))]
-    partial class JobBoardContextModelSnapshot : ModelSnapshot
+    [Migration("20240508173356_UpdateCareerProfilesWithNoc2021")]
+    partial class UpdateCareerProfilesWithNoc2021
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -439,10 +441,6 @@ namespace WorkBC.Data.Migrations
                         .HasColumnType("smallint");
 
                     b.Property<string>("Title")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<string>("TitleBC")
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
@@ -1413,6 +1411,10 @@ namespace WorkBC.Data.Migrations
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("CareerProfileId")
+                        .HasColumnType("int")
+                        .HasColumnName("EDM_CareerProfile_CareerProfileId");
+
                     b.Property<int>("NocCodeId2021")
                         .HasColumnType("int")
                         .HasColumnName("NocCodeId2021");
@@ -1454,12 +1456,16 @@ namespace WorkBC.Data.Migrations
                     b.Property<DateTime>("DateSaved")
                         .HasColumnType("datetime2");
 
-                    b.Property<short>("IndustryId")
-                        .HasColumnType("smallint")
-                        .HasColumnName("IndustryId");
+                    b.Property<int>("IndustryProfileId")
+                        .HasColumnType("int")
+                        .HasColumnName("EDM_IndustryProfile_IndustryProfileId");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<short>("IndustryId")
+                    .HasColumnType("smallint")
+                    .HasColumnName("IndustryId");
 
                     b.HasKey("Id");
 
@@ -1691,6 +1697,17 @@ namespace WorkBC.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Id");
+                });
+
+            modelBuilder.Entity("WorkBC.Data.Model.JobBoard.IndustryNaics", b =>
+                {
+                    b.HasOne("WorkBC.Data.Model.JobBoard.Industry", "Industry")
+                        .WithMany()
+                        .HasForeignKey("IndustryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Industry");
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.Job", b =>

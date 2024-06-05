@@ -17,5 +17,8 @@ namespace WorkBC.Data.Model.JobBoard
 
         [StringLength(250)]
         public string FrenchTitle { get; set; }
+
+        [StringLength(30)]
+        public string Code2016 { get; set; }
     }
 }
