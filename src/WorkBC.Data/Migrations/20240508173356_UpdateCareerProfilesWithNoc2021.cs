@@ -69,11 +69,6 @@ namespace WorkBC.Data.Migrations
 
             }
 
-            //Drop the older redundant column after populating NocCodeId2021 column.
-            migrationBuilder.DropColumn(
-            name: "EDM_CareerProfile_CareerProfileId",
-            table: "SavedCareerProfiles");
-
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -82,48 +77,6 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.DropForeignKey(
             name: "FK_SavedCareerProfiles_NocCodes2021_Id",
             table: "SavedCareerProfiles");
-
-            //Add older column to dbo.SavedCareeProfiles tables.
-            migrationBuilder.AddColumn<string>(
-            name: "EDM_CareerProfile_CareerProfileId",
-            table: "SavedCareerProfiles",
-            type: "int",
-            maxLength: 4,
-            nullable: true);
-
-            ////Reverting to the previous version of this SavedCareerProfiles table
-            ////Populate the values into EDM_CareerProfile_CareerProfileId column from Code2016 values of NocCodes2021 table.
-            var allNocs = GetEDMNocs();
-            var allCareerProfiles = GetEDMCareerProfiles();
-            var allSSOTData = GetNocCodesSSOT();
-
-            var allNocCareerProfiles = allNocs //EDM_NOCS list
-                .Join(allCareerProfiles, //Join with EDM_CareerProfiles list
-                      cp => cp.NOC_ID,
-                      no => no.NOC_ID,
-                      (cp, no) => new { allNoc = cp, nocCareer = no })
-                ;
-
-            foreach (var x in allNocCareerProfiles)
-            {
-
-                //Get the CareerProfileId, Noc ID and Noc Codes from the super list.
-                int careerProfileId = x.nocCareer.CareerProfileID;
-                string nocCode = x.allNoc.NOCCode;
-                int nocId = x.allNoc.NOC_ID;
-
-                var noc2021 = allSSOTData.Where(s => s.noc_2016.Contains(nocCode)).Select(s => s.noc_2021).FirstOrDefault();
-                //Populate EDM_CareerProfile_CareerProfileId column in dbo.SavedCareerProfile table.
-                //migrationBuilder.UpdateData(
-                //table: "SavedCareerProfiles",
-                //keyColumn: "NocCodeId2021",
-                //keyValue: noc2021,
-                //column: "EDM_CareerProfile_CareerProfileId",
-                //value: careerProfileId);
-                //migrationBuilder.Sql("Update SavedCareerProfiles SET EDM_CareerProfile_CareerProfileId =" +
-                //    careerProfileId + "where NocCodeId2021 =" + noc2021);
-
-            }
 
             //Drop the new column after adding the older column for Noc Codes.
             migrationBuilder.DropColumn(
