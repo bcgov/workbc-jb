@@ -1413,6 +1413,10 @@ namespace WorkBC.Data.Migrations
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("EDM_CareerProfile_CareerProfileId")
+                    .HasColumnType("int")
+                    .HasColumnName("EDM_CareerProfile_CareerProfileId");
+
                     b.Property<int>("NocCodeId2021")
                         .HasColumnType("int")
                         .HasColumnName("NocCodeId2021");
