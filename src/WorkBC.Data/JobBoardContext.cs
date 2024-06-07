@@ -51,8 +51,6 @@ namespace WorkBC.Data
 
         public DbSet<Industry> Industries { get; set; }
 
-        public DbSet<IndustryNaics> IndustryNaics { get; set; }
-
         public DbSet<Job> Jobs { get; set; }
 
         public DbSet<JobAlert> JobAlerts { get; set; }
