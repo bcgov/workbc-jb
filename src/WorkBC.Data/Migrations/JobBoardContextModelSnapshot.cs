@@ -451,19 +451,6 @@ namespace WorkBC.Data.Migrations
                     b.ToTable("Industries");
                 });
 
-            modelBuilder.Entity("WorkBC.Data.Model.JobBoard.IndustryNaics", b =>
-                {
-                    b.Property<short>("IndustryId")
-                        .HasColumnType("smallint");
-
-                    b.Property<short>("NaicsId")
-                        .HasColumnType("smallint");
-
-                    b.HasKey("IndustryId", "NaicsId");
-
-                    b.ToTable("IndustryNaics");
-                });
-
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.Job", b =>
                 {
                     b.Property<long>("JobId")
@@ -1413,9 +1400,9 @@ namespace WorkBC.Data.Migrations
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("NocCodeId2021")
+                    b.Property<int?>("CareerProfileId")
                         .HasColumnType("int")
-                        .HasColumnName("NocCodeId2021");
+                        .HasColumnName("EDM_CareerProfile_CareerProfileId");
 
                     b.Property<DateTime?>("DateDeleted")
                         .HasColumnType("datetime2");
@@ -1425,6 +1412,10 @@ namespace WorkBC.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("NocCodeId2021")
+                        .HasColumnType("int")
+                        .HasColumnName("NocCodeId2021");
 
                     b.HasKey("Id");
 
@@ -1691,6 +1682,17 @@ namespace WorkBC.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Id");
+                });
+
+            modelBuilder.Entity("WorkBC.Data.Model.JobBoard.IndustryNaics", b =>
+                {
+                    b.HasOne("WorkBC.Data.Model.JobBoard.Industry", "Industry")
+                        .WithMany()
+                        .HasForeignKey("IndustryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Industry");
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.Job", b =>
