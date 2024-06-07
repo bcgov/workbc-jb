@@ -1413,13 +1413,9 @@ namespace WorkBC.Data.Migrations
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("EDM_CareerProfile_CareerProfileId")
-                    .HasColumnType("int")
-                    .HasColumnName("EDM_CareerProfile_CareerProfileId");
-
-                    b.Property<int>("NocCodeId2021")
+                    b.Property<int>("CareerProfileId")
                         .HasColumnType("int")
-                        .HasColumnName("NocCodeId2021");
+                        .HasColumnName("EDM_CareerProfile_CareerProfileId");
 
                     b.Property<DateTime?>("DateDeleted")
                         .HasColumnType("datetime2");
@@ -1429,6 +1425,10 @@ namespace WorkBC.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("NocCodeId2021")
+                        .HasColumnType("int")
+                        .HasColumnName("NocCodeId2021");
 
                     b.HasKey("Id");
 
@@ -1695,6 +1695,17 @@ namespace WorkBC.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Id");
+                });
+
+            modelBuilder.Entity("WorkBC.Data.Model.JobBoard.IndustryNaics", b =>
+                {
+                    b.HasOne("WorkBC.Data.Model.JobBoard.Industry", "Industry")
+                        .WithMany()
+                        .HasForeignKey("IndustryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Industry");
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.Job", b =>
