@@ -161,7 +161,7 @@ namespace WorkBC.Web.Controllers
                 int careerProfileId = (
                     from profile in _context.SavedCareerProfiles
                     join nocCodes in _context.NocCodes2021 on profile.NocCodeId2021 equals nocCodes.Id
-                    where nocCodes.Code == nocCode && profile.AspNetUserId == UserId
+                    where nocCodes.Code == nocCode && profile.AspNetUserId == UserId && !profile.IsDeleted
                     select profile.Id
                 ).FirstOrDefault();
 
@@ -171,6 +171,7 @@ namespace WorkBC.Web.Controllers
                         var profile = new SavedCareerProfile
                         {
                             AspNetUserId = UserId,
+                            CareerProfileId = null,
                             NocCodeId2021 = Convert.ToInt32(nocCode),
                             DateDeleted = null,
                             DateSaved = DateTime.Now,
