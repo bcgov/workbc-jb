@@ -451,19 +451,6 @@ namespace WorkBC.Data.Migrations
                     b.ToTable("Industries");
                 });
 
-            modelBuilder.Entity("WorkBC.Data.Model.JobBoard.IndustryNaics", b =>
-                {
-                    b.Property<short>("IndustryId")
-                        .HasColumnType("smallint");
-
-                    b.Property<short>("NaicsId")
-                        .HasColumnType("smallint");
-
-                    b.HasKey("IndustryId", "NaicsId");
-
-                    b.ToTable("IndustryNaics");
-                });
-
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.Job", b =>
                 {
                     b.Property<long>("JobId")
