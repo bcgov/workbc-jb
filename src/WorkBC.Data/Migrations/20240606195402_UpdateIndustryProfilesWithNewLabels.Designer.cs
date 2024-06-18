@@ -12,8 +12,8 @@ using WorkBC.Data;
 namespace WorkBC.Data.Migrations
 {
     [DbContext(typeof(JobBoardContext))]
-    [Migration("20240508173356_UpdateCareerProfilesWithNoc2021")]
-    partial class UpdateCareerProfilesWithNoc2021
+    [Migration("20240606195402_UpdateIndustryProfilesWithNewLabels")]
+    partial class UpdateIndustryProfilesWithNewLabels
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -441,6 +441,10 @@ namespace WorkBC.Data.Migrations
                         .HasColumnType("smallint");
 
                     b.Property<string>("Title")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("TitleBC")
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
@@ -1411,14 +1415,6 @@ namespace WorkBC.Data.Migrations
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("CareerProfileId")
-                        .HasColumnType("int")
-                        .HasColumnName("EDM_CareerProfile_CareerProfileId");
-
-                    b.Property<int?>("NocCodeId2021")
-                        .HasColumnType("int")
-                        .HasColumnName("NocCodeId2021");
-
                     b.Property<DateTime?>("DateDeleted")
                         .HasColumnType("datetime2");
 
@@ -1427,6 +1423,10 @@ namespace WorkBC.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("NocCodeId2021")
+                        .HasColumnType("int")
+                        .HasColumnName("NocCodeId2021");
 
                     b.HasKey("Id");
 
@@ -1456,16 +1456,12 @@ namespace WorkBC.Data.Migrations
                     b.Property<DateTime>("DateSaved")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IndustryProfileId")
-                        .HasColumnType("int")
-                        .HasColumnName("EDM_IndustryProfile_IndustryProfileId");
+                    b.Property<short>("IndustryId")
+                        .HasColumnType("smallint")
+                        .HasColumnName("IndustryId");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<short>("IndustryId")
-                    .HasColumnType("smallint")
-                    .HasColumnName("IndustryId");
 
                     b.HasKey("Id");
 
