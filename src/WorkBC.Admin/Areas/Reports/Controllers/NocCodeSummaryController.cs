@@ -62,6 +62,11 @@ namespace WorkBC.Admin.Areas.Reports.Controllers
                 ModelState.AddModelError("MajorGroup", "Select an option");
             }
 
+            if (model.NocCategoryLevel == NocCategoryLevel.SubMajorGroup && string.IsNullOrEmpty(model.SubMajorGroup))
+            {
+                ModelState.AddModelError("SubMajorGroup", "Select an option");
+            }
+
             if (model.NocCategoryLevel == NocCategoryLevel.BroadOccupationalCategory && string.IsNullOrEmpty(model.BroadCategory))
             {
                 ModelState.AddModelError("BroadCategory", "Select an option");
@@ -82,6 +87,9 @@ namespace WorkBC.Admin.Areas.Reports.Controllers
                     break;
                 case NocCategoryLevel.MajorGroup:
                     nocCodeStartsWith = model.MajorGroup;
+                    break;
+                case NocCategoryLevel.SubMajorGroup:
+                    nocCodeStartsWith = model.SubMajorGroup;
                     break;
                 case NocCategoryLevel.MinorGroup:
                     nocCodeStartsWith = model.MinorGroup;
