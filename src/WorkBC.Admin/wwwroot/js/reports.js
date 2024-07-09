@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Reports area javascript
 */
 $(document).ready(function () {
@@ -59,6 +59,7 @@ $(document).ready(function () {
 
         $('#BroadCategory').select2();
         $('#MajorGroup').select2();
+        $('#SubMajorGroup').select2();
         $('#MinorGroup').select2();
         $('#UnitGroup').select2();
 
@@ -66,6 +67,7 @@ $(document).ready(function () {
             var selectedRadio = $("input[name='NocCategoryLevel']:checked").val();
             $("#BroadOccupationalCategoryPanel").slideUp(400);
             $("#MajorGroupPanel").slideUp(400);
+            $("#SubMajorGroupPanel").slideUp(400);
             $("#MinorGroupPanel").slideUp(400);
             $("#UnitGroupPanel").slideUp(400);
             if ($(`#${selectedRadio}Panel`).length) {
