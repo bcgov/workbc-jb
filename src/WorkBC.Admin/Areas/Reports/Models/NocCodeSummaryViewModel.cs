@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using WorkBC.Admin.Areas.Reports.Data.QueryResultModels;
 using WorkBC.Admin.Areas.Reports.Models.Partial;
@@ -11,6 +11,7 @@ namespace WorkBC.Admin.Areas.Reports.Models
         public NocCategoryLevel NocCategoryLevel { get; set; }
         public string BroadCategory { get; set; }
         public string MajorGroup { get; set; }
+        public string SubMajorGroup { get; set; }
         public string MinorGroup { get; set; }
         public string UnitGroup { get; set; }
         public bool ShowZeroes { get; set; }
