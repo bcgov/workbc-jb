@@ -1,4 +1,4 @@
-﻿@model NocCodeSummaryViewModel
+@model NocCodeSummaryViewModel
 
     <div id="NocCategoryPartial">
         <div class="form-check">
@@ -40,6 +40,19 @@
                 <br><span class="text-danger" asp-validation-for="MajorGroup"></span>
             </div>
         </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" value="@NocCategoryLevel.SubMajorGroup" asp-for="NocCategoryLevel" id="NocCategoryLevelSubMajor">
+        <label class="form-check-label" for="NocCategoryLevelSubMajor">
+            Sub Major group (2-digit)
+        </label>
+        <div class="form-group form-check-panel" id="SubMajorGroupPanel"
+             style="display: @(Model.NocCategoryLevel == NocCategoryLevel.SubMajorGroup ? "block" : "none");">
+            <select class="form-control" asp-for="SubMajorGroup" asp-items="SelectLists.SubMajorGroups">
+                <option value="">-- Select Sub Major Group --</option>
+            </select>
+            <br><span class="text-danger" asp-validation-for="SubMajorGroup"></span>
+        </div>
+    </div>
         <div class="form-check">
             <input class="form-check-input" type="radio" value="@NocCategoryLevel.BroadOccupationalCategory" asp-for="NocCategoryLevel" id="NocCategoryLevelBroad">
             <label class="form-check-label" for="NocCategoryLevelBroad">
