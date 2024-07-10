@@ -144,8 +144,8 @@ namespace WorkBC.Admin.Areas.Jobs.Controllers
                             Activity = "NOC code updated",
                             Editor = importer,
                             TimeStamp = newVersion.DateVersionStart,
-                            OldValue = (oldVersion.NocCodeId2021 ?? 0).ToString("0000"),
-                            NewValue = (newVersion.NocCodeId2021 ?? 0).ToString("0000")
+                            OldValue = (oldVersion.NocCodeId2021 ?? 0).ToString("00000"),
+                            NewValue = (newVersion.NocCodeId2021 ?? 0).ToString("00000")
                         });
                     }
 
