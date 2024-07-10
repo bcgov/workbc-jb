@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -40,7 +40,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
         }
 
 
-        public async Task<(IList<JobSearchViewModel> result, 
+        public async Task<(IList<JobSearchViewModel> result,
             int filteredResultsCount)> Search(DataTablesModel model)
         {
             string searchBy = model.Search.Value;
@@ -64,7 +64,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
             }
 
             // search the database taking into consideration table sorting and paging
-            (List<JobSearchViewModel> result, 
+            (List<JobSearchViewModel> result,
                     int filteredResultsCount) = await GetDataFromDatabase(searchBy, take, skip, sortBy, sortDir, filter);
 
             if (result == null)
@@ -126,7 +126,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
                         DatePosted = oldVersion.DatePosted,
                         JobSourceId = oldVersion.JobSourceId,
                         IndustryId = oldVersion.IndustryId,
-                        NocCodeId = oldVersion.NocCodeId,
+                        NocCodeId2021 = oldVersion.NocCodeId2021,
                         IsActive = false,
                         PositionsAvailable = oldVersion.PositionsAvailable,
                         LocationId = oldVersion.LocationId,
@@ -241,7 +241,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
                     OriginalSource = m.OriginalSource
                 })
                 .ToListAsync();
-            
+
             //total results found by applying the filter
             int filteredResultsCount = await queryable.CountAsync();
 
