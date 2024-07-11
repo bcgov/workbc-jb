@@ -32,7 +32,7 @@ namespace WorkBC.Admin.Areas.Reports.Controllers
 
             var model = new NocCodeSummaryViewModel
             {
-                NocCategoryLevel = NocCategoryLevel.UnitGroup,
+                NocCategoryLevel = NocCategoryLevel.All,
                 JobSourceId = JobSource.All,
                 StartDate = startDate,
                 EndDate = endDate,
