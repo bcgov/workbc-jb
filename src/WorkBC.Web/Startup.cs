@@ -68,11 +68,6 @@ namespace WorkBC.Web
                     .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")), 
                 ServiceLifetime.Transient);
 
-            services.AddDbContext<EnterpriseContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("EnterpriseConnection")),
-                ServiceLifetime.Transient);
-
             services.AddDefaultIdentity<JobSeeker>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;
