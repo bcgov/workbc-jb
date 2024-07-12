@@ -1,3 +1,0 @@
-1. Go to appSettings file
-2. Remove the instance of EnterpriseConnection like below:
-"EnterpriseConnection": "Server=.;Database=WorkBC_Enterprise_DEV;integrated security=true",
