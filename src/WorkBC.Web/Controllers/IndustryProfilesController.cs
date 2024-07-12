@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,7 +31,7 @@ namespace WorkBC.Web.Controllers
         public async Task<IActionResult> GetIndustryProfilesTotalAsync()
         {
             var savedIndustryProfiles = await _context.SavedIndustryProfiles
-                .Where(x => x.AspNetUserId == UserId && !x.IsDeleted)
+                .Where(x => x.AspNetUserId == UserId && !x.IsDeleted && x.IndustryId != null)
                 .ToListAsync();
 
             return Ok(savedIndustryProfiles.Count);
@@ -42,7 +42,7 @@ namespace WorkBC.Web.Controllers
         public async Task<ActionResult<IEnumerable<IndustryProfileModel>>> GetSavedIndustryProfilesAsync()
         {
             var savedIndustryProfiles = await _context.SavedIndustryProfiles
-                .Where(x => x.AspNetUserId == UserId && !x.IsDeleted)
+                .Where(x => x.AspNetUserId == UserId && !x.IsDeleted && x.IndustryId != null)
                 .ToListAsync();
 
             var savedIndustryProfilesDict = savedIndustryProfiles
