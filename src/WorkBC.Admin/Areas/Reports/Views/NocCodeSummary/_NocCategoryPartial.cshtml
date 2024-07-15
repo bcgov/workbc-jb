@@ -62,12 +62,12 @@
         <div class="form-check">
             <input class="form-check-input" type="radio" value="@NocCategoryLevel.BroadOccupationalCategory" asp-for="NocCategoryLevel" id="NocCategoryLevelBroad">
             <label class="form-check-label" for="NocCategoryLevelBroad">
-                Broad occupational category (1 digit)
+                Broad category (1 digit)
             </label>
             <div class="form-group form-check-panel" id="BroadOccupationalCategoryPanel"
                  style="display: @(Model.NocCategoryLevel == NocCategoryLevel.BroadOccupationalCategory ? "block" : "none");">
                 <select class="form-control" asp-for="BroadCategory" asp-items="SelectLists.BroadOccupationalCategories">
-                    <option value="">-- Select Broad Occupational Category --</option>
+                    <option value="">-- Select Broad Category --</option>
                 </select>
                 <br><span class="text-danger" asp-validation-for="BroadCategory"></span>
             </div>
