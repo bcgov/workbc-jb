@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -24,7 +24,7 @@ namespace WorkBC.Admin.Services
         {
             get
             {
-                return _jobBoardContext.NocCategories
+                return _jobBoardContext.NocCategories2021
                     .Where(c => c.Level == NocCategoryLevel.BroadOccupationalCategory)
                     .OrderBy(c => c.CategoryCode)
                     .Select(c => new SelectListItem
@@ -42,8 +42,26 @@ namespace WorkBC.Admin.Services
         {
             get
             {
-                return _jobBoardContext.NocCategories
+                return _jobBoardContext.NocCategories2021
                     .Where(c => c.Level == NocCategoryLevel.MajorGroup)
+                    .OrderBy(c => c.CategoryCode)
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.CategoryCode,
+                        Text = $"{c.CategoryCode} – {c.Title}"
+                    });
+            }
+        }
+
+        /// <summary>
+        ///     Sub-major groups for NOC Code Summary report
+        /// </summary>
+        public IEnumerable<SelectListItem> SubMajorGroups
+        {
+            get
+            {
+                return _jobBoardContext.NocCategories2021
+                    .Where(c => c.Level == NocCategoryLevel.SubMajorGroup)
                     .OrderBy(c => c.CategoryCode)
                     .Select(c => new SelectListItem
                     {
@@ -60,7 +78,7 @@ namespace WorkBC.Admin.Services
         {
             get
             {
-                return _jobBoardContext.NocCategories
+                return _jobBoardContext.NocCategories2021
                     .Where(c => c.Level == NocCategoryLevel.MinorGroup)
                     .OrderBy(c => c.CategoryCode)
                     .Select(c => new SelectListItem
@@ -72,13 +90,13 @@ namespace WorkBC.Admin.Services
         }
 
         /// <summary>
-        ///     Unit groups for NOC Code Summary report
+        ///     Unit groups for NOC Code 2021 Summary report
         /// </summary>
         public IEnumerable<SelectListItem> UnitGroups
         {
             get
             {
-                return _jobBoardContext.NocCodes
+                return _jobBoardContext.NocCodes2021
                     .OrderBy(c => c.Code)
                     .Select(c => new SelectListItem
                     {
