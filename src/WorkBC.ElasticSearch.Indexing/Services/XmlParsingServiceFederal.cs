@@ -44,7 +44,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 //read XML to XmlDocument
                 var jobXml = new XmlDocument();
 
-                //Load job xml 
+                //Load job xml
                 jobXml.LoadXml(federalXml);
 
                 //Get the root element
@@ -78,7 +78,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 }
 
                 //Special case for NOC-387: The parser should convert any incoming NOC 00011-00015 into NOC 00018
-                //before attempting to locate it in the database. 
+                //before attempting to locate it in the database.
 
 
                 //get noc 2021 code
@@ -88,7 +88,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     noc2021 = Convert.ToInt32(xmlJobNode["noc2021"].InnerText);
 
                     //Special case for NOC-387: The parser should convert any incoming NOC 00011-00015 into NOC 00018
-                    //before attempting to locate it in the database. 
+                    //before attempting to locate it in the database.
 
                     if (specialNocs.Contains(noc2021))
                     {
@@ -111,7 +111,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                         ? xmlJobNode["employer_name_string"].InnerText.Trim()
                         : string.Empty,
                     EmployerTypeId = Convert.ToInt32(xmlJobNode["employer_type_id"].InnerText),
-                    Lang = xmlJobNode["lang"].InnerText, 
+                    Lang = xmlJobNode["lang"].InnerText,
                     WorkLangCd = new JobLanguage(),// xmlJobNode["work_lang_cd"].InnerText,
                     PostalCode = xmlJobNode["postal_code"] != null
                         ? xmlJobNode["postal_code"].InnerText
@@ -319,7 +319,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                             if (benefit.StartsWith("Rrsp") || benefit.StartsWith("Resp"))
                             {
                                 benefit = benefit
-                                    .Replace("Rrsp", "RRSP") 
+                                    .Replace("Rrsp", "RRSP")
                                     .Replace("Resp", "RESP");
                             }
 
@@ -333,11 +333,11 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     switch (name.ToLower())
                     {
                         case "education":
-                            //All Education categories should have the ID 195 (Feds) 
+                            //All Education categories should have the ID 195 (Feds)
                             id = 195;
                             break;
                         case "études":
-                            //All Education categories should have the ID 195 (Feds) 
+                            //All Education categories should have the ID 195 (Feds)
                             id = 195;
                             break;
                     }
@@ -645,12 +645,12 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                 //#endregion
 
-                #region Noc2021
+                //#region Noc2021
 
                 job.NocGroup = GetNocGroup2021(job.Noc2021, isFrench);
                 job.NocJobTitle = job.Title;
 
-                #endregion
+                //#endregion
 
                 #region Salary Description / Salary Summary
 
@@ -854,10 +854,10 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             var maxWeeklySalary = 100000m;
             var maxYearlySalary = 5000000m;
 
-            // Minimum is wage as of  June 2020. This doesn't have to be exact.  The purpose of
+            // Minimum is wage as at June 2024. This doesn't have to be exact.  The purpose of
             // this is to filter out some bad data coming from the national job bank, not to ensure,
-            // that employers pay minimum wage.  
-            const decimal minimumWage = 14.60m;
+            // that employers pay minimum wage.
+            const decimal minimumWage = 17.40m;
 
             // if hourly is going to appear on the job listing, then use hourly wage
             if (salaryString.ToLower().Contains("hour"))
