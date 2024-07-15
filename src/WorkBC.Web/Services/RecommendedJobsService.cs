@@ -312,7 +312,7 @@ namespace WorkBC.Web.Services
             var reasons = new List<string>();
 
             if (result.Noc2021 != null)
-            {                
+            {
                 int noc= Int32.TryParse(result.Noc2021, out noc) ? noc : 0;
                 if (AccountCriteria.NocCodes2021.ContainsKey(noc))
                 {

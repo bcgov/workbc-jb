@@ -22,33 +22,6 @@ namespace WorkBC.Admin.Areas.Reports.Services
             _dapperContext = dapperContext;
         }
 
-        public async Task GenerateJobSeekerStats(DateTime startDate, DateTime endDate)
-        {
-            IList<WeeklyPeriod> weeklyPeriods =
-                await _jobBoardContext.WeeklyPeriods
-                    .Where(p => p.WeekStartDate >= startDate && p.WeekEndDate <= endDate &&
-                                p.WeekStartDate < DateTime.Now)
-                    .ToListAsync();
-
-            IList<int> weeklyPeriodIds = weeklyPeriods.Select(w => w.Id).ToList();
-
-            IList<ReportPersistenceControl> jobSeekerStatsPeriods =
-                await _jobBoardContext.ReportPersistenceControl
-                    .Where(period =>
-                        period.TableName == "JobSeekerStats" && 
-                        weeklyPeriodIds.Contains(period.WeeklyPeriodId) && !period.IsTotalToDate)
-                    .ToListAsync();
-
-            foreach (WeeklyPeriod period in weeklyPeriods)
-            {
-                if (jobSeekerStatsPeriods.All(j => j.WeeklyPeriodId != period.Id))
-                {
-                    // run the stored procedure to populate the missing data
-                    await _dapperContext.Persistence.GenerateJobSeekerStats(period.WeekEndDate);
-                }
-            }
-        }
-
         public MatrixReport GroupUsers(IList<JobSeekerAccountResult> results)
         {
             IEnumerable<IGrouping<string, JobSeekerAccountResult>> grouped = results.GroupBy(r => r.Label);
