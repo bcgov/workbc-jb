@@ -127,21 +127,6 @@ namespace WorkBC.Tests.Tests
                 $"Job for 2021 NOC code {nocCode2021} returned {result.Count} results");
         }
 
-        [Theory(DisplayName = "Find jobs based on a NOC code 2021")]
-        [InlineData("21234")]
-        public async Task FindJobByNocCode2021(string nocCode2021)
-        {
-            //Create an instance with the filters required
-            var esq = new JobSearchQuery(GeocodingService, Configuration, GetFiltersForJobNocField2021(nocCode2021));
-
-            //return results
-            List<Source> result = await QueryElasticSearch(esq);
-
-            //We have 1 jobs with this NOC code in the fixtures
-            Assert.True(result.Count == 1,
-                $"Job for NOC code {nocCode2021} returned {result.Count} results");
-        }
-
         [Theory(DisplayName = "Find jobs based on job sources")]
         [InlineData("1")] //National Job Bank/WorkBC
         [InlineData("2")] //Other job posting websites (e.g. Monster, Workopolis, Indeed)
