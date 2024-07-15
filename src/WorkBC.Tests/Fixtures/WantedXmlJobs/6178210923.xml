@@ -1,0 +1,39 @@
+﻿<job id="6178210923" hash="2204234286" refnumber="" isstaffing="false" isanonymous="false" isthirdparty="false"
+     isinappropriate="false" isbulk="false" isaggregator="false" isfree="false" isclassifiedoccupation="true"
+     isclassifiedindustry="true" iscurrent="true">
+	<dates firstseen="2019-10-03" posted="2019-10-03" refreshed="2019-10-03" />
+	<title value="Digital Marketing Specialist - Bilingual" titleid="698109398" cleantitleid="12100081"
+		   semicleantitleid="37141148" />
+	<description
+	  value="Bilingual (French/English) Digital Marketing Specialist WE NEED Absolute Results is looking for a Bilingual Digital Marketing Specialist to join our fast-growing team in Surrey, BC. Reporting to the Senior Digital Marketing Lead, you will manage..." />
+	<occupation>
+		<noc code="1111" label="Accountant" revision="2011" />
+		<noc code="1114" label="Financial insurance advisor" revision="2011" />
+	</occupation>
+	<industry code="541618" label="Other Management Consulting Services" />
+	<function id="14" label="Marketing / PR" />
+	<employer id="1015954" name="ABSOLUTE RESULTS" superaliasid="1015954" superalias="ABSOLUTE RESULTS" />
+	<education id="5" label="Bachelor's degree" />
+	<locations>
+		<location>
+			<city code="5915004" label="Surrey" />
+			<state code="59" label="BC" />
+			<county code="5915" label="Greater Vancouver County" />
+			<wib id="0" code="00000" label="Unavailable" />
+			<msa code="59933" label="Vancouver" />
+			<position latitude="49.10810089111328" longitude="-122.7969970703125" />
+		</location>
+	</locations>
+	<salaries>
+		<salary id="2" type="Modeled" value="62000" />
+	</salaries>
+	<jobtypes>
+		<jobtype id="4" label="Full-Time" />
+		<jobtype id="1" label="Permanent" />
+	</jobtypes>
+	<tags />
+	<sources>
+		<source id="1572" jobid="6178210923" tags="" type="Corporate" name="ABSOLUTE RESULTS"
+				url="https://absoluteresults.bamboohr.com/jobs/view.php?id=30" validlink="true" />
+	</sources>
+</job>

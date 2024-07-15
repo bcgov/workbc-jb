@@ -203,6 +203,80 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 return string.Empty;
             }
         }
+        protected string GetNocGroup2021(int? nocId, bool isFrench = false)
+        {
+            if (nocId == null || nocId == 0)
+            {
+                return string.Empty;
+            }
+
+            string codeStr = nocId.ToString().PadLeft(5, '0');
+
+            try
+            {
+                string groupName = isFrench
+                    ? (
+                        from nc in NocCodes2021
+                        where nc.Id == nocId
+                        select nc.FrenchTitle
+                    ).FirstOrDefault()
+                    : (
+                        from nc in NocCodes2021
+                        where nc.Id == nocId
+                        select nc.Title
+                    ).FirstOrDefault();
+
+                if (groupName != null)
+                {
+                    return $"{groupName} ({codeStr})";
+                }
+
+                return codeStr;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception in GetNocGroup(), reason: " + ex.Message);
+                Console.WriteLine("Noc: " + nocId);
+                return string.Empty;
+            }
+        }
+
+
+        protected int? GetNoc2021from2016value(string nocId)
+        {
+            int noc2021;
+            if (String.IsNullOrEmpty(nocId))
+            {
+                return null;
+            }         
+
+
+            try
+            {
+                // get the NoC Code 2021 value for the corresponding 2016 value.
+                string noc2021Str = (
+                        from nc in NocCodes2021
+                        where nc.Code2016.Contains(nocId)
+                        select nc.Code
+                    ).FirstOrDefault();
+
+                if (String.IsNullOrEmpty(noc2021Str))
+                {
+                    return null;
+                }
+                else
+                {
+                    noc2021 = Convert.ToInt32(noc2021Str);
+                }
+                return noc2021;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception in GetNoc2021from2016value(), reason: " + ex.Message);
+                Console.WriteLine("Noc2016: " + nocId);
+                return null;
+            }
+        }
 
         protected string ConvertToTime(decimal time)
         {

@@ -442,22 +442,13 @@ namespace WorkBC.Data.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<string>("TitleBC")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Industries");
-                });
-
-            modelBuilder.Entity("WorkBC.Data.Model.JobBoard.IndustryNaics", b =>
-                {
-                    b.Property<short>("IndustryId")
-                        .HasColumnType("smallint");
-
-                    b.Property<short>("NaicsId")
-                        .HasColumnType("smallint");
-
-                    b.HasKey("IndustryId", "NaicsId");
-
-                    b.ToTable("IndustryNaics");
                 });
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.Job", b =>
@@ -1217,6 +1208,10 @@ namespace WorkBC.Data.Migrations
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)");
 
+                    b.Property<string>("Code2016")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
                     b.Property<string>("FrenchTitle")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
@@ -1405,7 +1400,7 @@ namespace WorkBC.Data.Migrations
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("CareerProfileId")
+                    b.Property<int?>("CareerProfileId")
                         .HasColumnType("int")
                         .HasColumnName("EDM_CareerProfile_CareerProfileId");
 
@@ -1417,6 +1412,10 @@ namespace WorkBC.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("NocCodeId2021")
+                        .HasColumnType("int")
+                        .HasColumnName("NocCodeId2021");
 
                     b.HasKey("Id");
 
@@ -1446,9 +1445,9 @@ namespace WorkBC.Data.Migrations
                     b.Property<DateTime>("DateSaved")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IndustryProfileId")
-                        .HasColumnType("int")
-                        .HasColumnName("EDM_IndustryProfile_IndustryProfileId");
+                    b.Property<short>("IndustryId")
+                        .HasColumnType("smallint")
+                        .HasColumnName("IndustryId");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");

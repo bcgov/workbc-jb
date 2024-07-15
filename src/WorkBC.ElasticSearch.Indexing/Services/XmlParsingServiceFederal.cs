@@ -19,6 +19,9 @@ namespace WorkBC.ElasticSearch.Indexing.Services
         private const string VirtualJobBasedIn_EN = "Virtual job based in";
         private const string VirtualJobBasedIn_FR = "Emploi virtuel basé à";
         private readonly IGeocodingService _geocodingService;
+        //NOC-387-Special case scenario fix for NOC 2021 codes 00011 to 00015
+        private List<int> specialNocs = new List<int>() { 00011, 00012, 00013, 00014, 00015 };
+
 
 
         public XmlParsingServiceFederal(IConfiguration configuration) : base(configuration)
@@ -41,7 +44,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 //read XML to XmlDocument
                 var jobXml = new XmlDocument();
 
-                //Load job xml 
+                //Load job xml
                 jobXml.LoadXml(federalXml);
 
                 //Get the root element
@@ -74,12 +77,23 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     noc = 0;
                 }
 
+                //Special case for NOC-387: The parser should convert any incoming NOC 00011-00015 into NOC 00018
+                //before attempting to locate it in the database.
+
 
                 //get noc 2021 code
                 var noc2021 = 0;
                 if (xmlJobNode["noc2021"] != null)
                 {
                     noc2021 = Convert.ToInt32(xmlJobNode["noc2021"].InnerText);
+
+                    //Special case for NOC-387: The parser should convert any incoming NOC 00011-00015 into NOC 00018
+                    //before attempting to locate it in the database.
+
+                    if (specialNocs.Contains(noc2021))
+                    {
+                        noc2021 = 00018;
+                    }
                     // make sure the code 2021 is valid
                     if (NocCodes2021.All(c => c.Id != noc2021))
                     {
@@ -97,7 +111,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                         ? xmlJobNode["employer_name_string"].InnerText.Trim()
                         : string.Empty,
                     EmployerTypeId = Convert.ToInt32(xmlJobNode["employer_type_id"].InnerText),
-                    Lang = xmlJobNode["lang"].InnerText, 
+                    Lang = xmlJobNode["lang"].InnerText,
                     WorkLangCd = new JobLanguage(),// xmlJobNode["work_lang_cd"].InnerText,
                     PostalCode = xmlJobNode["postal_code"] != null
                         ? xmlJobNode["postal_code"].InnerText
@@ -305,7 +319,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                             if (benefit.StartsWith("Rrsp") || benefit.StartsWith("Resp"))
                             {
                                 benefit = benefit
-                                    .Replace("Rrsp", "RRSP") 
+                                    .Replace("Rrsp", "RRSP")
                                     .Replace("Resp", "RESP");
                             }
 
@@ -319,11 +333,11 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     switch (name.ToLower())
                     {
                         case "education":
-                            //All Education categories should have the ID 195 (Feds) 
+                            //All Education categories should have the ID 195 (Feds)
                             id = 195;
                             break;
                         case "études":
-                            //All Education categories should have the ID 195 (Feds) 
+                            //All Education categories should have the ID 195 (Feds)
                             id = 195;
                             break;
                     }
@@ -624,12 +638,19 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                 #endregion
 
-                #region Noc
+                //#region Noc
 
-                job.NocGroup = GetNocGroup(job.Noc, isFrench);
+                //job.NocGroup = GetNocGroup(job.Noc2021, isFrench);
+                //job.NocJobTitle = job.Title;
+
+                //#endregion
+
+                //#region Noc2021
+
+                job.NocGroup = GetNocGroup2021(job.Noc2021, isFrench);
                 job.NocJobTitle = job.Title;
 
-                #endregion
+                //#endregion
 
 
                 #region Noc2021
@@ -843,7 +864,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
             // Minimum is wage as at June 2024. This doesn't have to be exact.  The purpose of
             // this is to filter out some bad data coming from the national job bank, not to ensure,
-            // that employers pay minimum wage.  
+            // that employers pay minimum wage.
             const decimal minimumWage = 17.40m;
 
             // if hourly is going to appear on the job listing, then use hourly wage

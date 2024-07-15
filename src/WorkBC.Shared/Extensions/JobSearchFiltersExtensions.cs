@@ -518,7 +518,13 @@ namespace WorkBC.Shared.Extensions
                 moreParams += $"employmentgroups={string.Join(",", employmentGroupsList)};";
             }
 
-            // 2016 NOC code
+            //// 2016 NOC code
+            //if (!string.IsNullOrEmpty(filters.SearchNocField))
+            //{
+            //    moreParams += $"noc={filters.SearchNocField};";
+            //}
+
+            // 2021 NOC code
             if (!string.IsNullOrEmpty(filters.SearchNocField))
             {
                 moreParams += $"noc={filters.SearchNocField};";

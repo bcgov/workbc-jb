@@ -12,7 +12,10 @@ namespace WorkBC.Data.Model.JobBoard
         public int Id { get; set; }
 
         [Column("EDM_CareerProfile_CareerProfileId")]
-        public int CareerProfileId { get; set; }
+        public int? CareerProfileId { get; set; }
+
+        [Column("NocCodeId2021")]
+        public int? NocCodeId2021 { get; set; }
 
         [ForeignKey("JobSeeker")]
         public string AspNetUserId { get; set; }
