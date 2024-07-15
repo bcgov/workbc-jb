@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -82,6 +82,7 @@ namespace WorkBC.Data
         public DbSet<Location> Locations { get; set; }
 
         public DbSet<NocCategory> NocCategories { get; set; }
+        public DbSet<NocCategory2021> NocCategories2021 { get; set; }
 
         public DbSet<NocCode> NocCodes { get; set; }
         public DbSet<NocCode2021> NocCodes2021 { get; set; } 

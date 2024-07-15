@@ -35,7 +35,7 @@ The community version will work fine for the project.
 * A number of secrets were removed fro the appsettings.json files when this application was migrated from TFS to Github
 * These are stored in a spreadsheet and can be obtained from TBTB
 * Get the commands from "USER-SECRETS" tab in the spreadsheets, and run them in the `/src/WorkBC.Web` folder using Powershell
-    * You might need to change the Server name in ConnectionStrings:DefaultConnection, ConnectionStrings:EnterpriseConnection and ConnectionStrings:MigrationRunnerConnection to include an instance name if your SQL server was installed with an instance name (e.g. localhost\SQLEXPRESS)
+    * You might need to change the Server name in ConnectionStrings:DefaultConnection, and ConnectionStrings:MigrationRunnerConnection to include an instance name if your SQL server was installed with an instance name (e.g. localhost\SQLEXPRESS)
 
 ### 3. Setting up databases
 
@@ -152,7 +152,7 @@ then retry the steps above.
 ### 6. Running with Docker Desktop
 
 * Get the key/value pairs from the "ENV" tab of the spredsheet in step 2 above, and put them into a file in /src called `.env`
-    * You might need to change the Server name in ConnectionStrings__DefaultConnection, ConnectionStrings__EnterpriseConnection and ConnectionStrings__MigrationRunnerConnection to include an instance name if your SQL server was installed with an instance name (e.g. localhost\SQLEXPRESS)
+    * You might need to change the Server name in ConnectionStrings__DefaultConnection, and ConnectionStrings__MigrationRunnerConnection to include an instance name if your SQL server was installed with an instance name (e.g. localhost\SQLEXPRESS)
 * Create a user account in SQL Server called "jobboard" with the password "password"
 * Add this user to the db_owner role on WorkBC_jobboard_dev and WorkBC_enterprise_dev
 * Run these commands from powershell

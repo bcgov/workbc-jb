@@ -184,7 +184,6 @@ namespace WorkBC.ElasticSearch.Models.Filters
 
         /// <example></example>
         public string SearchNocField { get; set; }
-        public string SearchNoc2021Field { get; set; }
 
         /// <example>0</example>
         public string SearchJobSource { get; set; }

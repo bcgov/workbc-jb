@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,22 +36,22 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
 
             // set up the query
             string sql =
-                $@"WITH Jobs(JobId, PositionsAvailable, NocCodeId, JobSourceId) AS
+                $@"WITH Jobs(JobId, PositionsAvailable, NocCodeId2021, JobSourceId) AS
                     (
                         SELECT j.JobId, 
                             j.PositionsAvailable AS Vacancies,
-						    j.NocCodeId,
+						    j.NocCodeId2021,
                             j.JobSourceId 
                         FROM dbo.tvf_GetJobsForDate(@EndDate) j
 					    WHERE j.DateFirstImported >= @StartDate AND j.DateFirstImported < @EndDate 
                             AND (@JobSourceId = 0 OR j.JobSourceId = @JobSourceId)
                     )
 
-                    SELECT nc.Code AS NocCode, 
+                    SELECT nc.Code AS NocCode2021, 
                         nc.Title AS NocTitle, 
 						IsNull(Sum(j.PositionsAvailable),0) AS Vacancies,
                         Count(j.JobId) AS Postings
-					FROM NocCodes nc LEFT OUTER JOIN Jobs j ON j.NocCodeId = nc.Id
+					FROM NocCodes2021 nc LEFT OUTER JOIN Jobs j ON j.NocCodeId2021 = nc.Id
                         {categoryPredicate}
                     GROUP BY nc.Code, nc.Title
                     ORDER BY Sum(j.PositionsAvailable) DESC, Count(j.JobId) DESC, nc.Code";
