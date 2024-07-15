@@ -132,8 +132,7 @@ namespace WorkBC.ElasticSearch.Search.Queries
         public string SearchJobSource { get; set; }
 
         //Noc code field (more filters)
-        public string SearchNocField { get; set; }        
-        public string SearchNoc2021Field { get; set; }
+        public string SearchNocField { get; set; }       
 
         //(More filters)
         public bool SearchExcludePlacementAgencies { get; set; }
@@ -703,18 +702,18 @@ namespace WorkBC.ElasticSearch.Search.Queries
                 filterGroups.Add(jsonPostingLanguage);
             }
 
-            //NOC field
-            if (!string.IsNullOrEmpty(SearchNocField))
-            {
-                string nocJson = "{ \"term\": { \"Noc\": \"" + SearchNocField + "\" } }";
-                filterGroups.Add(nocJson);
-            }
+            ////NOC field
+            //if (!string.IsNullOrEmpty(SearchNocField))
+            //{
+            //    string nocJson = "{ \"term\": { \"Noc\": \"" + SearchNocField + "\" } }";
+            //    filterGroups.Add(nocJson);
+            //}
 
 
             //NOC 2021 field
-            if (!string.IsNullOrEmpty(SearchNoc2021Field))
+            if (!string.IsNullOrEmpty(SearchNocField))
             {
-                string nocJson2021 = "{ \"term\": { \"Noc2021\": \"" + SearchNoc2021Field + "\" } }";
+                string nocJson2021 = "{ \"term\": { \"Noc2021\": \"" + SearchNocField + "\" } }";
                 filterGroups.Add(nocJson2021);
             }
 
@@ -996,7 +995,6 @@ namespace WorkBC.ElasticSearch.Search.Queries
             SearchIsPostingsInEnglish = _filters.SearchIsPostingsInEnglish;
             SearchIsPostingsInEnglishAndFrench = _filters.SearchIsPostingsInEnglishAndFrench;
             SearchNocField = _filters.SearchNocField;
-            SearchNoc2021Field = _filters.SearchNoc2021Field;
             SearchJobSource = _filters.SearchJobSource;
             SearchExcludePlacementAgencies = _filters.SearchExcludePlacementAgencyJobs;
 

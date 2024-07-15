@@ -33,6 +33,21 @@
 	  <None Update="ssot_nocs.json">
 		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
+	  <None Update="edm_naics.json">
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="jb_industryNaics.json">
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="edm_industryprofiles.json">
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="edm_nocs.json">
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="edm_careerprofiles.json">
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>

@@ -11,5 +11,8 @@ namespace WorkBC.Data.Model.JobBoard
 
         [StringLength(150)]
         public string Title { get; set; }
+
+        [StringLength(150)]
+        public string TitleBC { get; set; }
     }
 }
