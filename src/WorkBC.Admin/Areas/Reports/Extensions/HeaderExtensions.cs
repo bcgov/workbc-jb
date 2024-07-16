@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -132,7 +132,7 @@ namespace WorkBC.Admin.Areas.Reports.Extensions
                 {
                     SelectListItem selectedCategory = selectLists.BroadOccupationalCategories
                         .FirstOrDefault(r => r.Value == model.BroadCategory);
-                    return $"<strong>Broad occupational category</strong>: {selectedCategory?.Text}<br>";
+                    return $"<strong>Broad category</strong>: {selectedCategory?.Text}<br>";
                 }
                 case NocCategoryLevel.MajorGroup:
                 {
@@ -140,6 +140,12 @@ namespace WorkBC.Admin.Areas.Reports.Extensions
                         .FirstOrDefault(r => r.Value == model.MajorGroup);
                     return $"<strong>Major group</strong>: {selectedCategory?.Text}<br>";
                 }
+                case NocCategoryLevel.SubMajorGroup:
+                    {
+                        SelectListItem selectedCategory = selectLists.SubMajorGroups
+                            .FirstOrDefault(r => r.Value == model.SubMajorGroup);
+                        return $"<strong>Sub Major group</strong>: {selectedCategory?.Text}<br>";
+                    }
                 case NocCategoryLevel.MinorGroup:
                 {
                     SelectListItem selectedCategory = selectLists.MinorGroups

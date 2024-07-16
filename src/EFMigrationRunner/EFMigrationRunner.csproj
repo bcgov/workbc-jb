@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
@@ -41,11 +41,14 @@
 	  </None>
 	  <None Update="edm_industryprofiles.json">
 		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>	
+	  </None>
 	  <None Update="edm_nocs.json">
 		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	  <None Update="edm_careerprofiles.json">
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="ssot_categories.json">
 		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
