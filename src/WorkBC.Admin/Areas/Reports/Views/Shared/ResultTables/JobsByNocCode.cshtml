@@ -1,4 +1,4 @@
-﻿@model IJobsByNocCodeViewModel;
+@model IJobsByNocCodeViewModel;
 
 <table class="table twoLabelCols" id="ResultsTable">
     <thead>
@@ -21,7 +21,7 @@
         vacancies += noc.Vacancies;
 
         <tr>
-            <td>@noc.NocCode</td>
+            <td>@noc.NocCode2021</td>
             <td>@noc.NocTitle</td>
             <td class="text-right">@noc.Vacancies.ToString("#,##0")</td>
             <td class="text-right">@noc.Postings.ToString("#,##0")</td>

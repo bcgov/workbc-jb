@@ -137,15 +137,15 @@ namespace WorkBC.Admin.Areas.Jobs.Controllers
                         });
                     }
 
-                    if (oldVersion.NocCodeId != newVersion.NocCodeId)
+                    if (oldVersion.NocCodeId2021 != newVersion.NocCodeId2021)
                     {
                         model.History.Add(new JobPostingHistoryItem
                         {
                             Activity = "NOC code updated",
                             Editor = importer,
                             TimeStamp = newVersion.DateVersionStart,
-                            OldValue = (oldVersion.NocCodeId ?? 0).ToString("0000"),
-                            NewValue = (newVersion.NocCodeId ?? 0).ToString("0000")
+                            OldValue = (oldVersion.NocCodeId2021 ?? 0).ToString("00000"),
+                            NewValue = (newVersion.NocCodeId2021 ?? 0).ToString("00000")
                         });
                     }
 

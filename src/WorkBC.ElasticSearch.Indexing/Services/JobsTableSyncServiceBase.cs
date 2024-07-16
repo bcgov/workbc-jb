@@ -220,14 +220,14 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     JobSourceId = job.JobSourceId,
                     IndustryId = job.IndustryId,
                     NocCodeId = job.NocCodeId,
-                    NocCodeId2021 = job.NocCodeId2021,                    
+                    NocCodeId2021 = job.NocCodeId2021,
                     IsActive = true,
                     PositionsAvailable = job.PositionsAvailable,
                     LocationId = job.LocationId,
                     IsCurrentVersion = true,
                     VersionNumber = 1
                 };
-            }            
+            }
 
             DbContext.JobVersions.Add(newVersion);
         }
