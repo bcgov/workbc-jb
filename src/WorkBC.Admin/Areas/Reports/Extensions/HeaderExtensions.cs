@@ -132,7 +132,7 @@ namespace WorkBC.Admin.Areas.Reports.Extensions
                 {
                     SelectListItem selectedCategory = selectLists.BroadOccupationalCategories
                         .FirstOrDefault(r => r.Value == model.BroadCategory);
-                    return $"<strong>Broad occupational category</strong>: {selectedCategory?.Text}<br>";
+                    return $"<strong>Broad category</strong>: {selectedCategory?.Text}<br>";
                 }
                 case NocCategoryLevel.MajorGroup:
                 {
