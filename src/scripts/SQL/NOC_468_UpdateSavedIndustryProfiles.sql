@@ -12,10 +12,10 @@ WHERE Id in (
 	)
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
---Fix 2: For 408 users with single entry of IndustryId = 1 or 33, we are adding a new entry so that they have both the industries in their profile.
+--Fix 2: For 408 users with single entry of IndustryId = 1, we are adding a new entry of IndustryId =33 so that they have both the industries in their profile.
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 Insert into SavedIndustryProfiles(AspNetUserId, DateSaved, DateDeleted, IsDeleted, IndustryId)
-SELECT t1.AspNetUserId, GETDATE() , NULL, 0, 1
+SELECT t1.AspNetUserId, GETDATE() , NULL, 0, 33
   FROM dbo.SavedIndustryProfiles AS t1
   WHERE t1.IsDeleted =0
   and t1.IndustryId =1
@@ -24,16 +24,4 @@ SELECT t1.AspNetUserId, GETDATE() , NULL, 0, 1
       SELECT 1 FROM dbo.SavedIndustryProfiles AS t2
       WHERE t1.AspNetUserId = t2.AspNetUserId	
       AND t2.IndustryId = 33  
-    );
-
-Insert into SavedIndustryProfiles(AspNetUserId, DateSaved, DateDeleted, IsDeleted, IndustryId)
-SELECT t1.AspNetUserId, GETDATE() , NULL, 0, 33
-  FROM dbo.SavedIndustryProfiles AS t1
-  WHERE t1.IsDeleted =0
-  and t1.IndustryId = 33
-  AND NOT EXISTS
-    (
-      SELECT 1 FROM dbo.SavedIndustryProfiles AS t2
-      WHERE t1.AspNetUserId = t2.AspNetUserId	
-      AND t2.IndustryId = 1 
     );
