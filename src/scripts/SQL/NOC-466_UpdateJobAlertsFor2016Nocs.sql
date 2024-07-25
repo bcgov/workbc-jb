@@ -1,11 +1,14 @@
+--Create a temp table for all Job alerts with NOC filters.
 SELECT * 
 INTO #TempJobAlerts 
 FROM [dbo].[JobAlerts]
 where UrlParameters like '%noc%' and isdeleted = '0' and JobSearchFilters like '%SearchNocField%'  
 
+--Add NOC2016 column in the temp table. 
 Alter table #TempJobAlerts
 Add NOC2016 varchar(10);
 
+--Add NOC2021 column in the temp table. 
 Alter table #TempJobAlerts
 Add NOC2021 varchar(10);
 
