@@ -12,9 +12,17 @@ Add NOC2016 varchar(10);
 Alter table #TempJobAlerts
 Add NOC2021 varchar(10);
 
+--Add NOC2021 column in the temp table. 
+Alter table #TempJobAlerts
+Add nocIndex int;
+
+Update #TempJobAlerts
+Set nocIndex = PATINDEX('%noc=%', UrlParameters)
+From #TempJobAlerts
+
 --Extract the noc value from UrlParameters field.
 Update #TempJobAlerts
-Set NOC2016 = SUBSTRING(UrlParameters, 6, 5)
+Set NOC2016 = SUBSTRING(UrlParameters, nocIndex+4 , 5)
 From #TempJobAlerts
 
 --Delete the 5 digit NOCs from the temp table.
@@ -48,7 +56,7 @@ where JobAlerts.Id = t.Id
 -----Drop the temp table-----
 Drop table #TempJobAlerts
 
+-----Check results-----------
 Select *
 FROM [dbo].[JobAlerts]
 where UrlParameters like '%noc%' and isdeleted = '0' and JobSearchFilters like '%SearchNocField%'
-
