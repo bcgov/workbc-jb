@@ -1,0 +1,7 @@
+Steps for deployment for NOC-466:
+
+1. Run the SQL script placed in code repo : ~/NOC-466%5D-UpdateJobAlertsFor2016NOCs/src/scripts/SQL/NOC-466_UpdateJobAlertsFor2016Nocs.sql
+
+2. Share the results from following query:
+	
+	Select * from JobAlerts
