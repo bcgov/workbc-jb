@@ -57,6 +57,17 @@ jobs:
 
       - name: Set current date as env variable
         run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+            
+      # Step 2: Install docker-compose
+      - name: Install Docker Compose
+        run: |
+          if ! command -v docker-compose &> /dev/null
+          then
+            curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+          else
+            echo "docker-compose installation found. Skipping install."
+          fi
 
       - uses: isbang/compose-action@v1.3.2
         with:
