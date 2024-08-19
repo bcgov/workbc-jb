@@ -180,7 +180,7 @@ namespace WorkBC.Web.Controllers
 
                         _context.SavedCareerProfiles.Add(profile);
                         await _context.SaveChangesAsync();
-                    
+
                 }
             }
 
@@ -202,7 +202,7 @@ namespace WorkBC.Web.Controllers
                 {
                     //this career profile is linked to this user
                     return true;
-                }            
+                }
 
             return false;
         }
