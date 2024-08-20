@@ -24,12 +24,22 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+    # Step 2: Install docker-compose
+    - name: Install Docker Compose
+      run: |
+        if ! command -v docker-compose &> /dev/null
+        then
+          curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+        else
+          echo "docker-compose installation found. Skipping install."
+        fi
 
     - name: Build test image
-      run: docker compose build
+      run: docker-compose build
 
     - name: Run tests
-      run: docker compose up --abort-on-container-exit
+      run: docker-compose up --abort-on-container-exit
 
   # This workflow contains a single job called "build"
   build:
@@ -47,6 +57,17 @@ jobs:
 
       - name: Set current date as env variable
         run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+            
+      # Step 2: Install docker-compose
+      - name: Install Docker Compose
+        run: |
+          if ! command -v docker-compose &> /dev/null
+          then
+            curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+          else
+            echo "docker-compose installation found. Skipping install."
+          fi
 
       - uses: isbang/compose-action@v1.3.2
         with:
