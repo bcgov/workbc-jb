@@ -317,6 +317,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                         xmlSkillOptions = skillCategory.SelectNodes("options/option_name");
                         foreach (XmlNode option in xmlSkillOptions)
                         {
+                            // capitalize the first letter and lower case all others
                             var benefit = option.InnerText.Capitalize();
 
                             if (benefit.Contains("rrsp"))
