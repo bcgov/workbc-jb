@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -182,7 +182,7 @@ namespace WorkBC.Shared.Repositories
             // deactivate the account
             jobSeeker.AccountStatus = AccountStatus.Deleted; 
             jobSeeker.LockoutEnabled = true;
-            jobSeeker.LockoutEnd = DateTimeOffset.MaxValue;
+            jobSeeker.LockoutEnd = DateTime.MaxValue;
             jobSeeker.EmailConfirmed = false;
 
             //update user
