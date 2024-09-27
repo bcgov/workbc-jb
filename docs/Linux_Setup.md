@@ -16,16 +16,7 @@ alter role [db_owner] add member [jobboard];
 go
 ```
 - Stop the containers and restart to run the Job Board data migrations - allow 15 minutes running time for the `WorkBC_JobBoard_DEV` to be fully populated.
-- `docker cp /path/to/WorkBC_Enterprise_DEV.bak src-mssql-1:/var/opt/mssql/data/WorkBC_Enterprise_DEV.bak`
-- `docker-compose -f docker-compose.yml -f docker-compose.linux-dev.yml exec mssql /opt/mssql-tools/bin/sqlcmd -U sa -P 18^fh4M08aB@`
-```
-restore database [WorkBC_Enterprise_DEV] from disk = N'/var/opt/mssql/data/WorkBC_Enterprise_DEV.bak'
-with replace, move 'WorkBCEnterprise' to '/var/opt/mssql/data/WorkBC_Enterprise_DEV.mdf',
-move 'WorkBCEnterprise_log' to '/var/opt/mssql/data/WorkBC_Enterprise_DEV.ldf'
-go
-```
-- Download SSOT dump at https://github.com/bcgov/workbc-ssot/blob/master/ssot-full.sql.gz
-- `gunzip -k -c ssot-full.sql.gz | docker-compose -f docker-compose.yml -f docker-compose.linux-dev.yml exec -T postgres psql --username workbc ssot && docker-compose -f docker-compose.yml -f docker-compose.linux-dev.yml kill -s SIGUSR1 ssot`
+- Restore the SSOT database as per the instructions at https://github.com/bcgov/workbc-ssot?tab=readme-ov-file#development
 
 ## Troubleshooting
 
