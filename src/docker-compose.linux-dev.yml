@@ -35,21 +35,21 @@ services:
     image: kibana:7.17.8
     ports:
       - 5601:5601
-  mssql:
-    image: mcr.microsoft.com/mssql/server:2017-latest
-    ports:
-      - 1433:1433
-    environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "18^fh4M08aB@"
-    volumes:
-      - mssql_data:/var/opt/mssql/data
+  # mssql:
+  #   image: mcr.microsoft.com/mssql/server:2017-latest
+  #   ports:
+  #     - 1433:1433
+  #   environment:
+  #     ACCEPT_EULA: "Y"
+  #     MSSQL_SA_PASSWORD: "18^fh4M08aB@"
+  #   volumes:
+  #     - mssql_data:/var/opt/mssql/data
   postgres:
     image: postgres:15.5-bookworm
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: ssot
+      POSTGRES_DB: jobboard
       POSTGRES_USER: workbc
       POSTGRES_PASSWORD: workbc
     volumes:
@@ -75,5 +75,4 @@ services:
     depends_on:
       - ssot
 volumes:
-  mssql_data:
   pg_data:
