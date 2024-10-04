@@ -1,3 +1,0 @@
---
--- Initialization script for JobBoard PostgreSQL database.
---

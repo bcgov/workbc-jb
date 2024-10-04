@@ -44,28 +44,17 @@ services:
   #     MSSQL_SA_PASSWORD: "18^fh4M08aB@"
   #   volumes:
   #     - mssql_data:/var/opt/mssql/data
-  postgres-jobboard:
-    image: postgres:15.5-bookworm
-    ports:
-      - "5433:5432"
-    environment:
-      POSTGRES_DB: jobboard_dev
-      POSTGRES_USER: workbc
-      POSTGRES_PASSWORD: workbc
-    volumes:
-      - "pg_data_jobboard:/var/lib/postgresql/data"
-      - "./scripts/postgres-init/jobboard:/docker-entrypoint-initdb.d"
   postgres:
     image: postgres:15.5-bookworm
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: ssot
+      POSTGRES_DB: jobboard
       POSTGRES_USER: workbc
       POSTGRES_PASSWORD: workbc
     volumes:
-      - "pg_data_ssot:/var/lib/postgresql/data"
-      - "./scripts/postgres-init/ssot:/docker-entrypoint-initdb.d"
+      - "pg_data:/var/lib/postgresql/data"
+      - "./scripts/postgres-init:/docker-entrypoint-initdb.d"
   ssot:
     image: postgrest/postgrest
     ports:
@@ -86,6 +75,4 @@ services:
     depends_on:
       - ssot
 volumes:
-  mssql_data:
-  pg_data_ssot:
-  pg_data_jobboard:
+  pg_data:
