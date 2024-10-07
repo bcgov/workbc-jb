@@ -1,10 +1,11 @@
 Importing ddata manually into PostgreSQL
 ========================================
 
-## Order of import
-Restore using DBeaver unless otherwise noted.
+- Obtain a package of exported CSV files from a recent snapshot of MSSQL WorkBC_JobBoard.
+- Restore using DBeaver unless otherwise noted. Specific instructions given for each file.
+- TODO Import `AdminUsers.LockedByAdminUserId` and `AdminUsers.LockedByAdminUserId`
 
-| File | Actions |
+| File | Instructions |
 | ---- | ------- |
 | jobboard-schema.sql | Restore using `docker-compose-jb exec -T postgres psql -U workbc jobboard < scripts/sql/WBCAMS-450/jobboard-schema.sql` |
 | ___EFMigrationsHistory | |
@@ -46,5 +47,3 @@ Restore using DBeaver unless otherwise noted.
 | ImportedJobsWanted | |
 | DeletedJobs | |
 | ExpiredJobs | |
-
-- TODO `AdminUsers.LockedByAdminUserId` and `AdminUsers.LockedByAdminUserId`
