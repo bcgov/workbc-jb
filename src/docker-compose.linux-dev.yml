@@ -23,7 +23,7 @@ services:
       - ./WorkBC.Notifications.JobAlerts/appsettings.linux.json:/app/appsettings.json
   migration-runner:
     volumes:
-      - ./WorkBC.Web/appsettings.linux.json:/app/appsettings.json
+      - ./EFMigrationRunner/appsettings.linux.json:/app/appsettings.json
   elasticsearch:
     image: elasticsearch:7.17.8
     ports:

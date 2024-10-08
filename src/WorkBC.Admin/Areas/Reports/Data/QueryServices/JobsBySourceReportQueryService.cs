@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using WorkBC.Admin.Areas.Reports.Data.QueryResultModels;
 
 namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
@@ -24,33 +24,33 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
         {
             // set up the query
             var sql =
-                @"WITH dimensions AS 
+                @"WITH dimensions AS
                     (
                         SELECT DISTINCT js.Id AS JobSourceId, js.GroupName AS Label, wp.FiscalYear
                         FROM WeeklyPeriods wp, JobSources js
                         WHERE wp.FiscalYear >= @StartYear AND wp.FiscalYear <= @EndYear
                             AND wp.WeekStartDate <= GetDate()
                     ),
-                    jobdata AS 
+                    jobdata AS
                     (
 	                    SELECT jr.JobSourceId,
-		                    wp.FiscalYear, 
+		                    wp.FiscalYear,
 		                    Sum(jr.PositionsAvailable) AS Vacancies,
 		                    Sum(jr.JobPostings) AS Postings
 	                    FROM JobStats jr
 		                    INNER JOIN weeklyPeriods wp ON wp.Id = jr.WeeklyPeriodId
 	                    GROUP BY jr.JobSourceId, wp.FiscalYear
                     )
-                    SELECT d.Label, 
+                    SELECT d.Label,
 	                    d.FiscalYear,
 	                    IsNull(jd.Vacancies,0) AS Vacancies,
 	                    IsNull(jd.Postings,0) AS Postings
                     FROM dimensions d
-                    LEFT OUTER JOIN jobdata jd ON d.FiscalYear = jd.FiscalYear 
+                    LEFT OUTER JOIN jobdata jd ON d.FiscalYear = jd.FiscalYear
 	                    AND d.JobSourceId = jd.JobSourceId
                     ORDER BY d.Label, FiscalYear";
 
-            using (var conn = new SqlConnection(ConnectionString))
+            using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 return (await conn.QueryAsync<JobStatsResult>(sql,
                     new
@@ -69,18 +69,18 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
         {
             // set up the query
             var sql =
-                @"WITH dimensions AS 
+                @"WITH dimensions AS
                     (
-	                    SELECT DISTINCT js.Id AS JobSourceId, js.GroupName AS Label, 
+	                    SELECT DISTINCT js.Id AS JobSourceId, js.GroupName AS Label,
                             wp.CalendarMonth, wp.CalendarYear
 	                    FROM WeeklyPeriods wp, JobSources js
 	                    WHERE wp.WeekStartDate >= @StartDate AND wp.WeekEndDate <= @EndDate
                             AND wp.WeekStartDate <= GetDate()
                     ),
-                    jobdata AS 
+                    jobdata AS
                     (
 	                    SELECT jr.JobSourceId,
-		                    wp.CalendarMonth, 
+		                    wp.CalendarMonth,
 		                    wp.CalendarYear,
 		                    Sum(jr.PositionsAvailable) AS Vacancies,
 		                    Sum(jr.JobPostings) AS Postings
@@ -88,18 +88,18 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
 		                    INNER JOIN weeklyPeriods wp ON wp.Id = jr.WeeklyPeriodId
 	                    GROUP BY jr.JobSourceId, wp.CalendarMonth, wp.CalendarYear
                     )
-                    SELECT d.Label, 
-	                    d.CalendarMonth, 
+                    SELECT d.Label,
+	                    d.CalendarMonth,
 	                    d.CalendarYear,
 	                    IsNull(jd.Vacancies,0) AS Vacancies,
 	                    IsNull(jd.Postings,0) AS Postings
                     FROM dimensions d
-                    LEFT OUTER JOIN jobdata jd ON d.CalendarMonth = jd.CalendarMonth 
-	                    AND d.CalendarYear = jd.CalendarYear 
+                    LEFT OUTER JOIN jobdata jd ON d.CalendarMonth = jd.CalendarMonth
+	                    AND d.CalendarYear = jd.CalendarYear
 	                    AND d.JobSourceId = jd.JobSourceId
                     ORDER BY d.Label, CalendarYear, d.CalendarMonth";
 
-            using (var conn = new SqlConnection(ConnectionString))
+            using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 return (await conn.QueryAsync<JobStatsResult>(sql,
                     new
@@ -118,26 +118,26 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
         {
             // set up the query
             var sql =
-                @"WITH dimensions AS 
+                @"WITH dimensions AS
                     (
-	                    SELECT DISTINCT js.Id AS JobSourceId, js.GroupName AS Label, 
-                            wp.WeekOfMonth, wp.Id AS WeeklyPeriodId, 
+	                    SELECT DISTINCT js.Id AS JobSourceId, js.GroupName AS Label,
+                            wp.WeekOfMonth, wp.Id AS WeeklyPeriodId,
                             wp.CalendarMonth, wp.CalendarYear
 	                    FROM WeeklyPeriods wp , JobSources js
-	                    WHERE  wp.CalendarYear = @Year AND wp.CalendarMonth = @Month 
+	                    WHERE  wp.CalendarYear = @Year AND wp.CalendarMonth = @Month
                             AND wp.WeekStartDate <= GetDate()
                     ),
-                    jobdata AS 
+                    jobdata AS
                     (
 	                    SELECT jr.JobSourceId,
-		                    jr.WeeklyPeriodId, 
+		                    jr.WeeklyPeriodId,
 		                    Sum(jr.PositionsAvailable) AS Vacancies,
 		                    Sum(jr.JobPostings) AS Postings
 	                    FROM JobStats jr
 		                    INNER JOIN WeeklyPeriods wp ON wp.Id = jr.WeeklyPeriodId
 	                    GROUP BY jr.JobSourceId, jr.WeeklyPeriodId
                     )
-                    SELECT d.Label, 
+                    SELECT d.Label,
 	                    d.WeekOfMonth,
                         d.CalendarMonth,
                         d.CalendarYear,
@@ -148,7 +148,7 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
 	                    AND d.JobSourceId = jd.JobSourceId
                     ORDER BY d.Label, d.WeekOfMonth, d.CalendarMonth, d.CalendarYear";
 
-            using (var conn = new SqlConnection(ConnectionString))
+            using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 return (await conn.QueryAsync<JobStatsResult>(sql,
                     new

@@ -1,4 +1,4 @@
-Importing ddata manually into PostgreSQL
+Importing data manually into PostgreSQL
 ========================================
 
 - Obtain a package of exported CSV files from a recent snapshot of MSSQL WorkBC_JobBoard.

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using WorkBC.Admin.Areas.Reports.Data.QueryResultModels;
 
 namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
@@ -28,17 +28,17 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
             // set up the query
             string sql =
                 @"WITH JobData AS (
-                        SELECT j.IndustryId, 
+                        SELECT j.IndustryId,
                             Sum(j.PositionsAvailable) AS Vacancies,
                             Count(*) AS Postings
-                        FROM dbo.tvf_GetJobsForDate(@EndDate) j 
+                        FROM dbo.tvf_GetJobsForDate(@EndDate) j
 						    INNER JOIN Locations ll ON ll.LocationId = j.LocationId
-                        WHERE j.DateFirstImported >= @StartDate AND j.DateFirstImported < @EndDate 
+                        WHERE j.DateFirstImported >= @StartDate AND j.DateFirstImported < @EndDate
                                 AND (@RegionId = 0 OR ll.RegionId = @RegionId)
 							    AND j.JobSourceId = 1
                         GROUP BY j.IndustryId
                 )
-                SELECT i.Id, i.Title AS Industry, 
+                SELECT i.Id, i.Title AS Industry,
                     ISNULL(Vacancies,0) AS Vacancies,
                     ISNULL(Postings,0) AS Postings
                 FROM Industries i
@@ -46,7 +46,7 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
                 WHERE i.Id NOT IN (38, 33)
                 ORDER BY Vacancies DESC, Postings DESC, Title";
 
-            using (var conn = new SqlConnection(ConnectionString))
+            using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 return (await conn.QueryAsync<JobsByIndustryResult>(sql,
                     new

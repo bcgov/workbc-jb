@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using WorkBC.Admin.Areas.Reports.Data.QueryResultModels;
 
 namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
@@ -36,17 +36,17 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
             // set up the query
             string sql =
                 @"WITH UsersWithJobAlerts AS (
-	                SELECT DISTINCT AspNetUserId 
-	                FROM JobAlerts 
+	                SELECT DISTINCT AspNetUserId
+	                FROM JobAlerts
 	                WHERE IsDeleted = 0
                 ),
                 UsersWithCareerProfiles AS (
-	                SELECT DISTINCT AspNetUserId 
-	                FROM SavedCareerProfiles 
+	                SELECT DISTINCT AspNetUserId
+	                FROM SavedCareerProfiles
 	                WHERE IsDeleted = 0
                 ),
                 UsersWithIndustryProfiles AS (
-	                SELECT DISTINCT AspNetUserId 
+	                SELECT DISTINCT AspNetUserId
 	                FROM SavedIndustryProfiles
 	                WHERE IsDeleted = 0
                 ),
@@ -72,7 +72,7 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
 	                f.IsNewImmigrant,
 	                f.IsPersonWithDisability,
 	                f.IsStudent,
-	                f.IsVeteran, 
+	                f.IsVeteran,
 	                f.IsVisibleMinority,
 	                f.IsYouth,
 	                (CASE WHEN ja.AspNetUserId IS NOT NULL THEN 1 ELSE 0 END) AS HasJobAlerts,
@@ -89,11 +89,11 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
                 LEFT OUTER JOIN UsersWithCareerProfiles cp ON cp.AspNetUserId = u.Id
                 LEFT OUTER JOIN UsersWithIndustryProfiles ip ON ip.AspNetUserId = u.Id
                 LEFT OUTER JOIN UsersWithSavedJobs sj ON sj.AspNetUserId = u.Id
-                WHERE (@StartDate IS NULL OR u.DateRegistered >= @StartDate) 
+                WHERE (@StartDate IS NULL OR u.DateRegistered >= @StartDate)
 	                AND (@EndDate IS NULL OR u.DateRegistered <= @EndDate)
                 ORDER BY AccountStatus, DateRegistered DESC";
 
-            using (var conn = new SqlConnection(ConnectionString))
+            using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 return (await conn.QueryAsync<JobSeekerDetailResult>(sql,
                     new
@@ -125,10 +125,10 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
             string sql =
                 @"SELECT COUNT(*)
                 FROM AspNetUsers u
-                WHERE (@StartDate IS NULL OR u.DateRegistered >= @StartDate) 
+                WHERE (@StartDate IS NULL OR u.DateRegistered >= @StartDate)
 	                AND (@EndDate IS NULL OR u.DateRegistered <= @EndDate)";
 
-            using (var conn = new SqlConnection(ConnectionString))
+            using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 return (await conn.QueryFirstOrDefaultAsync<int>(sql,
                     new
