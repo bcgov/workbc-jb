@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.SqlServer.Infrastructure.Internal;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 using WorkBC.Data.Model.JobBoard;
 using WorkBC.Data.Model.JobBoard.ReportData;
 
@@ -17,7 +17,7 @@ namespace WorkBC.Data
             try
             {
 #pragma warning disable EF1001 // Internal EF Core API usage.
-                _connectionString = options.GetExtension<SqlServerOptionsExtension>().ConnectionString;
+                _connectionString = options.GetExtension<NpgsqlOptionsExtension>().ConnectionString;
 #pragma warning restore EF1001 // Internal EF Core API usage.
             }
             catch

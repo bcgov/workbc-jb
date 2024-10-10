@@ -1,56 +1,57 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<OutputType>Exe</OutputType>
-		<TargetFramework>net6.0</TargetFramework>
-		<UserSecretsId>WorkBC-JobBoard-faa7f933-396f-4d5c-aeba-e868c0457626</UserSecretsId>
-		<RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
-		<Authors>OXD</Authors>
-		<Company>WorkBC</Company>
-		<Product>WorkBC Job Board</Product>
-		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-	</PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>WorkBC-JobBoard-faa7f933-396f-4d5c-aeba-e868c0457626</UserSecretsId>
+    <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
+    <Authors>OXD</Authors>
+    <Company>WorkBC</Company>
+    <Product>WorkBC Job Board</Product>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-		<PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.7" />
+  </ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\..\src\WorkBC.Data\WorkBC.Data.csproj" />
-	  <ProjectReference Include="..\..\src\WorkBC.ElasticSearch.Indexing\WorkBC.ElasticSearch.Indexing.csproj" />
-	  <ProjectReference Include="..\..\src\WorkBC.Shared\WorkBC.Shared.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\WorkBC.Data\WorkBC.Data.csproj" />
+    <ProjectReference Include="..\..\src\WorkBC.ElasticSearch.Indexing\WorkBC.ElasticSearch.Indexing.csproj" />
+    <ProjectReference Include="..\..\src\WorkBC.Shared\WorkBC.Shared.csproj" />
+  </ItemGroup>
 
-	<ItemGroup>
-	  <None Update="appsettings.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="ssot_nocs.json">
-		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="edm_naics.json">
-		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="jb_industryNaics.json">
-		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="edm_industryprofiles.json">
-		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="edm_nocs.json">
-		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="edm_careerprofiles.json">
-		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="ssot_categories.json">
-		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	</ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ssot_nocs.json">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="edm_naics.json">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="jb_industryNaics.json">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="edm_industryprofiles.json">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="edm_nocs.json">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="edm_careerprofiles.json">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ssot_categories.json">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
 </Project>

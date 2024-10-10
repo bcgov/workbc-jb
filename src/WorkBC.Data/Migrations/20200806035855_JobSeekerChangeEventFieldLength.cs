@@ -12,7 +12,7 @@ namespace WorkBC.Data.Migrations
                 maxLength: 100,
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(50)",
+                oldType: "varchar(50)",
                 oldMaxLength: 50,
                 oldNullable: true);
 
@@ -27,7 +27,7 @@ WHERE [Name] = 'jbSearch.errors.outOfProvincePostal'");
             migrationBuilder.AlterColumn<string>(
                 "Field",
                 "JobSeekerChangeLog",
-                "nvarchar(50)",
+                "varchar(50)",
                 maxLength: 50,
                 nullable: true,
                 oldClrType: typeof(string),

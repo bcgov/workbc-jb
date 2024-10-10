@@ -18,7 +18,7 @@ namespace WorkBC.Data.Migrations
                 table: "SystemSettings",
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(2000)",
+                oldType: "varchar(2000)",
                 oldMaxLength: 2000,
                 oldNullable: true);
 
@@ -188,7 +188,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "Description",
                 table: "SystemSettings",
-                type: "nvarchar(2000)",
+                type: "varchar(2000)",
                 maxLength: 2000,
                 nullable: true,
                 oldClrType: typeof(string),
@@ -200,12 +200,12 @@ namespace WorkBC.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Field = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    DateUpdated = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    Field = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true),
                     JobId = table.Column<long>(type: "bigint", nullable: false),
                     ModifiedByAdminUserId = table.Column<int>(type: "int", nullable: false),
-                    NewValue = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OldValue = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
+                    NewValue = table.Column<string>(type: "varchar", nullable: true),
+                    OldValue = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -230,12 +230,12 @@ namespace WorkBC.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AspNetUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Field = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    AspNetUserId = table.Column<string>(type: "varchar(450)", nullable: true),
+                    DateUpdated = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    Field = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true),
                     ModifiedByAdminUserId = table.Column<int>(type: "int", nullable: false),
-                    NewValue = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OldValue = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
+                    NewValue = table.Column<string>(type: "varchar", nullable: true),
+                    OldValue = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {

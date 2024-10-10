@@ -14,9 +14,9 @@ namespace WorkBC.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<short>(type: "int", nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
-                    Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
-                    FrenchTitle = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true)
+                    Code = table.Column<string>(type: "varchar(5)", maxLength: 5, nullable: true),
+                    Title = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: true),
+                    FrenchTitle = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: true)
                 },
                 constraints: table =>
                 {

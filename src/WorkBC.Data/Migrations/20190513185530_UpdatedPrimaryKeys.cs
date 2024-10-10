@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WorkBC.Data.Migrations
@@ -49,14 +49,14 @@ namespace WorkBC.Data.Migrations
                 table: "ImportedJobsWanted",
                 nullable: false,
                 defaultValue: 0)
-                .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .Annotation("SqlServer:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             migrationBuilder.AddColumn<int>(
                 name: "Id",
                 table: "ImportedJobsFederal",
                 nullable: false,
                 defaultValue: 0)
-                .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .Annotation("SqlServer:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_ImportedJobsWanted",

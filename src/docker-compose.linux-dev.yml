@@ -3,47 +3,57 @@ services:
   web:
     volumes:
       - ./WorkBC.Web/appsettings.linux.json:/app/appsettings.json
+    depends_on:
+      - postgres
   admin:
     volumes:
       - ./WorkBC.Admin/appsettings.linux.json:/app/appsettings.json
+    depends_on:
+      - postgres
   importers-wanted:
     volumes:
       - ./WorkBC.Importers.Wanted/appsettings.linux.json:/app/appsettings.json
+    depends_on:
+      - postgres
   importers-federal:
     volumes:
       - ./WorkBC.Importers.Federal/appsettings.linux.json:/app/appsettings.json
+    depends_on:
+      - postgres
   indexers-federal:
     volumes:
       - ./WorkBC.Indexers.Federal/appsettings.linux.json:/app/appsettings.json
+    depends_on:
+      - postgres
   indexers-wanted:
     volumes:
       - ./WorkBC.Indexers.Wanted/appsettings.linux.json:/app/appsettings.json
+    depends_on:
+      - postgres
   notifications-job-alerts:
     volumes:
       - ./WorkBC.Notifications.JobAlerts/appsettings.linux.json:/app/appsettings.json
+    depends_on:
+      - postgres
   migration-runner:
     volumes:
       - ./EFMigrationRunner/appsettings.linux.json:/app/appsettings.json
+    depends_on:
+      - postgres
   elasticsearch:
     image: elasticsearch:7.17.8
     ports:
       - 9200:9200
+      - 9300:9300
     environment:
       discovery.type: 'single-node'
       xpack.security.enabled: 'false'
+    volumes:
+      - "es_data:/usr/share/elasticsearch/data"
   kibana:
     image: kibana:7.17.8
     ports:
       - 5601:5601
-  # mssql:
-  #   image: mcr.microsoft.com/mssql/server:2017-latest
-  #   ports:
-  #     - 1433:1433
-  #   environment:
-  #     ACCEPT_EULA: "Y"
-  #     MSSQL_SA_PASSWORD: "18^fh4M08aB@"
-  #   volumes:
-  #     - mssql_data:/var/opt/mssql/data
   postgres:
     image: postgres:15.5-bookworm
     ports:
@@ -52,6 +62,10 @@ services:
       POSTGRES_DB: jobboard
       POSTGRES_USER: workbc
       POSTGRES_PASSWORD: workbc
+    healthcheck:
+      test: "pg_isready --dbname=jobboard --username=workbc && psql --username=workbc --list jobboard"
+      timeout: 5s
+      retries: 20
     volumes:
       - "pg_data:/var/lib/postgresql/data"
       - "./scripts/postgres-init:/docker-entrypoint-initdb.d"
@@ -76,3 +90,4 @@ services:
       - ssot
 volumes:
   pg_data:
+  es_data:

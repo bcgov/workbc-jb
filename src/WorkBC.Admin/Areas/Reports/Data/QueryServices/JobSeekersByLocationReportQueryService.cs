@@ -171,7 +171,7 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
             var sql = @"SELECT Count(*) FROM [dbo].[tvf_GetJobSeekersForDate](@EndDate)
                         WHERE AccountStatus <> 99";
 
-            using (var conn = new SqlConnection(ConnectionString))
+            using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 return await conn.ExecuteScalarAsync<int>(sql, new {EndDate = endDate});
             }

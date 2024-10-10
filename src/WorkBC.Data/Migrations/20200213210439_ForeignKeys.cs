@@ -34,7 +34,7 @@ namespace WorkBC.Data.Migrations
                 maxLength: 40,
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
+                oldType: "varchar",
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
@@ -42,7 +42,7 @@ namespace WorkBC.Data.Migrations
                 table: "SavedIndustryProfiles",
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
+                oldType: "varchar",
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
@@ -50,7 +50,7 @@ namespace WorkBC.Data.Migrations
                 table: "SavedCareerProfiles",
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
+                oldType: "varchar",
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
@@ -59,7 +59,7 @@ namespace WorkBC.Data.Migrations
                 maxLength: 150,
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
+                oldType: "varchar",
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
@@ -68,7 +68,7 @@ namespace WorkBC.Data.Migrations
                 maxLength: 4,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(450)");
+                oldType: "varchar(450)");
 
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
@@ -76,7 +76,7 @@ namespace WorkBC.Data.Migrations
                 maxLength: 50,
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
+                oldType: "varchar",
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
@@ -85,7 +85,7 @@ namespace WorkBC.Data.Migrations
                 maxLength: 2,
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
+                oldType: "varchar",
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<int>(
@@ -263,7 +263,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "QuestionText",
                 table: "SecurityQuestions",
-                type: "nvarchar(max)",
+                type: "varchar",
                 nullable: true,
                 oldClrType: typeof(string),
                 oldMaxLength: 40,
@@ -272,7 +272,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "AspNetUserId",
                 table: "SavedIndustryProfiles",
-                type: "nvarchar(max)",
+                type: "varchar",
                 nullable: true,
                 oldClrType: typeof(string),
                 oldNullable: true);
@@ -280,7 +280,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "AspNetUserId",
                 table: "SavedCareerProfiles",
-                type: "nvarchar(max)",
+                type: "varchar",
                 nullable: true,
                 oldClrType: typeof(string),
                 oldNullable: true);
@@ -288,7 +288,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "Title",
                 table: "NocCodes",
-                type: "nvarchar(max)",
+                type: "varchar",
                 nullable: true,
                 oldClrType: typeof(string),
                 oldMaxLength: 150,
@@ -297,7 +297,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "Code",
                 table: "NocCodes",
-                type: "nvarchar(450)",
+                type: "varchar(450)",
                 nullable: false,
                 oldClrType: typeof(string),
                 oldMaxLength: 4);
@@ -305,7 +305,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
                 table: "Countries",
-                type: "nvarchar(max)",
+                type: "varchar",
                 nullable: true,
                 oldClrType: typeof(string),
                 oldMaxLength: 50,
@@ -314,7 +314,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "CountryTwoLetterCode",
                 table: "Countries",
-                type: "nvarchar(max)",
+                type: "varchar",
                 nullable: true,
                 oldClrType: typeof(string),
                 oldMaxLength: 2,
