@@ -11,7 +11,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "FrenchCity",
                 table: "GeocodedLocationCache",
-                type: "nvarchar(80)",
+                type: "varchar(80)",
                 maxLength: 80,
                 nullable: true);
         }

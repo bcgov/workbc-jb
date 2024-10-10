@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using WorkBC.Admin.Areas.Reports.Data.QueryResultModels;
 
 namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
@@ -24,7 +24,7 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
         {
             // set up the query
             var sql =
-                @"WITH dimensions AS 
+                @"WITH dimensions AS
                     (
                         SELECT DISTINCT r.[Key], r.[Label],
                             wp.FiscalYear, r.IsTotal
@@ -32,10 +32,10 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
                         WHERE wp.FiscalYear >= @StartYear AND wp.FiscalYear <= @EndYear
                             AND wp.WeekStartDate <= GetDate()
                     ),
-                    jobseekerdata AS 
+                    jobseekerdata AS
                     (
 	                    SELECT jss.LabelKey,
-		                    wp.FiscalYear, 
+		                    wp.FiscalYear,
 		                    Sum(jss.[Value]) AS [Value]
 	                    FROM JobSeekerStats jss
 		                    INNER JOIN weeklyPeriods wp ON wp.Id = jss.WeeklyPeriodId
@@ -46,12 +46,12 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
                         UNION
 
 	                    SELECT jss.LabelKey,
-		                    wp.FiscalYear, 
+		                    wp.FiscalYear,
 		                    Sum(jss.[Value]) AS [Value]
 	                    FROM JobSeekerStats jss
 		                    INNER JOIN weeklyPeriods wp ON wp.Id = jss.WeeklyPeriodId
                             INNER JOIN JobSeekerStatLabels rm ON rm.[Key] = jss.LabelKey
-                        WHERE rm.IsTotal = 1 
+                        WHERE rm.IsTotal = 1
                             AND (wp.IsEndOfFiscalYear = 1 OR wp.Id = @CurrentPeriodId)
                             AND (@RegionId IS NULL OR jss.RegionId = @RegionId)
                         GROUP BY jss.LabelKey, wp.FiscalYear
@@ -62,11 +62,11 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
 	                    d.FiscalYear,
 	                    IsNull(jd.[Value],0) AS [Value]
                     FROM dimensions d
-                    LEFT OUTER JOIN jobseekerdata jd ON d.FiscalYear = jd.FiscalYear 
+                    LEFT OUTER JOIN jobseekerdata jd ON d.FiscalYear = jd.FiscalYear
 	                    AND d.[Key] = jd.LabelKey
                     ORDER BY d.Label, FiscalYear";
 
-            using (var conn = new SqlConnection(ConnectionString))
+            using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 return (await conn.QueryAsync<JobSeekerAccountResult>(sql,
                     new
@@ -87,7 +87,7 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
         {
             // set up the query
             var sql =
-                @"WITH dimensions AS 
+                @"WITH dimensions AS
                     (
 	                    SELECT DISTINCT r.[Key], r.[Label],
                             wp.CalendarMonth, wp.CalendarYear, r.IsTotal
@@ -95,10 +95,10 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
 	                    WHERE wp.WeekStartDate >= @StartDate AND wp.WeekEndDate <= @EndDate
                             AND wp.WeekStartDate <= GetDate()
                     ),
-                    jobseekerdata AS 
+                    jobseekerdata AS
                     (
 	                    SELECT jss.LabelKey,
-		                    wp.CalendarMonth, 
+		                    wp.CalendarMonth,
 		                    wp.CalendarYear,
 		                    Sum(jss.[Value]) AS [Value]
 	                    FROM JobSeekerStats jss
@@ -110,13 +110,13 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
 						UNION
 
 						SELECT jss.LabelKey,
-		                    wp.CalendarMonth, 
+		                    wp.CalendarMonth,
 		                    wp.CalendarYear,
 		                    Sum(jss.[Value]) AS [Value]
 	                    FROM JobSeekerStats jss
 		                    INNER JOIN weeklyPeriods wp ON wp.Id = jss.WeeklyPeriodId
 							INNER JOIN JobSeekerStatLabels rm ON rm.[Key] = jss.LabelKey
-                        WHERE rm.IsTotal = 1 
+                        WHERE rm.IsTotal = 1
 							AND (wp.IsEndOfMonth = 1 OR wp.Id = @CurrentPeriodId)
 							AND (@RegionId IS NULL OR jss.RegionId = @RegionId)
 						GROUP BY jss.LabelKey, wp.CalendarMonth, wp.CalendarYear
@@ -124,16 +124,16 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
                     SELECT d.[Key] AS LabelKey,
 						d.Label,
                         d.IsTotal,
-	                    d.CalendarMonth, 
+	                    d.CalendarMonth,
 	                    d.CalendarYear,
 	                    IsNull(jd.[Value],0) AS [Value]
                     FROM dimensions d
-                    LEFT OUTER JOIN jobseekerdata jd ON d.CalendarMonth = jd.CalendarMonth 
-	                    AND d.CalendarYear = jd.CalendarYear 
+                    LEFT OUTER JOIN jobseekerdata jd ON d.CalendarMonth = jd.CalendarMonth
+	                    AND d.CalendarYear = jd.CalendarYear
 	                    AND d.[Key] = jd.LabelKey
                     ORDER BY d.Label, CalendarYear, d.CalendarMonth";
 
-            using (var conn = new SqlConnection(ConnectionString))
+            using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 return (await conn.QueryAsync<JobSeekerAccountResult>(sql,
                     new
@@ -154,19 +154,19 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
         {
             // set up the query
             var sql =
-                @"WITH dimensions AS 
+                @"WITH dimensions AS
                     (
-	                    SELECT DISTINCT r.[Key], r.[Label], 
-                            wp.WeekOfMonth, wp.Id AS WeeklyPeriodId, 
+	                    SELECT DISTINCT r.[Key], r.[Label],
+                            wp.WeekOfMonth, wp.Id AS WeeklyPeriodId,
                             wp.CalendarMonth, wp.CalendarYear, r.IsTotal
 	                    FROM WeeklyPeriods wp, JobSeekerStatLabels r
-	                    WHERE  wp.CalendarYear = @Year AND wp.CalendarMonth = @Month 
+	                    WHERE  wp.CalendarYear = @Year AND wp.CalendarMonth = @Month
                             AND wp.WeekStartDate <= GetDate()
 					),
-                    jobseekerdata AS 
+                    jobseekerdata AS
                     (
 	                    SELECT jss.LabelKey,
-		                    jss.WeeklyPeriodId, 
+		                    jss.WeeklyPeriodId,
 		                    SUM(jss.[Value]) AS [Value]
 	                    FROM JobSeekerStats jss
 		                    INNER JOIN WeeklyPeriods wp ON wp.Id = jss.WeeklyPeriodId
@@ -186,7 +186,7 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
                     ORDER BY d.Label, d.WeekOfMonth, d.CalendarMonth,  d.CalendarYear
 ";
 
-            using (var conn = new SqlConnection(ConnectionString))
+            using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 return (await conn.QueryAsync<JobSeekerAccountResult>(sql,
                     new

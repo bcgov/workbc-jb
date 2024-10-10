@@ -12,7 +12,7 @@ namespace WorkBC.Data.Migrations
                 table: "SavedJobs",
                 nullable: true,
                 oldClrType: typeof(DateTime),
-                oldType: "datetime2");
+                oldType: "timestamp");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -20,7 +20,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "DateDeleted",
                 table: "SavedJobs",
-                type: "datetime2",
+                type: "timestamp",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldNullable: true);
