@@ -78,7 +78,7 @@ USING BTREE ("LockedByAdminUserId" ASC);
   - Right-click table > **Import Data**
   - **Import source** > **CSV** and select the corresponding CSV file
   - **Input file(s)** > **Importer settings** > Click **Set empty strings to NULL** to show **[v]** (only for the first time, as the setting will remain checked from now on)
-  - **Tables mapping** > If any column is marked as Skip below, expand the Source and change its **Mapping** entry from `existing` to `skip`
+  - **Tables mapping** > If any column is marked as Skip below, expand the table and change the column **Mapping** entry from `existing` to `skip`
   - **Data load settings** > No change
   - **Confirm** > **Proceed**
 
