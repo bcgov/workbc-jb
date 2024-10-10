@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <UserSecretsId>WorkBC-JobBoard-faa7f933-396f-4d5c-aeba-e868c0457626</UserSecretsId>
-    <Authors>OXD</Authors>
+    <Authors>OXD, Quartech</Authors>
     <Company>WorkBC</Company>
     <Product>WorkBC Job Board</Product>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
