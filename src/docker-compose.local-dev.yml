@@ -1,6 +1,30 @@
 version: '3'
 name: workbc-jb-local
 services:
+  web:
+    depends_on:
+      - postgres
+  admin:
+    depends_on:
+      - postgres
+  importers-wanted:
+    depends_on:
+      - postgres
+  importers-federal:
+    depends_on:
+      - postgres
+  indexers-federal:
+    depends_on:
+      - postgres
+  indexers-wanted:
+    depends_on:
+      - postgres
+  notifications-job-alerts:
+    depends_on:
+      - postgres
+  migration-runner:
+    depends_on:
+      - postgres
   elasticsearch:
     image: elasticsearch:7.17.8
     ports:
@@ -8,6 +32,8 @@ services:
     environment:
       discovery.type: 'single-node'
       xpack.security.enabled: 'false'
+    volumes:
+      - "es_data:/usr/share/elasticsearch/data"
   kibana:
     image: kibana:7.17.8
     ports:
@@ -17,9 +43,13 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: ssot
+      POSTGRES_DB: jobboard
       POSTGRES_USER: workbc
       POSTGRES_PASSWORD: workbc
+    healthcheck:
+      test: "pg_isready --dbname=jobboard --username=workbc && psql --username=workbc --list jobboard"
+      timeout: 5s
+      retries: 20
     volumes:
       - "pg_data:/var/lib/postgresql/data"
       - "./scripts/postgres-init:/docker-entrypoint-initdb.d"
@@ -44,3 +74,4 @@ services:
       - ssot
 volumes:
   pg_data:
+  es_data:
