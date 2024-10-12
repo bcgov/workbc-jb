@@ -3,28 +3,42 @@ name: workbc-jb-local
 services:
   web:
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
   admin:
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
   importers-wanted:
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
   importers-federal:
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
   indexers-federal:
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
   indexers-wanted:
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
   notifications-job-alerts:
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
   migration-runner:
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
   elasticsearch:
     image: elasticsearch:7.17.8
     ports:
@@ -34,10 +48,18 @@ services:
       xpack.security.enabled: 'false'
     volumes:
       - "es_data:/usr/share/elasticsearch/data"
+    healthcheck:
+      test: curl -s http://localhost:9200 >/dev/null || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 50
   kibana:
     image: kibana:7.17.8
     ports:
       - 5601:5601
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
   postgres:
     image: postgres:15.5-bookworm
     ports:
@@ -63,7 +85,8 @@ services:
       PGRST_DB_ANON_ROLE: ssot_readonly
       PGRST_OPENAPI_SERVER_PROXY_URI: http://localhost:3000
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
   swagger:
     image: swaggerapi/swagger-ui
     ports:

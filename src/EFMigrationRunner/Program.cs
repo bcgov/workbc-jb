@@ -13,6 +13,9 @@ namespace EFMigrationRunner
     {
         private static void Main(string[] args)
         {
+            // Set Npgsql to avoid complaining about Datetimes.
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             var fileInfo = new FileInfo(Assembly.GetExecutingAssembly().Location);
 
             IConfigurationBuilder builder = new ConfigurationBuilder()

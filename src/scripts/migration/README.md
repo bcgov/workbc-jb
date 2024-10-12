@@ -59,6 +59,15 @@ USING BTREE ("LockedByAdminUserId" ASC);
 - Verify that a new **WorkBC_JobBoard_dbo** schema has been added to the target-side **PostgreSQL `jobboard`** database
 - Right-click **WorkBC_JobBoard_dbo** > **Apply to database**
 - Ensure all entries below **WorkBC_JobBoard_dbo** are free of warning sign (red exclamation icon)
+- Right-click **WorkBC_JobBoard_dbo** > **Save as SQL**
+
+### 1.4. Manual fixes to the schema
+The following changes needed to be made following the AWS SCT migration:
+- Change the schema name from **WorkBC_JobBoard_dbo** to **public**
+- Change all columns with type `NUMERIC(1,0)` to `BOOLEAN`
+- Modify the exported SQL functions and stored procedures to ensure database object names are properly quoted
+
+The final result after these manual modifications is stored in `scripts/migration/sql/pgsql-schema.sql`.
 
 ## 2. Export the MSSQL data to CSV
 - Install [DBeaver](https://dbeaver.io/download/)

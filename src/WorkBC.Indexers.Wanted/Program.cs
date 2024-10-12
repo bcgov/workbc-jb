@@ -6,7 +6,6 @@ using CommandLine;
 using Microsoft.Extensions.Configuration;
 using Serilog.Core;
 using WorkBC.ElasticSearch.Indexing;
-using WorkBC.ElasticSearch.Indexing.Services;
 using WorkBC.Indexers.Wanted.Services;
 using WorkBC.Shared.Services;
 
@@ -17,6 +16,9 @@ namespace WorkBC.Indexers.Wanted
 
         static async Task Main(string[] args)
         {
+            // Set Npgsql to avoid complaining about Datetimes.
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             CultureInfo.CurrentCulture = new CultureInfo("en-CA", false);
 
             IConfigurationBuilder builder = new ConfigurationBuilder()

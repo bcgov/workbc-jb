@@ -1,1850 +1,263 @@
--- ------------ Write DROP-FUNCTION-stage scripts -----------
-
-DROP ROUTINE IF EXISTS public."tvf_GetJobSeekersForDate"(IN TIMESTAMP WITHOUT TIME ZONE, OUT VARCHAR, OUT VARCHAR, OUT INTEGER, OUT INTEGER, OUT INTEGER, OUT TIMESTAMP WITHOUT TIME ZONE, OUT SMALLINT, OUT NUMERIC, OUT NUMERIC, OUT NUMERIC, OUT NUMERIC, OUT NUMERIC, OUT NUMERIC, OUT NUMERIC, OUT NUMERIC, OUT NUMERIC, OUT NUMERIC);
-
-DROP ROUTINE IF EXISTS public."tvf_GetJobsForDate"(IN TIMESTAMP WITHOUT TIME ZONE, OUT BIGINT, OUT SMALLINT, OUT INTEGER, OUT INTEGER, OUT SMALLINT, OUT TIMESTAMP WITHOUT TIME ZONE, OUT SMALLINT);
-
--- ------------ Write DROP-PROCEDURE-stage scripts -----------
-
-DROP ROUTINE IF EXISTS public."usp_GenerateJobSeekerStats"(IN TIMESTAMP WITHOUT TIME ZONE, INOUT int);
-
-DROP ROUTINE IF EXISTS public."usp_GenerateJobStats"(IN TIMESTAMP WITHOUT TIME ZONE, INOUT int);
-
--- ------------ Write DROP-FOREIGN-KEY-CONSTRAINT-stage scripts -----------
-
-ALTER TABLE public."AdminUsers" DROP CONSTRAINT "FK_AdminUsers_AdminUsers_LockedByAdminUserId_1346103836";
-
-ALTER TABLE public."AdminUsers" DROP CONSTRAINT "FK_AdminUsers_AdminUsers_ModifiedByAdminUserId_1378103950";
-
-ALTER TABLE public."AspNetRoleClaims" DROP CONSTRAINT "FK_AspNetRoleClaims_AspNetRoles_RoleId_1829581556";
-
-ALTER TABLE public."AspNetUserClaims" DROP CONSTRAINT "FK_AspNetUserClaims_AspNetUsers_UserId_1877581727";
-
-ALTER TABLE public."AspNetUserLogins" DROP CONSTRAINT "FK_AspNetUserLogins_AspNetUsers_UserId_1925581898";
-
-ALTER TABLE public."AspNetUserRoles" DROP CONSTRAINT "FK_AspNetUserRoles_AspNetRoles_RoleId_1973582069";
-
-ALTER TABLE public."AspNetUserRoles" DROP CONSTRAINT "FK_AspNetUserRoles_AspNetUsers_UserId_1989582126";
-
-ALTER TABLE public."AspNetUserTokens" DROP CONSTRAINT "FK_AspNetUserTokens_AspNetUsers_UserId_2037582297";
-
-ALTER TABLE public."AspNetUsers" DROP CONSTRAINT "FK_AspNetUsers_AdminUsers_LockedByAdminUserId_2050106344";
-
-ALTER TABLE public."AspNetUsers" DROP CONSTRAINT "FK_AspNetUsers_Countries_CountryId_414624520";
-
-ALTER TABLE public."AspNetUsers" DROP CONSTRAINT "FK_AspNetUsers_LocationLookups_LocationId_190623722";
-
-ALTER TABLE public."AspNetUsers" DROP CONSTRAINT "FK_AspNetUsers_Provinces_ProvinceId_206623779";
-
-ALTER TABLE public."AspNetUsers" DROP CONSTRAINT "FK_AspNetUsers_SecurityQuestions_SecurityQuestionId_850102069";
-
-ALTER TABLE public."DeletedJobs" DROP CONSTRAINT "FK_DeletedJobs_AdminUsers_DeletedByAdminUserId_974626515";
-
-ALTER TABLE public."DeletedJobs" DROP CONSTRAINT "FK_DeletedJobs_Jobs_JobId_990626572";
-
-ALTER TABLE public."ExpiredJobs" DROP CONSTRAINT "FK_ExpiredJobs_JobIds_JobId_1726629194";
-
-ALTER TABLE public."ImpersonationLog" DROP CONSTRAINT "FK_ImpersonationLog_AdminUsers_AdminUserId_1038626743";
-
-ALTER TABLE public."ImpersonationLog" DROP CONSTRAINT "FK_ImpersonationLog_AspNetUsers_AspNetUserId_1054626800";
-
-ALTER TABLE public."ImportedJobsFederal" DROP CONSTRAINT "FK_ImportedJobsFederal_JobIds_JobId_1570104634";
-
-ALTER TABLE public."ImportedJobsWanted" DROP CONSTRAINT "FK_ImportedJobsWanted_JobIds_JobId_1586104691";
-
-ALTER TABLE public."JobAlerts" DROP CONSTRAINT "FK_JobAlerts_AspNetUsers_AspNetUserId_1122103038";
-
-ALTER TABLE public."JobIds" DROP CONSTRAINT "FK_JobIds_JobSources_JobSourceId_766625774";
-
-ALTER TABLE public."JobSeekerAdminComments" DROP CONSTRAINT "FK_JobSeekerAdminComments_AdminUsers_EnteredByAdminUserId_1906105831";
-
-ALTER TABLE public."JobSeekerAdminComments" DROP CONSTRAINT "FK_JobSeekerAdminComments_AspNetUsers_AspNetUserId_1890105774";
-
-ALTER TABLE public."JobSeekerChangeLog" DROP CONSTRAINT "FK_JobSeekerAdminLog_AspNetUsers_AspNetUserId_1662628966";
-
-ALTER TABLE public."JobSeekerChangeLog" DROP CONSTRAINT "FK_JobSeekerChangeLog_AdminUsers_ModifiedByAdminUserId_1630628852";
-
-ALTER TABLE public."JobSeekerEventLog" DROP CONSTRAINT "FK_JobSeekerEventLog_AspNetUsers_AspNetUserId_2018106230";
-
-ALTER TABLE public."JobSeekerFlags" DROP CONSTRAINT "FK_JobSeekerFlags_AspNetUsers_AspNetUserId_178099675";
-
-ALTER TABLE public."JobSeekerStats" DROP CONSTRAINT "FK_JobSeekerStats_JobSeekerStatLabels_LabelKey_1454628225";
-
-ALTER TABLE public."JobSeekerStats" DROP CONSTRAINT "FK_JobSeekerStats_Regions_RegionId_1502628396";
-
-ALTER TABLE public."JobSeekerStats" DROP CONSTRAINT "FK_JobSeekerStats_WeeklyPeriods_WeeklyPeriodId_1262627541";
-
-ALTER TABLE public."JobSeekerVersions" DROP CONSTRAINT "FK_JobSeekerVersions_AspNetUsers_AspNetUserId_302624121";
-
-ALTER TABLE public."JobSeekerVersions" DROP CONSTRAINT "FK_JobSeekerVersions_Countries_CountryId_430624577";
-
-ALTER TABLE public."JobSeekerVersions" DROP CONSTRAINT "FK_JobSeekerVersions_Locations_LocationId_366624349";
-
-ALTER TABLE public."JobSeekerVersions" DROP CONSTRAINT "FK_JobSeekerVersions_Provinces_ProvinceId_350624292";
-
-ALTER TABLE public."JobStats" DROP CONSTRAINT "FK_JobStats_JobSources_JobSourceId_1358627883";
-
-ALTER TABLE public."JobStats" DROP CONSTRAINT "FK_JobStats_Regions_RegionId_1518628453";
-
-ALTER TABLE public."JobStats" DROP CONSTRAINT "FK_JobStats_WeeklyPeriods_WeeklyPeriodId_1374627940";
-
-ALTER TABLE public."JobVersions" DROP CONSTRAINT "FK_JobVersions_Jobs_JobId_62623266";
-
-ALTER TABLE public."JobVersions" DROP CONSTRAINT "FK_JobVersions_LocationLookups_LocationId_238623893";
-
-ALTER TABLE public."JobVersions" DROP CONSTRAINT "FK_JobVersions_NaicsCodes_NaicsId_94623380";
-
-ALTER TABLE public."JobVersions" DROP CONSTRAINT "FK_JobVersions_NocCodes2021_NocCodeId2021_891150220";
-
-ALTER TABLE public."JobVersions" DROP CONSTRAINT "FK_JobVersions_NocCodes_NocCodeId_110623437";
-
-ALTER TABLE public."JobViews" DROP CONSTRAINT "FK_JobViews_Jobs_JobId_1442104178";
-
-ALTER TABLE public."Jobs" DROP CONSTRAINT "FK_Jobs_JobIds_JobId_1602104748";
-
-ALTER TABLE public."Jobs" DROP CONSTRAINT "FK_Jobs_JobSources_JobSourceId_782625831";
-
-ALTER TABLE public."Jobs" DROP CONSTRAINT "FK_Jobs_LocationLookups_LocationId_222623836";
-
-ALTER TABLE public."Jobs" DROP CONSTRAINT "FK_Jobs_NaicsCodes_NaicsId_14623095";
-
-ALTER TABLE public."Jobs" DROP CONSTRAINT "FK_Jobs_NocCodes2021_NocCodeId2021_875150163";
-
-ALTER TABLE public."Jobs" DROP CONSTRAINT "FK_Jobs_NocCodes_NocCodeId_1650104919";
-
-ALTER TABLE public."Locations" DROP CONSTRAINT "FK_LocationLookups_Regions_RegionId_254623950";
-
-ALTER TABLE public."Locations" DROP CONSTRAINT "FK_Locations_Regions_RegionId_446624634";
-
-ALTER TABLE public."ReportPersistenceControl" DROP CONSTRAINT "FK_ReportPersistenceControl_WeeklyPeriods_WeeklyPeriodId_1150627142";
-
-ALTER TABLE public."SavedCareerProfiles" DROP CONSTRAINT "FK_SavedCareerProfiles_AspNetUsers_AspNetUserId_1458104235";
-
-ALTER TABLE public."SavedCareerProfiles" DROP CONSTRAINT "FK_SavedCareerProfiles_NocCodes2021_Id_907150277";
-
-ALTER TABLE public."SavedIndustryProfiles" DROP CONSTRAINT "FK_SavedIndustryProfiles_AspNetUsers_AspNetUserId_1474104292";
-
-ALTER TABLE public."SavedIndustryProfiles" DROP CONSTRAINT "FK_SavedIndustryProfiles_Industries_Id_923150334";
-
-ALTER TABLE public."SavedJobs" DROP CONSTRAINT "FK_SavedJobs_AspNetUsers_AspNetUserId_514100872";
-
-ALTER TABLE public."SavedJobs" DROP CONSTRAINT "FK_SavedJobs_Jobs_JobId_1362103893";
-
-ALTER TABLE public."SystemSettings" DROP CONSTRAINT "FK_SystemSettings_AdminUsers_ModifiedByAdminUserId_1490104349";
-
--- ------------ Write DROP-CONSTRAINT-stage scripts -----------
-
-ALTER TABLE public."AdminUsers" DROP CONSTRAINT "PK_AdminUsers_322100188";
-
-ALTER TABLE public."AspNetRoleClaims" DROP CONSTRAINT "PK_AspNetRoleClaims_1813581499";
-
-ALTER TABLE public."AspNetRoles" DROP CONSTRAINT "PK_AspNetRoles_1749581271";
-
-ALTER TABLE public."AspNetUserClaims" DROP CONSTRAINT "PK_AspNetUserClaims_1861581670";
-
-ALTER TABLE public."AspNetUserLogins" DROP CONSTRAINT "PK_AspNetUserLogins_418100530";
-
-ALTER TABLE public."AspNetUserRoles" DROP CONSTRAINT "PK_AspNetUserRoles_1957582012";
-
-ALTER TABLE public."AspNetUserTokens" DROP CONSTRAINT "PK_AspNetUserTokens_402100473";
-
-ALTER TABLE public."AspNetUsers" DROP CONSTRAINT "PK_AspNetUsers_1781581385";
-
-ALTER TABLE public."Countries" DROP CONSTRAINT "PK_Countries_398624463";
-
-ALTER TABLE public."DataProtectionKeys" DROP CONSTRAINT "PK_DataProtectionKeys_2078630448";
-
-ALTER TABLE public."DeletedJobs" DROP CONSTRAINT "PK_DeletedJobs_958626458";
-
-ALTER TABLE public."ExpiredJobs" DROP CONSTRAINT "PK_ExpiredJobs_1710629137";
-
-ALTER TABLE public."GeocodedLocationCache" DROP CONSTRAINT "PK_GeocodedLocationCache_1669580986";
-
-ALTER TABLE public."ImpersonationLog" DROP CONSTRAINT "PK_ImpersonationLog_1022626686";
-
-ALTER TABLE public."ImportedJobsFederal" DROP CONSTRAINT "PK_ImportedJobsFederal_290100074";
-
-ALTER TABLE public."ImportedJobsWanted" DROP CONSTRAINT "PK_ImportedJobsWanted_1509580416";
-
-ALTER TABLE public."Industries" DROP CONSTRAINT "PK_NaicsCodes_2146106686";
-
-ALTER TABLE public."JobAlerts" DROP CONSTRAINT "PK_JobAlerts_1106102981";
-
-ALTER TABLE public."JobIds" DROP CONSTRAINT "PK_JobIds_1538104520";
-
-ALTER TABLE public."JobSeekerAdminComments" DROP CONSTRAINT "PK_JobSeekerAdminComments_1874105717";
-
-ALTER TABLE public."JobSeekerChangeLog" DROP CONSTRAINT "PK_JobSeekerChangeLog_1646628909";
-
-ALTER TABLE public."JobSeekerEventLog" DROP CONSTRAINT "PK_JobSeekerEventLog_2002106173";
-
-ALTER TABLE public."JobSeekerFlags" DROP CONSTRAINT "PK_JobSeekerFlags_98099390";
-
-ALTER TABLE public."JobSeekerStatLabels" DROP CONSTRAINT "PK_JobSeekerStatLabels_1438628168";
-
-ALTER TABLE public."JobSeekerStats" DROP CONSTRAINT "PK_JobSeekerStats_1406628054";
-
-ALTER TABLE public."JobSeekerVersions" DROP CONSTRAINT "PK_JobSeekerVersions_286624064";
-
-ALTER TABLE public."JobSources" DROP CONSTRAINT "PK_JobSources_734625660";
-
-ALTER TABLE public."JobStats" DROP CONSTRAINT "PK_JobStats_1342627826";
-
-ALTER TABLE public."JobVersions" DROP CONSTRAINT "PK_JobVersions_46623209";
-
-ALTER TABLE public."JobViews" DROP CONSTRAINT "PK_JobViews_786101841";
-
-ALTER TABLE public."Jobs" DROP CONSTRAINT "PK_Jobs_802101898";
-
-ALTER TABLE public."Locations" DROP CONSTRAINT "PK_LocationLookups_466100701";
-
-ALTER TABLE public."NocCategories" DROP CONSTRAINT "PK_NocCategories_2114106572";
-
-ALTER TABLE public."NocCategories2021" DROP CONSTRAINT "PK_NocCategories2021_955150448";
-
-ALTER TABLE public."NocCodes" DROP CONSTRAINT "PK_NocCodes_1634104862";
-
-ALTER TABLE public."NocCodes2021" DROP CONSTRAINT "PK_NocCodes2021_859150106";
-
-ALTER TABLE public."Provinces" DROP CONSTRAINT "PK_Provinces_142623551";
-
-ALTER TABLE public."Regions" DROP CONSTRAINT "PK_Regions_174623665";
-
-ALTER TABLE public."ReportPersistenceControl" DROP CONSTRAINT "PK_ReportPersistenceControl_1566628624";
-
-ALTER TABLE public."SavedCareerProfiles" DROP CONSTRAINT "PK_SavedCareerProfiles_1250103494";
-
-ALTER TABLE public."SavedIndustryProfiles" DROP CONSTRAINT "PK_SavedIndustryProfiles_1282103608";
-
-ALTER TABLE public."SavedJobs" DROP CONSTRAINT "PK_SavedJobs_498100815";
-
-ALTER TABLE public."SecurityQuestions" DROP CONSTRAINT "PK_SecurityQuestions_770101784";
-
-ALTER TABLE public."SystemSettings" DROP CONSTRAINT "PK_SystemSettings_1678629023";
-
-ALTER TABLE public."WeeklyPeriods" DROP CONSTRAINT "PK_WeeklyPeriods_542624976";
-
-ALTER TABLE public."__EFMigrationsHistory" DROP CONSTRAINT "PK___EFMigrationsHistory_1221579390";
-
--- ------------ Write DROP-INDEX-stage scripts -----------
-
-DROP INDEX IF EXISTS public."IX_AdminUsers_IX_AdminUsers_LockedByAdminUserId";
-
-DROP INDEX IF EXISTS public."IX_AdminUsers_IX_AdminUsers_ModifiedByAdminUserId";
-
-DROP INDEX IF EXISTS public."IX_AspNetRoleClaims_IX_AspNetRoleClaims_RoleId";
-
-DROP INDEX IF EXISTS public."IX_AspNetRoles_RoleNameIndex";
-
-DROP INDEX IF EXISTS public."IX_AspNetUserClaims_IX_AspNetUserClaims_UserId";
-
-DROP INDEX IF EXISTS public."IX_AspNetUserLogins_IX_AspNetUserLogins_UserId";
-
-DROP INDEX IF EXISTS public."IX_AspNetUserRoles_IX_AspNetUserRoles_RoleId";
-
-DROP INDEX IF EXISTS public."IX_AspNetUsers_EmailIndex";
-
-DROP INDEX IF EXISTS public."IX_AspNetUsers_IX_AspNetUsers_AccountStatus_LastName_FirstName";
-
-DROP INDEX IF EXISTS public."IX_AspNetUsers_IX_AspNetUsers_CountryId";
-
-DROP INDEX IF EXISTS public."IX_AspNetUsers_IX_AspNetUsers_DateRegistered";
-
-DROP INDEX IF EXISTS public."IX_AspNetUsers_IX_AspNetUsers_Email";
-
-DROP INDEX IF EXISTS public."IX_AspNetUsers_IX_AspNetUsers_FirstName_LastName";
-
-DROP INDEX IF EXISTS public."IX_AspNetUsers_IX_AspNetUsers_LastModified";
-
-DROP INDEX IF EXISTS public."IX_AspNetUsers_IX_AspNetUsers_LastName_FirstName";
-
-DROP INDEX IF EXISTS public."IX_AspNetUsers_IX_AspNetUsers_LocationId";
-
-DROP INDEX IF EXISTS public."IX_AspNetUsers_IX_AspNetUsers_LockedByAdminUserId";
-
-DROP INDEX IF EXISTS public."IX_AspNetUsers_IX_AspNetUsers_ProvinceId";
-
-DROP INDEX IF EXISTS public."IX_AspNetUsers_IX_AspNetUsers_SecurityQuestionId";
-
-DROP INDEX IF EXISTS public."IX_AspNetUsers_UserNameIndex";
-
-DROP INDEX IF EXISTS public."IX_DeletedJobs_IX_DeletedJobs_DeletedByAdminUserId";
-
-DROP INDEX IF EXISTS public."IX_GeocodedLocationCache_IX_GeocodedLocationCache_Name";
-
-DROP INDEX IF EXISTS public."IX_ImpersonationLog_IX_ImpersonationLog_AdminUserId";
-
-DROP INDEX IF EXISTS public."IX_ImpersonationLog_IX_ImpersonationLog_AspNetUserId";
-
-DROP INDEX IF EXISTS public."IX_ImportedJobsWanted_IX_ImportedJobsWanted_HashId";
-
-DROP INDEX IF EXISTS public."IX_JobAlerts_IX_JobAlerts_AspNetUserId";
-
-DROP INDEX IF EXISTS public."IX_JobAlerts_IX_JobAlerts_DateCreated";
-
-DROP INDEX IF EXISTS public."IX_JobIds_IX_JobIds_JobSourceId";
-
-DROP INDEX IF EXISTS public."IX_JobSeekerAdminComments_IX_JobSeekerAdminComments_AspNetUserId";
-
-DROP INDEX IF EXISTS public."IX_JobSeekerAdminComments_IX_JobSeekerAdminComments_EnteredByAdminUserId";
-
-DROP INDEX IF EXISTS public."IX_JobSeekerChangeLog_IX_JobSeekerChangeLog_AspNetUserId";
-
-DROP INDEX IF EXISTS public."IX_JobSeekerChangeLog_IX_JobSeekerChangeLog_ModifiedByAdminUserId";
-
-DROP INDEX IF EXISTS public."IX_JobSeekerEventLog_IX_JobSeekerEventLog_AspNetUserId";
-
-DROP INDEX IF EXISTS public."IX_JobSeekerEventLog_IX_JobSeekerEventLog_DateLogged";
-
-DROP INDEX IF EXISTS public."IX_JobSeekerFlags_IX_JobSeekerFlags_AspNetUserId";
-
-DROP INDEX IF EXISTS public."IX_JobSeekerStats_IX_JobSeekerStats_LabelKey";
-
-DROP INDEX IF EXISTS public."IX_JobSeekerStats_IX_JobSeekerStats_RegionId";
-
-DROP INDEX IF EXISTS public."IX_JobSeekerVersions_IX_JobSeekerVersions_AspNetUserId_VersionNumber";
-
-DROP INDEX IF EXISTS public."IX_JobSeekerVersions_IX_JobSeekerVersions_CountryId";
-
-DROP INDEX IF EXISTS public."IX_JobSeekerVersions_IX_JobSeekerVersions_LocationId";
-
-DROP INDEX IF EXISTS public."IX_JobSeekerVersions_IX_JobSeekerVersions_ProvinceId";
-
-DROP INDEX IF EXISTS public."IX_JobStats_IX_JobStats_JobSourceId";
-
-DROP INDEX IF EXISTS public."IX_JobStats_IX_JobStats_RegionId";
-
-DROP INDEX IF EXISTS public."IX_JobVersions_IX_JobVersions_JobId_VersionNumber";
-
-DROP INDEX IF EXISTS public."IX_JobVersions_IX_JobVersions_LocationId";
-
-DROP INDEX IF EXISTS public."IX_JobVersions_IX_JobVersions_NaicsId";
-
-DROP INDEX IF EXISTS public."IX_JobVersions_IX_JobVersions_NocCodeId";
-
-DROP INDEX IF EXISTS public."IX_Jobs_IX_Jobs_JobSourceId";
-
-DROP INDEX IF EXISTS public."IX_Jobs_IX_Jobs_LocationId";
-
-DROP INDEX IF EXISTS public."IX_Jobs_IX_Jobs_NaicsId";
-
-DROP INDEX IF EXISTS public."IX_Jobs_IX_Jobs_NocCodeId";
-
-DROP INDEX IF EXISTS public."IX_Locations_IX_LocationLookups_RegionId";
-
-DROP INDEX IF EXISTS public."IX_SavedCareerProfiles_IX_SavedCareerProfiles_AspNetUserId";
-
-DROP INDEX IF EXISTS public."IX_SavedCareerProfiles_IX_SavedCareerProfiles_DateDeleted";
-
-DROP INDEX IF EXISTS public."IX_SavedCareerProfiles_IX_SavedCareerProfiles_DateSaved";
-
-DROP INDEX IF EXISTS public."IX_SavedIndustryProfiles_IX_SavedIndustryProfiles_AspNetUserId";
-
-DROP INDEX IF EXISTS public."IX_SavedIndustryProfiles_IX_SavedIndustryProfiles_DateDeleted";
-
-DROP INDEX IF EXISTS public."IX_SavedIndustryProfiles_IX_SavedIndustryProfiles_DateSaved";
-
-DROP INDEX IF EXISTS public."IX_SavedJobs_IX_SavedJobs_AspNetUserId";
-
-DROP INDEX IF EXISTS public."IX_SavedJobs_IX_SavedJobs_JobId";
-
-DROP INDEX IF EXISTS public."IX_SystemSettings_IX_SystemSettings_ModifiedByAdminUserId";
-
-DROP INDEX IF EXISTS public."IX_WeeklyPeriods_IX_WeeklyPeriods_WeekEndDate";
-
--- ------------ Write DROP-TABLE-stage scripts -----------
-
-DROP TABLE IF EXISTS public."AdminUsers";
-
-DROP TABLE IF EXISTS public."AspNetRoleClaims";
-
-DROP TABLE IF EXISTS public."AspNetRoles";
-
-DROP TABLE IF EXISTS public."AspNetUserClaims";
-
-DROP TABLE IF EXISTS public."AspNetUserLogins";
-
-DROP TABLE IF EXISTS public."AspNetUserRoles";
-
-DROP TABLE IF EXISTS public."AspNetUserTokens";
-
-DROP TABLE IF EXISTS public."AspNetUsers";
-
-DROP TABLE IF EXISTS public."Countries";
-
-DROP TABLE IF EXISTS public."DataProtectionKeys";
-
-DROP TABLE IF EXISTS public."DeletedJobs";
-
-DROP TABLE IF EXISTS public."ExpiredJobs";
-
-DROP TABLE IF EXISTS public."GeocodedLocationCache";
-
-DROP TABLE IF EXISTS public."ImpersonationLog";
-
-DROP TABLE IF EXISTS public."ImportedJobsFederal";
-
-DROP TABLE IF EXISTS public."ImportedJobsWanted";
-
-DROP TABLE IF EXISTS public."Industries";
-
-DROP TABLE IF EXISTS public."JobAlerts";
-
-DROP TABLE IF EXISTS public."JobIds";
-
-DROP TABLE IF EXISTS public."JobBankUserImport";
-
-DROP TABLE IF EXISTS public."JobSeekerAdminComments";
-
-DROP TABLE IF EXISTS public."JobSeekerChangeLog";
-
-DROP TABLE IF EXISTS public."JobSeekerEventLog";
-
-DROP TABLE IF EXISTS public."JobSeekerFlags";
-
-DROP TABLE IF EXISTS public."JobSeekerStatLabels";
-
-DROP TABLE IF EXISTS public."JobSeekerStats";
-
-DROP TABLE IF EXISTS public."JobSeekerVersions";
-
-DROP TABLE IF EXISTS public."JobSources";
-
-DROP TABLE IF EXISTS public."JobStats";
-
-DROP TABLE IF EXISTS public."JobVersions";
-
-DROP TABLE IF EXISTS public."JobViews";
-
-DROP TABLE IF EXISTS public."Jobs";
-
-DROP TABLE IF EXISTS public."Locations";
-
-DROP TABLE IF EXISTS public."NocCategories";
-
-DROP TABLE IF EXISTS public."NocCategories2021";
-
-DROP TABLE IF EXISTS public."NocCodes";
-
-DROP TABLE IF EXISTS public."NocCodes2021";
-
-DROP TABLE IF EXISTS public."Provinces";
-
-DROP TABLE IF EXISTS public."Regions";
-
-DROP TABLE IF EXISTS public."ReportPersistenceControl";
-
-DROP TABLE IF EXISTS public."SavedCareerProfiles";
-
-DROP TABLE IF EXISTS public."SavedIndustryProfiles";
-
-DROP TABLE IF EXISTS public."SavedJobs";
-
-DROP TABLE IF EXISTS public."SecurityQuestions";
-
-DROP TABLE IF EXISTS public."SystemSettings";
-
-DROP TABLE IF EXISTS public."WeeklyPeriods";
-
-DROP TABLE IF EXISTS public."__EFMigrationsHistory";
-
--- ------------ Write DROP-DATABASE-stage scripts -----------
-
--- ------------ Write CREATE-DATABASE-stage scripts -----------
-
-CREATE SCHEMA IF NOT EXISTS public;
-
--- ------------ Write CREATE-TABLE-stage scripts -----------
-
-CREATE TABLE public."AdminUsers"(
-    "Id" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "SamAccountName" VARCHAR(20),
-    "DisplayName" VARCHAR(60) NOT NULL,
-    "DateUpdated" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "AdminLevel" INTEGER NOT NULL,
-    "DateCreated" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL DEFAULT '0001-01-01T00:00:00.0000000',
-    "Deleted" NUMERIC(1,0) NOT NULL,
-    "Guid" VARCHAR(40),
-    "DateLocked" TIMESTAMP(6) WITHOUT TIME ZONE,
-    "LockedByAdminUserId" INTEGER,
-    "ModifiedByAdminUserId" INTEGER,
-    "DateLastLogin" TIMESTAMP(6) WITHOUT TIME ZONE,
-    "GivenName" VARCHAR(40),
-    "Surname" VARCHAR(40)
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."AspNetRoleClaims"(
-    "Id" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "RoleId" VARCHAR(450) NOT NULL,
-    "ClaimType" TEXT,
-    "ClaimValue" TEXT
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."AspNetRoles"(
-    "Id" VARCHAR(450) NOT NULL,
-    "Name" VARCHAR(256),
-    "NormalizedName" VARCHAR(256),
-    "ConcurrencyStamp" TEXT
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."AspNetUserClaims"(
-    "Id" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "UserId" VARCHAR(450) NOT NULL,
-    "ClaimType" TEXT,
-    "ClaimValue" TEXT
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."AspNetUserLogins"(
-    "LoginProvider" VARCHAR(128) NOT NULL,
-    "ProviderKey" VARCHAR(128) NOT NULL,
-    "ProviderDisplayName" TEXT,
-    "UserId" VARCHAR(450) NOT NULL
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."AspNetUserRoles"(
-    "UserId" VARCHAR(450) NOT NULL,
-    "RoleId" VARCHAR(450) NOT NULL
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."AspNetUserTokens"(
-    "UserId" VARCHAR(450) NOT NULL,
-    "LoginProvider" VARCHAR(128) NOT NULL,
-    "Name" VARCHAR(128) NOT NULL,
-    "Value" TEXT
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."AspNetUsers"(
-    "Id" VARCHAR(450) NOT NULL,
-    "UserName" VARCHAR(256),
-    "NormalizedUserName" VARCHAR(256),
-    "Email" VARCHAR(256),
-    "NormalizedEmail" VARCHAR(256),
-    "EmailConfirmed" NUMERIC(1,0) NOT NULL,
-    "PasswordHash" TEXT,
-    "SecurityStamp" TEXT,
-    "ConcurrencyStamp" TEXT,
-    "PhoneNumber" TEXT,
-    "PhoneNumberConfirmed" NUMERIC(1,0) NOT NULL,
-    "TwoFactorEnabled" NUMERIC(1,0) NOT NULL,
-    "LockoutEnd" TIMESTAMP(6) WITH TIME ZONE,
-    "LockoutEnabled" NUMERIC(1,0) NOT NULL,
-    "AccessFailedCount" INTEGER NOT NULL,
-    "LocationId" INTEGER,
-    "City" VARCHAR(50),
-    "CountryId" INTEGER,
-    "FirstName" VARCHAR(50),
-    "LastName" VARCHAR(50),
-    "LegacyWebUserId" INTEGER,
-    "ProvinceId" INTEGER,
-    "AccountStatus" SMALLINT NOT NULL,
-    "DateRegistered" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL DEFAULT '0001-01-01T00:00:00.0000000',
-    "LastLogon" TIMESTAMP(6) WITHOUT TIME ZONE,
-    "LastModified" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL DEFAULT '0001-01-01T00:00:00.0000000',
-    "VerificationGuid" UUID,
-    "SecurityAnswer" VARCHAR(50),
-    "SecurityQuestionId" INTEGER,
-    "DateLocked" TIMESTAMP(6) WITHOUT TIME ZONE,
-    "LockedByAdminUserId" INTEGER
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."Countries"(
-    "Id" INTEGER NOT NULL,
-    "Name" VARCHAR(50),
-    "CountryTwoLetterCode" VARCHAR(2),
-    "SortOrder" SMALLINT NOT NULL
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."DataProtectionKeys"(
-    "Id" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "FriendlyName" TEXT,
-    "Xml" TEXT
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."DeletedJobs"(
-    "JobId" BIGINT NOT NULL,
-    "DeletedByAdminUserId" INTEGER NOT NULL,
-    "DateDeleted" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."ExpiredJobs"(
-    "JobId" BIGINT NOT NULL,
-    "RemovedFromElasticsearch" NUMERIC(1,0) NOT NULL,
-    "DateRemoved" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."GeocodedLocationCache"(
-    "Id" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "Name" VARCHAR(120),
-    "Latitude" VARCHAR(25),
-    "Longitude" VARCHAR(25),
-    "DateGeocoded" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "IsPermanent" NUMERIC(1,0) NOT NULL,
-    "City" VARCHAR(80),
-    "Province" VARCHAR(2),
-    "FrenchCity" VARCHAR(80)
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."ImpersonationLog"(
-    "Token" VARCHAR(200) NOT NULL,
-    "AspNetUserId" VARCHAR(450),
-    "AdminUserId" INTEGER NOT NULL,
-    "DateTokenCreated" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."ImportedJobsFederal"(
-    "JobId" BIGINT NOT NULL,
-    "ApiDate" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "DateFirstImported" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "JobPostEnglish" TEXT,
-    "JobPostFrench" TEXT,
-    "ReIndexNeeded" NUMERIC(1,0) NOT NULL,
-    "DisplayUntil" TIMESTAMP(6) WITHOUT TIME ZONE,
-    "DateLastImported" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL DEFAULT '0001-01-01T00:00:00.0000000'
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."ImportedJobsWanted"(
-    "JobId" BIGINT NOT NULL,
-    "JobPostEnglish" TEXT,
-    "DateFirstImported" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "ApiDate" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "ReIndexNeeded" NUMERIC(1,0) NOT NULL,
-    "DateLastImported" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL DEFAULT '0001-01-01T00:00:00.0000000',
-    "IsFederalOrWorkBc" NUMERIC(1,0) NOT NULL,
-    "HashId" BIGINT NOT NULL,
-    "DateLastSeen" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL DEFAULT '0001-01-01T00:00:00.0000000'
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."Industries"(
-    "Id" SMALLINT NOT NULL,
-    "Title" VARCHAR(150),
-    "TitleBC" VARCHAR(150)
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."JobAlerts"(
-    "Id" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "Title" VARCHAR(50),
-    "AlertFrequency" SMALLINT NOT NULL,
-    "UrlParameters" VARCHAR(1000),
-    "DateCreated" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "DateModified" TIMESTAMP(6) WITHOUT TIME ZONE,
-    "DateDeleted" TIMESTAMP(6) WITHOUT TIME ZONE,
-    "IsDeleted" NUMERIC(1,0) NOT NULL,
-    "AspNetUserId" VARCHAR(450),
-    "JobSearchFilters" TEXT,
-    "JobSearchFiltersVersion" INTEGER NOT NULL DEFAULT (0)
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."JobIds"(
-    "Id" BIGINT NOT NULL,
-    "DateFirstImported" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "JobSourceId" SMALLINT NOT NULL
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."JobBankUserImport"(
-    "LegacyWebUserId" INTEGER NOT NULL,
-    "Email" VARCHAR(150) NOT NULL,
-    "Password" VARCHAR(150) NOT NULL,
-    "AccountStatus" INTEGER NOT NULL,
-    "VerificationGuid" UUID,
-    "LastModified" TIMESTAMP WITHOUT TIME ZONE,
-    "DateCreated" TIMESTAMP WITHOUT TIME ZONE,
-    "FirstName" VARCHAR(50),
-    "LastName" VARCHAR(50),
-    "LastLogon" TIMESTAMP(6) WITHOUT TIME ZONE,
-    "LocationId" INTEGER,
-    "City" VARCHAR(100),
-    "CountryId" INTEGER,
-    "ProvinceId" INTEGER,
-    "IsIndigenousPerson" NUMERIC(1,0),
-    "IsPersonWithDisability" NUMERIC(1,0),
-    "IsMatureWorker" NUMERIC(1,0),
-    "IsReservist" NUMERIC(1,0),
-    "IsApprentice" NUMERIC(1,0)
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."JobSeekerAdminComments"(
-    "Id" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "AspNetUserId" VARCHAR(450),
-    "Comment" TEXT,
-    "IsPinned" NUMERIC(1,0) NOT NULL,
-    "EnteredByAdminUserId" INTEGER NOT NULL,
-    "DateEntered" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."JobSeekerChangeLog"(
-    "Id" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "AspNetUserId" VARCHAR(450),
-    "Field" VARCHAR(100),
-    "OldValue" TEXT,
-    "NewValue" TEXT,
-    "ModifiedByAdminUserId" INTEGER,
-    "DateUpdated" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."JobSeekerEventLog"(
-    "Id" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "AspNetUserId" VARCHAR(450),
-    "EventTypeId" INTEGER NOT NULL,
-    "DateLogged" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."JobSeekerFlags"(
-    "Id" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "AspNetUserId" VARCHAR(450),
-    "IsApprentice" NUMERIC(1,0) NOT NULL,
-    "IsIndigenousPerson" NUMERIC(1,0) NOT NULL,
-    "IsMatureWorker" NUMERIC(1,0) NOT NULL,
-    "IsNewImmigrant" NUMERIC(1,0) NOT NULL,
-    "IsPersonWithDisability" NUMERIC(1,0) NOT NULL,
-    "IsStudent" NUMERIC(1,0) NOT NULL,
-    "IsVeteran" NUMERIC(1,0) NOT NULL,
-    "IsVisibleMinority" NUMERIC(1,0) NOT NULL,
-    "IsYouth" NUMERIC(1,0) NOT NULL
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."JobSeekerStatLabels"(
-    "Key" VARCHAR(4) NOT NULL,
-    "Label" VARCHAR(100),
-    "IsTotal" NUMERIC(1,0) NOT NULL
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."JobSeekerStats"(
-    "WeeklyPeriodId" INTEGER NOT NULL,
-    "Value" INTEGER NOT NULL,
-    "RegionId" INTEGER NOT NULL,
-    "LabelKey" VARCHAR(4) NOT NULL DEFAULT ''
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."JobSeekerVersions"(
-    "Id" BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "AspNetUserId" VARCHAR(450),
-    "CountryId" INTEGER,
-    "ProvinceId" INTEGER,
-    "LocationId" INTEGER,
-    "DateRegistered" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "AccountStatus" SMALLINT NOT NULL,
-    "EmailConfirmed" NUMERIC(1,0) NOT NULL,
-    "IsApprentice" NUMERIC(1,0) NOT NULL,
-    "IsIndigenousPerson" NUMERIC(1,0) NOT NULL,
-    "IsMatureWorker" NUMERIC(1,0) NOT NULL,
-    "IsNewImmigrant" NUMERIC(1,0) NOT NULL,
-    "IsPersonWithDisability" NUMERIC(1,0) NOT NULL,
-    "IsStudent" NUMERIC(1,0) NOT NULL,
-    "IsVeteran" NUMERIC(1,0) NOT NULL,
-    "IsVisibleMinority" NUMERIC(1,0) NOT NULL,
-    "IsYouth" NUMERIC(1,0) NOT NULL,
-    "DateVersionStart" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "DateVersionEnd" TIMESTAMP(6) WITHOUT TIME ZONE,
-    "IsCurrentVersion" NUMERIC(1,0) NOT NULL,
-    "VersionNumber" SMALLINT NOT NULL,
-    "Email" VARCHAR(256)
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."JobSources"(
-    "Id" SMALLINT NOT NULL,
-    "Name" VARCHAR(50),
-    "GroupName" VARCHAR(50),
-    "ListOrder" SMALLINT NOT NULL
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."JobStats"(
-    "WeeklyPeriodId" INTEGER NOT NULL,
-    "JobSourceId" SMALLINT NOT NULL,
-    "RegionId" INTEGER NOT NULL,
-    "JobPostings" INTEGER NOT NULL,
-    "PositionsAvailable" INTEGER NOT NULL
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."JobVersions"(
-    "Id" BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "JobId" BIGINT NOT NULL,
-    "LocationId" INTEGER NOT NULL,
-    "NocCodeId" SMALLINT,
-    "IndustryId" SMALLINT,
-    "PositionsAvailable" SMALLINT NOT NULL,
-    "DatePosted" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "IsActive" NUMERIC(1,0) NOT NULL,
-    "DateVersionStart" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "DateVersionEnd" TIMESTAMP(6) WITHOUT TIME ZONE,
-    "IsCurrentVersion" NUMERIC(1,0) NOT NULL,
-    "VersionNumber" SMALLINT NOT NULL,
-    "ActualDatePosted" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL DEFAULT '0001-01-01T00:00:00.0000000',
-    "DateFirstImported" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL DEFAULT '0001-01-01T00:00:00.0000000',
-    "JobSourceId" SMALLINT NOT NULL,
-    "NocCodeId2021" INTEGER
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."JobViews"(
-    "JobId" BIGINT NOT NULL,
-    "Views" INTEGER,
-    "DateLastViewed" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."Jobs"(
-    "JobId" BIGINT NOT NULL,
-    "Title" VARCHAR(300),
-    "NocCodeId" SMALLINT,
-    "PositionsAvailable" SMALLINT NOT NULL,
-    "EmployerName" VARCHAR(100),
-    "DatePosted" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "Casual" NUMERIC(1,0) NOT NULL,
-    "City" VARCHAR(120),
-    "ExpireDate" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL DEFAULT '0001-01-01T00:00:00.0000000',
-    "FullTime" NUMERIC(1,0) NOT NULL,
-    "LastUpdated" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL DEFAULT '0001-01-01T00:00:00.0000000',
-    "LeadingToFullTime" NUMERIC(1,0) NOT NULL,
-    "LocationId" INTEGER NOT NULL DEFAULT (0),
-    "IndustryId" SMALLINT,
-    "PartTime" NUMERIC(1,0) NOT NULL,
-    "Permanent" NUMERIC(1,0) NOT NULL,
-    "Salary" NUMERIC(18,2),
-    "SalarySummary" VARCHAR(60),
-    "Seasonal" NUMERIC(1,0) NOT NULL,
-    "Temporary" NUMERIC(1,0) NOT NULL,
-    "DateFirstImported" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL DEFAULT '0001-01-01T00:00:00.0000000',
-    "IsActive" NUMERIC(1,0) NOT NULL,
-    "DateLastImported" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL DEFAULT '0001-01-01T00:00:00.0000000',
-    "JobSourceId" SMALLINT NOT NULL,
-    "OriginalSource" VARCHAR(100),
-    "ExternalSourceUrl" VARCHAR(800),
-    "ActualDatePosted" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL DEFAULT '0001-01-01T00:00:00.0000000',
-    "NocCodeId2021" INTEGER
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."Locations"(
-    "LocationId" INTEGER NOT NULL,
-    "EDM_Location_DistrictLocationId" INTEGER NOT NULL,
-    "RegionId" INTEGER,
-    "FederalCityId" INTEGER,
-    "City" VARCHAR(50),
-    "Label" VARCHAR(50),
-    "IsDuplicate" NUMERIC(1,0) NOT NULL,
-    "IsHidden" NUMERIC(1,0) NOT NULL,
-    "Latitude" VARCHAR(25),
-    "Longitude" VARCHAR(25),
-    "BcStatsPlaceId" INTEGER
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."NocCategories"(
-    "CategoryCode" VARCHAR(3) NOT NULL,
-    "Level" SMALLINT NOT NULL,
-    "Title" VARCHAR(150)
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."NocCategories2021"(
-    "CategoryCode" VARCHAR(4) NOT NULL,
-    "Level" SMALLINT NOT NULL,
-    "Title" VARCHAR(150)
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."NocCodes"(
-    "Code" VARCHAR(4),
-    "Title" VARCHAR(150),
-    "Id" SMALLINT NOT NULL,
-    "FrenchTitle" VARCHAR(180)
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."NocCodes2021"(
-    "Id" INTEGER NOT NULL,
-    "Code" VARCHAR(5),
-    "Title" VARCHAR(150),
-    "FrenchTitle" VARCHAR(250),
-    "Code2016" VARCHAR(30)
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."Provinces"(
-    "ProvinceId" INTEGER NOT NULL,
-    "Name" VARCHAR(50),
-    "ShortName" VARCHAR(2)
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."Regions"(
-    "Id" INTEGER NOT NULL,
-    "Name" VARCHAR(50),
-    "ListOrder" SMALLINT NOT NULL,
-    "IsHidden" NUMERIC(1,0) NOT NULL
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."ReportPersistenceControl"(
-    "WeeklyPeriodId" INTEGER NOT NULL,
-    "DateCalculated" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "IsTotalToDate" NUMERIC(1,0) NOT NULL,
-    "TableName" VARCHAR(25) NOT NULL DEFAULT ''
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."SavedCareerProfiles"(
-    "Id" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "EDM_CareerProfile_CareerProfileId" INTEGER,
-    "AspNetUserId" VARCHAR(450),
-    "DateSaved" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "DateDeleted" TIMESTAMP(6) WITHOUT TIME ZONE,
-    "IsDeleted" NUMERIC(1,0) NOT NULL,
-    "NocCodeId2021" INTEGER
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."SavedIndustryProfiles"(
-    "Id" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "AspNetUserId" VARCHAR(450),
-    "DateSaved" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "DateDeleted" TIMESTAMP(6) WITHOUT TIME ZONE,
-    "IsDeleted" NUMERIC(1,0) NOT NULL,
-    "IndustryId" SMALLINT
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."SavedJobs"(
-    "Id" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "JobId" BIGINT NOT NULL,
-    "AspNetUserId" VARCHAR(450),
-    "DateSaved" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "DateDeleted" TIMESTAMP(6) WITHOUT TIME ZONE,
-    "IsDeleted" NUMERIC(1,0) NOT NULL,
-    "Note" VARCHAR(800),
-    "NoteUpdatedDate" TIMESTAMP(6) WITHOUT TIME ZONE
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."SecurityQuestions"(
-    "Id" INTEGER NOT NULL,
-    "QuestionText" VARCHAR(40)
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."SystemSettings"(
-    "Name" VARCHAR(400) NOT NULL,
-    "Value" TEXT,
-    "Description" TEXT,
-    "FieldType" INTEGER NOT NULL,
-    "ModifiedByAdminUserId" INTEGER NOT NULL,
-    "DateUpdated" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "DefaultValue" TEXT
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."WeeklyPeriods"(
-    "Id" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY,
-    "CalendarYear" SMALLINT NOT NULL,
-    "CalendarMonth" SMALLINT NOT NULL,
-    "FiscalYear" SMALLINT NOT NULL,
-    "WeekOfMonth" SMALLINT NOT NULL,
-    "WeekStartDate" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "WeekEndDate" TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL,
-    "IsEndOfFiscalYear" NUMERIC(1,0) NOT NULL,
-    "IsEndOfMonth" NUMERIC(1,0) NOT NULL
-)
-        WITH (
-        OIDS=FALSE
-        );
-
-CREATE TABLE public."__EFMigrationsHistory"(
-    "MigrationId" VARCHAR(150) NOT NULL,
-    "ProductVersion" VARCHAR(32) NOT NULL
-)
-        WITH (
-        OIDS=FALSE
-        );
-
--- ------------ Write CREATE-INDEX-stage scripts -----------
-
-CREATE INDEX "IX_AdminUsers_IX_AdminUsers_LockedByAdminUserId"
-ON public."AdminUsers"
-USING BTREE ("LockedByAdminUserId" ASC);
-
-CREATE INDEX "IX_AdminUsers_IX_AdminUsers_ModifiedByAdminUserId"
-ON public."AdminUsers"
-USING BTREE ("ModifiedByAdminUserId" ASC);
-
-CREATE INDEX "IX_AspNetRoleClaims_IX_AspNetRoleClaims_RoleId"
-ON public."AspNetRoleClaims"
-USING BTREE ("RoleId" ASC);
-
-CREATE UNIQUE INDEX "IX_AspNetRoles_RoleNameIndex"
-ON public."AspNetRoles"
-USING BTREE ("NormalizedName" ASC)
-WHERE
-("NormalizedName" IS NOT NULL);
-
-CREATE INDEX "IX_AspNetUserClaims_IX_AspNetUserClaims_UserId"
-ON public."AspNetUserClaims"
-USING BTREE ("UserId" ASC);
-
-CREATE INDEX "IX_AspNetUserLogins_IX_AspNetUserLogins_UserId"
-ON public."AspNetUserLogins"
-USING BTREE ("UserId" ASC);
-
-CREATE INDEX "IX_AspNetUserRoles_IX_AspNetUserRoles_RoleId"
-ON public."AspNetUserRoles"
-USING BTREE ("RoleId" ASC);
-
-CREATE INDEX "IX_AspNetUsers_EmailIndex"
-ON public."AspNetUsers"
-USING BTREE ("NormalizedEmail" ASC);
-
-CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_AccountStatus_LastName_FirstName"
-ON public."AspNetUsers"
-USING BTREE ("AccountStatus" ASC, "LastName" ASC, "FirstName" ASC) INCLUDE("Email");
-
-CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_CountryId"
-ON public."AspNetUsers"
-USING BTREE ("CountryId" ASC);
-
-CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_DateRegistered"
-ON public."AspNetUsers"
-USING BTREE ("DateRegistered" ASC) INCLUDE("LastName", "FirstName", "Email", "AccountStatus");
-
-CREATE UNIQUE INDEX "IX_AspNetUsers_IX_AspNetUsers_Email"
-ON public."AspNetUsers"
-USING BTREE ("Email" ASC) INCLUDE("LastName", "FirstName", "AccountStatus")
-WHERE
-("Email" IS NOT NULL);
-
-CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_FirstName_LastName"
-ON public."AspNetUsers"
-USING BTREE ("FirstName" ASC, "LastName" ASC) INCLUDE("Email", "AccountStatus");
-
-CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_LastModified"
-ON public."AspNetUsers"
-USING BTREE ("LastModified" ASC) INCLUDE("LastName", "FirstName", "Email", "AccountStatus");
-
-CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_LastName_FirstName"
-ON public."AspNetUsers"
-USING BTREE ("LastName" ASC, "FirstName" ASC) INCLUDE("Email", "AccountStatus");
-
-CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_LocationId"
-ON public."AspNetUsers"
-USING BTREE ("LocationId" ASC);
-
-CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_LockedByAdminUserId"
-ON public."AspNetUsers"
-USING BTREE ("LockedByAdminUserId" ASC);
-
-CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_ProvinceId"
-ON public."AspNetUsers"
-USING BTREE ("ProvinceId" ASC);
-
-CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_SecurityQuestionId"
-ON public."AspNetUsers"
-USING BTREE ("SecurityQuestionId" ASC);
-
-CREATE UNIQUE INDEX "IX_AspNetUsers_UserNameIndex"
-ON public."AspNetUsers"
-USING BTREE ("NormalizedUserName" ASC)
-WHERE
-("NormalizedUserName" IS NOT NULL);
-
-CREATE INDEX "IX_DeletedJobs_IX_DeletedJobs_DeletedByAdminUserId"
-ON public."DeletedJobs"
-USING BTREE ("DeletedByAdminUserId" ASC);
-
-CREATE UNIQUE INDEX "IX_GeocodedLocationCache_IX_GeocodedLocationCache_Name"
-ON public."GeocodedLocationCache"
-USING BTREE ("Name" ASC)
-WHERE
-("Name" IS NOT NULL);
-
-CREATE INDEX "IX_ImpersonationLog_IX_ImpersonationLog_AdminUserId"
-ON public."ImpersonationLog"
-USING BTREE ("AdminUserId" ASC);
-
-CREATE INDEX "IX_ImpersonationLog_IX_ImpersonationLog_AspNetUserId"
-ON public."ImpersonationLog"
-USING BTREE ("AspNetUserId" ASC);
-
-CREATE UNIQUE INDEX "IX_ImportedJobsWanted_IX_ImportedJobsWanted_HashId"
-ON public."ImportedJobsWanted"
-USING BTREE ("HashId" ASC);
-
-CREATE INDEX "IX_JobAlerts_IX_JobAlerts_AspNetUserId"
-ON public."JobAlerts"
-USING BTREE ("AspNetUserId" ASC);
-
-CREATE INDEX "IX_JobAlerts_IX_JobAlerts_DateCreated"
-ON public."JobAlerts"
-USING BTREE ("DateCreated" ASC);
-
-CREATE INDEX "IX_JobIds_IX_JobIds_JobSourceId"
-ON public."JobIds"
-USING BTREE ("JobSourceId" ASC);
-
-CREATE INDEX "IX_JobSeekerAdminComments_IX_JobSeekerAdminComments_AspNetUserId"
-ON public."JobSeekerAdminComments"
-USING BTREE ("AspNetUserId" ASC);
-
-CREATE INDEX "IX_JobSeekerAdminComments_IX_JobSeekerAdminComments_EnteredByAdminUserId"
-ON public."JobSeekerAdminComments"
-USING BTREE ("EnteredByAdminUserId" ASC);
-
-CREATE INDEX "IX_JobSeekerChangeLog_IX_JobSeekerChangeLog_AspNetUserId"
-ON public."JobSeekerChangeLog"
-USING BTREE ("AspNetUserId" ASC);
-
-CREATE INDEX "IX_JobSeekerChangeLog_IX_JobSeekerChangeLog_ModifiedByAdminUserId"
-ON public."JobSeekerChangeLog"
-USING BTREE ("ModifiedByAdminUserId" ASC);
-
-CREATE INDEX "IX_JobSeekerEventLog_IX_JobSeekerEventLog_AspNetUserId"
-ON public."JobSeekerEventLog"
-USING BTREE ("AspNetUserId" ASC);
-
-CREATE INDEX "IX_JobSeekerEventLog_IX_JobSeekerEventLog_DateLogged"
-ON public."JobSeekerEventLog"
-USING BTREE ("DateLogged" ASC);
-
-CREATE UNIQUE INDEX "IX_JobSeekerFlags_IX_JobSeekerFlags_AspNetUserId"
-ON public."JobSeekerFlags"
-USING BTREE ("AspNetUserId" ASC)
-WHERE
-("AspNetUserId" IS NOT NULL);
-
-CREATE INDEX "IX_JobSeekerStats_IX_JobSeekerStats_LabelKey"
-ON public."JobSeekerStats"
-USING BTREE ("LabelKey" ASC);
-
-CREATE INDEX "IX_JobSeekerStats_IX_JobSeekerStats_RegionId"
-ON public."JobSeekerStats"
-USING BTREE ("RegionId" ASC);
-
-CREATE UNIQUE INDEX "IX_JobSeekerVersions_IX_JobSeekerVersions_AspNetUserId_VersionNumber"
-ON public."JobSeekerVersions"
-USING BTREE ("AspNetUserId" ASC, "VersionNumber" ASC)
-WHERE
-("AspNetUserId" IS NOT NULL);
-
-CREATE INDEX "IX_JobSeekerVersions_IX_JobSeekerVersions_CountryId"
-ON public."JobSeekerVersions"
-USING BTREE ("CountryId" ASC);
-
-CREATE INDEX "IX_JobSeekerVersions_IX_JobSeekerVersions_LocationId"
-ON public."JobSeekerVersions"
-USING BTREE ("LocationId" ASC);
-
-CREATE INDEX "IX_JobSeekerVersions_IX_JobSeekerVersions_ProvinceId"
-ON public."JobSeekerVersions"
-USING BTREE ("ProvinceId" ASC);
-
-CREATE INDEX "IX_JobStats_IX_JobStats_JobSourceId"
-ON public."JobStats"
-USING BTREE ("JobSourceId" ASC);
-
-CREATE INDEX "IX_JobStats_IX_JobStats_RegionId"
-ON public."JobStats"
-USING BTREE ("RegionId" ASC);
-
-CREATE UNIQUE INDEX "IX_JobVersions_IX_JobVersions_JobId_VersionNumber"
-ON public."JobVersions"
-USING BTREE ("JobId" ASC, "VersionNumber" ASC);
-
-CREATE INDEX "IX_JobVersions_IX_JobVersions_LocationId"
-ON public."JobVersions"
-USING BTREE ("LocationId" ASC);
-
-CREATE INDEX "IX_JobVersions_IX_JobVersions_NaicsId"
-ON public."JobVersions"
-USING BTREE ("IndustryId" ASC);
-
-CREATE INDEX "IX_JobVersions_IX_JobVersions_NocCodeId"
-ON public."JobVersions"
-USING BTREE ("NocCodeId" ASC);
-
-CREATE INDEX "IX_Jobs_IX_Jobs_JobSourceId"
-ON public."Jobs"
-USING BTREE ("JobSourceId" ASC);
-
-CREATE INDEX "IX_Jobs_IX_Jobs_LocationId"
-ON public."Jobs"
-USING BTREE ("LocationId" ASC);
-
-CREATE INDEX "IX_Jobs_IX_Jobs_NaicsId"
-ON public."Jobs"
-USING BTREE ("IndustryId" ASC);
-
-CREATE INDEX "IX_Jobs_IX_Jobs_NocCodeId"
-ON public."Jobs"
-USING BTREE ("NocCodeId" ASC);
-
-CREATE INDEX "IX_Locations_IX_LocationLookups_RegionId"
-ON public."Locations"
-USING BTREE ("RegionId" ASC);
-
-CREATE INDEX "IX_SavedCareerProfiles_IX_SavedCareerProfiles_AspNetUserId"
-ON public."SavedCareerProfiles"
-USING BTREE ("AspNetUserId" ASC);
-
-CREATE INDEX "IX_SavedCareerProfiles_IX_SavedCareerProfiles_DateDeleted"
-ON public."SavedCareerProfiles"
-USING BTREE ("DateDeleted" ASC);
-
-CREATE INDEX "IX_SavedCareerProfiles_IX_SavedCareerProfiles_DateSaved"
-ON public."SavedCareerProfiles"
-USING BTREE ("DateSaved" ASC);
-
-CREATE INDEX "IX_SavedIndustryProfiles_IX_SavedIndustryProfiles_AspNetUserId"
-ON public."SavedIndustryProfiles"
-USING BTREE ("AspNetUserId" ASC);
-
-CREATE INDEX "IX_SavedIndustryProfiles_IX_SavedIndustryProfiles_DateDeleted"
-ON public."SavedIndustryProfiles"
-USING BTREE ("DateDeleted" ASC);
-
-CREATE INDEX "IX_SavedIndustryProfiles_IX_SavedIndustryProfiles_DateSaved"
-ON public."SavedIndustryProfiles"
-USING BTREE ("DateSaved" ASC);
-
-CREATE INDEX "IX_SavedJobs_IX_SavedJobs_AspNetUserId"
-ON public."SavedJobs"
-USING BTREE ("AspNetUserId" ASC);
-
-CREATE INDEX "IX_SavedJobs_IX_SavedJobs_JobId"
-ON public."SavedJobs"
-USING BTREE ("JobId" ASC);
-
-CREATE INDEX "IX_SystemSettings_IX_SystemSettings_ModifiedByAdminUserId"
-ON public."SystemSettings"
-USING BTREE ("ModifiedByAdminUserId" ASC);
-
-CREATE INDEX "IX_WeeklyPeriods_IX_WeeklyPeriods_WeekEndDate"
-ON public."WeeklyPeriods"
-USING BTREE ("WeekEndDate" ASC);
-
--- ------------ Write CREATE-CONSTRAINT-stage scripts -----------
-
-ALTER TABLE public."AdminUsers"
-ADD CONSTRAINT "PK_AdminUsers_322100188" PRIMARY KEY ("Id");
-
-ALTER TABLE public."AspNetRoleClaims"
-ADD CONSTRAINT "PK_AspNetRoleClaims_1813581499" PRIMARY KEY ("Id");
-
-ALTER TABLE public."AspNetRoles"
-ADD CONSTRAINT "PK_AspNetRoles_1749581271" PRIMARY KEY ("Id");
-
-ALTER TABLE public."AspNetUserClaims"
-ADD CONSTRAINT "PK_AspNetUserClaims_1861581670" PRIMARY KEY ("Id");
-
-ALTER TABLE public."AspNetUserLogins"
-ADD CONSTRAINT "PK_AspNetUserLogins_418100530" PRIMARY KEY ("ProviderKey");
-
-ALTER TABLE public."AspNetUserRoles"
-ADD CONSTRAINT "PK_AspNetUserRoles_1957582012" PRIMARY KEY ("UserId", "RoleId");
-
-ALTER TABLE public."AspNetUserTokens"
-ADD CONSTRAINT "PK_AspNetUserTokens_402100473" PRIMARY KEY ("Name");
-
-ALTER TABLE public."AspNetUsers"
-ADD CONSTRAINT "PK_AspNetUsers_1781581385" PRIMARY KEY ("Id");
-
-ALTER TABLE public."Countries"
-ADD CONSTRAINT "PK_Countries_398624463" PRIMARY KEY ("Id");
-
-ALTER TABLE public."DataProtectionKeys"
-ADD CONSTRAINT "PK_DataProtectionKeys_2078630448" PRIMARY KEY ("Id");
-
-ALTER TABLE public."DeletedJobs"
-ADD CONSTRAINT "PK_DeletedJobs_958626458" PRIMARY KEY ("JobId");
-
-ALTER TABLE public."ExpiredJobs"
-ADD CONSTRAINT "PK_ExpiredJobs_1710629137" PRIMARY KEY ("JobId");
-
-ALTER TABLE public."GeocodedLocationCache"
-ADD CONSTRAINT "PK_GeocodedLocationCache_1669580986" PRIMARY KEY ("Id");
-
-ALTER TABLE public."ImpersonationLog"
-ADD CONSTRAINT "PK_ImpersonationLog_1022626686" PRIMARY KEY ("Token");
-
-ALTER TABLE public."ImportedJobsFederal"
-ADD CONSTRAINT "PK_ImportedJobsFederal_290100074" PRIMARY KEY ("JobId");
-
-ALTER TABLE public."ImportedJobsWanted"
-ADD CONSTRAINT "PK_ImportedJobsWanted_1509580416" PRIMARY KEY ("JobId");
-
-ALTER TABLE public."Industries"
-ADD CONSTRAINT "PK_NaicsCodes_2146106686" PRIMARY KEY ("Id");
-
-ALTER TABLE public."JobAlerts"
-ADD CONSTRAINT "PK_JobAlerts_1106102981" PRIMARY KEY ("Id");
-
-ALTER TABLE public."JobIds"
-ADD CONSTRAINT "PK_JobIds_1538104520" PRIMARY KEY ("Id");
-
-ALTER TABLE public."JobSeekerAdminComments"
-ADD CONSTRAINT "PK_JobSeekerAdminComments_1874105717" PRIMARY KEY ("Id");
-
-ALTER TABLE public."JobSeekerChangeLog"
-ADD CONSTRAINT "PK_JobSeekerChangeLog_1646628909" PRIMARY KEY ("Id");
-
-ALTER TABLE public."JobSeekerEventLog"
-ADD CONSTRAINT "PK_JobSeekerEventLog_2002106173" PRIMARY KEY ("Id");
-
-ALTER TABLE public."JobSeekerFlags"
-ADD CONSTRAINT "PK_JobSeekerFlags_98099390" PRIMARY KEY ("Id");
-
-ALTER TABLE public."JobSeekerStatLabels"
-ADD CONSTRAINT "PK_JobSeekerStatLabels_1438628168" PRIMARY KEY ("Key");
-
-ALTER TABLE public."JobSeekerStats"
-ADD CONSTRAINT "PK_JobSeekerStats_1406628054" PRIMARY KEY ("WeeklyPeriodId", "LabelKey", "RegionId");
-
-ALTER TABLE public."JobSeekerVersions"
-ADD CONSTRAINT "PK_JobSeekerVersions_286624064" PRIMARY KEY ("Id");
-
-ALTER TABLE public."JobSources"
-ADD CONSTRAINT "PK_JobSources_734625660" PRIMARY KEY ("Id");
-
-ALTER TABLE public."JobStats"
-ADD CONSTRAINT "PK_JobStats_1342627826" PRIMARY KEY ("WeeklyPeriodId", "RegionId", "JobSourceId");
-
-ALTER TABLE public."JobVersions"
-ADD CONSTRAINT "PK_JobVersions_46623209" PRIMARY KEY ("Id");
-
-ALTER TABLE public."JobViews"
-ADD CONSTRAINT "PK_JobViews_786101841" PRIMARY KEY ("JobId");
-
-ALTER TABLE public."Jobs"
-ADD CONSTRAINT "PK_Jobs_802101898" PRIMARY KEY ("JobId");
-
-ALTER TABLE public."Locations"
-ADD CONSTRAINT "PK_LocationLookups_466100701" PRIMARY KEY ("LocationId");
-
-ALTER TABLE public."NocCategories"
-ADD CONSTRAINT "PK_NocCategories_2114106572" PRIMARY KEY ("CategoryCode");
-
-ALTER TABLE public."NocCategories2021"
-ADD CONSTRAINT "PK_NocCategories2021_955150448" PRIMARY KEY ("CategoryCode");
-
-ALTER TABLE public."NocCodes"
-ADD CONSTRAINT "PK_NocCodes_1634104862" PRIMARY KEY ("Id");
-
-ALTER TABLE public."NocCodes2021"
-ADD CONSTRAINT "PK_NocCodes2021_859150106" PRIMARY KEY ("Id");
-
-ALTER TABLE public."Provinces"
-ADD CONSTRAINT "PK_Provinces_142623551" PRIMARY KEY ("ProvinceId");
-
-ALTER TABLE public."Regions"
-ADD CONSTRAINT "PK_Regions_174623665" PRIMARY KEY ("Id");
-
-ALTER TABLE public."ReportPersistenceControl"
-ADD CONSTRAINT "PK_ReportPersistenceControl_1566628624" PRIMARY KEY ("WeeklyPeriodId", "TableName");
-
-ALTER TABLE public."SavedCareerProfiles"
-ADD CONSTRAINT "PK_SavedCareerProfiles_1250103494" PRIMARY KEY ("Id");
-
-ALTER TABLE public."SavedIndustryProfiles"
-ADD CONSTRAINT "PK_SavedIndustryProfiles_1282103608" PRIMARY KEY ("Id");
-
-ALTER TABLE public."SavedJobs"
-ADD CONSTRAINT "PK_SavedJobs_498100815" PRIMARY KEY ("Id");
-
-ALTER TABLE public."SecurityQuestions"
-ADD CONSTRAINT "PK_SecurityQuestions_770101784" PRIMARY KEY ("Id");
-
-ALTER TABLE public."SystemSettings"
-ADD CONSTRAINT "PK_SystemSettings_1678629023" PRIMARY KEY ("Name");
-
-ALTER TABLE public."WeeklyPeriods"
-ADD CONSTRAINT "PK_WeeklyPeriods_542624976" PRIMARY KEY ("Id");
-
-ALTER TABLE public."__EFMigrationsHistory"
-ADD CONSTRAINT "PK___EFMigrationsHistory_1221579390" PRIMARY KEY ("MigrationId");
-
--- ------------ Write CREATE-FOREIGN-KEY-CONSTRAINT-stage scripts -----------
-
-ALTER TABLE public."AdminUsers"
-ADD CONSTRAINT "FK_AdminUsers_AdminUsers_LockedByAdminUserId_1346103836" FOREIGN KEY ("LockedByAdminUserId")
-REFERENCES public."AdminUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."AdminUsers"
-ADD CONSTRAINT "FK_AdminUsers_AdminUsers_ModifiedByAdminUserId_1378103950" FOREIGN KEY ("ModifiedByAdminUserId")
-REFERENCES public."AdminUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."AspNetRoleClaims"
-ADD CONSTRAINT "FK_AspNetRoleClaims_AspNetRoles_RoleId_1829581556" FOREIGN KEY ("RoleId")
-REFERENCES public."AspNetRoles" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."AspNetUserClaims"
-ADD CONSTRAINT "FK_AspNetUserClaims_AspNetUsers_UserId_1877581727" FOREIGN KEY ("UserId")
-REFERENCES public."AspNetUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."AspNetUserLogins"
-ADD CONSTRAINT "FK_AspNetUserLogins_AspNetUsers_UserId_1925581898" FOREIGN KEY ("UserId")
-REFERENCES public."AspNetUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."AspNetUserRoles"
-ADD CONSTRAINT "FK_AspNetUserRoles_AspNetRoles_RoleId_1973582069" FOREIGN KEY ("RoleId")
-REFERENCES public."AspNetRoles" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."AspNetUserRoles"
-ADD CONSTRAINT "FK_AspNetUserRoles_AspNetUsers_UserId_1989582126" FOREIGN KEY ("UserId")
-REFERENCES public."AspNetUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."AspNetUserTokens"
-ADD CONSTRAINT "FK_AspNetUserTokens_AspNetUsers_UserId_2037582297" FOREIGN KEY ("UserId")
-REFERENCES public."AspNetUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."AspNetUsers"
-ADD CONSTRAINT "FK_AspNetUsers_AdminUsers_LockedByAdminUserId_2050106344" FOREIGN KEY ("LockedByAdminUserId")
-REFERENCES public."AdminUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."AspNetUsers"
-ADD CONSTRAINT "FK_AspNetUsers_Countries_CountryId_414624520" FOREIGN KEY ("CountryId")
-REFERENCES public."Countries" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."AspNetUsers"
-ADD CONSTRAINT "FK_AspNetUsers_LocationLookups_LocationId_190623722" FOREIGN KEY ("LocationId")
-REFERENCES public."Locations" ("LocationId")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."AspNetUsers"
-ADD CONSTRAINT "FK_AspNetUsers_Provinces_ProvinceId_206623779" FOREIGN KEY ("ProvinceId")
-REFERENCES public."Provinces" ("ProvinceId")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."AspNetUsers"
-ADD CONSTRAINT "FK_AspNetUsers_SecurityQuestions_SecurityQuestionId_850102069" FOREIGN KEY ("SecurityQuestionId")
-REFERENCES public."SecurityQuestions" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."DeletedJobs"
-ADD CONSTRAINT "FK_DeletedJobs_AdminUsers_DeletedByAdminUserId_974626515" FOREIGN KEY ("DeletedByAdminUserId")
-REFERENCES public."AdminUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."DeletedJobs"
-ADD CONSTRAINT "FK_DeletedJobs_Jobs_JobId_990626572" FOREIGN KEY ("JobId")
-REFERENCES public."Jobs" ("JobId")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."ExpiredJobs"
-ADD CONSTRAINT "FK_ExpiredJobs_JobIds_JobId_1726629194" FOREIGN KEY ("JobId")
-REFERENCES public."JobIds" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."ImpersonationLog"
-ADD CONSTRAINT "FK_ImpersonationLog_AdminUsers_AdminUserId_1038626743" FOREIGN KEY ("AdminUserId")
-REFERENCES public."AdminUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."ImpersonationLog"
-ADD CONSTRAINT "FK_ImpersonationLog_AspNetUsers_AspNetUserId_1054626800" FOREIGN KEY ("AspNetUserId")
-REFERENCES public."AspNetUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."ImportedJobsFederal"
-ADD CONSTRAINT "FK_ImportedJobsFederal_JobIds_JobId_1570104634" FOREIGN KEY ("JobId")
-REFERENCES public."JobIds" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."ImportedJobsWanted"
-ADD CONSTRAINT "FK_ImportedJobsWanted_JobIds_JobId_1586104691" FOREIGN KEY ("JobId")
-REFERENCES public."JobIds" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."JobAlerts"
-ADD CONSTRAINT "FK_JobAlerts_AspNetUsers_AspNetUserId_1122103038" FOREIGN KEY ("AspNetUserId")
-REFERENCES public."AspNetUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."JobIds"
-ADD CONSTRAINT "FK_JobIds_JobSources_JobSourceId_766625774" FOREIGN KEY ("JobSourceId")
-REFERENCES public."JobSources" ("Id") MATCH SIMPLE
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."JobSeekerAdminComments"
-ADD CONSTRAINT "FK_JobSeekerAdminComments_AdminUsers_EnteredByAdminUserId_1906105831" FOREIGN KEY ("EnteredByAdminUserId")
-REFERENCES public."AdminUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."JobSeekerAdminComments"
-ADD CONSTRAINT "FK_JobSeekerAdminComments_AspNetUsers_AspNetUserId_1890105774" FOREIGN KEY ("AspNetUserId")
-REFERENCES public."AspNetUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."JobSeekerChangeLog"
-ADD CONSTRAINT "FK_JobSeekerAdminLog_AspNetUsers_AspNetUserId_1662628966" FOREIGN KEY ("AspNetUserId")
-REFERENCES public."AspNetUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."JobSeekerChangeLog"
-ADD CONSTRAINT "FK_JobSeekerChangeLog_AdminUsers_ModifiedByAdminUserId_1630628852" FOREIGN KEY ("ModifiedByAdminUserId")
-REFERENCES public."AdminUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."JobSeekerEventLog"
-ADD CONSTRAINT "FK_JobSeekerEventLog_AspNetUsers_AspNetUserId_2018106230" FOREIGN KEY ("AspNetUserId")
-REFERENCES public."AspNetUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."JobSeekerFlags"
-ADD CONSTRAINT "FK_JobSeekerFlags_AspNetUsers_AspNetUserId_178099675" FOREIGN KEY ("AspNetUserId")
-REFERENCES public."AspNetUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."JobSeekerStats"
-ADD CONSTRAINT "FK_JobSeekerStats_JobSeekerStatLabels_LabelKey_1454628225" FOREIGN KEY ("LabelKey")
-REFERENCES public."JobSeekerStatLabels" ("Key")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."JobSeekerStats"
-ADD CONSTRAINT "FK_JobSeekerStats_Regions_RegionId_1502628396" FOREIGN KEY ("RegionId")
-REFERENCES public."Regions" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."JobSeekerStats"
-ADD CONSTRAINT "FK_JobSeekerStats_WeeklyPeriods_WeeklyPeriodId_1262627541" FOREIGN KEY ("WeeklyPeriodId")
-REFERENCES public."WeeklyPeriods" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."JobSeekerVersions"
-ADD CONSTRAINT "FK_JobSeekerVersions_AspNetUsers_AspNetUserId_302624121" FOREIGN KEY ("AspNetUserId")
-REFERENCES public."AspNetUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."JobSeekerVersions"
-ADD CONSTRAINT "FK_JobSeekerVersions_Countries_CountryId_430624577" FOREIGN KEY ("CountryId")
-REFERENCES public."Countries" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."JobSeekerVersions"
-ADD CONSTRAINT "FK_JobSeekerVersions_Locations_LocationId_366624349" FOREIGN KEY ("LocationId")
-REFERENCES public."Locations" ("LocationId")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."JobSeekerVersions"
-ADD CONSTRAINT "FK_JobSeekerVersions_Provinces_ProvinceId_350624292" FOREIGN KEY ("ProvinceId")
-REFERENCES public."Provinces" ("ProvinceId")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."JobStats"
-ADD CONSTRAINT "FK_JobStats_JobSources_JobSourceId_1358627883" FOREIGN KEY ("JobSourceId")
-REFERENCES public."JobSources" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."JobStats"
-ADD CONSTRAINT "FK_JobStats_Regions_RegionId_1518628453" FOREIGN KEY ("RegionId")
-REFERENCES public."Regions" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."JobStats"
-ADD CONSTRAINT "FK_JobStats_WeeklyPeriods_WeeklyPeriodId_1374627940" FOREIGN KEY ("WeeklyPeriodId")
-REFERENCES public."WeeklyPeriods" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."JobVersions"
-ADD CONSTRAINT "FK_JobVersions_Jobs_JobId_62623266" FOREIGN KEY ("JobId")
-REFERENCES public."Jobs" ("JobId")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."JobVersions"
-ADD CONSTRAINT "FK_JobVersions_LocationLookups_LocationId_238623893" FOREIGN KEY ("LocationId")
-REFERENCES public."Locations" ("LocationId")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."JobVersions"
-ADD CONSTRAINT "FK_JobVersions_NaicsCodes_NaicsId_94623380" FOREIGN KEY ("IndustryId")
-REFERENCES public."Industries" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."JobVersions"
-ADD CONSTRAINT "FK_JobVersions_NocCodes2021_NocCodeId2021_891150220" FOREIGN KEY ("NocCodeId2021")
-REFERENCES public."NocCodes2021" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."JobVersions"
-ADD CONSTRAINT "FK_JobVersions_NocCodes_NocCodeId_110623437" FOREIGN KEY ("NocCodeId")
-REFERENCES public."NocCodes" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."JobViews"
-ADD CONSTRAINT "FK_JobViews_Jobs_JobId_1442104178" FOREIGN KEY ("JobId")
-REFERENCES public."Jobs" ("JobId")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."Jobs"
-ADD CONSTRAINT "FK_Jobs_JobIds_JobId_1602104748" FOREIGN KEY ("JobId")
-REFERENCES public."JobIds" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."Jobs"
-ADD CONSTRAINT "FK_Jobs_JobSources_JobSourceId_782625831" FOREIGN KEY ("JobSourceId")
-REFERENCES public."JobSources" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."Jobs"
-ADD CONSTRAINT "FK_Jobs_LocationLookups_LocationId_222623836" FOREIGN KEY ("LocationId")
-REFERENCES public."Locations" ("LocationId")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."Jobs"
-ADD CONSTRAINT "FK_Jobs_NaicsCodes_NaicsId_14623095" FOREIGN KEY ("IndustryId")
-REFERENCES public."Industries" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."Jobs"
-ADD CONSTRAINT "FK_Jobs_NocCodes2021_NocCodeId2021_875150163" FOREIGN KEY ("NocCodeId2021")
-REFERENCES public."NocCodes2021" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."Jobs"
-ADD CONSTRAINT "FK_Jobs_NocCodes_NocCodeId_1650104919" FOREIGN KEY ("NocCodeId")
-REFERENCES public."NocCodes" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."Locations"
-ADD CONSTRAINT "FK_LocationLookups_Regions_RegionId_254623950" FOREIGN KEY ("RegionId")
-REFERENCES public."Regions" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."Locations"
-ADD CONSTRAINT "FK_Locations_Regions_RegionId_446624634" FOREIGN KEY ("RegionId")
-REFERENCES public."Regions" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."ReportPersistenceControl"
-ADD CONSTRAINT "FK_ReportPersistenceControl_WeeklyPeriods_WeeklyPeriodId_1150627142" FOREIGN KEY ("WeeklyPeriodId")
-REFERENCES public."WeeklyPeriods" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."SavedCareerProfiles"
-ADD CONSTRAINT "FK_SavedCareerProfiles_AspNetUsers_AspNetUserId_1458104235" FOREIGN KEY ("AspNetUserId")
-REFERENCES public."AspNetUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."SavedCareerProfiles"
-ADD CONSTRAINT "FK_SavedCareerProfiles_NocCodes2021_Id_907150277" FOREIGN KEY ("NocCodeId2021")
-REFERENCES public."NocCodes2021" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."SavedIndustryProfiles"
-ADD CONSTRAINT "FK_SavedIndustryProfiles_AspNetUsers_AspNetUserId_1474104292" FOREIGN KEY ("AspNetUserId")
-REFERENCES public."AspNetUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."SavedIndustryProfiles"
-ADD CONSTRAINT "FK_SavedIndustryProfiles_Industries_Id_923150334" FOREIGN KEY ("IndustryId")
-REFERENCES public."Industries" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."SavedJobs"
-ADD CONSTRAINT "FK_SavedJobs_AspNetUsers_AspNetUserId_514100872" FOREIGN KEY ("AspNetUserId")
-REFERENCES public."AspNetUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE NO ACTION;
-
-ALTER TABLE public."SavedJobs"
-ADD CONSTRAINT "FK_SavedJobs_Jobs_JobId_1362103893" FOREIGN KEY ("JobId")
-REFERENCES public."Jobs" ("JobId")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
-ALTER TABLE public."SystemSettings"
-ADD CONSTRAINT "FK_SystemSettings_AdminUsers_ModifiedByAdminUserId_1490104349" FOREIGN KEY ("ModifiedByAdminUserId")
-REFERENCES public."AdminUsers" ("Id")
-ON UPDATE NO ACTION
-ON DELETE CASCADE;
-
--- ------------ Write CREATE-FUNCTION-stage scripts -----------
-
-CREATE OR REPLACE FUNCTION public."tvf_GetJobSeekersForDate"(IN par_enddateplus1 TIMESTAMP WITHOUT TIME ZONE)
-RETURNS TABLE ("AspNetUserId" VARCHAR, "Email" VARCHAR, "LocationId" INTEGER, "ProvinceId" INTEGER, "CountryId" INTEGER, "DateRegistered" TIMESTAMP WITHOUT TIME ZONE, "AccountStatus" SMALLINT, "EmailConfirmed" NUMERIC, "IsApprentice" NUMERIC, "IsIndigenousPerson" NUMERIC, "IsMatureWorker" NUMERIC, "IsNewImmigrant" NUMERIC, "IsPersonWithDisability" NUMERIC, "IsStudent" NUMERIC, "IsVeteran" NUMERIC, "IsVisibleMinority" NUMERIC, "IsYouth" NUMERIC)
-AS
-$BODY$
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 15.5 (Debian 15.5-1.pgdg120+1)
+-- Dumped by pg_dump version 15.5 (Debian 15.5-1.pgdg120+1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+ALTER TABLE ONLY public."SystemSettings" DROP CONSTRAINT "FK_SystemSettings_AdminUsers_ModifiedByAdminUserId_1490104349";
+ALTER TABLE ONLY public."SavedJobs" DROP CONSTRAINT "FK_SavedJobs_Jobs_JobId_1362103893";
+ALTER TABLE ONLY public."SavedJobs" DROP CONSTRAINT "FK_SavedJobs_AspNetUsers_AspNetUserId_514100872";
+ALTER TABLE ONLY public."SavedIndustryProfiles" DROP CONSTRAINT "FK_SavedIndustryProfiles_Industries_Id_923150334";
+ALTER TABLE ONLY public."SavedIndustryProfiles" DROP CONSTRAINT "FK_SavedIndustryProfiles_AspNetUsers_AspNetUserId_1474104292";
+ALTER TABLE ONLY public."SavedCareerProfiles" DROP CONSTRAINT "FK_SavedCareerProfiles_NocCodes2021_Id_907150277";
+ALTER TABLE ONLY public."SavedCareerProfiles" DROP CONSTRAINT "FK_SavedCareerProfiles_AspNetUsers_AspNetUserId_1458104235";
+ALTER TABLE ONLY public."ReportPersistenceControl" DROP CONSTRAINT "FK_ReportPersistenceControl_WeeklyPeriods_WeeklyPeriodId_115062";
+ALTER TABLE ONLY public."Locations" DROP CONSTRAINT "FK_Locations_Regions_RegionId_446624634";
+ALTER TABLE ONLY public."Locations" DROP CONSTRAINT "FK_LocationLookups_Regions_RegionId_254623950";
+ALTER TABLE ONLY public."Jobs" DROP CONSTRAINT "FK_Jobs_NocCodes_NocCodeId_1650104919";
+ALTER TABLE ONLY public."Jobs" DROP CONSTRAINT "FK_Jobs_NocCodes2021_NocCodeId2021_875150163";
+ALTER TABLE ONLY public."Jobs" DROP CONSTRAINT "FK_Jobs_NaicsCodes_NaicsId_14623095";
+ALTER TABLE ONLY public."Jobs" DROP CONSTRAINT "FK_Jobs_LocationLookups_LocationId_222623836";
+ALTER TABLE ONLY public."Jobs" DROP CONSTRAINT "FK_Jobs_JobSources_JobSourceId_782625831";
+ALTER TABLE ONLY public."Jobs" DROP CONSTRAINT "FK_Jobs_JobIds_JobId_1602104748";
+ALTER TABLE ONLY public."JobViews" DROP CONSTRAINT "FK_JobViews_Jobs_JobId_1442104178";
+ALTER TABLE ONLY public."JobVersions" DROP CONSTRAINT "FK_JobVersions_NocCodes_NocCodeId_110623437";
+ALTER TABLE ONLY public."JobVersions" DROP CONSTRAINT "FK_JobVersions_NocCodes2021_NocCodeId2021_891150220";
+ALTER TABLE ONLY public."JobVersions" DROP CONSTRAINT "FK_JobVersions_NaicsCodes_NaicsId_94623380";
+ALTER TABLE ONLY public."JobVersions" DROP CONSTRAINT "FK_JobVersions_LocationLookups_LocationId_238623893";
+ALTER TABLE ONLY public."JobVersions" DROP CONSTRAINT "FK_JobVersions_Jobs_JobId_62623266";
+ALTER TABLE ONLY public."JobStats" DROP CONSTRAINT "FK_JobStats_WeeklyPeriods_WeeklyPeriodId_1374627940";
+ALTER TABLE ONLY public."JobStats" DROP CONSTRAINT "FK_JobStats_Regions_RegionId_1518628453";
+ALTER TABLE ONLY public."JobStats" DROP CONSTRAINT "FK_JobStats_JobSources_JobSourceId_1358627883";
+ALTER TABLE ONLY public."JobSeekerVersions" DROP CONSTRAINT "FK_JobSeekerVersions_Provinces_ProvinceId_350624292";
+ALTER TABLE ONLY public."JobSeekerVersions" DROP CONSTRAINT "FK_JobSeekerVersions_Locations_LocationId_366624349";
+ALTER TABLE ONLY public."JobSeekerVersions" DROP CONSTRAINT "FK_JobSeekerVersions_Countries_CountryId_430624577";
+ALTER TABLE ONLY public."JobSeekerVersions" DROP CONSTRAINT "FK_JobSeekerVersions_AspNetUsers_AspNetUserId_302624121";
+ALTER TABLE ONLY public."JobSeekerStats" DROP CONSTRAINT "FK_JobSeekerStats_WeeklyPeriods_WeeklyPeriodId_1262627541";
+ALTER TABLE ONLY public."JobSeekerStats" DROP CONSTRAINT "FK_JobSeekerStats_Regions_RegionId_1502628396";
+ALTER TABLE ONLY public."JobSeekerStats" DROP CONSTRAINT "FK_JobSeekerStats_JobSeekerStatLabels_LabelKey_1454628225";
+ALTER TABLE ONLY public."JobSeekerFlags" DROP CONSTRAINT "FK_JobSeekerFlags_AspNetUsers_AspNetUserId_178099675";
+ALTER TABLE ONLY public."JobSeekerEventLog" DROP CONSTRAINT "FK_JobSeekerEventLog_AspNetUsers_AspNetUserId_2018106230";
+ALTER TABLE ONLY public."JobSeekerChangeLog" DROP CONSTRAINT "FK_JobSeekerChangeLog_AdminUsers_ModifiedByAdminUserId_16306288";
+ALTER TABLE ONLY public."JobSeekerChangeLog" DROP CONSTRAINT "FK_JobSeekerAdminLog_AspNetUsers_AspNetUserId_1662628966";
+ALTER TABLE ONLY public."JobSeekerAdminComments" DROP CONSTRAINT "FK_JobSeekerAdminComments_AspNetUsers_AspNetUserId_1890105774";
+ALTER TABLE ONLY public."JobSeekerAdminComments" DROP CONSTRAINT "FK_JobSeekerAdminComments_AdminUsers_EnteredByAdminUserId_19061";
+ALTER TABLE ONLY public."JobIds" DROP CONSTRAINT "FK_JobIds_JobSources_JobSourceId_766625774";
+ALTER TABLE ONLY public."JobAlerts" DROP CONSTRAINT "FK_JobAlerts_AspNetUsers_AspNetUserId_1122103038";
+ALTER TABLE ONLY public."ImportedJobsWanted" DROP CONSTRAINT "FK_ImportedJobsWanted_JobIds_JobId_1586104691";
+ALTER TABLE ONLY public."ImportedJobsFederal" DROP CONSTRAINT "FK_ImportedJobsFederal_JobIds_JobId_1570104634";
+ALTER TABLE ONLY public."ImpersonationLog" DROP CONSTRAINT "FK_ImpersonationLog_AspNetUsers_AspNetUserId_1054626800";
+ALTER TABLE ONLY public."ImpersonationLog" DROP CONSTRAINT "FK_ImpersonationLog_AdminUsers_AdminUserId_1038626743";
+ALTER TABLE ONLY public."ExpiredJobs" DROP CONSTRAINT "FK_ExpiredJobs_JobIds_JobId_1726629194";
+ALTER TABLE ONLY public."DeletedJobs" DROP CONSTRAINT "FK_DeletedJobs_Jobs_JobId_990626572";
+ALTER TABLE ONLY public."DeletedJobs" DROP CONSTRAINT "FK_DeletedJobs_AdminUsers_DeletedByAdminUserId_974626515";
+ALTER TABLE ONLY public."AspNetUsers" DROP CONSTRAINT "FK_AspNetUsers_SecurityQuestions_SecurityQuestionId_850102069";
+ALTER TABLE ONLY public."AspNetUsers" DROP CONSTRAINT "FK_AspNetUsers_Provinces_ProvinceId_206623779";
+ALTER TABLE ONLY public."AspNetUsers" DROP CONSTRAINT "FK_AspNetUsers_LocationLookups_LocationId_190623722";
+ALTER TABLE ONLY public."AspNetUsers" DROP CONSTRAINT "FK_AspNetUsers_Countries_CountryId_414624520";
+ALTER TABLE ONLY public."AspNetUsers" DROP CONSTRAINT "FK_AspNetUsers_AdminUsers_LockedByAdminUserId_2050106344";
+ALTER TABLE ONLY public."AspNetUserTokens" DROP CONSTRAINT "FK_AspNetUserTokens_AspNetUsers_UserId_2037582297";
+ALTER TABLE ONLY public."AspNetUserRoles" DROP CONSTRAINT "FK_AspNetUserRoles_AspNetUsers_UserId_1989582126";
+ALTER TABLE ONLY public."AspNetUserRoles" DROP CONSTRAINT "FK_AspNetUserRoles_AspNetRoles_RoleId_1973582069";
+ALTER TABLE ONLY public."AspNetUserLogins" DROP CONSTRAINT "FK_AspNetUserLogins_AspNetUsers_UserId_1925581898";
+ALTER TABLE ONLY public."AspNetUserClaims" DROP CONSTRAINT "FK_AspNetUserClaims_AspNetUsers_UserId_1877581727";
+ALTER TABLE ONLY public."AspNetRoleClaims" DROP CONSTRAINT "FK_AspNetRoleClaims_AspNetRoles_RoleId_1829581556";
+ALTER TABLE ONLY public."AdminUsers" DROP CONSTRAINT "FK_AdminUsers_AdminUsers_ModifiedByAdminUserId_1378103950";
+ALTER TABLE ONLY public."AdminUsers" DROP CONSTRAINT "FK_AdminUsers_AdminUsers_LockedByAdminUserId_1346103836";
+DROP INDEX public."IX_WeeklyPeriods_IX_WeeklyPeriods_WeekEndDate";
+DROP INDEX public."IX_SystemSettings_IX_SystemSettings_ModifiedByAdminUserId";
+DROP INDEX public."IX_SavedJobs_IX_SavedJobs_JobId";
+DROP INDEX public."IX_SavedJobs_IX_SavedJobs_AspNetUserId";
+DROP INDEX public."IX_SavedIndustryProfiles_IX_SavedIndustryProfiles_DateSaved";
+DROP INDEX public."IX_SavedIndustryProfiles_IX_SavedIndustryProfiles_DateDeleted";
+DROP INDEX public."IX_SavedIndustryProfiles_IX_SavedIndustryProfiles_AspNetUserId";
+DROP INDEX public."IX_SavedCareerProfiles_IX_SavedCareerProfiles_DateSaved";
+DROP INDEX public."IX_SavedCareerProfiles_IX_SavedCareerProfiles_DateDeleted";
+DROP INDEX public."IX_SavedCareerProfiles_IX_SavedCareerProfiles_AspNetUserId";
+DROP INDEX public."IX_Locations_IX_LocationLookups_RegionId";
+DROP INDEX public."IX_Jobs_IX_Jobs_NocCodeId";
+DROP INDEX public."IX_Jobs_IX_Jobs_NaicsId";
+DROP INDEX public."IX_Jobs_IX_Jobs_LocationId";
+DROP INDEX public."IX_Jobs_IX_Jobs_JobSourceId";
+DROP INDEX public."IX_JobVersions_IX_JobVersions_NocCodeId";
+DROP INDEX public."IX_JobVersions_IX_JobVersions_NaicsId";
+DROP INDEX public."IX_JobVersions_IX_JobVersions_LocationId";
+DROP INDEX public."IX_JobVersions_IX_JobVersions_JobId_VersionNumber";
+DROP INDEX public."IX_JobStats_IX_JobStats_RegionId";
+DROP INDEX public."IX_JobStats_IX_JobStats_JobSourceId";
+DROP INDEX public."IX_JobSeekerVersions_IX_JobSeekerVersions_ProvinceId";
+DROP INDEX public."IX_JobSeekerVersions_IX_JobSeekerVersions_LocationId";
+DROP INDEX public."IX_JobSeekerVersions_IX_JobSeekerVersions_CountryId";
+DROP INDEX public."IX_JobSeekerVersions_IX_JobSeekerVersions_AspNetUserId_VersionN";
+DROP INDEX public."IX_JobSeekerStats_IX_JobSeekerStats_RegionId";
+DROP INDEX public."IX_JobSeekerStats_IX_JobSeekerStats_LabelKey";
+DROP INDEX public."IX_JobSeekerFlags_IX_JobSeekerFlags_AspNetUserId";
+DROP INDEX public."IX_JobSeekerEventLog_IX_JobSeekerEventLog_DateLogged";
+DROP INDEX public."IX_JobSeekerEventLog_IX_JobSeekerEventLog_AspNetUserId";
+DROP INDEX public."IX_JobSeekerChangeLog_IX_JobSeekerChangeLog_ModifiedByAdminUser";
+DROP INDEX public."IX_JobSeekerChangeLog_IX_JobSeekerChangeLog_AspNetUserId";
+DROP INDEX public."IX_JobSeekerAdminComments_IX_JobSeekerAdminComments_EnteredByAd";
+DROP INDEX public."IX_JobSeekerAdminComments_IX_JobSeekerAdminComments_AspNetUserI";
+DROP INDEX public."IX_JobIds_IX_JobIds_JobSourceId";
+DROP INDEX public."IX_JobAlerts_IX_JobAlerts_DateCreated";
+DROP INDEX public."IX_JobAlerts_IX_JobAlerts_AspNetUserId";
+DROP INDEX public."IX_ImportedJobsWanted_IX_ImportedJobsWanted_HashId";
+DROP INDEX public."IX_ImpersonationLog_IX_ImpersonationLog_AspNetUserId";
+DROP INDEX public."IX_ImpersonationLog_IX_ImpersonationLog_AdminUserId";
+DROP INDEX public."IX_GeocodedLocationCache_IX_GeocodedLocationCache_Name";
+DROP INDEX public."IX_DeletedJobs_IX_DeletedJobs_DeletedByAdminUserId";
+DROP INDEX public."IX_AspNetUsers_UserNameIndex";
+DROP INDEX public."IX_AspNetUsers_IX_AspNetUsers_SecurityQuestionId";
+DROP INDEX public."IX_AspNetUsers_IX_AspNetUsers_ProvinceId";
+DROP INDEX public."IX_AspNetUsers_IX_AspNetUsers_LockedByAdminUserId";
+DROP INDEX public."IX_AspNetUsers_IX_AspNetUsers_LocationId";
+DROP INDEX public."IX_AspNetUsers_IX_AspNetUsers_LastName_FirstName";
+DROP INDEX public."IX_AspNetUsers_IX_AspNetUsers_LastModified";
+DROP INDEX public."IX_AspNetUsers_IX_AspNetUsers_FirstName_LastName";
+DROP INDEX public."IX_AspNetUsers_IX_AspNetUsers_Email";
+DROP INDEX public."IX_AspNetUsers_IX_AspNetUsers_DateRegistered";
+DROP INDEX public."IX_AspNetUsers_IX_AspNetUsers_CountryId";
+DROP INDEX public."IX_AspNetUsers_IX_AspNetUsers_AccountStatus_LastName_FirstName";
+DROP INDEX public."IX_AspNetUsers_EmailIndex";
+DROP INDEX public."IX_AspNetUserRoles_IX_AspNetUserRoles_RoleId";
+DROP INDEX public."IX_AspNetUserLogins_IX_AspNetUserLogins_UserId";
+DROP INDEX public."IX_AspNetUserClaims_IX_AspNetUserClaims_UserId";
+DROP INDEX public."IX_AspNetRoles_RoleNameIndex";
+DROP INDEX public."IX_AspNetRoleClaims_IX_AspNetRoleClaims_RoleId";
+DROP INDEX public."IX_AdminUsers_IX_AdminUsers_ModifiedByAdminUserId";
+DROP INDEX public."IX_AdminUsers_IX_AdminUsers_LockedByAdminUserId";
+ALTER TABLE ONLY public."__EFMigrationsHistory" DROP CONSTRAINT "PK___EFMigrationsHistory_1221579390";
+ALTER TABLE ONLY public."WeeklyPeriods" DROP CONSTRAINT "PK_WeeklyPeriods_542624976";
+ALTER TABLE ONLY public."SystemSettings" DROP CONSTRAINT "PK_SystemSettings_1678629023";
+ALTER TABLE ONLY public."SecurityQuestions" DROP CONSTRAINT "PK_SecurityQuestions_770101784";
+ALTER TABLE ONLY public."SavedJobs" DROP CONSTRAINT "PK_SavedJobs_498100815";
+ALTER TABLE ONLY public."SavedIndustryProfiles" DROP CONSTRAINT "PK_SavedIndustryProfiles_1282103608";
+ALTER TABLE ONLY public."SavedCareerProfiles" DROP CONSTRAINT "PK_SavedCareerProfiles_1250103494";
+ALTER TABLE ONLY public."ReportPersistenceControl" DROP CONSTRAINT "PK_ReportPersistenceControl_1566628624";
+ALTER TABLE ONLY public."Regions" DROP CONSTRAINT "PK_Regions_174623665";
+ALTER TABLE ONLY public."Provinces" DROP CONSTRAINT "PK_Provinces_142623551";
+ALTER TABLE ONLY public."NocCodes" DROP CONSTRAINT "PK_NocCodes_1634104862";
+ALTER TABLE ONLY public."NocCodes2021" DROP CONSTRAINT "PK_NocCodes2021_859150106";
+ALTER TABLE ONLY public."NocCategories" DROP CONSTRAINT "PK_NocCategories_2114106572";
+ALTER TABLE ONLY public."NocCategories2021" DROP CONSTRAINT "PK_NocCategories2021_955150448";
+ALTER TABLE ONLY public."Industries" DROP CONSTRAINT "PK_NaicsCodes_2146106686";
+ALTER TABLE ONLY public."Locations" DROP CONSTRAINT "PK_LocationLookups_466100701";
+ALTER TABLE ONLY public."Jobs" DROP CONSTRAINT "PK_Jobs_802101898";
+ALTER TABLE ONLY public."JobViews" DROP CONSTRAINT "PK_JobViews_786101841";
+ALTER TABLE ONLY public."JobVersions" DROP CONSTRAINT "PK_JobVersions_46623209";
+ALTER TABLE ONLY public."JobStats" DROP CONSTRAINT "PK_JobStats_1342627826";
+ALTER TABLE ONLY public."JobSources" DROP CONSTRAINT "PK_JobSources_734625660";
+ALTER TABLE ONLY public."JobSeekerVersions" DROP CONSTRAINT "PK_JobSeekerVersions_286624064";
+ALTER TABLE ONLY public."JobSeekerStats" DROP CONSTRAINT "PK_JobSeekerStats_1406628054";
+ALTER TABLE ONLY public."JobSeekerStatLabels" DROP CONSTRAINT "PK_JobSeekerStatLabels_1438628168";
+ALTER TABLE ONLY public."JobSeekerFlags" DROP CONSTRAINT "PK_JobSeekerFlags_98099390";
+ALTER TABLE ONLY public."JobSeekerEventLog" DROP CONSTRAINT "PK_JobSeekerEventLog_2002106173";
+ALTER TABLE ONLY public."JobSeekerChangeLog" DROP CONSTRAINT "PK_JobSeekerChangeLog_1646628909";
+ALTER TABLE ONLY public."JobSeekerAdminComments" DROP CONSTRAINT "PK_JobSeekerAdminComments_1874105717";
+ALTER TABLE ONLY public."JobIds" DROP CONSTRAINT "PK_JobIds_1538104520";
+ALTER TABLE ONLY public."JobAlerts" DROP CONSTRAINT "PK_JobAlerts_1106102981";
+ALTER TABLE ONLY public."ImportedJobsWanted" DROP CONSTRAINT "PK_ImportedJobsWanted_1509580416";
+ALTER TABLE ONLY public."ImportedJobsFederal" DROP CONSTRAINT "PK_ImportedJobsFederal_290100074";
+ALTER TABLE ONLY public."ImpersonationLog" DROP CONSTRAINT "PK_ImpersonationLog_1022626686";
+ALTER TABLE ONLY public."GeocodedLocationCache" DROP CONSTRAINT "PK_GeocodedLocationCache_1669580986";
+ALTER TABLE ONLY public."ExpiredJobs" DROP CONSTRAINT "PK_ExpiredJobs_1710629137";
+ALTER TABLE ONLY public."DeletedJobs" DROP CONSTRAINT "PK_DeletedJobs_958626458";
+ALTER TABLE ONLY public."DataProtectionKeys" DROP CONSTRAINT "PK_DataProtectionKeys_2078630448";
+ALTER TABLE ONLY public."Countries" DROP CONSTRAINT "PK_Countries_398624463";
+ALTER TABLE ONLY public."AspNetUsers" DROP CONSTRAINT "PK_AspNetUsers_1781581385";
+ALTER TABLE ONLY public."AspNetUserTokens" DROP CONSTRAINT "PK_AspNetUserTokens_402100473";
+ALTER TABLE ONLY public."AspNetUserRoles" DROP CONSTRAINT "PK_AspNetUserRoles_1957582012";
+ALTER TABLE ONLY public."AspNetUserLogins" DROP CONSTRAINT "PK_AspNetUserLogins_418100530";
+ALTER TABLE ONLY public."AspNetUserClaims" DROP CONSTRAINT "PK_AspNetUserClaims_1861581670";
+ALTER TABLE ONLY public."AspNetRoles" DROP CONSTRAINT "PK_AspNetRoles_1749581271";
+ALTER TABLE ONLY public."AspNetRoleClaims" DROP CONSTRAINT "PK_AspNetRoleClaims_1813581499";
+ALTER TABLE ONLY public."AdminUsers" DROP CONSTRAINT "PK_AdminUsers_322100188";
+DROP TABLE public."__EFMigrationsHistory";
+DROP TABLE public."WeeklyPeriods";
+DROP TABLE public."SystemSettings";
+DROP TABLE public."SecurityQuestions";
+DROP TABLE public."SavedJobs";
+DROP TABLE public."SavedIndustryProfiles";
+DROP TABLE public."SavedCareerProfiles";
+DROP TABLE public."ReportPersistenceControl";
+DROP TABLE public."Regions";
+DROP TABLE public."Provinces";
+DROP TABLE public."NocCodes2021";
+DROP TABLE public."NocCodes";
+DROP TABLE public."NocCategories2021";
+DROP TABLE public."NocCategories";
+DROP TABLE public."Locations";
+DROP TABLE public."Jobs";
+DROP TABLE public."JobViews";
+DROP TABLE public."JobVersions";
+DROP TABLE public."JobStats";
+DROP TABLE public."JobSources";
+DROP TABLE public."JobSeekerVersions";
+DROP TABLE public."JobSeekerStats";
+DROP TABLE public."JobSeekerStatLabels";
+DROP TABLE public."JobSeekerFlags";
+DROP TABLE public."JobSeekerEventLog";
+DROP TABLE public."JobSeekerChangeLog";
+DROP TABLE public."JobSeekerAdminComments";
+DROP TABLE public."JobIds";
+DROP TABLE public."JobAlerts";
+DROP TABLE public."Industries";
+DROP TABLE public."ImportedJobsWanted";
+DROP TABLE public."ImportedJobsFederal";
+DROP TABLE public."ImpersonationLog";
+DROP TABLE public."GeocodedLocationCache";
+DROP TABLE public."ExpiredJobs";
+DROP TABLE public."DeletedJobs";
+DROP TABLE public."DataProtectionKeys";
+DROP TABLE public."Countries";
+DROP TABLE public."AspNetUsers";
+DROP TABLE public."AspNetUserTokens";
+DROP TABLE public."AspNetUserRoles";
+DROP TABLE public."AspNetUserLogins";
+DROP TABLE public."AspNetUserClaims";
+DROP TABLE public."AspNetRoles";
+DROP TABLE public."AspNetRoleClaims";
+DROP TABLE public."AdminUsers";
+DROP PROCEDURE public."usp_GenerateJobStats"(IN par_weekenddate timestamp without time zone, INOUT return_code integer);
+DROP PROCEDURE public."usp_GenerateJobSeekerStats"(IN par_weekenddate timestamp without time zone, INOUT return_code integer);
+DROP FUNCTION public."tvf_GetJobsForDate"(par_enddateplus1 timestamp without time zone);
+DROP FUNCTION public."tvf_GetJobSeekersForDate"(par_enddateplus1 timestamp without time zone);
+-- *not* dropping schema, since initdb creates it
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: workbc
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+ALTER SCHEMA public OWNER TO workbc;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: workbc
+--
+
+COMMENT ON SCHEMA public IS '';
+
+
+--
+-- Name: tvf_GetJobSeekersForDate(timestamp without time zone); Type: FUNCTION; Schema: public; Owner: workbc
+--
+
+CREATE FUNCTION public."tvf_GetJobSeekersForDate"(par_enddateplus1 timestamp without time zone) RETURNS TABLE("AspNetUserId" character varying, "Email" character varying, "LocationId" integer, "ProvinceId" integer, "CountryId" integer, "DateRegistered" timestamp without time zone, "AccountStatus" smallint, "EmailConfirmed" boolean, "IsApprentice" boolean, "IsIndigenousPerson" boolean, "IsMatureWorker" boolean, "IsNewImmigrant" boolean, "IsPersonWithDisability" boolean, "IsStudent" boolean, "IsVeteran" boolean, "IsVisibleMinority" boolean, "IsYouth" boolean)
+    LANGUAGE plpgsql
+    AS $$
 /*
 Returns a snapshot of a subset jobseeker data for a specified date.
 * Only data the is used by existing reports is included in the snapshot.
@@ -1864,10 +277,10 @@ BEGIN
     RETURN QUERY
     WITH periodversion (aspnetuserid, versionnumber)
     AS (SELECT
-        aspnetuserid, MAX("VersionNumber") AS versionnumber
+        "AspNetUserId", MAX("VersionNumber") AS versionnumber
         FROM public."JobSeekerVersions"
         WHERE "DateVersionStart" < par_EndDatePlus1 AND ("DateVersionEnd" IS NULL OR "DateVersionEnd" >= par_EndDatePlus1)
-        GROUP BY AspnetUserId)
+        GROUP BY "AspNetUserId")
     SELECT
         js."AspNetUserId", js."Email", js."LocationId", js."ProvinceId", js."CountryId", js."DateRegistered", js."AccountStatus", js."EmailConfirmed", js."IsApprentice", js."IsIndigenousPerson", js."IsMatureWorker", js."IsNewImmigrant", js."IsPersonWithDisability", js."IsStudent", js."IsVeteran", js."IsVisibleMinority", js."IsYouth"
         FROM public."JobSeekerVersions" AS js
@@ -1876,19 +289,24 @@ BEGIN
         WHERE par_EndDatePlus1 < clock_timestamp()
     UNION
     SELECT
-        js."Id" AS aspnetuserid, js."Email", js."LocationId", js."ProvinceId", js."CountryId", js."DateRegistered", js."AccountStatus", js."EmailConfirmed", jsf."IsApprentice", jsf."IsIndigenousPerson", jsf."IsMatureWorker", jsf."IsNewImmigrant", jsf."IsPersonWithDisability", jsf."IsStudent", jsf."IsVeteran", jsf."IsVisibleMinority", jsf."IsYouth"
+        js."Id" AS "AspNetUserId", js."Email", js."LocationId", js."ProvinceId", js."CountryId", js."DateRegistered", js."AccountStatus", js."EmailConfirmed", jsf."IsApprentice", jsf."IsIndigenousPerson", jsf."IsMatureWorker", jsf."IsNewImmigrant", jsf."IsPersonWithDisability", jsf."IsStudent", jsf."IsVeteran", jsf."IsVisibleMinority", jsf."IsYouth"
         FROM public."AspNetUsers" AS js
         LEFT OUTER JOIN public."JobSeekerFlags" AS jsf
-            ON jsf.AspnetUserId = js."Id"::VARCHAR
+            ON jsf."AspNetUserId" = js."Id"::VARCHAR
         WHERE par_EndDatePlus1 >= clock_timestamp();
 END;
-$BODY$
-LANGUAGE  plpgsql;
+$$;
 
-CREATE OR REPLACE FUNCTION public."tvf_GetJobsForDate"(IN par_enddateplus1 TIMESTAMP WITHOUT TIME ZONE)
-RETURNS TABLE ("JobId" BIGINT, "JobSourceId" SMALLINT, "LocationId" INTEGER, "NocCodeId2021" INTEGER, "IndustryId" SMALLINT, "DateFirstImported" TIMESTAMP WITHOUT TIME ZONE, "PositionsAvailable" SMALLINT)
-AS
-$BODY$
+
+ALTER FUNCTION public."tvf_GetJobSeekersForDate"(par_enddateplus1 timestamp without time zone) OWNER TO workbc;
+
+--
+-- Name: tvf_GetJobsForDate(timestamp without time zone); Type: FUNCTION; Schema: public; Owner: workbc
+--
+
+CREATE FUNCTION public."tvf_GetJobsForDate"(par_enddateplus1 timestamp without time zone) RETURNS TABLE("JobId" bigint, "JobSourceId" smallint, "LocationId" integer, "NocCodeId2021" integer, "IndustryId" smallint, "DateFirstImported" timestamp without time zone, "PositionsAvailable" smallint)
+    LANGUAGE plpgsql
+    AS $$
 /*
 Returns a snapshot of a subset job data for a specified date.
 * Only data the is used by existing reports is included in the snapshot.
@@ -1915,14 +333,18 @@ BEGIN
         INNER JOIN periodversion AS pv
             ON pv."JobId" = jv."JobId" AND pv.versionnumber = jv."VersionNumber";
 END;
-$BODY$
-LANGUAGE  plpgsql;
+$$;
 
--- ------------ Write CREATE-PROCEDURE-stage scripts -----------
 
-CREATE OR REPLACE PROCEDURE public."usp_GenerateJobSeekerStats"(IN par_weekenddate TIMESTAMP WITHOUT TIME ZONE, INOUT return_code int DEFAULT 0)
-AS
-$BODY$
+ALTER FUNCTION public."tvf_GetJobsForDate"(par_enddateplus1 timestamp without time zone) OWNER TO workbc;
+
+--
+-- Name: usp_GenerateJobSeekerStats(timestamp without time zone, integer); Type: PROCEDURE; Schema: public; Owner: workbc
+--
+
+CREATE PROCEDURE public."usp_GenerateJobSeekerStats"(IN par_weekenddate timestamp without time zone, INOUT return_code integer DEFAULT 0)
+    LANGUAGE plpgsql
+    AS $_$
 /*
 Generates data in the JobSeekerStats table for a 1-week period.
 *
@@ -2176,12 +598,18 @@ BEGIN
     return_code := 0;
     RETURN;
 END;
-$BODY$
-LANGUAGE plpgsql;
+$_$;
 
-CREATE OR REPLACE PROCEDURE public."usp_GenerateJobStats"(IN par_weekenddate TIMESTAMP WITHOUT TIME ZONE, INOUT return_code int DEFAULT 0)
-AS
-$BODY$
+
+ALTER PROCEDURE public."usp_GenerateJobSeekerStats"(IN par_weekenddate timestamp without time zone, INOUT return_code integer) OWNER TO workbc;
+
+--
+-- Name: usp_GenerateJobStats(timestamp without time zone, integer); Type: PROCEDURE; Schema: public; Owner: workbc
+--
+
+CREATE PROCEDURE public."usp_GenerateJobStats"(IN par_weekenddate timestamp without time zone, INOUT return_code integer DEFAULT 0)
+    LANGUAGE plpgsql
+    AS $$
 /*
 Generates data in the JobStats table for a 1-week period.
 *
@@ -2259,6 +687,2307 @@ BEGIN
     return_code := 0;
     RETURN;
 END;
-$BODY$
-LANGUAGE plpgsql;
+$$;
+
+
+ALTER PROCEDURE public."usp_GenerateJobStats"(IN par_weekenddate timestamp without time zone, INOUT return_code integer) OWNER TO workbc;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: AdminUsers; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."AdminUsers" (
+    "Id" integer NOT NULL,
+    "SamAccountName" character varying(20),
+    "DisplayName" character varying(60) NOT NULL,
+    "DateUpdated" timestamp(6) without time zone NOT NULL,
+    "AdminLevel" integer NOT NULL,
+    "DateCreated" timestamp(6) without time zone DEFAULT '0001-01-01 00:00:00'::timestamp without time zone NOT NULL,
+    "Deleted" boolean NOT NULL,
+    "Guid" character varying(40),
+    "DateLocked" timestamp(6) without time zone,
+    "LockedByAdminUserId" integer,
+    "ModifiedByAdminUserId" integer,
+    "DateLastLogin" timestamp(6) without time zone,
+    "GivenName" character varying(40),
+    "Surname" character varying(40)
+);
+
+
+ALTER TABLE public."AdminUsers" OWNER TO workbc;
+
+--
+-- Name: AdminUsers_Id_seq; Type: SEQUENCE; Schema: public; Owner: workbc
+--
+
+ALTER TABLE public."AdminUsers" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."AdminUsers_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: AspNetRoleClaims; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."AspNetRoleClaims" (
+    "Id" integer NOT NULL,
+    "RoleId" character varying(450) NOT NULL,
+    "ClaimType" text,
+    "ClaimValue" text
+);
+
+
+ALTER TABLE public."AspNetRoleClaims" OWNER TO workbc;
+
+--
+-- Name: AspNetRoleClaims_Id_seq; Type: SEQUENCE; Schema: public; Owner: workbc
+--
+
+ALTER TABLE public."AspNetRoleClaims" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."AspNetRoleClaims_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: AspNetRoles; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."AspNetRoles" (
+    "Id" character varying(450) NOT NULL,
+    "Name" character varying(256),
+    "NormalizedName" character varying(256),
+    "ConcurrencyStamp" text
+);
+
+
+ALTER TABLE public."AspNetRoles" OWNER TO workbc;
+
+--
+-- Name: AspNetUserClaims; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."AspNetUserClaims" (
+    "Id" integer NOT NULL,
+    "UserId" character varying(450) NOT NULL,
+    "ClaimType" text,
+    "ClaimValue" text
+);
+
+
+ALTER TABLE public."AspNetUserClaims" OWNER TO workbc;
+
+--
+-- Name: AspNetUserClaims_Id_seq; Type: SEQUENCE; Schema: public; Owner: workbc
+--
+
+ALTER TABLE public."AspNetUserClaims" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."AspNetUserClaims_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: AspNetUserLogins; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."AspNetUserLogins" (
+    "LoginProvider" character varying(128) NOT NULL,
+    "ProviderKey" character varying(128) NOT NULL,
+    "ProviderDisplayName" text,
+    "UserId" character varying(450) NOT NULL
+);
+
+
+ALTER TABLE public."AspNetUserLogins" OWNER TO workbc;
+
+--
+-- Name: AspNetUserRoles; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."AspNetUserRoles" (
+    "UserId" character varying(450) NOT NULL,
+    "RoleId" character varying(450) NOT NULL
+);
+
+
+ALTER TABLE public."AspNetUserRoles" OWNER TO workbc;
+
+--
+-- Name: AspNetUserTokens; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."AspNetUserTokens" (
+    "UserId" character varying(450) NOT NULL,
+    "LoginProvider" character varying(128) NOT NULL,
+    "Name" character varying(128) NOT NULL,
+    "Value" text
+);
+
+
+ALTER TABLE public."AspNetUserTokens" OWNER TO workbc;
+
+--
+-- Name: AspNetUsers; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."AspNetUsers" (
+    "Id" character varying(450) NOT NULL,
+    "UserName" character varying(256),
+    "NormalizedUserName" character varying(256),
+    "Email" character varying(256),
+    "NormalizedEmail" character varying(256),
+    "EmailConfirmed" boolean NOT NULL,
+    "PasswordHash" text,
+    "SecurityStamp" text,
+    "ConcurrencyStamp" text,
+    "PhoneNumber" text,
+    "PhoneNumberConfirmed" boolean NOT NULL,
+    "TwoFactorEnabled" boolean NOT NULL,
+    "LockoutEnd" timestamp(6) with time zone,
+    "LockoutEnabled" boolean NOT NULL,
+    "AccessFailedCount" integer NOT NULL,
+    "LocationId" integer,
+    "City" character varying(50),
+    "CountryId" integer,
+    "FirstName" character varying(50),
+    "LastName" character varying(50),
+    "LegacyWebUserId" integer,
+    "ProvinceId" integer,
+    "AccountStatus" smallint NOT NULL,
+    "DateRegistered" timestamp(6) without time zone DEFAULT '0001-01-01 00:00:00'::timestamp without time zone NOT NULL,
+    "LastLogon" timestamp(6) without time zone,
+    "LastModified" timestamp(6) without time zone DEFAULT '0001-01-01 00:00:00'::timestamp without time zone NOT NULL,
+    "VerificationGuid" uuid,
+    "SecurityAnswer" character varying(50),
+    "SecurityQuestionId" integer,
+    "DateLocked" timestamp(6) without time zone,
+    "LockedByAdminUserId" integer
+);
+
+
+ALTER TABLE public."AspNetUsers" OWNER TO workbc;
+
+--
+-- Name: Countries; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."Countries" (
+    "Id" integer NOT NULL,
+    "Name" character varying(50),
+    "CountryTwoLetterCode" character varying(2),
+    "SortOrder" smallint NOT NULL
+);
+
+
+ALTER TABLE public."Countries" OWNER TO workbc;
+
+--
+-- Name: DataProtectionKeys; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."DataProtectionKeys" (
+    "Id" integer NOT NULL,
+    "FriendlyName" text,
+    "Xml" text
+);
+
+
+ALTER TABLE public."DataProtectionKeys" OWNER TO workbc;
+
+--
+-- Name: DataProtectionKeys_Id_seq; Type: SEQUENCE; Schema: public; Owner: workbc
+--
+
+ALTER TABLE public."DataProtectionKeys" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."DataProtectionKeys_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: DeletedJobs; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."DeletedJobs" (
+    "JobId" bigint NOT NULL,
+    "DeletedByAdminUserId" integer NOT NULL,
+    "DateDeleted" timestamp(6) without time zone NOT NULL
+);
+
+
+ALTER TABLE public."DeletedJobs" OWNER TO workbc;
+
+--
+-- Name: ExpiredJobs; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."ExpiredJobs" (
+    "JobId" bigint NOT NULL,
+    "RemovedFromElasticsearch" boolean NOT NULL,
+    "DateRemoved" timestamp(6) without time zone NOT NULL
+);
+
+
+ALTER TABLE public."ExpiredJobs" OWNER TO workbc;
+
+--
+-- Name: GeocodedLocationCache; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."GeocodedLocationCache" (
+    "Id" integer NOT NULL,
+    "Name" character varying(120),
+    "Latitude" character varying(25),
+    "Longitude" character varying(25),
+    "DateGeocoded" timestamp(6) without time zone NOT NULL,
+    "IsPermanent" boolean NOT NULL,
+    "City" character varying(80),
+    "Province" character varying(2),
+    "FrenchCity" character varying(80)
+);
+
+
+ALTER TABLE public."GeocodedLocationCache" OWNER TO workbc;
+
+--
+-- Name: GeocodedLocationCache_Id_seq; Type: SEQUENCE; Schema: public; Owner: workbc
+--
+
+ALTER TABLE public."GeocodedLocationCache" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."GeocodedLocationCache_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: ImpersonationLog; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."ImpersonationLog" (
+    "Token" character varying(200) NOT NULL,
+    "AspNetUserId" character varying(450),
+    "AdminUserId" integer NOT NULL,
+    "DateTokenCreated" timestamp(6) without time zone NOT NULL
+);
+
+
+ALTER TABLE public."ImpersonationLog" OWNER TO workbc;
+
+--
+-- Name: ImportedJobsFederal; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."ImportedJobsFederal" (
+    "JobId" bigint NOT NULL,
+    "ApiDate" timestamp without time zone NOT NULL,
+    "DateFirstImported" timestamp(6) without time zone NOT NULL,
+    "JobPostEnglish" text,
+    "JobPostFrench" text,
+    "ReIndexNeeded" boolean NOT NULL,
+    "DisplayUntil" timestamp(6) without time zone,
+    "DateLastImported" timestamp(6) without time zone DEFAULT '0001-01-01 00:00:00'::timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public."ImportedJobsFederal" OWNER TO workbc;
+
+--
+-- Name: ImportedJobsWanted; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."ImportedJobsWanted" (
+    "JobId" bigint NOT NULL,
+    "JobPostEnglish" text,
+    "DateFirstImported" timestamp(6) without time zone NOT NULL,
+    "ApiDate" timestamp(6) without time zone NOT NULL,
+    "ReIndexNeeded" boolean NOT NULL,
+    "DateLastImported" timestamp(6) without time zone DEFAULT '0001-01-01 00:00:00'::timestamp without time zone NOT NULL,
+    "IsFederalOrWorkBc" boolean NOT NULL,
+    "HashId" bigint NOT NULL,
+    "DateLastSeen" timestamp(6) without time zone DEFAULT '0001-01-01 00:00:00'::timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public."ImportedJobsWanted" OWNER TO workbc;
+
+--
+-- Name: Industries; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."Industries" (
+    "Id" smallint NOT NULL,
+    "Title" character varying(150),
+    "TitleBC" character varying(150)
+);
+
+
+ALTER TABLE public."Industries" OWNER TO workbc;
+
+--
+-- Name: JobAlerts; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."JobAlerts" (
+    "Id" integer NOT NULL,
+    "Title" character varying(50),
+    "AlertFrequency" smallint NOT NULL,
+    "UrlParameters" character varying(1000),
+    "DateCreated" timestamp(6) without time zone NOT NULL,
+    "DateModified" timestamp(6) without time zone,
+    "DateDeleted" timestamp(6) without time zone,
+    "IsDeleted" boolean NOT NULL,
+    "AspNetUserId" character varying(450),
+    "JobSearchFilters" text,
+    "JobSearchFiltersVersion" integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE public."JobAlerts" OWNER TO workbc;
+
+--
+-- Name: JobAlerts_Id_seq; Type: SEQUENCE; Schema: public; Owner: workbc
+--
+
+ALTER TABLE public."JobAlerts" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."JobAlerts_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: JobIds; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."JobIds" (
+    "Id" bigint NOT NULL,
+    "DateFirstImported" timestamp(6) without time zone NOT NULL,
+    "JobSourceId" smallint NOT NULL
+);
+
+
+ALTER TABLE public."JobIds" OWNER TO workbc;
+
+--
+-- Name: JobSeekerAdminComments; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."JobSeekerAdminComments" (
+    "Id" integer NOT NULL,
+    "AspNetUserId" character varying(450),
+    "Comment" text,
+    "IsPinned" boolean NOT NULL,
+    "EnteredByAdminUserId" integer NOT NULL,
+    "DateEntered" timestamp(6) without time zone NOT NULL
+);
+
+
+ALTER TABLE public."JobSeekerAdminComments" OWNER TO workbc;
+
+--
+-- Name: JobSeekerAdminComments_Id_seq; Type: SEQUENCE; Schema: public; Owner: workbc
+--
+
+ALTER TABLE public."JobSeekerAdminComments" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."JobSeekerAdminComments_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: JobSeekerChangeLog; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."JobSeekerChangeLog" (
+    "Id" integer NOT NULL,
+    "AspNetUserId" character varying(450),
+    "Field" character varying(100),
+    "OldValue" text,
+    "NewValue" text,
+    "ModifiedByAdminUserId" integer,
+    "DateUpdated" timestamp(6) without time zone NOT NULL
+);
+
+
+ALTER TABLE public."JobSeekerChangeLog" OWNER TO workbc;
+
+--
+-- Name: JobSeekerChangeLog_Id_seq; Type: SEQUENCE; Schema: public; Owner: workbc
+--
+
+ALTER TABLE public."JobSeekerChangeLog" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."JobSeekerChangeLog_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: JobSeekerEventLog; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."JobSeekerEventLog" (
+    "Id" integer NOT NULL,
+    "AspNetUserId" character varying(450),
+    "EventTypeId" integer NOT NULL,
+    "DateLogged" timestamp(6) without time zone NOT NULL
+);
+
+
+ALTER TABLE public."JobSeekerEventLog" OWNER TO workbc;
+
+--
+-- Name: JobSeekerEventLog_Id_seq; Type: SEQUENCE; Schema: public; Owner: workbc
+--
+
+ALTER TABLE public."JobSeekerEventLog" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."JobSeekerEventLog_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: JobSeekerFlags; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."JobSeekerFlags" (
+    "Id" integer NOT NULL,
+    "AspNetUserId" character varying(450),
+    "IsApprentice" boolean NOT NULL,
+    "IsIndigenousPerson" boolean NOT NULL,
+    "IsMatureWorker" boolean NOT NULL,
+    "IsNewImmigrant" boolean NOT NULL,
+    "IsPersonWithDisability" boolean NOT NULL,
+    "IsStudent" boolean NOT NULL,
+    "IsVeteran" boolean NOT NULL,
+    "IsVisibleMinority" boolean NOT NULL,
+    "IsYouth" boolean NOT NULL
+);
+
+
+ALTER TABLE public."JobSeekerFlags" OWNER TO workbc;
+
+--
+-- Name: JobSeekerFlags_Id_seq; Type: SEQUENCE; Schema: public; Owner: workbc
+--
+
+ALTER TABLE public."JobSeekerFlags" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."JobSeekerFlags_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: JobSeekerStatLabels; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."JobSeekerStatLabels" (
+    "Key" character varying(4) NOT NULL,
+    "Label" character varying(100),
+    "IsTotal" boolean NOT NULL
+);
+
+
+ALTER TABLE public."JobSeekerStatLabels" OWNER TO workbc;
+
+--
+-- Name: JobSeekerStats; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."JobSeekerStats" (
+    "WeeklyPeriodId" integer NOT NULL,
+    "Value" integer NOT NULL,
+    "RegionId" integer NOT NULL,
+    "LabelKey" character varying(4) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE public."JobSeekerStats" OWNER TO workbc;
+
+--
+-- Name: JobSeekerVersions; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."JobSeekerVersions" (
+    "Id" bigint NOT NULL,
+    "AspNetUserId" character varying(450),
+    "CountryId" integer,
+    "ProvinceId" integer,
+    "LocationId" integer,
+    "DateRegistered" timestamp(6) without time zone NOT NULL,
+    "AccountStatus" smallint NOT NULL,
+    "EmailConfirmed" boolean NOT NULL,
+    "IsApprentice" boolean NOT NULL,
+    "IsIndigenousPerson" boolean NOT NULL,
+    "IsMatureWorker" boolean NOT NULL,
+    "IsNewImmigrant" boolean NOT NULL,
+    "IsPersonWithDisability" boolean NOT NULL,
+    "IsStudent" boolean NOT NULL,
+    "IsVeteran" boolean NOT NULL,
+    "IsVisibleMinority" boolean NOT NULL,
+    "IsYouth" boolean NOT NULL,
+    "DateVersionStart" timestamp(6) without time zone NOT NULL,
+    "DateVersionEnd" timestamp(6) without time zone,
+    "IsCurrentVersion" boolean NOT NULL,
+    "VersionNumber" smallint NOT NULL,
+    "Email" character varying(256)
+);
+
+
+ALTER TABLE public."JobSeekerVersions" OWNER TO workbc;
+
+--
+-- Name: JobSeekerVersions_Id_seq; Type: SEQUENCE; Schema: public; Owner: workbc
+--
+
+ALTER TABLE public."JobSeekerVersions" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."JobSeekerVersions_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: JobSources; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."JobSources" (
+    "Id" smallint NOT NULL,
+    "Name" character varying(50),
+    "GroupName" character varying(50),
+    "ListOrder" smallint NOT NULL
+);
+
+
+ALTER TABLE public."JobSources" OWNER TO workbc;
+
+--
+-- Name: JobStats; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."JobStats" (
+    "WeeklyPeriodId" integer NOT NULL,
+    "JobSourceId" smallint NOT NULL,
+    "RegionId" integer NOT NULL,
+    "JobPostings" integer NOT NULL,
+    "PositionsAvailable" integer NOT NULL
+);
+
+
+ALTER TABLE public."JobStats" OWNER TO workbc;
+
+--
+-- Name: JobVersions; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."JobVersions" (
+    "Id" bigint NOT NULL,
+    "JobId" bigint NOT NULL,
+    "LocationId" integer NOT NULL,
+    "NocCodeId" smallint,
+    "IndustryId" smallint,
+    "PositionsAvailable" smallint NOT NULL,
+    "DatePosted" timestamp(6) without time zone NOT NULL,
+    "IsActive" boolean NOT NULL,
+    "DateVersionStart" timestamp(6) without time zone NOT NULL,
+    "DateVersionEnd" timestamp(6) without time zone,
+    "IsCurrentVersion" boolean NOT NULL,
+    "VersionNumber" smallint NOT NULL,
+    "ActualDatePosted" timestamp(6) without time zone DEFAULT '0001-01-01 00:00:00'::timestamp without time zone NOT NULL,
+    "DateFirstImported" timestamp(6) without time zone DEFAULT '0001-01-01 00:00:00'::timestamp without time zone NOT NULL,
+    "JobSourceId" smallint NOT NULL,
+    "NocCodeId2021" integer
+);
+
+
+ALTER TABLE public."JobVersions" OWNER TO workbc;
+
+--
+-- Name: JobVersions_Id_seq; Type: SEQUENCE; Schema: public; Owner: workbc
+--
+
+ALTER TABLE public."JobVersions" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."JobVersions_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: JobViews; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."JobViews" (
+    "JobId" bigint NOT NULL,
+    "Views" integer,
+    "DateLastViewed" timestamp(6) without time zone NOT NULL
+);
+
+
+ALTER TABLE public."JobViews" OWNER TO workbc;
+
+--
+-- Name: Jobs; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."Jobs" (
+    "JobId" bigint NOT NULL,
+    "Title" character varying(300),
+    "NocCodeId" smallint,
+    "PositionsAvailable" smallint NOT NULL,
+    "EmployerName" character varying(100),
+    "DatePosted" timestamp(6) without time zone NOT NULL,
+    "Casual" boolean NOT NULL,
+    "City" character varying(120),
+    "ExpireDate" timestamp(6) without time zone DEFAULT '0001-01-01 00:00:00'::timestamp without time zone NOT NULL,
+    "FullTime" boolean NOT NULL,
+    "LastUpdated" timestamp(6) without time zone DEFAULT '0001-01-01 00:00:00'::timestamp without time zone NOT NULL,
+    "LeadingToFullTime" boolean NOT NULL,
+    "LocationId" integer DEFAULT 0 NOT NULL,
+    "IndustryId" smallint,
+    "PartTime" boolean NOT NULL,
+    "Permanent" boolean NOT NULL,
+    "Salary" numeric(18,2),
+    "SalarySummary" character varying(60),
+    "Seasonal" boolean NOT NULL,
+    "Temporary" boolean NOT NULL,
+    "DateFirstImported" timestamp(6) without time zone DEFAULT '0001-01-01 00:00:00'::timestamp without time zone NOT NULL,
+    "IsActive" boolean NOT NULL,
+    "DateLastImported" timestamp(6) without time zone DEFAULT '0001-01-01 00:00:00'::timestamp without time zone NOT NULL,
+    "JobSourceId" smallint NOT NULL,
+    "OriginalSource" character varying(100),
+    "ExternalSourceUrl" character varying(800),
+    "ActualDatePosted" timestamp(6) without time zone DEFAULT '0001-01-01 00:00:00'::timestamp without time zone NOT NULL,
+    "NocCodeId2021" integer
+);
+
+
+ALTER TABLE public."Jobs" OWNER TO workbc;
+
+--
+-- Name: Locations; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."Locations" (
+    "LocationId" integer NOT NULL,
+    "EDM_Location_DistrictLocationId" integer NOT NULL,
+    "RegionId" integer,
+    "FederalCityId" integer,
+    "City" character varying(50),
+    "Label" character varying(50),
+    "IsDuplicate" boolean NOT NULL,
+    "IsHidden" boolean NOT NULL,
+    "Latitude" character varying(25),
+    "Longitude" character varying(25),
+    "BcStatsPlaceId" integer
+);
+
+
+ALTER TABLE public."Locations" OWNER TO workbc;
+
+--
+-- Name: NocCategories; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."NocCategories" (
+    "CategoryCode" character varying(3) NOT NULL,
+    "Level" smallint NOT NULL,
+    "Title" character varying(150)
+);
+
+
+ALTER TABLE public."NocCategories" OWNER TO workbc;
+
+--
+-- Name: NocCategories2021; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."NocCategories2021" (
+    "CategoryCode" character varying(4) NOT NULL,
+    "Level" smallint NOT NULL,
+    "Title" character varying(150)
+);
+
+
+ALTER TABLE public."NocCategories2021" OWNER TO workbc;
+
+--
+-- Name: NocCodes; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."NocCodes" (
+    "Code" character varying(4),
+    "Title" character varying(150),
+    "Id" smallint NOT NULL,
+    "FrenchTitle" character varying(180)
+);
+
+
+ALTER TABLE public."NocCodes" OWNER TO workbc;
+
+--
+-- Name: NocCodes2021; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."NocCodes2021" (
+    "Id" integer NOT NULL,
+    "Code" character varying(5),
+    "Title" character varying(150),
+    "FrenchTitle" character varying(250),
+    "Code2016" character varying(30)
+);
+
+
+ALTER TABLE public."NocCodes2021" OWNER TO workbc;
+
+--
+-- Name: Provinces; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."Provinces" (
+    "ProvinceId" integer NOT NULL,
+    "Name" character varying(50),
+    "ShortName" character varying(2)
+);
+
+
+ALTER TABLE public."Provinces" OWNER TO workbc;
+
+--
+-- Name: Regions; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."Regions" (
+    "Id" integer NOT NULL,
+    "Name" character varying(50),
+    "ListOrder" smallint NOT NULL,
+    "IsHidden" boolean NOT NULL
+);
+
+
+ALTER TABLE public."Regions" OWNER TO workbc;
+
+--
+-- Name: ReportPersistenceControl; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."ReportPersistenceControl" (
+    "WeeklyPeriodId" integer NOT NULL,
+    "DateCalculated" timestamp(6) without time zone NOT NULL,
+    "IsTotalToDate" boolean NOT NULL,
+    "TableName" character varying(25) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE public."ReportPersistenceControl" OWNER TO workbc;
+
+--
+-- Name: SavedCareerProfiles; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."SavedCareerProfiles" (
+    "Id" integer NOT NULL,
+    "EDM_CareerProfile_CareerProfileId" integer,
+    "AspNetUserId" character varying(450),
+    "DateSaved" timestamp(6) without time zone NOT NULL,
+    "DateDeleted" timestamp(6) without time zone,
+    "IsDeleted" boolean NOT NULL,
+    "NocCodeId2021" integer
+);
+
+
+ALTER TABLE public."SavedCareerProfiles" OWNER TO workbc;
+
+--
+-- Name: SavedCareerProfiles_Id_seq; Type: SEQUENCE; Schema: public; Owner: workbc
+--
+
+ALTER TABLE public."SavedCareerProfiles" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."SavedCareerProfiles_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: SavedIndustryProfiles; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."SavedIndustryProfiles" (
+    "Id" integer NOT NULL,
+    "AspNetUserId" character varying(450),
+    "DateSaved" timestamp(6) without time zone NOT NULL,
+    "DateDeleted" timestamp(6) without time zone,
+    "IsDeleted" boolean NOT NULL,
+    "IndustryId" smallint
+);
+
+
+ALTER TABLE public."SavedIndustryProfiles" OWNER TO workbc;
+
+--
+-- Name: SavedIndustryProfiles_Id_seq; Type: SEQUENCE; Schema: public; Owner: workbc
+--
+
+ALTER TABLE public."SavedIndustryProfiles" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."SavedIndustryProfiles_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: SavedJobs; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."SavedJobs" (
+    "Id" integer NOT NULL,
+    "JobId" bigint NOT NULL,
+    "AspNetUserId" character varying(450),
+    "DateSaved" timestamp(6) without time zone NOT NULL,
+    "DateDeleted" timestamp(6) without time zone,
+    "IsDeleted" boolean NOT NULL,
+    "Note" character varying(800),
+    "NoteUpdatedDate" timestamp(6) without time zone
+);
+
+
+ALTER TABLE public."SavedJobs" OWNER TO workbc;
+
+--
+-- Name: SavedJobs_Id_seq; Type: SEQUENCE; Schema: public; Owner: workbc
+--
+
+ALTER TABLE public."SavedJobs" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."SavedJobs_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: SecurityQuestions; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."SecurityQuestions" (
+    "Id" integer NOT NULL,
+    "QuestionText" character varying(40)
+);
+
+
+ALTER TABLE public."SecurityQuestions" OWNER TO workbc;
+
+--
+-- Name: SystemSettings; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."SystemSettings" (
+    "Name" character varying(400) NOT NULL,
+    "Value" text,
+    "Description" text,
+    "FieldType" integer NOT NULL,
+    "ModifiedByAdminUserId" integer NOT NULL,
+    "DateUpdated" timestamp(6) without time zone NOT NULL,
+    "DefaultValue" text
+);
+
+
+ALTER TABLE public."SystemSettings" OWNER TO workbc;
+
+--
+-- Name: WeeklyPeriods; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."WeeklyPeriods" (
+    "Id" integer NOT NULL,
+    "CalendarYear" smallint NOT NULL,
+    "CalendarMonth" smallint NOT NULL,
+    "FiscalYear" smallint NOT NULL,
+    "WeekOfMonth" smallint NOT NULL,
+    "WeekStartDate" timestamp(6) without time zone NOT NULL,
+    "WeekEndDate" timestamp(6) without time zone NOT NULL,
+    "IsEndOfFiscalYear" boolean NOT NULL,
+    "IsEndOfMonth" boolean NOT NULL
+);
+
+
+ALTER TABLE public."WeeklyPeriods" OWNER TO workbc;
+
+--
+-- Name: WeeklyPeriods_Id_seq; Type: SEQUENCE; Schema: public; Owner: workbc
+--
+
+ALTER TABLE public."WeeklyPeriods" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."WeeklyPeriods_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: __EFMigrationsHistory; Type: TABLE; Schema: public; Owner: workbc
+--
+
+CREATE TABLE public."__EFMigrationsHistory" (
+    "MigrationId" character varying(150) NOT NULL,
+    "ProductVersion" character varying(32) NOT NULL
+);
+
+
+ALTER TABLE public."__EFMigrationsHistory" OWNER TO workbc;
+
+--
+-- Name: AdminUsers PK_AdminUsers_322100188; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AdminUsers"
+    ADD CONSTRAINT "PK_AdminUsers_322100188" PRIMARY KEY ("Id");
+
+
+--
+-- Name: AspNetRoleClaims PK_AspNetRoleClaims_1813581499; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AspNetRoleClaims"
+    ADD CONSTRAINT "PK_AspNetRoleClaims_1813581499" PRIMARY KEY ("Id");
+
+
+--
+-- Name: AspNetRoles PK_AspNetRoles_1749581271; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AspNetRoles"
+    ADD CONSTRAINT "PK_AspNetRoles_1749581271" PRIMARY KEY ("Id");
+
+
+--
+-- Name: AspNetUserClaims PK_AspNetUserClaims_1861581670; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AspNetUserClaims"
+    ADD CONSTRAINT "PK_AspNetUserClaims_1861581670" PRIMARY KEY ("Id");
+
+
+--
+-- Name: AspNetUserLogins PK_AspNetUserLogins_418100530; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AspNetUserLogins"
+    ADD CONSTRAINT "PK_AspNetUserLogins_418100530" PRIMARY KEY ("ProviderKey");
+
+
+--
+-- Name: AspNetUserRoles PK_AspNetUserRoles_1957582012; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AspNetUserRoles"
+    ADD CONSTRAINT "PK_AspNetUserRoles_1957582012" PRIMARY KEY ("UserId", "RoleId");
+
+
+--
+-- Name: AspNetUserTokens PK_AspNetUserTokens_402100473; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AspNetUserTokens"
+    ADD CONSTRAINT "PK_AspNetUserTokens_402100473" PRIMARY KEY ("Name");
+
+
+--
+-- Name: AspNetUsers PK_AspNetUsers_1781581385; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AspNetUsers"
+    ADD CONSTRAINT "PK_AspNetUsers_1781581385" PRIMARY KEY ("Id");
+
+
+--
+-- Name: Countries PK_Countries_398624463; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."Countries"
+    ADD CONSTRAINT "PK_Countries_398624463" PRIMARY KEY ("Id");
+
+
+--
+-- Name: DataProtectionKeys PK_DataProtectionKeys_2078630448; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."DataProtectionKeys"
+    ADD CONSTRAINT "PK_DataProtectionKeys_2078630448" PRIMARY KEY ("Id");
+
+
+--
+-- Name: DeletedJobs PK_DeletedJobs_958626458; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."DeletedJobs"
+    ADD CONSTRAINT "PK_DeletedJobs_958626458" PRIMARY KEY ("JobId");
+
+
+--
+-- Name: ExpiredJobs PK_ExpiredJobs_1710629137; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."ExpiredJobs"
+    ADD CONSTRAINT "PK_ExpiredJobs_1710629137" PRIMARY KEY ("JobId");
+
+
+--
+-- Name: GeocodedLocationCache PK_GeocodedLocationCache_1669580986; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."GeocodedLocationCache"
+    ADD CONSTRAINT "PK_GeocodedLocationCache_1669580986" PRIMARY KEY ("Id");
+
+
+--
+-- Name: ImpersonationLog PK_ImpersonationLog_1022626686; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."ImpersonationLog"
+    ADD CONSTRAINT "PK_ImpersonationLog_1022626686" PRIMARY KEY ("Token");
+
+
+--
+-- Name: ImportedJobsFederal PK_ImportedJobsFederal_290100074; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."ImportedJobsFederal"
+    ADD CONSTRAINT "PK_ImportedJobsFederal_290100074" PRIMARY KEY ("JobId");
+
+
+--
+-- Name: ImportedJobsWanted PK_ImportedJobsWanted_1509580416; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."ImportedJobsWanted"
+    ADD CONSTRAINT "PK_ImportedJobsWanted_1509580416" PRIMARY KEY ("JobId");
+
+
+--
+-- Name: JobAlerts PK_JobAlerts_1106102981; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobAlerts"
+    ADD CONSTRAINT "PK_JobAlerts_1106102981" PRIMARY KEY ("Id");
+
+
+--
+-- Name: JobIds PK_JobIds_1538104520; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobIds"
+    ADD CONSTRAINT "PK_JobIds_1538104520" PRIMARY KEY ("Id");
+
+
+--
+-- Name: JobSeekerAdminComments PK_JobSeekerAdminComments_1874105717; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerAdminComments"
+    ADD CONSTRAINT "PK_JobSeekerAdminComments_1874105717" PRIMARY KEY ("Id");
+
+
+--
+-- Name: JobSeekerChangeLog PK_JobSeekerChangeLog_1646628909; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerChangeLog"
+    ADD CONSTRAINT "PK_JobSeekerChangeLog_1646628909" PRIMARY KEY ("Id");
+
+
+--
+-- Name: JobSeekerEventLog PK_JobSeekerEventLog_2002106173; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerEventLog"
+    ADD CONSTRAINT "PK_JobSeekerEventLog_2002106173" PRIMARY KEY ("Id");
+
+
+--
+-- Name: JobSeekerFlags PK_JobSeekerFlags_98099390; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerFlags"
+    ADD CONSTRAINT "PK_JobSeekerFlags_98099390" PRIMARY KEY ("Id");
+
+
+--
+-- Name: JobSeekerStatLabels PK_JobSeekerStatLabels_1438628168; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerStatLabels"
+    ADD CONSTRAINT "PK_JobSeekerStatLabels_1438628168" PRIMARY KEY ("Key");
+
+
+--
+-- Name: JobSeekerStats PK_JobSeekerStats_1406628054; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerStats"
+    ADD CONSTRAINT "PK_JobSeekerStats_1406628054" PRIMARY KEY ("WeeklyPeriodId", "LabelKey", "RegionId");
+
+
+--
+-- Name: JobSeekerVersions PK_JobSeekerVersions_286624064; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerVersions"
+    ADD CONSTRAINT "PK_JobSeekerVersions_286624064" PRIMARY KEY ("Id");
+
+
+--
+-- Name: JobSources PK_JobSources_734625660; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSources"
+    ADD CONSTRAINT "PK_JobSources_734625660" PRIMARY KEY ("Id");
+
+
+--
+-- Name: JobStats PK_JobStats_1342627826; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobStats"
+    ADD CONSTRAINT "PK_JobStats_1342627826" PRIMARY KEY ("WeeklyPeriodId", "RegionId", "JobSourceId");
+
+
+--
+-- Name: JobVersions PK_JobVersions_46623209; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobVersions"
+    ADD CONSTRAINT "PK_JobVersions_46623209" PRIMARY KEY ("Id");
+
+
+--
+-- Name: JobViews PK_JobViews_786101841; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobViews"
+    ADD CONSTRAINT "PK_JobViews_786101841" PRIMARY KEY ("JobId");
+
+
+--
+-- Name: Jobs PK_Jobs_802101898; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."Jobs"
+    ADD CONSTRAINT "PK_Jobs_802101898" PRIMARY KEY ("JobId");
+
+
+--
+-- Name: Locations PK_LocationLookups_466100701; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."Locations"
+    ADD CONSTRAINT "PK_LocationLookups_466100701" PRIMARY KEY ("LocationId");
+
+
+--
+-- Name: Industries PK_NaicsCodes_2146106686; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."Industries"
+    ADD CONSTRAINT "PK_NaicsCodes_2146106686" PRIMARY KEY ("Id");
+
+
+--
+-- Name: NocCategories2021 PK_NocCategories2021_955150448; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."NocCategories2021"
+    ADD CONSTRAINT "PK_NocCategories2021_955150448" PRIMARY KEY ("CategoryCode");
+
+
+--
+-- Name: NocCategories PK_NocCategories_2114106572; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."NocCategories"
+    ADD CONSTRAINT "PK_NocCategories_2114106572" PRIMARY KEY ("CategoryCode");
+
+
+--
+-- Name: NocCodes2021 PK_NocCodes2021_859150106; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."NocCodes2021"
+    ADD CONSTRAINT "PK_NocCodes2021_859150106" PRIMARY KEY ("Id");
+
+
+--
+-- Name: NocCodes PK_NocCodes_1634104862; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."NocCodes"
+    ADD CONSTRAINT "PK_NocCodes_1634104862" PRIMARY KEY ("Id");
+
+
+--
+-- Name: Provinces PK_Provinces_142623551; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."Provinces"
+    ADD CONSTRAINT "PK_Provinces_142623551" PRIMARY KEY ("ProvinceId");
+
+
+--
+-- Name: Regions PK_Regions_174623665; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."Regions"
+    ADD CONSTRAINT "PK_Regions_174623665" PRIMARY KEY ("Id");
+
+
+--
+-- Name: ReportPersistenceControl PK_ReportPersistenceControl_1566628624; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."ReportPersistenceControl"
+    ADD CONSTRAINT "PK_ReportPersistenceControl_1566628624" PRIMARY KEY ("WeeklyPeriodId", "TableName");
+
+
+--
+-- Name: SavedCareerProfiles PK_SavedCareerProfiles_1250103494; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."SavedCareerProfiles"
+    ADD CONSTRAINT "PK_SavedCareerProfiles_1250103494" PRIMARY KEY ("Id");
+
+
+--
+-- Name: SavedIndustryProfiles PK_SavedIndustryProfiles_1282103608; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."SavedIndustryProfiles"
+    ADD CONSTRAINT "PK_SavedIndustryProfiles_1282103608" PRIMARY KEY ("Id");
+
+
+--
+-- Name: SavedJobs PK_SavedJobs_498100815; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."SavedJobs"
+    ADD CONSTRAINT "PK_SavedJobs_498100815" PRIMARY KEY ("Id");
+
+
+--
+-- Name: SecurityQuestions PK_SecurityQuestions_770101784; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."SecurityQuestions"
+    ADD CONSTRAINT "PK_SecurityQuestions_770101784" PRIMARY KEY ("Id");
+
+
+--
+-- Name: SystemSettings PK_SystemSettings_1678629023; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."SystemSettings"
+    ADD CONSTRAINT "PK_SystemSettings_1678629023" PRIMARY KEY ("Name");
+
+
+--
+-- Name: WeeklyPeriods PK_WeeklyPeriods_542624976; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."WeeklyPeriods"
+    ADD CONSTRAINT "PK_WeeklyPeriods_542624976" PRIMARY KEY ("Id");
+
+
+--
+-- Name: __EFMigrationsHistory PK___EFMigrationsHistory_1221579390; Type: CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."__EFMigrationsHistory"
+    ADD CONSTRAINT "PK___EFMigrationsHistory_1221579390" PRIMARY KEY ("MigrationId");
+
+
+--
+-- Name: IX_AdminUsers_IX_AdminUsers_LockedByAdminUserId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_AdminUsers_IX_AdminUsers_LockedByAdminUserId" ON public."AdminUsers" USING btree ("LockedByAdminUserId");
+
+
+--
+-- Name: IX_AdminUsers_IX_AdminUsers_ModifiedByAdminUserId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_AdminUsers_IX_AdminUsers_ModifiedByAdminUserId" ON public."AdminUsers" USING btree ("ModifiedByAdminUserId");
+
+
+--
+-- Name: IX_AspNetRoleClaims_IX_AspNetRoleClaims_RoleId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_AspNetRoleClaims_IX_AspNetRoleClaims_RoleId" ON public."AspNetRoleClaims" USING btree ("RoleId");
+
+
+--
+-- Name: IX_AspNetRoles_RoleNameIndex; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE UNIQUE INDEX "IX_AspNetRoles_RoleNameIndex" ON public."AspNetRoles" USING btree ("NormalizedName") WHERE ("NormalizedName" IS NOT NULL);
+
+
+--
+-- Name: IX_AspNetUserClaims_IX_AspNetUserClaims_UserId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_AspNetUserClaims_IX_AspNetUserClaims_UserId" ON public."AspNetUserClaims" USING btree ("UserId");
+
+
+--
+-- Name: IX_AspNetUserLogins_IX_AspNetUserLogins_UserId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_AspNetUserLogins_IX_AspNetUserLogins_UserId" ON public."AspNetUserLogins" USING btree ("UserId");
+
+
+--
+-- Name: IX_AspNetUserRoles_IX_AspNetUserRoles_RoleId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_AspNetUserRoles_IX_AspNetUserRoles_RoleId" ON public."AspNetUserRoles" USING btree ("RoleId");
+
+
+--
+-- Name: IX_AspNetUsers_EmailIndex; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_AspNetUsers_EmailIndex" ON public."AspNetUsers" USING btree ("NormalizedEmail");
+
+
+--
+-- Name: IX_AspNetUsers_IX_AspNetUsers_AccountStatus_LastName_FirstName; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_AccountStatus_LastName_FirstName" ON public."AspNetUsers" USING btree ("AccountStatus", "LastName", "FirstName") INCLUDE ("Email");
+
+
+--
+-- Name: IX_AspNetUsers_IX_AspNetUsers_CountryId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_CountryId" ON public."AspNetUsers" USING btree ("CountryId");
+
+
+--
+-- Name: IX_AspNetUsers_IX_AspNetUsers_DateRegistered; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_DateRegistered" ON public."AspNetUsers" USING btree ("DateRegistered") INCLUDE ("LastName", "FirstName", "Email", "AccountStatus");
+
+
+--
+-- Name: IX_AspNetUsers_IX_AspNetUsers_Email; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE UNIQUE INDEX "IX_AspNetUsers_IX_AspNetUsers_Email" ON public."AspNetUsers" USING btree ("Email") INCLUDE ("LastName", "FirstName", "AccountStatus") WHERE ("Email" IS NOT NULL);
+
+
+--
+-- Name: IX_AspNetUsers_IX_AspNetUsers_FirstName_LastName; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_FirstName_LastName" ON public."AspNetUsers" USING btree ("FirstName", "LastName") INCLUDE ("Email", "AccountStatus");
+
+
+--
+-- Name: IX_AspNetUsers_IX_AspNetUsers_LastModified; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_LastModified" ON public."AspNetUsers" USING btree ("LastModified") INCLUDE ("LastName", "FirstName", "Email", "AccountStatus");
+
+
+--
+-- Name: IX_AspNetUsers_IX_AspNetUsers_LastName_FirstName; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_LastName_FirstName" ON public."AspNetUsers" USING btree ("LastName", "FirstName") INCLUDE ("Email", "AccountStatus");
+
+
+--
+-- Name: IX_AspNetUsers_IX_AspNetUsers_LocationId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_LocationId" ON public."AspNetUsers" USING btree ("LocationId");
+
+
+--
+-- Name: IX_AspNetUsers_IX_AspNetUsers_LockedByAdminUserId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_LockedByAdminUserId" ON public."AspNetUsers" USING btree ("LockedByAdminUserId");
+
+
+--
+-- Name: IX_AspNetUsers_IX_AspNetUsers_ProvinceId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_ProvinceId" ON public."AspNetUsers" USING btree ("ProvinceId");
+
+
+--
+-- Name: IX_AspNetUsers_IX_AspNetUsers_SecurityQuestionId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_AspNetUsers_IX_AspNetUsers_SecurityQuestionId" ON public."AspNetUsers" USING btree ("SecurityQuestionId");
+
+
+--
+-- Name: IX_AspNetUsers_UserNameIndex; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE UNIQUE INDEX "IX_AspNetUsers_UserNameIndex" ON public."AspNetUsers" USING btree ("NormalizedUserName") WHERE ("NormalizedUserName" IS NOT NULL);
+
+
+--
+-- Name: IX_DeletedJobs_IX_DeletedJobs_DeletedByAdminUserId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_DeletedJobs_IX_DeletedJobs_DeletedByAdminUserId" ON public."DeletedJobs" USING btree ("DeletedByAdminUserId");
+
+
+--
+-- Name: IX_GeocodedLocationCache_IX_GeocodedLocationCache_Name; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE UNIQUE INDEX "IX_GeocodedLocationCache_IX_GeocodedLocationCache_Name" ON public."GeocodedLocationCache" USING btree ("Name") WHERE ("Name" IS NOT NULL);
+
+
+--
+-- Name: IX_ImpersonationLog_IX_ImpersonationLog_AdminUserId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_ImpersonationLog_IX_ImpersonationLog_AdminUserId" ON public."ImpersonationLog" USING btree ("AdminUserId");
+
+
+--
+-- Name: IX_ImpersonationLog_IX_ImpersonationLog_AspNetUserId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_ImpersonationLog_IX_ImpersonationLog_AspNetUserId" ON public."ImpersonationLog" USING btree ("AspNetUserId");
+
+
+--
+-- Name: IX_ImportedJobsWanted_IX_ImportedJobsWanted_HashId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE UNIQUE INDEX "IX_ImportedJobsWanted_IX_ImportedJobsWanted_HashId" ON public."ImportedJobsWanted" USING btree ("HashId");
+
+
+--
+-- Name: IX_JobAlerts_IX_JobAlerts_AspNetUserId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobAlerts_IX_JobAlerts_AspNetUserId" ON public."JobAlerts" USING btree ("AspNetUserId");
+
+
+--
+-- Name: IX_JobAlerts_IX_JobAlerts_DateCreated; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobAlerts_IX_JobAlerts_DateCreated" ON public."JobAlerts" USING btree ("DateCreated");
+
+
+--
+-- Name: IX_JobIds_IX_JobIds_JobSourceId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobIds_IX_JobIds_JobSourceId" ON public."JobIds" USING btree ("JobSourceId");
+
+
+--
+-- Name: IX_JobSeekerAdminComments_IX_JobSeekerAdminComments_AspNetUserI; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobSeekerAdminComments_IX_JobSeekerAdminComments_AspNetUserI" ON public."JobSeekerAdminComments" USING btree ("AspNetUserId");
+
+
+--
+-- Name: IX_JobSeekerAdminComments_IX_JobSeekerAdminComments_EnteredByAd; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobSeekerAdminComments_IX_JobSeekerAdminComments_EnteredByAd" ON public."JobSeekerAdminComments" USING btree ("EnteredByAdminUserId");
+
+
+--
+-- Name: IX_JobSeekerChangeLog_IX_JobSeekerChangeLog_AspNetUserId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobSeekerChangeLog_IX_JobSeekerChangeLog_AspNetUserId" ON public."JobSeekerChangeLog" USING btree ("AspNetUserId");
+
+
+--
+-- Name: IX_JobSeekerChangeLog_IX_JobSeekerChangeLog_ModifiedByAdminUser; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobSeekerChangeLog_IX_JobSeekerChangeLog_ModifiedByAdminUser" ON public."JobSeekerChangeLog" USING btree ("ModifiedByAdminUserId");
+
+
+--
+-- Name: IX_JobSeekerEventLog_IX_JobSeekerEventLog_AspNetUserId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobSeekerEventLog_IX_JobSeekerEventLog_AspNetUserId" ON public."JobSeekerEventLog" USING btree ("AspNetUserId");
+
+
+--
+-- Name: IX_JobSeekerEventLog_IX_JobSeekerEventLog_DateLogged; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobSeekerEventLog_IX_JobSeekerEventLog_DateLogged" ON public."JobSeekerEventLog" USING btree ("DateLogged");
+
+
+--
+-- Name: IX_JobSeekerFlags_IX_JobSeekerFlags_AspNetUserId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE UNIQUE INDEX "IX_JobSeekerFlags_IX_JobSeekerFlags_AspNetUserId" ON public."JobSeekerFlags" USING btree ("AspNetUserId") WHERE ("AspNetUserId" IS NOT NULL);
+
+
+--
+-- Name: IX_JobSeekerStats_IX_JobSeekerStats_LabelKey; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobSeekerStats_IX_JobSeekerStats_LabelKey" ON public."JobSeekerStats" USING btree ("LabelKey");
+
+
+--
+-- Name: IX_JobSeekerStats_IX_JobSeekerStats_RegionId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobSeekerStats_IX_JobSeekerStats_RegionId" ON public."JobSeekerStats" USING btree ("RegionId");
+
+
+--
+-- Name: IX_JobSeekerVersions_IX_JobSeekerVersions_AspNetUserId_VersionN; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE UNIQUE INDEX "IX_JobSeekerVersions_IX_JobSeekerVersions_AspNetUserId_VersionN" ON public."JobSeekerVersions" USING btree ("AspNetUserId", "VersionNumber") WHERE ("AspNetUserId" IS NOT NULL);
+
+
+--
+-- Name: IX_JobSeekerVersions_IX_JobSeekerVersions_CountryId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobSeekerVersions_IX_JobSeekerVersions_CountryId" ON public."JobSeekerVersions" USING btree ("CountryId");
+
+
+--
+-- Name: IX_JobSeekerVersions_IX_JobSeekerVersions_LocationId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobSeekerVersions_IX_JobSeekerVersions_LocationId" ON public."JobSeekerVersions" USING btree ("LocationId");
+
+
+--
+-- Name: IX_JobSeekerVersions_IX_JobSeekerVersions_ProvinceId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobSeekerVersions_IX_JobSeekerVersions_ProvinceId" ON public."JobSeekerVersions" USING btree ("ProvinceId");
+
+
+--
+-- Name: IX_JobStats_IX_JobStats_JobSourceId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobStats_IX_JobStats_JobSourceId" ON public."JobStats" USING btree ("JobSourceId");
+
+
+--
+-- Name: IX_JobStats_IX_JobStats_RegionId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobStats_IX_JobStats_RegionId" ON public."JobStats" USING btree ("RegionId");
+
+
+--
+-- Name: IX_JobVersions_IX_JobVersions_JobId_VersionNumber; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE UNIQUE INDEX "IX_JobVersions_IX_JobVersions_JobId_VersionNumber" ON public."JobVersions" USING btree ("JobId", "VersionNumber");
+
+
+--
+-- Name: IX_JobVersions_IX_JobVersions_LocationId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobVersions_IX_JobVersions_LocationId" ON public."JobVersions" USING btree ("LocationId");
+
+
+--
+-- Name: IX_JobVersions_IX_JobVersions_NaicsId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobVersions_IX_JobVersions_NaicsId" ON public."JobVersions" USING btree ("IndustryId");
+
+
+--
+-- Name: IX_JobVersions_IX_JobVersions_NocCodeId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_JobVersions_IX_JobVersions_NocCodeId" ON public."JobVersions" USING btree ("NocCodeId");
+
+
+--
+-- Name: IX_Jobs_IX_Jobs_JobSourceId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_Jobs_IX_Jobs_JobSourceId" ON public."Jobs" USING btree ("JobSourceId");
+
+
+--
+-- Name: IX_Jobs_IX_Jobs_LocationId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_Jobs_IX_Jobs_LocationId" ON public."Jobs" USING btree ("LocationId");
+
+
+--
+-- Name: IX_Jobs_IX_Jobs_NaicsId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_Jobs_IX_Jobs_NaicsId" ON public."Jobs" USING btree ("IndustryId");
+
+
+--
+-- Name: IX_Jobs_IX_Jobs_NocCodeId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_Jobs_IX_Jobs_NocCodeId" ON public."Jobs" USING btree ("NocCodeId");
+
+
+--
+-- Name: IX_Locations_IX_LocationLookups_RegionId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_Locations_IX_LocationLookups_RegionId" ON public."Locations" USING btree ("RegionId");
+
+
+--
+-- Name: IX_SavedCareerProfiles_IX_SavedCareerProfiles_AspNetUserId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_SavedCareerProfiles_IX_SavedCareerProfiles_AspNetUserId" ON public."SavedCareerProfiles" USING btree ("AspNetUserId");
+
+
+--
+-- Name: IX_SavedCareerProfiles_IX_SavedCareerProfiles_DateDeleted; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_SavedCareerProfiles_IX_SavedCareerProfiles_DateDeleted" ON public."SavedCareerProfiles" USING btree ("DateDeleted");
+
+
+--
+-- Name: IX_SavedCareerProfiles_IX_SavedCareerProfiles_DateSaved; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_SavedCareerProfiles_IX_SavedCareerProfiles_DateSaved" ON public."SavedCareerProfiles" USING btree ("DateSaved");
+
+
+--
+-- Name: IX_SavedIndustryProfiles_IX_SavedIndustryProfiles_AspNetUserId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_SavedIndustryProfiles_IX_SavedIndustryProfiles_AspNetUserId" ON public."SavedIndustryProfiles" USING btree ("AspNetUserId");
+
+
+--
+-- Name: IX_SavedIndustryProfiles_IX_SavedIndustryProfiles_DateDeleted; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_SavedIndustryProfiles_IX_SavedIndustryProfiles_DateDeleted" ON public."SavedIndustryProfiles" USING btree ("DateDeleted");
+
+
+--
+-- Name: IX_SavedIndustryProfiles_IX_SavedIndustryProfiles_DateSaved; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_SavedIndustryProfiles_IX_SavedIndustryProfiles_DateSaved" ON public."SavedIndustryProfiles" USING btree ("DateSaved");
+
+
+--
+-- Name: IX_SavedJobs_IX_SavedJobs_AspNetUserId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_SavedJobs_IX_SavedJobs_AspNetUserId" ON public."SavedJobs" USING btree ("AspNetUserId");
+
+
+--
+-- Name: IX_SavedJobs_IX_SavedJobs_JobId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_SavedJobs_IX_SavedJobs_JobId" ON public."SavedJobs" USING btree ("JobId");
+
+
+--
+-- Name: IX_SystemSettings_IX_SystemSettings_ModifiedByAdminUserId; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_SystemSettings_IX_SystemSettings_ModifiedByAdminUserId" ON public."SystemSettings" USING btree ("ModifiedByAdminUserId");
+
+
+--
+-- Name: IX_WeeklyPeriods_IX_WeeklyPeriods_WeekEndDate; Type: INDEX; Schema: public; Owner: workbc
+--
+
+CREATE INDEX "IX_WeeklyPeriods_IX_WeeklyPeriods_WeekEndDate" ON public."WeeklyPeriods" USING btree ("WeekEndDate");
+
+
+--
+-- Name: AdminUsers FK_AdminUsers_AdminUsers_LockedByAdminUserId_1346103836; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AdminUsers"
+    ADD CONSTRAINT "FK_AdminUsers_AdminUsers_LockedByAdminUserId_1346103836" FOREIGN KEY ("LockedByAdminUserId") REFERENCES public."AdminUsers"("Id");
+
+
+--
+-- Name: AdminUsers FK_AdminUsers_AdminUsers_ModifiedByAdminUserId_1378103950; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AdminUsers"
+    ADD CONSTRAINT "FK_AdminUsers_AdminUsers_ModifiedByAdminUserId_1378103950" FOREIGN KEY ("ModifiedByAdminUserId") REFERENCES public."AdminUsers"("Id");
+
+
+--
+-- Name: AspNetRoleClaims FK_AspNetRoleClaims_AspNetRoles_RoleId_1829581556; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AspNetRoleClaims"
+    ADD CONSTRAINT "FK_AspNetRoleClaims_AspNetRoles_RoleId_1829581556" FOREIGN KEY ("RoleId") REFERENCES public."AspNetRoles"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: AspNetUserClaims FK_AspNetUserClaims_AspNetUsers_UserId_1877581727; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AspNetUserClaims"
+    ADD CONSTRAINT "FK_AspNetUserClaims_AspNetUsers_UserId_1877581727" FOREIGN KEY ("UserId") REFERENCES public."AspNetUsers"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: AspNetUserLogins FK_AspNetUserLogins_AspNetUsers_UserId_1925581898; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AspNetUserLogins"
+    ADD CONSTRAINT "FK_AspNetUserLogins_AspNetUsers_UserId_1925581898" FOREIGN KEY ("UserId") REFERENCES public."AspNetUsers"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: AspNetUserRoles FK_AspNetUserRoles_AspNetRoles_RoleId_1973582069; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AspNetUserRoles"
+    ADD CONSTRAINT "FK_AspNetUserRoles_AspNetRoles_RoleId_1973582069" FOREIGN KEY ("RoleId") REFERENCES public."AspNetRoles"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: AspNetUserRoles FK_AspNetUserRoles_AspNetUsers_UserId_1989582126; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AspNetUserRoles"
+    ADD CONSTRAINT "FK_AspNetUserRoles_AspNetUsers_UserId_1989582126" FOREIGN KEY ("UserId") REFERENCES public."AspNetUsers"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: AspNetUserTokens FK_AspNetUserTokens_AspNetUsers_UserId_2037582297; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AspNetUserTokens"
+    ADD CONSTRAINT "FK_AspNetUserTokens_AspNetUsers_UserId_2037582297" FOREIGN KEY ("UserId") REFERENCES public."AspNetUsers"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: AspNetUsers FK_AspNetUsers_AdminUsers_LockedByAdminUserId_2050106344; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AspNetUsers"
+    ADD CONSTRAINT "FK_AspNetUsers_AdminUsers_LockedByAdminUserId_2050106344" FOREIGN KEY ("LockedByAdminUserId") REFERENCES public."AdminUsers"("Id");
+
+
+--
+-- Name: AspNetUsers FK_AspNetUsers_Countries_CountryId_414624520; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AspNetUsers"
+    ADD CONSTRAINT "FK_AspNetUsers_Countries_CountryId_414624520" FOREIGN KEY ("CountryId") REFERENCES public."Countries"("Id");
+
+
+--
+-- Name: AspNetUsers FK_AspNetUsers_LocationLookups_LocationId_190623722; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AspNetUsers"
+    ADD CONSTRAINT "FK_AspNetUsers_LocationLookups_LocationId_190623722" FOREIGN KEY ("LocationId") REFERENCES public."Locations"("LocationId");
+
+
+--
+-- Name: AspNetUsers FK_AspNetUsers_Provinces_ProvinceId_206623779; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AspNetUsers"
+    ADD CONSTRAINT "FK_AspNetUsers_Provinces_ProvinceId_206623779" FOREIGN KEY ("ProvinceId") REFERENCES public."Provinces"("ProvinceId");
+
+
+--
+-- Name: AspNetUsers FK_AspNetUsers_SecurityQuestions_SecurityQuestionId_850102069; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."AspNetUsers"
+    ADD CONSTRAINT "FK_AspNetUsers_SecurityQuestions_SecurityQuestionId_850102069" FOREIGN KEY ("SecurityQuestionId") REFERENCES public."SecurityQuestions"("Id");
+
+
+--
+-- Name: DeletedJobs FK_DeletedJobs_AdminUsers_DeletedByAdminUserId_974626515; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."DeletedJobs"
+    ADD CONSTRAINT "FK_DeletedJobs_AdminUsers_DeletedByAdminUserId_974626515" FOREIGN KEY ("DeletedByAdminUserId") REFERENCES public."AdminUsers"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: DeletedJobs FK_DeletedJobs_Jobs_JobId_990626572; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."DeletedJobs"
+    ADD CONSTRAINT "FK_DeletedJobs_Jobs_JobId_990626572" FOREIGN KEY ("JobId") REFERENCES public."Jobs"("JobId") ON DELETE CASCADE;
+
+
+--
+-- Name: ExpiredJobs FK_ExpiredJobs_JobIds_JobId_1726629194; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."ExpiredJobs"
+    ADD CONSTRAINT "FK_ExpiredJobs_JobIds_JobId_1726629194" FOREIGN KEY ("JobId") REFERENCES public."JobIds"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: ImpersonationLog FK_ImpersonationLog_AdminUsers_AdminUserId_1038626743; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."ImpersonationLog"
+    ADD CONSTRAINT "FK_ImpersonationLog_AdminUsers_AdminUserId_1038626743" FOREIGN KEY ("AdminUserId") REFERENCES public."AdminUsers"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: ImpersonationLog FK_ImpersonationLog_AspNetUsers_AspNetUserId_1054626800; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."ImpersonationLog"
+    ADD CONSTRAINT "FK_ImpersonationLog_AspNetUsers_AspNetUserId_1054626800" FOREIGN KEY ("AspNetUserId") REFERENCES public."AspNetUsers"("Id");
+
+
+--
+-- Name: ImportedJobsFederal FK_ImportedJobsFederal_JobIds_JobId_1570104634; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."ImportedJobsFederal"
+    ADD CONSTRAINT "FK_ImportedJobsFederal_JobIds_JobId_1570104634" FOREIGN KEY ("JobId") REFERENCES public."JobIds"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: ImportedJobsWanted FK_ImportedJobsWanted_JobIds_JobId_1586104691; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."ImportedJobsWanted"
+    ADD CONSTRAINT "FK_ImportedJobsWanted_JobIds_JobId_1586104691" FOREIGN KEY ("JobId") REFERENCES public."JobIds"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: JobAlerts FK_JobAlerts_AspNetUsers_AspNetUserId_1122103038; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobAlerts"
+    ADD CONSTRAINT "FK_JobAlerts_AspNetUsers_AspNetUserId_1122103038" FOREIGN KEY ("AspNetUserId") REFERENCES public."AspNetUsers"("Id");
+
+
+--
+-- Name: JobIds FK_JobIds_JobSources_JobSourceId_766625774; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobIds"
+    ADD CONSTRAINT "FK_JobIds_JobSources_JobSourceId_766625774" FOREIGN KEY ("JobSourceId") REFERENCES public."JobSources"("Id");
+
+
+--
+-- Name: JobSeekerAdminComments FK_JobSeekerAdminComments_AdminUsers_EnteredByAdminUserId_19061; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerAdminComments"
+    ADD CONSTRAINT "FK_JobSeekerAdminComments_AdminUsers_EnteredByAdminUserId_19061" FOREIGN KEY ("EnteredByAdminUserId") REFERENCES public."AdminUsers"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: JobSeekerAdminComments FK_JobSeekerAdminComments_AspNetUsers_AspNetUserId_1890105774; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerAdminComments"
+    ADD CONSTRAINT "FK_JobSeekerAdminComments_AspNetUsers_AspNetUserId_1890105774" FOREIGN KEY ("AspNetUserId") REFERENCES public."AspNetUsers"("Id");
+
+
+--
+-- Name: JobSeekerChangeLog FK_JobSeekerAdminLog_AspNetUsers_AspNetUserId_1662628966; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerChangeLog"
+    ADD CONSTRAINT "FK_JobSeekerAdminLog_AspNetUsers_AspNetUserId_1662628966" FOREIGN KEY ("AspNetUserId") REFERENCES public."AspNetUsers"("Id");
+
+
+--
+-- Name: JobSeekerChangeLog FK_JobSeekerChangeLog_AdminUsers_ModifiedByAdminUserId_16306288; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerChangeLog"
+    ADD CONSTRAINT "FK_JobSeekerChangeLog_AdminUsers_ModifiedByAdminUserId_16306288" FOREIGN KEY ("ModifiedByAdminUserId") REFERENCES public."AdminUsers"("Id");
+
+
+--
+-- Name: JobSeekerEventLog FK_JobSeekerEventLog_AspNetUsers_AspNetUserId_2018106230; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerEventLog"
+    ADD CONSTRAINT "FK_JobSeekerEventLog_AspNetUsers_AspNetUserId_2018106230" FOREIGN KEY ("AspNetUserId") REFERENCES public."AspNetUsers"("Id");
+
+
+--
+-- Name: JobSeekerFlags FK_JobSeekerFlags_AspNetUsers_AspNetUserId_178099675; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerFlags"
+    ADD CONSTRAINT "FK_JobSeekerFlags_AspNetUsers_AspNetUserId_178099675" FOREIGN KEY ("AspNetUserId") REFERENCES public."AspNetUsers"("Id");
+
+
+--
+-- Name: JobSeekerStats FK_JobSeekerStats_JobSeekerStatLabels_LabelKey_1454628225; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerStats"
+    ADD CONSTRAINT "FK_JobSeekerStats_JobSeekerStatLabels_LabelKey_1454628225" FOREIGN KEY ("LabelKey") REFERENCES public."JobSeekerStatLabels"("Key") ON DELETE CASCADE;
+
+
+--
+-- Name: JobSeekerStats FK_JobSeekerStats_Regions_RegionId_1502628396; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerStats"
+    ADD CONSTRAINT "FK_JobSeekerStats_Regions_RegionId_1502628396" FOREIGN KEY ("RegionId") REFERENCES public."Regions"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: JobSeekerStats FK_JobSeekerStats_WeeklyPeriods_WeeklyPeriodId_1262627541; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerStats"
+    ADD CONSTRAINT "FK_JobSeekerStats_WeeklyPeriods_WeeklyPeriodId_1262627541" FOREIGN KEY ("WeeklyPeriodId") REFERENCES public."WeeklyPeriods"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: JobSeekerVersions FK_JobSeekerVersions_AspNetUsers_AspNetUserId_302624121; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerVersions"
+    ADD CONSTRAINT "FK_JobSeekerVersions_AspNetUsers_AspNetUserId_302624121" FOREIGN KEY ("AspNetUserId") REFERENCES public."AspNetUsers"("Id");
+
+
+--
+-- Name: JobSeekerVersions FK_JobSeekerVersions_Countries_CountryId_430624577; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerVersions"
+    ADD CONSTRAINT "FK_JobSeekerVersions_Countries_CountryId_430624577" FOREIGN KEY ("CountryId") REFERENCES public."Countries"("Id");
+
+
+--
+-- Name: JobSeekerVersions FK_JobSeekerVersions_Locations_LocationId_366624349; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerVersions"
+    ADD CONSTRAINT "FK_JobSeekerVersions_Locations_LocationId_366624349" FOREIGN KEY ("LocationId") REFERENCES public."Locations"("LocationId");
+
+
+--
+-- Name: JobSeekerVersions FK_JobSeekerVersions_Provinces_ProvinceId_350624292; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobSeekerVersions"
+    ADD CONSTRAINT "FK_JobSeekerVersions_Provinces_ProvinceId_350624292" FOREIGN KEY ("ProvinceId") REFERENCES public."Provinces"("ProvinceId");
+
+
+--
+-- Name: JobStats FK_JobStats_JobSources_JobSourceId_1358627883; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobStats"
+    ADD CONSTRAINT "FK_JobStats_JobSources_JobSourceId_1358627883" FOREIGN KEY ("JobSourceId") REFERENCES public."JobSources"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: JobStats FK_JobStats_Regions_RegionId_1518628453; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobStats"
+    ADD CONSTRAINT "FK_JobStats_Regions_RegionId_1518628453" FOREIGN KEY ("RegionId") REFERENCES public."Regions"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: JobStats FK_JobStats_WeeklyPeriods_WeeklyPeriodId_1374627940; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobStats"
+    ADD CONSTRAINT "FK_JobStats_WeeklyPeriods_WeeklyPeriodId_1374627940" FOREIGN KEY ("WeeklyPeriodId") REFERENCES public."WeeklyPeriods"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: JobVersions FK_JobVersions_Jobs_JobId_62623266; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobVersions"
+    ADD CONSTRAINT "FK_JobVersions_Jobs_JobId_62623266" FOREIGN KEY ("JobId") REFERENCES public."Jobs"("JobId");
+
+
+--
+-- Name: JobVersions FK_JobVersions_LocationLookups_LocationId_238623893; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobVersions"
+    ADD CONSTRAINT "FK_JobVersions_LocationLookups_LocationId_238623893" FOREIGN KEY ("LocationId") REFERENCES public."Locations"("LocationId") ON DELETE CASCADE;
+
+
+--
+-- Name: JobVersions FK_JobVersions_NaicsCodes_NaicsId_94623380; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobVersions"
+    ADD CONSTRAINT "FK_JobVersions_NaicsCodes_NaicsId_94623380" FOREIGN KEY ("IndustryId") REFERENCES public."Industries"("Id");
+
+
+--
+-- Name: JobVersions FK_JobVersions_NocCodes2021_NocCodeId2021_891150220; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobVersions"
+    ADD CONSTRAINT "FK_JobVersions_NocCodes2021_NocCodeId2021_891150220" FOREIGN KEY ("NocCodeId2021") REFERENCES public."NocCodes2021"("Id");
+
+
+--
+-- Name: JobVersions FK_JobVersions_NocCodes_NocCodeId_110623437; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobVersions"
+    ADD CONSTRAINT "FK_JobVersions_NocCodes_NocCodeId_110623437" FOREIGN KEY ("NocCodeId") REFERENCES public."NocCodes"("Id");
+
+
+--
+-- Name: JobViews FK_JobViews_Jobs_JobId_1442104178; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."JobViews"
+    ADD CONSTRAINT "FK_JobViews_Jobs_JobId_1442104178" FOREIGN KEY ("JobId") REFERENCES public."Jobs"("JobId") ON DELETE CASCADE;
+
+
+--
+-- Name: Jobs FK_Jobs_JobIds_JobId_1602104748; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."Jobs"
+    ADD CONSTRAINT "FK_Jobs_JobIds_JobId_1602104748" FOREIGN KEY ("JobId") REFERENCES public."JobIds"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: Jobs FK_Jobs_JobSources_JobSourceId_782625831; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."Jobs"
+    ADD CONSTRAINT "FK_Jobs_JobSources_JobSourceId_782625831" FOREIGN KEY ("JobSourceId") REFERENCES public."JobSources"("Id");
+
+
+--
+-- Name: Jobs FK_Jobs_LocationLookups_LocationId_222623836; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."Jobs"
+    ADD CONSTRAINT "FK_Jobs_LocationLookups_LocationId_222623836" FOREIGN KEY ("LocationId") REFERENCES public."Locations"("LocationId") ON DELETE CASCADE;
+
+
+--
+-- Name: Jobs FK_Jobs_NaicsCodes_NaicsId_14623095; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."Jobs"
+    ADD CONSTRAINT "FK_Jobs_NaicsCodes_NaicsId_14623095" FOREIGN KEY ("IndustryId") REFERENCES public."Industries"("Id");
+
+
+--
+-- Name: Jobs FK_Jobs_NocCodes2021_NocCodeId2021_875150163; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."Jobs"
+    ADD CONSTRAINT "FK_Jobs_NocCodes2021_NocCodeId2021_875150163" FOREIGN KEY ("NocCodeId2021") REFERENCES public."NocCodes2021"("Id");
+
+
+--
+-- Name: Jobs FK_Jobs_NocCodes_NocCodeId_1650104919; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."Jobs"
+    ADD CONSTRAINT "FK_Jobs_NocCodes_NocCodeId_1650104919" FOREIGN KEY ("NocCodeId") REFERENCES public."NocCodes"("Id");
+
+
+--
+-- Name: Locations FK_LocationLookups_Regions_RegionId_254623950; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."Locations"
+    ADD CONSTRAINT "FK_LocationLookups_Regions_RegionId_254623950" FOREIGN KEY ("RegionId") REFERENCES public."Regions"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: Locations FK_Locations_Regions_RegionId_446624634; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."Locations"
+    ADD CONSTRAINT "FK_Locations_Regions_RegionId_446624634" FOREIGN KEY ("RegionId") REFERENCES public."Regions"("Id");
+
+
+--
+-- Name: ReportPersistenceControl FK_ReportPersistenceControl_WeeklyPeriods_WeeklyPeriodId_115062; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."ReportPersistenceControl"
+    ADD CONSTRAINT "FK_ReportPersistenceControl_WeeklyPeriods_WeeklyPeriodId_115062" FOREIGN KEY ("WeeklyPeriodId") REFERENCES public."WeeklyPeriods"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: SavedCareerProfiles FK_SavedCareerProfiles_AspNetUsers_AspNetUserId_1458104235; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."SavedCareerProfiles"
+    ADD CONSTRAINT "FK_SavedCareerProfiles_AspNetUsers_AspNetUserId_1458104235" FOREIGN KEY ("AspNetUserId") REFERENCES public."AspNetUsers"("Id");
+
+
+--
+-- Name: SavedCareerProfiles FK_SavedCareerProfiles_NocCodes2021_Id_907150277; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."SavedCareerProfiles"
+    ADD CONSTRAINT "FK_SavedCareerProfiles_NocCodes2021_Id_907150277" FOREIGN KEY ("NocCodeId2021") REFERENCES public."NocCodes2021"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: SavedIndustryProfiles FK_SavedIndustryProfiles_AspNetUsers_AspNetUserId_1474104292; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."SavedIndustryProfiles"
+    ADD CONSTRAINT "FK_SavedIndustryProfiles_AspNetUsers_AspNetUserId_1474104292" FOREIGN KEY ("AspNetUserId") REFERENCES public."AspNetUsers"("Id");
+
+
+--
+-- Name: SavedIndustryProfiles FK_SavedIndustryProfiles_Industries_Id_923150334; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."SavedIndustryProfiles"
+    ADD CONSTRAINT "FK_SavedIndustryProfiles_Industries_Id_923150334" FOREIGN KEY ("IndustryId") REFERENCES public."Industries"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: SavedJobs FK_SavedJobs_AspNetUsers_AspNetUserId_514100872; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."SavedJobs"
+    ADD CONSTRAINT "FK_SavedJobs_AspNetUsers_AspNetUserId_514100872" FOREIGN KEY ("AspNetUserId") REFERENCES public."AspNetUsers"("Id");
+
+
+--
+-- Name: SavedJobs FK_SavedJobs_Jobs_JobId_1362103893; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."SavedJobs"
+    ADD CONSTRAINT "FK_SavedJobs_Jobs_JobId_1362103893" FOREIGN KEY ("JobId") REFERENCES public."Jobs"("JobId") ON DELETE CASCADE;
+
+
+--
+-- Name: SystemSettings FK_SystemSettings_AdminUsers_ModifiedByAdminUserId_1490104349; Type: FK CONSTRAINT; Schema: public; Owner: workbc
+--
+
+ALTER TABLE ONLY public."SystemSettings"
+    ADD CONSTRAINT "FK_SystemSettings_AdminUsers_ModifiedByAdminUserId_1490104349" FOREIGN KEY ("ModifiedByAdminUserId") REFERENCES public."AdminUsers"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: workbc
+--
+
+REVOKE USAGE ON SCHEMA public FROM PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
 

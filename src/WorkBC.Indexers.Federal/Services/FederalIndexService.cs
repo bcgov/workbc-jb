@@ -198,15 +198,13 @@ namespace WorkBC.Indexers.Federal.Services
                     //open connection to SQL
                     cn.Open();
 
-                    string idList = $";{string.Join(";", _lstIds)};";
-                    var sql = @"UPDATE ImportedJobsFederal SET ReIndexNeeded = 0
-                                WHERE @IdList LIKE '%;' + Convert(nvarchar(20),[JobId]) + ';%'";
+                    var sql = "UPDATE \"ImportedJobsWanted\" SET \"ReIndexNeeded\" = false WHERE \"JobId\" = ANY(@ids)";
 
                     //Create command
                     using (var cmd = new NpgsqlCommand(sql, cn))
                     {
                         //Add parameter
-                        cmd.Parameters.AddWithValue("@IdList", idList);
+                        cmd.Parameters.AddWithValue("@ids", _lstIds.ToArray());
 
                         //Execute statement
                         cmd.ExecuteNonQuery();
