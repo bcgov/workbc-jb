@@ -458,10 +458,7 @@ namespace WorkBC.Importers.Wanted.Services
                     cn.Open();
 
                     using (var cmd = new NpgsqlCommand(
-                        $@"UPDATE ImportedJobsWanted
-                                  SET DateLastSeen = Now()
-                                  WHERE JobId IN ({string.Join(',', jobIds)})"
-                        , cn
+                        $"UPDATE \"ImportedJobsWanted\" SET \"DateLastSeen\" = Now() WHERE \"JobId\" IN ({string.Join(',', jobIds)})", cn
                     ))
                     {
                         cmd.ExecuteNonQuery();
