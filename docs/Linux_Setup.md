@@ -22,7 +22,7 @@ gunzip -k -c ../../workbc-ssot/ssot-full.sql.gz | docker-compose-jb exec -T post
 - Take a full database dump: `docker-compose-jb exec -T postgres pg_dump --clean --username workbc jobboard | gzip > scripts/jobboard-full.sql.gz`
 - Restore a full database dump:
 ```bash
-docker-compose-jb exec -T postgres psql -U workbc jobboard < scripts/jobboard-reset.sql && \
+docker-compose-jb exec -T postgres psql -U workbc jobboard < scripts/jobboard-reset.sql \
 && gunzip -k -c scripts/jobboard-full.sql.gz | docker-compose-jb exec -T postgres psql --username workbc jobboard
 ```
 - Restore the SSOT database:

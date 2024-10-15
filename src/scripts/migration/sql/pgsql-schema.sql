@@ -272,20 +272,19 @@ Returns a snapshot of a subset jobseeker data for a specified date.
 * you don't mind having your changes wiped out by a future release).
 * PLEASE INCLUDE THIS COMMENT IN THE ALTER STATEMENT OF YOUR MIGRATION!
 */
-# variable_conflict use_column
 BEGIN
     RETURN QUERY
-    WITH periodversion (aspnetuserid, versionnumber)
+    WITH periodversion ("AspNetUserId", "VersionNumber")
     AS (SELECT
-        "AspNetUserId", MAX("VersionNumber") AS versionnumber
-        FROM public."JobSeekerVersions"
+        jsv."AspNetUserId", MAX("VersionNumber") AS "VersionNumber"
+        FROM public."JobSeekerVersions" AS jsv
         WHERE "DateVersionStart" < par_EndDatePlus1 AND ("DateVersionEnd" IS NULL OR "DateVersionEnd" >= par_EndDatePlus1)
-        GROUP BY "AspNetUserId")
+        GROUP BY jsv."AspNetUserId")
     SELECT
         js."AspNetUserId", js."Email", js."LocationId", js."ProvinceId", js."CountryId", js."DateRegistered", js."AccountStatus", js."EmailConfirmed", js."IsApprentice", js."IsIndigenousPerson", js."IsMatureWorker", js."IsNewImmigrant", js."IsPersonWithDisability", js."IsStudent", js."IsVeteran", js."IsVisibleMinority", js."IsYouth"
         FROM public."JobSeekerVersions" AS js
         INNER JOIN periodversion AS pv
-            ON pv.aspnetuserid = js."AspNetUserId"::VARCHAR AND pv.versionnumber = js."VersionNumber"
+            ON pv."AspNetUserId" = js."AspNetUserId"::VARCHAR AND pv."VersionNumber" = js."VersionNumber"
         WHERE par_EndDatePlus1 < clock_timestamp()
     UNION
     SELECT
@@ -367,61 +366,61 @@ BEGIN
     var_TableName := 'JobSeekerStats';
     /* Get the WeeklyPeriod record */
     SELECT
-        WeekStartDate, Id
+        "WeekStartDate", "Id"
         INTO var_StartDate, var_PeriodId
         FROM public."WeeklyPeriods"
-        WHERE WeekEndDate = par_WeekEndDate;
+        WHERE "WeekEndDate" = par_WeekEndDate;
     var_EndDatePlus1 := par_WeekEndDate + (1::NUMERIC || ' DAY')::INTERVAL;
     DELETE FROM public."ReportPersistenceControl"
-        WHERE TableName = var_TableName::VARCHAR AND WeeklyPeriodId = var_PeriodId;
+        WHERE "TableName" = var_TableName::VARCHAR AND "WeeklyPeriodId" = var_PeriodId;
     /* also delete associated record from JobSeekerStats */
     DELETE FROM public."JobSeekerStats"
-        WHERE WeeklyPeriodId = var_PeriodId;
+        WHERE "WeeklyPeriodId" = var_PeriodId;
 
     BEGIN
         IF NOT EXISTS (SELECT
             *
             FROM public."ReportPersistenceControl"
-            WHERE WeeklyPeriodId = var_PeriodId AND TableName = var_TableName::VARCHAR) THEN
+            WHERE "WeeklyPeriodId" = var_PeriodId AND "TableName" = var_TableName::VARCHAR) THEN
             /* Store UserRegions in a Table Variable */
             CREATE TEMPORARY TABLE jobseekerdata$usp_generatejobseekerstats
-            (aspnetuserid VARCHAR(450) PRIMARY KEY,
-                regionid INTEGER,
-                dateregistered TIMESTAMP(6) WITHOUT TIME ZONE NULL,
-                accountstatus SMALLINT NULL,
-                emailconfirmed NUMERIC(1, 0) NULL,
-                isapprentice NUMERIC(1, 0) NULL,
-                isindigenousperson NUMERIC(1, 0) NULL,
-                ismatureworker NUMERIC(1, 0) NULL,
-                isnewimmigrant NUMERIC(1, 0) NULL,
-                ispersonwithdisability NUMERIC(1, 0) NULL,
-                isstudent NUMERIC(1, 0) NULL,
-                isveteran NUMERIC(1, 0) NULL,
-                isvisibleminority NUMERIC(1, 0) NULL,
-                isyouth NUMERIC(1, 0) NULL);
+            ("AspNetUserId" VARCHAR(450) PRIMARY KEY,
+                "RegionId" INTEGER,
+                "DateRegistered" TIMESTAMP(6) WITHOUT TIME ZONE NULL,
+                "AccountStatus" SMALLINT NULL,
+                "EmailConfirmed" BOOLEAN NULL,
+                "IsApprentice" BOOLEAN NULL,
+                "IsIndigenousPerson" BOOLEAN NULL,
+                "IsMatureWorker" BOOLEAN NULL,
+                "IsNewImmigrant" BOOLEAN NULL,
+                "IsPersonWithDisability" BOOLEAN NULL,
+                "IsStudent" BOOLEAN NULL,
+                "IsVeteran" BOOLEAN NULL,
+                "IsVisibleMinority" BOOLEAN NULL,
+                "IsYouth" BOOLEAN NULL);
 
             IF var_EndDatePlus1 < clock_timestamp() THEN
                 INSERT INTO jobseekerdata$usp_generatejobseekerstats
                 SELECT
-                    aspnetuserid, (CASE
-                        WHEN regionid IS NOT NULL THEN regionid
-                        WHEN CountryId = 37 AND ProvinceId <> 2 THEN - 1
-                        WHEN (CountryId IS NOT NULL AND CountryId <> 37) THEN - 2
+                    "AspNetUserId", (CASE
+                        WHEN "RegionId" IS NOT NULL THEN "RegionId"
+                        WHEN "CountryId" = 37 AND "ProvinceId" <> 2 THEN - 1
+                        WHEN ("CountryId" IS NOT NULL AND "CountryId" <> 37) THEN - 2
                         ELSE 0
-                    END) AS regionid, dateregistered, accountstatus, emailconfirmed, isapprentice, isindigenousperson, ismatureworker, isnewimmigrant, ispersonwithdisability, isstudent, isveteran, isvisibleminority, isyouth
+                    END) AS "RegionId", "DateRegistered", "AccountStatus", "EmailConfirmed", "IsApprentice", "IsIndigenousPerson", "IsMatureWorker", "IsNewImmigrant", "IsPersonWithDisability", "IsStudent", "IsVeteran", "IsVisibleMinority", "IsYouth"
                     FROM public."tvf_GetJobSeekersForDate"(var_EndDatePlus1)
                         AS js
                     LEFT OUTER JOIN public."Locations" AS l
-                        ON l."LocationId" = js.LocationId;
+                        ON l."LocationId" = js."LocationId";
             ELSE
                 INSERT INTO jobseekerdata$usp_generatejobseekerstats
                 SELECT
-                    js."Id" AS aspnetuserid, (CASE
-                        WHEN regionid IS NOT NULL THEN regionid
-                        WHEN CountryId = 37 AND ProvinceId <> 2 THEN - 1
-                        WHEN (CountryId IS NOT NULL AND CountryId <> 37) THEN - 2
+                    js."Id" AS "AspNetUserId", (CASE
+                        WHEN "RegionId" IS NOT NULL THEN "RegionId"
+                        WHEN "CountryId" = 37 AND "ProvinceId" <> 2 THEN - 1
+                        WHEN ("CountryId" IS NOT NULL AND "CountryId" <> 37) THEN - 2
                         ELSE 0
-                    END) AS regionid, dateregistered, accountstatus, emailconfirmed, isapprentice, isindigenousperson, ismatureworker, isnewimmigrant, ispersonwithdisability, isstudent, isveteran, isvisibleminority, isyouth
+                    END) AS "RegionId", "DateRegistered", "AccountStatus", "EmailConfirmed", "IsApprentice", "IsIndigenousPerson", "IsMatureWorker", "IsNewImmigrant", "IsPersonWithDisability", "IsStudent", "IsVeteran", "IsVisibleMinority", "IsYouth"
                     FROM public."AspNetUsers" AS js
                     LEFT OUTER JOIN public."JobSeekerFlags" AS jf
                         ON jf."AspNetUserId" = js."Id"
@@ -429,169 +428,164 @@ BEGIN
                         ON l."LocationId" = js."LocationId";
             END IF;
             /* insert a record into ReportPersistenceControl */
-            INSERT INTO public."ReportPersistenceControl" (weeklyperiodid, tablename, datecalculated, istotaltodate)
+            INSERT INTO public."ReportPersistenceControl" ("WeeklyPeriodId", "TableName", "DateCalculated", "IsTotalToDate")
             SELECT
-                var_PeriodId AS weeklyperiodid, var_TableName AS report, clock_timestamp() AS datecalculated, (CASE
-                    WHEN var_EndDatePlus1 > clock_timestamp() THEN 1
-                    ELSE 0
-                END) AS istotaltodate;
+                var_PeriodId AS "WeeklyPeriodId", var_TableName AS report, clock_timestamp() AS "DateCalculated", (CASE
+                    WHEN var_EndDatePlus1 > clock_timestamp() THEN true
+                    ELSE false
+                END) AS "IsTotalToDate";
             /* ACCOUNTS BY STATUS */
             /* New Registrations */
-            INSERT INTO public."JobSeekerStats" (weeklyperiodid, labelkey, regionid, value)
+            INSERT INTO public."JobSeekerStats" ("WeeklyPeriodId", "LabelKey", "RegionId", "Value")
             SELECT
-                var_PeriodId, 'REGD', regionid, COUNT(*)
+                var_PeriodId, 'REGD', "RegionId", COUNT(*)
                 FROM jobseekerdata$usp_generatejobseekerstats
-                WHERE dateregistered >= var_StartDate AND dateregistered < var_EndDatePlus1
-                GROUP BY regionid;
+                WHERE "DateRegistered" >= var_StartDate AND "DateRegistered" < var_EndDatePlus1
+                GROUP BY "RegionId";
             /* Awaiting Email Activation: This is the total at the end of the selected period. */
-            INSERT INTO public."JobSeekerStats" (weeklyperiodid, labelkey, regionid, value)
+            INSERT INTO public."JobSeekerStats" ("WeeklyPeriodId", "LabelKey", "RegionId", "Value")
             SELECT
-                var_PeriodId, 'CFEM', regionid, COUNT(DISTINCT je."AspNetUserId")
+                var_PeriodId, 'CFEM', "RegionId", COUNT(DISTINCT je."AspNetUserId")
                 FROM public."JobSeekerEventLog" AS je
                 INNER JOIN jobseekerdata$usp_generatejobseekerstats AS jd
-                    ON jd.aspnetuserid = je."AspNetUserId"
-                WHERE EventTypeId = 3 AND DateLogged >= var_StartDate AND DateLogged < var_EndDatePlus1
-                GROUP BY jd.regionid;
+                    ON jd."AspNetUserId" = je."AspNetUserId"
+                WHERE "EventTypeId" = 3 AND "DateLogged" >= var_StartDate AND "DateLogged" < var_EndDatePlus1
+                GROUP BY jd."RegionId";
             /* Get the net number of new unactivated accounts for the period */
             /* by subtracting new email confirmations from new registrations. */
-
-            /*
-            [9996 - Severity CRITICAL - Transformer error occurred in statement. Please submit report to developers.]
-            INSERT INTO dbo.JobSeekerStats
-            			(WeeklyPeriodId,[LabelKey],[RegionId],[Value])
-            		SELECT WeeklyPeriodId,'NOAC' AS [LabelKey],[RegionId], SUM([Value]) AS [Value]
-            		FROM (
-            			SELECT WeeklyPeriodId,[LabelKey],[RegionId],[Value]
-            			FROM JobSeekerStats
-            			WHERE WeeklyPeriodId = @PeriodId AND LabelKey = 'REGD'
-            			UNION
-            			SELECT WeeklyPeriodId,[LabelKey],[RegionId],-1 * [Value]
-            			FROM JobSeekerStats
-            			WHERE WeeklyPeriodId = @PeriodId AND LabelKey = 'CFEM'
-            		) AS REGD_CFEM
-            		GROUP BY WeeklyPeriodId,[RegionId]
-            */
+            INSERT INTO public."JobSeekerStats" ("WeeklyPeriodId", "LabelKey", "RegionId", "Value")
+            SELECT "WeeklyPeriodId", 'NOAC' AS "LabelKey", "RegionId", SUM("Value") AS "Value"
+            FROM (
+                SELECT "WeeklyPeriodId","LabelKey","RegionId","Value"
+                FROM "JobSeekerStats"
+                WHERE "WeeklyPeriodId" = var_PeriodId AND "LabelKey" = 'REGD'
+                UNION
+                SELECT "WeeklyPeriodId","LabelKey","RegionId",-1 * "Value"
+                FROM "JobSeekerStats"
+                WHERE "WeeklyPeriodId" = var_PeriodId AND "LabelKey" = 'CFEM'
+            ) AS REGD_CFEM
+            GROUP BY "WeeklyPeriodId","RegionId";
             /* Get statistics from the JobSeekerEventLog */
             /* Deactivated: This is accounts deactivated for this period. */
-            INSERT INTO public."JobSeekerStats" (weeklyperiodid, labelkey, regionid, value)
+            INSERT INTO public."JobSeekerStats" ("WeeklyPeriodId", "LabelKey", "RegionId", "Value")
             SELECT
-                var_PeriodId, 'DEAC', regionid, COUNT(DISTINCT je."AspNetUserId")
+                var_PeriodId, 'DEAC', "RegionId", COUNT(DISTINCT je."AspNetUserId")
                 FROM public."JobSeekerEventLog" AS je
                 INNER JOIN jobseekerdata$usp_generatejobseekerstats AS jd
-                    ON jd.aspnetuserid = je."AspNetUserId"
-                WHERE EventTypeId = 4 AND DateLogged >= var_StartDate AND DateLogged < var_EndDatePlus1
-                GROUP BY jd.regionid;
+                    ON jd."AspNetUserId" = je."AspNetUserId"
+                WHERE "EventTypeId" = 4 AND "DateLogged" >= var_StartDate AND "DateLogged" < var_EndDatePlus1
+                GROUP BY jd."RegionId";
             /* Deleted: This is total account deleted for this period. */
-            INSERT INTO public."JobSeekerStats" (weeklyperiodid, labelkey, regionid, value)
+            INSERT INTO public."JobSeekerStats" ("WeeklyPeriodId", "LabelKey", "RegionId", "Value")
             SELECT
-                var_PeriodId, 'DEL', regionid, COUNT(DISTINCT je."AspNetUserId")
+                var_PeriodId, 'DEL', "RegionId", COUNT(DISTINCT je."AspNetUserId")
                 FROM public."JobSeekerEventLog" AS je
                 INNER JOIN jobseekerdata$usp_generatejobseekerstats AS jd
-                    ON jd.aspnetuserid = je."AspNetUserId"
-                WHERE EventTypeId = 6 AND DateLogged >= var_StartDate AND DateLogged < var_EndDatePlus1
-                GROUP BY jd.regionid;
+                    ON jd."AspNetUserId" = je."AspNetUserId"
+                WHERE "EventTypeId" = 6 AND "DateLogged" >= var_StartDate AND "DateLogged" < var_EndDatePlus1
+                GROUP BY jd."RegionId";
             /* JOB SEEKER EMPLOYMENT GROUPS */
             /* Employment Groups: Total number of accounts */
-            INSERT INTO public."JobSeekerStats" (weeklyperiodid, labelkey, regionid, value)
+            INSERT INTO public."JobSeekerStats" ("WeeklyPeriodId", "LabelKey", "RegionId", "Value")
             SELECT
-                var_PeriodId, 'APPR', regionid, COUNT(DISTINCT aspnetuserid)
+                var_PeriodId, 'APPR', "RegionId", COUNT(DISTINCT "AspNetUserId")
                 FROM jobseekerdata$usp_generatejobseekerstats
-                WHERE isapprentice = 1
-                GROUP BY regionid;
-            INSERT INTO public."JobSeekerStats" (weeklyperiodid, labelkey, regionid, value)
+                WHERE "IsApprentice" = true
+                GROUP BY "RegionId";
+            INSERT INTO public."JobSeekerStats" ("WeeklyPeriodId", "LabelKey", "RegionId", "Value")
             SELECT
-                var_PeriodId, 'INDP', regionid, COUNT(DISTINCT aspnetuserid)
+                var_PeriodId, 'INDP', "RegionId", COUNT(DISTINCT "AspNetUserId")
                 FROM jobseekerdata$usp_generatejobseekerstats
-                WHERE isindigenousperson = 1
-                GROUP BY regionid;
-            INSERT INTO public."JobSeekerStats" (weeklyperiodid, labelkey, regionid, value)
+                WHERE "IsIndigenousPerson" = true
+                GROUP BY "RegionId";
+            INSERT INTO public."JobSeekerStats" ("WeeklyPeriodId", "LabelKey", "RegionId", "Value")
             SELECT
-                var_PeriodId, 'MAT', regionid, COUNT(DISTINCT aspnetuserid)
+                var_PeriodId, 'MAT', "RegionId", COUNT(DISTINCT "AspNetUserId")
                 FROM jobseekerdata$usp_generatejobseekerstats
-                WHERE ismatureworker = 1
-                GROUP BY regionid;
-            INSERT INTO public."JobSeekerStats" (weeklyperiodid, labelkey, regionid, value)
+                WHERE "IsMatureWorker" = true
+                GROUP BY "RegionId";
+            INSERT INTO public."JobSeekerStats" ("WeeklyPeriodId", "LabelKey", "RegionId", "Value")
             SELECT
-                var_PeriodId, 'IMMG', regionid, COUNT(DISTINCT aspnetuserid)
+                var_PeriodId, 'IMMG', "RegionId", COUNT(DISTINCT "AspNetUserId")
                 FROM jobseekerdata$usp_generatejobseekerstats
-                WHERE isnewimmigrant = 1
-                GROUP BY regionid;
-            INSERT INTO public."JobSeekerStats" (weeklyperiodid, labelkey, regionid, value)
+                WHERE "IsNewImmigrant" = true
+                GROUP BY "RegionId";
+            INSERT INTO public."JobSeekerStats" ("WeeklyPeriodId", "LabelKey", "RegionId", "Value")
             SELECT
-                var_PeriodId, 'PWD', regionid, COUNT(DISTINCT aspnetuserid)
+                var_PeriodId, 'PWD', "RegionId", COUNT(DISTINCT "AspNetUserId")
                 FROM jobseekerdata$usp_generatejobseekerstats
-                WHERE ispersonwithdisability = 1
-                GROUP BY regionid;
-            INSERT INTO public."JobSeekerStats" (weeklyperiodid, labelkey, regionid, value)
+                WHERE "IsPersonWithDisability" = true
+                GROUP BY "RegionId";
+            INSERT INTO public."JobSeekerStats" ("WeeklyPeriodId", "LabelKey", "RegionId", "Value")
             SELECT
-                var_PeriodId, 'STUD', regionid, COUNT(DISTINCT aspnetuserid)
+                var_PeriodId, 'STUD', "RegionId", COUNT(DISTINCT "AspNetUserId")
                 FROM jobseekerdata$usp_generatejobseekerstats
-                WHERE isstudent = 1
-                GROUP BY regionid;
-            INSERT INTO public."JobSeekerStats" (weeklyperiodid, labelkey, regionid, value)
+                WHERE "IsStudent" = true
+                GROUP BY "RegionId";
+            INSERT INTO public."JobSeekerStats" ("WeeklyPeriodId", "LabelKey", "RegionId", "Value")
             SELECT
-                var_PeriodId, 'VET', regionid, COUNT(DISTINCT aspnetuserid)
+                var_PeriodId, 'VET', "RegionId", COUNT(DISTINCT "AspNetUserId")
                 FROM jobseekerdata$usp_generatejobseekerstats
-                WHERE isveteran = 1
-                GROUP BY regionid;
-            INSERT INTO public."JobSeekerStats" (weeklyperiodid, labelkey, regionid, value)
+                WHERE "IsVeteran" = true
+                GROUP BY "RegionId";
+            INSERT INTO public."JobSeekerStats" ("WeeklyPeriodId", "LabelKey", "RegionId", "Value")
             SELECT
-                var_PeriodId, 'VMIN', regionid, COUNT(DISTINCT aspnetuserid)
+                var_PeriodId, 'VMIN', "RegionId", COUNT(DISTINCT "AspNetUserId")
                 FROM jobseekerdata$usp_generatejobseekerstats
-                WHERE isvisibleminority = 1
-                GROUP BY regionid;
-            INSERT INTO public."JobSeekerStats" (weeklyperiodid, labelkey, regionid, value)
+                WHERE "IsVisibleMinority" = true
+                GROUP BY "RegionId";
+            INSERT INTO public."JobSeekerStats" ("WeeklyPeriodId", "LabelKey", "RegionId", "Value")
             SELECT
-                var_PeriodId, 'YTH', regionid, COUNT(DISTINCT aspnetuserid)
+                var_PeriodId, 'YTH', "RegionId", COUNT(DISTINCT "AspNetUserId")
                 FROM jobseekerdata$usp_generatejobseekerstats
-                WHERE isyouth = 1
-                GROUP BY regionid;
+                WHERE "IsYouth" = true
+                GROUP BY "RegionId";
             /* ACCOUNT ACTIVITY */
             /* Get statistics from the JobSeekerEventLog */
             /* Logins: This is total number of times users successfully logged in for this period. */
-            INSERT INTO public."JobSeekerStats" (weeklyperiodid, labelkey, regionid, value)
+            INSERT INTO public."JobSeekerStats" ("WeeklyPeriodId", "LabelKey", "RegionId", "Value")
             SELECT
-                var_PeriodId, 'LOGN', regionid, COUNT(je."AspNetUserId")
+                var_PeriodId, 'LOGN', "RegionId", COUNT(je."AspNetUserId")
                 FROM public."JobSeekerEventLog" AS je
                 INNER JOIN jobseekerdata$usp_generatejobseekerstats AS jd
-                    ON jd.aspnetuserid = je."AspNetUserId"
-                WHERE EventTypeId = 1 AND DateLogged >= var_StartDate AND DateLogged < var_EndDatePlus1
-                GROUP BY jd.regionid;
+                    ON jd."AspNetUserId" = je."AspNetUserId"
+                WHERE "EventTypeId" = 1 AND "DateLogged" >= var_StartDate AND "DateLogged" < var_EndDatePlus1
+                GROUP BY jd."RegionId";
             /* Job Seekers with Job Alerts, Job Seekers with Saved Career Profiles: */
             /* These are total number of accounts, not new registrations. */
-            INSERT INTO public."JobSeekerStats" (weeklyperiodid, labelkey, regionid, value)
+            INSERT INTO public."JobSeekerStats" ("WeeklyPeriodId", "LabelKey", "RegionId", "Value")
             SELECT
-                var_PeriodId, 'ALRT', regionid, COUNT(DISTINCT ja."AspNetUserId")
+                var_PeriodId, 'ALRT', "RegionId", COUNT(DISTINCT ja."AspNetUserId")
                 FROM public."JobAlerts" AS ja
                 INNER JOIN jobseekerdata$usp_generatejobseekerstats AS jd
-                    ON jd.aspnetuserid = ja."AspNetUserId"
-                WHERE DateCreated < var_EndDatePlus1 AND (IsDeleted = 0 OR DateDeleted >= var_EndDatePlus1)
-                GROUP BY jd.regionid;
-            INSERT INTO public."JobSeekerStats" (weeklyperiodid, labelkey, regionid, value)
+                    ON jd."AspNetUserId" = ja."AspNetUserId"
+                WHERE "DateCreated" < var_EndDatePlus1 AND ("IsDeleted" = false OR "DateDeleted" >= var_EndDatePlus1)
+                GROUP BY jd."RegionId";
+            INSERT INTO public."JobSeekerStats" ("WeeklyPeriodId", "LabelKey", "RegionId", "Value")
             SELECT
-                var_PeriodId, 'CAPR', jd.regionid, COUNT(DISTINCT sc."AspNetUserId")
+                var_PeriodId, 'CAPR', jd."RegionId", COUNT(DISTINCT sc."AspNetUserId")
                 FROM public."SavedCareerProfiles" AS sc
                 INNER JOIN jobseekerdata$usp_generatejobseekerstats AS jd
-                    ON jd.aspnetuserid = sc."AspNetUserId"
-                WHERE DateSaved < var_EndDatePlus1 AND (IsDeleted = 0 OR DateDeleted >= var_EndDatePlus1)
-                GROUP BY jd.regionid;
-            INSERT INTO public."JobSeekerStats" (weeklyperiodid, labelkey, regionid, value)
+                    ON jd."AspNetUserId" = sc."AspNetUserId"
+                WHERE "DateSaved" < var_EndDatePlus1 AND ("IsDeleted" = false OR "DateDeleted" >= var_EndDatePlus1)
+                GROUP BY jd."RegionId";
+            INSERT INTO public."JobSeekerStats" ("WeeklyPeriodId", "LabelKey", "RegionId", "Value")
             SELECT
-                var_PeriodId, 'INPR', regionid, COUNT(DISTINCT si."AspNetUserId")
+                var_PeriodId, 'INPR', "RegionId", COUNT(DISTINCT si."AspNetUserId")
                 FROM public."SavedIndustryProfiles" AS si
                 INNER JOIN jobseekerdata$usp_generatejobseekerstats AS jd
-                    ON jd.aspnetuserid = si."AspNetUserId"
-                WHERE DateSaved < var_EndDatePlus1 AND (IsDeleted = 0 OR DateDeleted >= var_EndDatePlus1)
-                GROUP BY jd.regionid;
+                    ON jd."AspNetUserId" = si."AspNetUserId"
+                WHERE "DateSaved" < var_EndDatePlus1 AND ("IsDeleted" = false OR "DateDeleted" >= var_EndDatePlus1)
+                GROUP BY jd."RegionId";
             DROP TABLE IF EXISTS jobseekerdata$usp_generatejobseekerstats;
         END IF;
-        EXCEPTION
+        EXCEPTION   
             WHEN OTHERS THEN
                 DELETE FROM public."ReportPersistenceControl"
-                    WHERE TableName = var_TableName::VARCHAR AND WeeklyPeriodId = var_PeriodId;
+                    WHERE "TableName" = var_TableName::VARCHAR AND "WeeklyPeriodId" = var_PeriodId;
                 /* also delete associated record from JobSeekerStats */
                 DELETE FROM public."JobSeekerStats"
-                    WHERE WeeklyPeriodId = var_PeriodId;
+                    WHERE "WeeklyPeriodId" = var_PeriodId;
                 return_code := - 1;
                 RETURN;
     END;
@@ -632,55 +626,55 @@ BEGIN
     var_TableName := 'JobStats';
     /* Get the WeeklyPeriod record */
     SELECT
-        WeekStartDate, Id
+        "WeekStartDate", "Id"
         INTO var_StartDate, var_PeriodId
         FROM public."WeeklyPeriods"
-        WHERE WeekEndDate = par_WeekEndDate;
+        WHERE "WeekEndDate" = par_WeekEndDate;
     var_EndDatePlus1 := par_WeekEndDate + (1::NUMERIC || ' DAY')::INTERVAL;
     /* - Check if a ReportPersistenceControl record exists.  Delete if it is a TotalToDate record */
 
     IF EXISTS (SELECT
         *
         FROM public."ReportPersistenceControl"
-        WHERE TableName = var_TableName::VARCHAR AND WeeklyPeriodId = var_PeriodId AND DateCalculated < par_WeekEndDate + (48::NUMERIC || ' HOUR')::INTERVAL) THEN
+        WHERE "TableName" = var_TableName::VARCHAR AND "WeeklyPeriodId" = var_PeriodId AND "DateCalculated" < par_WeekEndDate + (48::NUMERIC || ' HOUR')::INTERVAL) THEN
         DELETE FROM public."ReportPersistenceControl"
-            WHERE TableName = var_TableName::VARCHAR AND WeeklyPeriodId = var_PeriodId;
+            WHERE "TableName" = var_TableName::VARCHAR AND "WeeklyPeriodId" = var_PeriodId;
         /* also delete associated record from JobStats */
         DELETE FROM public."JobStats"
-            WHERE WeeklyPeriodId = var_PeriodId;
+            WHERE "WeeklyPeriodId" = var_PeriodId;
     END IF;
 
     BEGIN
         IF NOT EXISTS (SELECT
             *
             FROM public."ReportPersistenceControl"
-            WHERE WeeklyPeriodId = var_PeriodId AND TableName = var_TableName::VARCHAR) THEN
+            WHERE "WeeklyPeriodId" = var_PeriodId AND "TableName" = var_TableName::VARCHAR) THEN
             /* insert a record into ReportPersistenceControl */
-            INSERT INTO public."ReportPersistenceControl" (weeklyperiodid, tablename, datecalculated, istotaltodate)
+            INSERT INTO public."ReportPersistenceControl" ("WeeklyPeriodId", "TableName", "DateCalculated", "IsTotalToDate")
             SELECT
-                var_PeriodId AS weeklyperiodid, var_TableName AS tablename, clock_timestamp() AS datecalculated, (CASE
-                    WHEN par_WeekEndDate + (48::NUMERIC || ' HOUR')::INTERVAL > clock_timestamp() THEN 1
-                    ELSE 0
-                END) AS istotaltodate;
+                var_PeriodId AS "WeeklyPeriodId", var_TableName AS "TableName", clock_timestamp() AS "DateCalculated", (CASE
+                    WHEN par_WeekEndDate + (48::NUMERIC || ' HOUR')::INTERVAL > clock_timestamp() THEN true
+                    ELSE false
+                END) AS "IsTotalToDate";
             /* insert records into JobStats */
-            INSERT INTO public."JobStats" (weeklyperiodid, jobsourceid, regionid, jobpostings, positionsavailable)
+            INSERT INTO public."JobStats" ("WeeklyPeriodId", "JobSourceId", "RegionId", "JobPostings", "PositionsAvailable")
             SELECT
-                var_PeriodId AS weeklyperiodid, j.JobSourceId, COALESCE(l."RegionId", 0) AS regionid, COUNT(*) AS jobpostings, SUM(positionsavailable) AS positionsavailable
+                var_PeriodId AS "WeeklyPeriodId", j."JobSourceId", COALESCE(l."RegionId", 0) AS "RegionId", COUNT(*) AS "JobPostings", SUM("PositionsAvailable") AS "PositionsAvailable"
                 FROM public."tvf_GetJobsForDate"(var_EndDatePlus1)
                     AS j
                 LEFT OUTER JOIN public."Locations" AS l
-                    ON l."LocationId" = j.LocationId
-                WHERE j.DateFirstImported >= var_StartDate AND j.DateFirstImported < var_EndDatePlus1
-                GROUP BY j.JobSourceId, l."RegionId";
+                    ON l."LocationId" = j."LocationId"
+                WHERE j."DateFirstImported" >= var_StartDate AND j."DateFirstImported" < var_EndDatePlus1
+                GROUP BY j."JobSourceId", l."RegionId";
         END IF;
         EXCEPTION
             WHEN OTHERS THEN
                 /* if an error occurs, undo any inserts */
                 DELETE FROM public."ReportPersistenceControl"
-                    WHERE TableName = var_TableName::VARCHAR AND WeeklyPeriodId = var_PeriodId;
+                    WHERE "TableName" = var_TableName::VARCHAR AND "WeeklyPeriodId" = var_PeriodId;
                 /* also delete associated record from JobStats */
                 DELETE FROM public."JobStats"
-                    WHERE WeeklyPeriodId = var_PeriodId;
+                    WHERE "WeeklyPeriodId" = var_PeriodId;
                 return_code := - 1;
                 RETURN;
     END;
@@ -1005,7 +999,7 @@ ALTER TABLE public."ImpersonationLog" OWNER TO workbc;
 
 CREATE TABLE public."ImportedJobsFederal" (
     "JobId" bigint NOT NULL,
-    "ApiDate" timestamp without time zone NOT NULL,
+    "ApiDate" timestamp(6) without time zone NOT NULL,
     "DateFirstImported" timestamp(6) without time zone NOT NULL,
     "JobPostEnglish" text,
     "JobPostFrench" text,

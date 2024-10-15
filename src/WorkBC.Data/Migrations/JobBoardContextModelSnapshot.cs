@@ -63,7 +63,7 @@ namespace WorkBC.Data.Migrations
                     b.HasIndex("NormalizedName")
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasFilter("\"NormalizedName\" IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
                 });
@@ -336,7 +336,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("Name")
                         .IsUnique()
-                        .HasFilter("[Name] IS NOT NULL");
+                        .HasFilter("\"Name\" IS NOT NULL");
 
                     b.ToTable("GeocodedLocationCache");
                 });
@@ -739,7 +739,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("Email")
                         .IsUnique()
-                        .HasFilter("[Email] IS NOT NULL");
+                        .HasFilter("\"Email\" IS NOT NULL");
 
                     NpgsqlIndexBuilderExtensions.IncludeProperties(b.HasIndex("Email"), new[] { "LastName", "FirstName", "AccountStatus" });
 
@@ -757,7 +757,7 @@ namespace WorkBC.Data.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                        .HasFilter("\"NormalizedUserName\" IS NOT NULL");
 
                     b.HasIndex("ProvinceId");
 
@@ -914,7 +914,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("AspNetUserId")
                         .IsUnique()
-                        .HasFilter("[AspNetUserId] IS NOT NULL");
+                        .HasFilter("\"AspNetUserId\" IS NOT NULL");
 
                     b.ToTable("JobSeekerFlags");
                 });
@@ -1001,7 +1001,7 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("AspNetUserId", "VersionNumber")
                         .IsUnique()
-                        .HasFilter("[AspNetUserId] IS NOT NULL");
+                        .HasFilter("\"AspNetUserId\" IS NOT NULL");
 
                     b.ToTable("JobSeekerVersions");
                 });
