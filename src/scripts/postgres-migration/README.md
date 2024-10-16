@@ -15,8 +15,8 @@ AWS Schema Conversion Tool (SCT) is used to migrate the schema. Because **.NET e
 ### 1.1. Adjust MSSQL database collation
 - Open Microsoft SQL Server Management Studio (SSMS)
 - Connect to the server running the JobBoard database with a user with permission to alter any database (e.g. `sa`)
-- Run the following script: `src/scripts/migration/sql/mssql-alter-collation.sql` and ensure the script succeeds
-- Run the following script: `src/scripts/migration/sql/mssql-recreate-indexes.sql` and ensure the script succeeds
+- Run the following script: `src/scripts/postgres-migration/sql/mssql-alter-collation.sql` and ensure the script succeeds
+- Run the following script: `src/scripts/postgres-migration/sql/mssql-recreate-indexes.sql` and ensure the script succeeds
 - Right-click `WorkBC_JobBoard` database > **Properties** and ensure that **General** > **Maintenance** > **Collation** is `SQL_Latin1_General_CP1_CS_AS`
 
 ![](./images/collation-ssms.png)
@@ -67,7 +67,7 @@ The following changes needed to be made following the AWS SCT migration:
 - Change all columns with type `NUMERIC(1,0)` to `BOOLEAN`
 - Modify the exported SQL functions and stored procedures to ensure database object names are properly quoted
 
-The final result after these manual modifications is stored in `scripts/migration/sql/pgsql-schema.sql`.
+The final result after these manual modifications is stored in `scripts/postgres-migration/sql/pgsql-schema.sql`.
 
 ## 2. Export the MSSQL data to CSV
 - Install [DBeaver](https://dbeaver.io/download/)
@@ -82,7 +82,7 @@ The final result after these manual modifications is stored in `scripts/migratio
 
 ## 3. Import the CSV into PgSQL
 - In DBeaver, create a new database connection > PostgreSQL > Enter connection parameters to `jobboard`
-- Restore the database schema using `docker-compose-jb exec -T postgres psql -U workbc jobboard < scripts/migration/sql/pgsql-schema.sql`
+- Restore the database schema using `docker-compose-jb exec -T postgres psql -U workbc jobboard < scripts/postgres-migration/sql/pgsql-schema.sql`
 - For each table in the appendix:
   - Right-click table > **Import Data**
   - **Import source** > **CSV** and select the corresponding CSV file
