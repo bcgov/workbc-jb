@@ -16,7 +16,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "JobPostFrench",
                 table: "ExpiredJobs",
-                type: "nvarchar(max)",
+                type: "varchar",
                 nullable: true);
         }
     }

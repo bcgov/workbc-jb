@@ -68,7 +68,7 @@ namespace WorkBC.Data.Migrations
                 columns: table => new
                 {
                     WeeklyPeriodId = table.Column<int>(type: "int", nullable: false),
-                    DateCalculated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateCalculated = table.Column<DateTime>(type: "timestamp", nullable: false),
                     IsTotalToDate = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -87,7 +87,7 @@ namespace WorkBC.Data.Migrations
                 columns: table => new
                 {
                     WeeklyPeriodId = table.Column<int>(type: "int", nullable: false),
-                    DateCalculated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateCalculated = table.Column<DateTime>(type: "timestamp", nullable: false),
                     IsTotalToDate = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>

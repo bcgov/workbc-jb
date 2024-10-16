@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using WorkBC.Admin.Areas.Reports.Data.QueryResultModels;
 
 namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
@@ -26,21 +26,30 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
             endDate = endDate.AddDays(1);
 
             // set up the query
-            string sql =
-                @"SELECT l.City, 
-						IsNull(r.Name,'N/A') as Region,
-                        Sum(j.PositionsAvailable) AS Vacancies,
-                        Count(*) AS Postings
-                    FROM dbo.tvf_GetJobsForDate(@EndDate) j
-						INNER JOIN Locations l ON l.LocationId = j.LocationId
-						INNER JOIN Regions r on r.Id = l.RegionId
-                    WHERE j.DateFirstImported >= @StartDate AND j.DateFirstImported < @EndDate 
-                            AND (@RegionId = 0 OR l.RegionId = @RegionId)
-                            AND (@JobSourceId = 0 OR j.JobSourceId = @JobSourceId)
-                    GROUP BY l.City, IsNull(r.Name,'N/A')
-                    ORDER BY Sum(j.PositionsAvailable) DESC";
+            string sql = @"
+SELECT l.""City""
+	,Coalesce(r.""Name"", 'N/A') AS ""Region""
+	,Sum(j.""PositionsAvailable"") AS ""Vacancies""
+	,Count(*) AS ""Postings""
+FROM ""tvf_GetJobsForDate""(@EndDate) j
+INNER JOIN ""Locations"" l ON l.""LocationId"" = j.""LocationId""
+INNER JOIN ""Regions"" r ON r.""Id"" = l.""RegionId""
+WHERE j.""DateFirstImported"" >= @StartDate
+	AND j.""DateFirstImported"" < @EndDate
+	AND (
+		@RegionId = 0
+		OR l.""RegionId"" = @RegionId
+		)
+	AND (
+		@JobSourceId = 0
+		OR j.""JobSourceId"" = @JobSourceId
+		)
+GROUP BY l.""City""
+	,Coalesce(r.""Name"", 'N/A')
+ORDER BY Sum(j.""PositionsAvailable"") DESC;
+";
 
-            using (var conn = new SqlConnection(ConnectionString))
+            using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 return (await conn.QueryAsync<JobsByCityResult>(sql,
                     new

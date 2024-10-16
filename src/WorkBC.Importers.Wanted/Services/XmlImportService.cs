@@ -5,8 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Linq;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Serilog;
@@ -129,7 +128,7 @@ namespace WorkBC.Importers.Wanted.Services
                 _settings.DateFrom = DateTime.Now.AddDays(-(k + 1)).ToString("yyyy-MM-dd");
 
                 //to date
-                //_settings.DateEnd = DateTime.Now.AddDays(-k).ToString("yyyy-MM-dd");  
+                //_settings.DateEnd = DateTime.Now.AddDays(-k).ToString("yyyy-MM-dd");
                 _settings.DateEnd = _settings.DateFrom; // only import 1 day, not 2
 
                 //total records for specific date
@@ -297,9 +296,9 @@ namespace WorkBC.Importers.Wanted.Services
             //move jobs to expired jobs
             foreach (ImportedJobWanted job in jobsToPurge)
             {
-                //check that this job exists in the database 
+                //check that this job exists in the database
                 //if the job is not in the database, it means this job was a Gov of Canada job
-                //and the job was not index, hence we do not try to remove the job 
+                //and the job was not index, hence we do not try to remove the job
                 ImportedJobWanted jobEntry =
                     await _dbContext.ImportedJobsWanted.FirstOrDefaultAsync(j => j.JobId == job.JobId);
 
@@ -453,16 +452,13 @@ namespace WorkBC.Importers.Wanted.Services
             if (jobIds.Any())
             {
                 //Create SQL Connection object
-                using (var cn = new SqlConnection(_connectionString))
+                using (var cn = new NpgsqlConnection(_connectionString))
                 {
                     //open connection to SQL
                     cn.Open();
 
-                    using (var cmd = new SqlCommand(
-                        $@"UPDATE ImportedJobsWanted 
-                                  SET DateLastSeen = GetDate() 
-                                  WHERE JobId IN ({string.Join(',', jobIds)})"
-                        , cn
+                    using (var cmd = new NpgsqlCommand(
+                        $"UPDATE \"ImportedJobsWanted\" SET \"DateLastSeen\" = Now() WHERE \"JobId\" IN ({string.Join(',', jobIds)})", cn
                     ))
                     {
                         cmd.ExecuteNonQuery();

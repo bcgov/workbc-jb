@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WorkBC.Data.Migrations
@@ -13,7 +13,7 @@ namespace WorkBC.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     JobId = table.Column<int>(nullable: false),
                     FileUpdateDate = table.Column<DateTime>(nullable: false),
                     DateImported = table.Column<DateTime>(nullable: false),
@@ -30,7 +30,7 @@ namespace WorkBC.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     JobId = table.Column<long>(nullable: false),
                     JobXml = table.Column<string>(nullable: true),
                     DateImported = table.Column<DateTime>(nullable: false),
