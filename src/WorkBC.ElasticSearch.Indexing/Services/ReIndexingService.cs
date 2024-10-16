@@ -101,12 +101,12 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 //open connection to SQL
                 cn.Open();
 
-                using (var cmd = new NpgsqlCommand("UPDATE \"ImportedJobsWanted\" SET \"ReIndexNeeded\" = true", cn))
+                using (var cmd = new NpgsqlCommand(@"UPDATE ""ImportedJobsWanted"" SET ""ReIndexNeeded"" = true", cn))
                 {
                     cmd.ExecuteNonQuery();
                 }
 
-                using (var cmd = new NpgsqlCommand("UPDATE \"ImportedJobsFederal\" SET \"ReIndexNeeded\" = true", cn))
+                using (var cmd = new NpgsqlCommand(@"UPDATE ""ImportedJobsFederal"" SET ""ReIndexNeeded"" = true", cn))
                 {
                     cmd.ExecuteNonQuery();
                 }

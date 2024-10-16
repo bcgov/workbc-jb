@@ -23,33 +23,45 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
         public async Task<IList<JobSeekersByLocationResult>> RunYearlyAsync(int startYear, int endYear)
         {
             // set up the query
-            var sql =
-                @"WITH dimensions AS
-                    (
-                        SELECT DISTINCT r.Id AS RegionId, r.[Name] AS Label, wp.FiscalYear,
-                            r.ListOrder AS SortOrder
-                        FROM WeeklyPeriods wp, Regions r
-                        WHERE wp.FiscalYear >= @StartYear AND wp.FiscalYear <= @EndYear
-                            AND wp.WeekStartDate <= GetDate() AND r.Id NOT IN (0,-4,-5)
-                    ),
-                    jobseekerdata AS
-                    (
-	                    SELECT jsl.RegionId,
-		                    wp.FiscalYear,
-		                    Sum(jsl.Value) AS Value
-	                    FROM JobSeekerStats jsl
-		                    INNER JOIN weeklyPeriods wp ON wp.Id = jsl.WeeklyPeriodId
-                        WHERE LabelKey = 'REGD'
-	                    GROUP BY jsl.RegionId, wp.FiscalYear
-                    )
-                    SELECT d.Label,
-	                    d.FiscalYear,
-	                    IsNull(jd.Value,0) AS Users,
-                        d.SortOrder
-                    FROM dimensions d
-                    LEFT OUTER JOIN jobseekerdata jd ON d.FiscalYear = jd.FiscalYear
-	                    AND d.RegionId = jd.RegionId
-                    ORDER BY d.Label, FiscalYear";
+            var sql = @"
+WITH dimensions
+AS (
+  SELECT DISTINCT r.""Id"" AS ""RegionId""
+    ,r.""Name"" AS ""Label""
+    ,wp.""FiscalYear""
+    ,r.""ListOrder"" AS ""SortOrder""
+  FROM ""WeeklyPeriods"" wp
+    ,""Regions"" r
+  WHERE wp.""FiscalYear"" >= @StartYear
+    AND wp.""FiscalYear"" <= @EndYear
+    AND wp.""WeekStartDate"" <= Now()
+    AND r.""Id"" NOT IN (
+      0
+      ,- 4
+      ,- 5
+      )
+  )
+  ,jobseekerdata
+AS (
+  SELECT jsl.""RegionId""
+    ,wp.""FiscalYear""
+    ,Sum(jsl.""Value"") AS ""Value""
+  FROM ""JobSeekerStats"" jsl
+  INNER JOIN ""WeeklyPeriods"" wp ON wp.""Id"" = jsl.""WeeklyPeriodId""
+  WHERE ""LabelKey"" = 'REGD'
+  GROUP BY jsl.""RegionId""
+    ,wp.""FiscalYear""
+  )
+SELECT d.""Label""
+  ,d.""FiscalYear""
+  ,Coalesce(jd.""Value"", 0) AS ""Users""
+  ,d.""SortOrder""
+FROM dimensions d
+LEFT OUTER JOIN jobseekerdata jd ON d.""FiscalYear"" = jd.""FiscalYear""
+  AND d.""RegionId"" = jd.""RegionId""
+ORDER BY d.""Label""
+  ,d.""FiscalYear"";
+            ";
 
             using (var conn = new NpgsqlConnection(ConnectionString))
             {
@@ -69,36 +81,51 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
         public async Task<IList<JobSeekersByLocationResult>> RunMonthlyAsync(DateTime startDate, DateTime endDate)
         {
             // set up the query
-            var sql =
-                @"WITH dimensions AS
-                    (
-	                    SELECT DISTINCT r.Id AS RegionId, r.[Name] AS Label,
-                            wp.CalendarMonth, wp.CalendarYear, r.ListOrder AS SortOrder
-	                    FROM WeeklyPeriods wp, Regions r
-	                    WHERE wp.WeekStartDate >= @StartDate AND wp.WeekEndDate <= @EndDate
-                            AND wp.WeekStartDate <= GetDate() AND r.Id NOT IN (0,-4,-5)
-                    ),
-                    jobseekerdata AS
-                    (
-	                    SELECT jsl.RegionId,
-		                    wp.CalendarMonth,
-		                    wp.CalendarYear,
-		                    Sum(jsl.Value) AS Value
-	                    FROM JobSeekerStats jsl
-		                    INNER JOIN weeklyPeriods wp ON wp.Id = jsl.WeeklyPeriodId
-                        WHERE LabelKey = 'REGD'
-	                    GROUP BY jsl.RegionId, wp.CalendarMonth, wp.CalendarYear
-                    )
-                    SELECT d.Label,
-	                    d.CalendarMonth,
-	                    d.CalendarYear,
-	                    IsNull(jd.Value,0) AS Users,
-                        d.SortOrder
-                    FROM dimensions d
-                    LEFT OUTER JOIN jobseekerdata jd ON d.CalendarMonth = jd.CalendarMonth
-	                    AND d.CalendarYear = jd.CalendarYear
-	                    AND d.RegionId = jd.RegionId
-                    ORDER BY d.Label, CalendarYear, d.CalendarMonth";
+            var sql = @"
+WITH dimensions
+AS (
+  SELECT DISTINCT r.""Id"" AS ""RegionId""
+    ,r.""Name"" AS ""Label""
+    ,wp.""CalendarMonth""
+    ,wp.""CalendarYear""
+    ,r.""ListOrder"" AS ""SortOrder""
+  FROM ""WeeklyPeriods"" wp
+    ,""Regions"" r
+  WHERE wp.""WeekStartDate"" >= @StartDate
+    AND wp.""WeekEndDate"" <= @EndDate
+    AND wp.""WeekStartDate"" <= Now()
+    AND r.""Id"" NOT IN (
+      0
+      ,- 4
+      ,- 5
+      )
+  )
+  ,jobseekerdata
+AS (
+  SELECT jsl.""RegionId""
+    ,wp.""CalendarMonth""
+    ,wp.""CalendarYear""
+    ,Sum(jsl.""Value"") AS ""Value""
+  FROM ""JobSeekerStats"" jsl
+  INNER JOIN ""WeeklyPeriods"" wp ON wp.""Id"" = jsl.""WeeklyPeriodId""
+  WHERE ""LabelKey"" = 'REGD'
+  GROUP BY jsl.""RegionId""
+    ,wp.""CalendarMonth""
+    ,wp.""CalendarYear""
+  )
+SELECT d.""Label""
+  ,d.""CalendarMonth""
+  ,d.""CalendarYear""
+  ,Coalesce(jd.""Value"", 0) AS ""Users""
+  ,d.""SortOrder""
+FROM dimensions d
+LEFT OUTER JOIN jobseekerdata jd ON d.""CalendarMonth"" = jd.""CalendarMonth""
+  AND d.""CalendarYear"" = jd.""CalendarYear""
+  AND d.""RegionId"" = jd.""RegionId""
+ORDER BY d.""Label""
+  ,d.""CalendarYear""
+  ,d.""CalendarMonth"";
+            ";
 
             using (var conn = new NpgsqlConnection(ConnectionString))
             {
@@ -118,35 +145,50 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
         public async Task<IList<JobSeekersByLocationResult>> RunWeeklyAsync(int year, int month)
         {
             // set up the query
-            var sql =
-                @"WITH dimensions AS
-                    (
-	                    SELECT DISTINCT r.Id AS RegionId, r.[Name] AS Label,
-                            wp.WeekOfMonth, wp.Id AS WeeklyPeriodId,
-                            wp.CalendarMonth, wp.CalendarYear, r.ListOrder AS SortOrder
-	                    FROM WeeklyPeriods wp, Regions r
-	                    WHERE  wp.CalendarYear = @Year AND wp.CalendarMonth = @Month
-                            AND wp.WeekStartDate <= GetDate() AND r.Id NOT IN (0,-4,-5)
-                    ),
-                    jobseekerdata AS
-                    (
-	                    SELECT jsl.RegionId,
-		                    jsl.WeeklyPeriodId,
-		                    jsl.Value
-	                    FROM JobSeekerStats jsl
-		                    INNER JOIN WeeklyPeriods wp ON wp.Id = jsl.WeeklyPeriodId
-                        WHERE LabelKey = 'REGD'
-                    )
-                    SELECT d.Label,
-	                    d.WeekOfMonth,
-                        d.CalendarMonth,
-                        d.CalendarYear,
-	                    IsNull(jd.Value,0) AS Users,
-                        d.SortOrder
-                    FROM dimensions d
-                    LEFT OUTER JOIN jobseekerdata jd ON d.WeeklyPeriodId = jd.WeeklyPeriodId
-	                    AND d.RegionId = jd.RegionId
-                    ORDER BY d.Label, d.WeekOfMonth, d.CalendarMonth,  d.CalendarYear";
+            var sql = @"
+WITH dimensions
+AS (
+  SELECT DISTINCT r.""Id"" AS ""RegionId""
+    ,r.""Name"" AS ""Label""
+    ,wp.""WeekOfMonth""
+    ,wp.""Id"" AS ""WeeklyPeriodId""
+    ,wp.""CalendarMonth""
+    ,wp.""CalendarYear""
+    ,r.""ListOrder"" AS ""SortOrder""
+  FROM ""WeeklyPeriods"" wp
+    ,""Regions"" r
+  WHERE wp.""CalendarYear"" = @Year
+    AND wp.""CalendarMonth"" = @Month
+    AND wp.""WeekStartDate"" <= Now()
+    AND r.""Id"" NOT IN (
+      0
+      ,- 4
+      ,- 5
+      )
+  )
+  ,jobseekerdata
+AS (
+  SELECT jsl.""RegionId""
+    ,jsl.""WeeklyPeriodId""
+    ,jsl.""Value""
+  FROM ""JobSeekerStats"" jsl
+  INNER JOIN ""WeeklyPeriods"" wp ON wp.""Id"" = jsl.""WeeklyPeriodId""
+  WHERE ""LabelKey"" = 'REGD'
+  )
+SELECT d.""Label""
+  ,d.""WeekOfMonth""
+  ,d.""CalendarMonth""
+  ,d.""CalendarYear""
+  ,Coalesce(jd.""Value"", 0) AS ""Users""
+  ,d.""SortOrder""
+FROM dimensions d
+LEFT OUTER JOIN jobseekerdata jd ON d.""WeeklyPeriodId"" = jd.""WeeklyPeriodId""
+  AND d.""RegionId"" = jd.""RegionId""
+ORDER BY d.""Label""
+  ,d.""WeekOfMonth""
+  ,d.""CalendarMonth""
+  ,d.""CalendarYear"";
+            ";
 
             using (var conn = new NpgsqlConnection(ConnectionString))
             {
@@ -168,8 +210,11 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
             // add 1 day to the endDate so the entire date selected is included in the result
             endDate = endDate.AddDays(1);
 
-            var sql = @"SELECT Count(*) FROM [dbo].[tvf_GetJobSeekersForDate](@EndDate)
-                        WHERE AccountStatus <> 99";
+            var sql = @"
+SELECT Count(*)
+FROM ""tvf_GetJobSeekersForDate""(@EndDate)
+WHERE ""AccountStatus"" <> 99;
+            ";
 
             using (var conn = new NpgsqlConnection(ConnectionString))
             {

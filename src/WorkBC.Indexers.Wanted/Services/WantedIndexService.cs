@@ -200,7 +200,7 @@ namespace WorkBC.Indexers.Wanted.Services
                     //open connection to SQL
                     cn.Open();
 
-                    var sql = "UPDATE \"ImportedJobsWanted\" SET \"ReIndexNeeded\" = false WHERE \"JobId\" = ANY(@ids)";
+                    var sql = @"UPDATE ""ImportedJobsWanted"" SET ""ReIndexNeeded"" = false WHERE ""JobId"" = ANY(@ids)";
 
                     //Create command
                     using (var cmd = new NpgsqlCommand(sql, cn))
