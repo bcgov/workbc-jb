@@ -53,6 +53,7 @@ locals {
   )
 }
 
+# Postgres DB
 resource "aws_rds_cluster" "postgres" {
   cluster_identifier      = "jb-postgres-cluster"
   engine                  = "aurora-postgresql"
@@ -62,8 +63,8 @@ resource "aws_rds_cluster" "postgres" {
   master_password         = local.db_creds.password
   backup_retention_period = 5
   preferred_backup_window = "07:00-09:00"
-  db_subnet_group_name    = aws_db_subnet_group.data_subnet.name
-  kms_key_id              = aws_kms_key.workbc-jb-kms-key.arn
+  db_subnet_group_name    = data.aws_db_subnet_group.data_subnet.name
+  kms_key_id              = data.aws_kms_key.workbc-jb-kms-key.arn
   storage_encrypted       = true
   vpc_security_group_ids  = [data.aws_security_group.data.id]
   skip_final_snapshot     = true
