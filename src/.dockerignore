@@ -21,5 +21,6 @@
 **/secrets.dev.yaml
 **/values.dev.yaml
 **/wwwroot/dist
+**/scripts
 LICENSE
 README.md

@@ -33,7 +33,7 @@ Please disregard this message if you received it in error.
   </tr>
  </table>
 </body>
-</html>', N'Job alert email template / HTML version. {0} = firstName, {1} = frequency, {2} = jobAlertTitle, {3} = notificationUrl, {4} = emailSubject.', 5, 1, CAST(N'2020-06-19T06:54:37.7000000' AS DateTime2))
+</html>', N'Job alert email template / HTML version. {0} = firstName, {1} = frequency, {2} = jobAlertTitle, {3} = notificationUrl, {4} = emailSubject.', 5, 1, CAST(N'2020-06-19T06:54:37.7000000' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'email.jobAlert.bodyText', N'Hello {0},
 
@@ -43,9 +43,9 @@ Your {1} job alert for {2} is ready for viewing. Please click the link below, or
 
 Your job alerts will only be sent when new job opportunities are available. You can edit or delete your job alert by signing in to your account on WorkBC.
 
-Please disregard this message if you received it in error.', N'Job alert email template / plain text version. {0} = firstName, {1} = frequency, {2} = jobAlertTitle, {3} = notificationUrl. The Job Board sends multi-part emails. Only a very small number of devices require these plain text emails, but including them helps to keep our messages from being flagged as spam.', 2, 1, CAST(N'2020-06-19T06:54:37.7000000' AS DateTime2))
+Please disregard this message if you received it in error.', N'Job alert email template / plain text version. {0} = firstName, {1} = frequency, {2} = jobAlertTitle, {3} = notificationUrl. The Job Board sends multi-part emails. Only a very small number of devices require these plain text emails, but including them helps to keep our messages from being flagged as spam.', 2, 1, CAST(N'2020-06-19T06:54:37.7000000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'email.jobAlert.subject', N'Job Alert for {0} - NEW Job(s) Available!', N'Job alert email subject. {0} = jobAlertTitle.', 1, 1, CAST(N'2020-06-19T06:54:37.7000000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'email.jobAlert.subject', N'Job Alert for {0} - NEW Job(s) Available!', N'Job alert email subject. {0} = jobAlertTitle.', 1, 1, CAST(N'2020-06-19T06:54:37.7000000' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'email.passwordReset.bodyHtml', N'<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">
 <html xmlns=""http://www.w3.org/1999/xhtml"">
@@ -69,7 +69,7 @@ INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [Mod
   </tr>
  </table>
 </body>
-</html>', N'Password reset email template / HTML version. {0} = firstName, {1} = lastName, {2} = linkUrl, {3} = emailSubject.', 5, 1, CAST(N'2020-06-19T06:54:37.6966667' AS DateTime2))
+</html>', N'Password reset email template / HTML version. {0} = firstName, {1} = lastName, {2} = linkUrl, {3} = emailSubject.', 5, 1, CAST(N'2020-06-19T06:54:37.6966667' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'email.passwordReset.bodyText', N'Hello {0},
 
@@ -80,9 +80,9 @@ You''ve requested a password reset for your WorkBC.ca account. Follow the link b
 Thank you,
 
 The WorkBC.ca Team
-https://www.workbc.ca', N'Password reset email template / plain text version. {0} = firstName, {1} = lastName, {2} = linkUrl. The Job Board sends multi-part emails. Only a very small number of devices require these plain text emails, but including them helps to keep our messages from being flagged as spam.', 2, 1, CAST(N'2020-06-19T06:54:37.7000000' AS DateTime2))
+https://www.workbc.ca', N'Password reset email template / plain text version. {0} = firstName, {1} = lastName, {2} = linkUrl. The Job Board sends multi-part emails. Only a very small number of devices require these plain text emails, but including them helps to keep our messages from being flagged as spam.', 2, 1, CAST(N'2020-06-19T06:54:37.7000000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'email.passwordReset.subject', N'WorkBC.ca Password Reset', N'Password reset email subject', 1, 1, CAST(N'2020-06-19T06:54:37.7000000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'email.passwordReset.subject', N'WorkBC.ca Password Reset', N'Password reset email subject', 1, 1, CAST(N'2020-06-19T06:54:37.7000000' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'email.registration.bodyHtml', N'<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">
 <html xmlns=""http://www.w3.org/1999/xhtml"">
@@ -107,7 +107,7 @@ INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [Mod
   </tr>
  </table>
 </body>
-</html>', N'Registration confirmation email template / HTML version. {0} = firstName, {1} = lastName, {2} = email, {3} = linkUrl, {4} = emailSubject.', 5, 1, CAST(N'2020-06-19T06:54:37.7000000' AS DateTime2))
+</html>', N'Registration confirmation email template / HTML version. {0} = firstName, {1} = lastName, {2} = email, {3} = linkUrl, {4} = emailSubject.', 5, 1, CAST(N'2020-06-19T06:54:37.7000000' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'email.registration.bodyText', N'Hello {0} {1},
 
@@ -120,81 +120,81 @@ You will need to activate your account before you can login by clicking on the l
 Thank you,
 
 The WorkBC.ca Team
-https://www.workbc.ca', N'Registration confirmation email template / plain text version. {0} = firstName, {1} = lastName, {2} = email, {3} = linkUrl. The Job Board sends multi-part emails. Only a very small number of devices require these plain text emails, but including them helps to keep our messages from being flagged as spam.', 2, 1, CAST(N'2020-06-19T06:54:37.7000000' AS DateTime2))
+https://www.workbc.ca', N'Registration confirmation email template / plain text version. {0} = firstName, {1} = lastName, {2} = email, {3} = linkUrl. The Job Board sends multi-part emails. Only a very small number of devices require these plain text emails, but including them helps to keep our messages from being flagged as spam.', 2, 1, CAST(N'2020-06-19T06:54:37.7000000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'email.registration.subject', N'Your WorkBC.ca Account Requires Activation', N'Registration confirmation email subject', 1, 1, CAST(N'2020-06-19T06:54:37.7000000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'email.registration.subject', N'Your WorkBC.ca Account Requires Activation', N'Registration confirmation email subject', 1, 1, CAST(N'2020-06-19T06:54:37.7000000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.careerProfiles.callToAction1BodyText', N'Discover over 500 career options and learn about the duties, salary, education, job prospects and much more.', N'Description for the 1st call-to-action on the saved career profiles page', 2, 1, CAST(N'2020-06-19T06:54:41.0166667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.careerProfiles.callToAction1BodyText', N'Discover over 500 career options and learn about the duties, salary, education, job prospects and much more.', N'Description for the 1st call-to-action on the saved career profiles page', 2, 1, CAST(N'2020-06-19T06:54:41.0166667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.careerProfiles.callToAction1LinkText', N'Search Career Profiles', N'Link text for the 1st call-to-action on the saved career profiles page', 1, 1, CAST(N'2020-06-19T06:54:41.0166667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.careerProfiles.callToAction1LinkText', N'Search Career Profiles', N'Link text for the 1st call-to-action on the saved career profiles page', 1, 1, CAST(N'2020-06-19T06:54:41.0166667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.careerProfiles.callToAction1LinkUrl', N'/Jobs-Careers/Explore-Careers.aspx', N'Link URL for the 1st call-to-action on the saved career profiles page', 1, 1, CAST(N'2020-06-19T06:54:41.0166667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.careerProfiles.callToAction1LinkUrl', N'/Jobs-Careers/Explore-Careers.aspx', N'Link URL for the 1st call-to-action on the saved career profiles page', 1, 1, CAST(N'2020-06-19T06:54:41.0166667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.careerProfiles.callToAction2BodyText', N'Learn about the kinds of jobs and skills that will be most in demand for the next 10 years.', N'Description for the 2nd call-to-action on the saved career profiles page', 2, 1, CAST(N'2020-06-19T06:54:41.0200000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.careerProfiles.callToAction2BodyText', N'Learn about the kinds of jobs and skills that will be most in demand for the next 10 years.', N'Description for the 2nd call-to-action on the saved career profiles page', 2, 1, CAST(N'2020-06-19T06:54:41.0200000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.careerProfiles.callToAction2LinkText', N'Explore the Labour Market Outlook', N'Link text for the 2nd call-to-action on the saved career profiles page', 1, 1, CAST(N'2020-06-19T06:54:41.0200000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.careerProfiles.callToAction2LinkText', N'Explore the Labour Market Outlook', N'Link text for the 2nd call-to-action on the saved career profiles page', 1, 1, CAST(N'2020-06-19T06:54:41.0200000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.careerProfiles.callToAction2LinkUrl', N'/Labour-Market-Industry/Labour-Market-Outlook.aspx', N'Link URL for the 2nd call-to-action on the saved career profiles page', 1, 1, CAST(N'2020-06-19T06:54:41.0200000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.careerProfiles.callToAction2LinkUrl', N'/Labour-Market-Industry/Labour-Market-Outlook.aspx', N'Link URL for the 2nd call-to-action on the saved career profiles page', 1, 1, CAST(N'2020-06-19T06:54:41.0200000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.accountDescription', N'Keep your account up-to-date. Access and manage your personal settings.', N'Text for the Manage Account widget on the account dashboard page', 2, 1, CAST(N'2020-06-19T06:54:41.0033333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.accountDescription', N'Keep your account up-to-date. Access and manage your personal settings.', N'Text for the Manage Account widget on the account dashboard page', 2, 1, CAST(N'2020-06-19T06:54:41.0033333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.careersDescription', N'Explore and save your favourite career and industry profiles to help you decide on the right career path for you.', N'Text for the Careers & Industries widget on the account dashboard page', 2, 1, CAST(N'2020-06-19T06:54:41.0033333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.careersDescription', N'Explore and save your favourite career and industry profiles to help you decide on the right career path for you.', N'Text for the Careers & Industries widget on the account dashboard page', 2, 1, CAST(N'2020-06-19T06:54:41.0033333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.introText', N'Manage and personalize the job search process in your account. 
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.introText', N'Manage and personalize the job search process in your account.
 <br>
-Find job opportunities that match your skills and experience, and learn about careers and industries in B.C.', N'Text shown at the top of the account dashboard page', 5, 1, CAST(N'2020-06-19T06:54:41.0000000' AS DateTime2))
+Find job opportunities that match your skills and experience, and learn about careers and industries in B.C.', N'Text shown at the top of the account dashboard page', 5, 1, CAST(N'2020-06-19T06:54:41.0000000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.jobsDescription', N'Stay organized by saving your favourite jobs and employers. You can view and manage then without having to run a search.', N'Text for the Jobs widget on the account dashboard page', 2, 1, CAST(N'2020-06-19T06:54:41.0033333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.jobsDescription', N'Stay organized by saving your favourite jobs and employers. You can view and manage then without having to run a search.', N'Text for the Jobs widget on the account dashboard page', 2, 1, CAST(N'2020-06-19T06:54:41.0033333' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.newAccountMessageBody', N'<p>Here is what''s new with the website:</p>
 <ol>
 <li>We have made improvements to your Job Alerts. Your Job Alerts will continue to recommend job postings to you based on your selected preferences, but you can now access them from your Dashboard menu and receive them via email.</li>
 <li>If you are a returning user, your Saved Searches have been merged into the enhanced Job Alerts section of your account.</li>
-</ol>', N'The New Account Message will appear at the top of the account dashboard the first time a user logs into the Job Board or when a user logs in from a new browser. It will continue to appear until the user dismisses the message. This field can contain HTML or plain text.', 5, 1, CAST(N'2020-06-19T06:54:38.7433333' AS DateTime2))
+</ol>', N'The New Account Message will appear at the top of the account dashboard the first time a user logs into the Job Board or when a user logs in from a new browser. It will continue to appear until the user dismisses the message. This field can contain HTML or plain text.', 5, 1, CAST(N'2020-06-19T06:54:38.7433333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.newAccountMessageTitle', N'Welcome to WorkBC''s job board!', N'This is a mandatory component of the New Account Message. It appears in bold at the top of the message. It can contain HTML or plain text.', 5, 1, CAST(N'2020-06-19T06:54:38.7433333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.newAccountMessageTitle', N'Welcome to WorkBC''s job board!', N'This is a mandatory component of the New Account Message. It appears in bold at the top of the message. It can contain HTML or plain text.', 5, 1, CAST(N'2020-06-19T06:54:38.7433333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.notification1Body', N'', N'Notification #1 appears at the top of the account dashboard and below the New Account Message. If Notification #1 is enabled, the message will appear in a specific browser until the user dismisses the message. It will re-appear if the message is changed or the user logs in from a different browser. This field can contain HTML or plain text.', 5, 1, CAST(N'2020-06-19T06:54:38.7433333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.notification1Body', N'', N'Notification #1 appears at the top of the account dashboard and below the New Account Message. If Notification #1 is enabled, the message will appear in a specific browser until the user dismisses the message. It will re-appear if the message is changed or the user logs in from a different browser. This field can contain HTML or plain text.', 5, 1, CAST(N'2020-06-19T06:54:38.7433333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.notification1Enabled', N'0', N'Toggle to turn Notification #1 on or off', 4, 1, CAST(N'2020-06-19T06:54:38.7433333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.notification1Enabled', N'0', N'Toggle to turn Notification #1 on or off', 4, 1, CAST(N'2020-06-19T06:54:38.7433333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.notification1Title', N'', N'This is a mandatory component of Notification #1. It appears in bold at the top of the message. It can contain HTML or plain text.', 5, 1, CAST(N'2020-06-19T06:54:38.7433333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.notification1Title', N'', N'This is a mandatory component of Notification #1. It appears in bold at the top of the message. It can contain HTML or plain text.', 5, 1, CAST(N'2020-06-19T06:54:38.7433333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.notification2Body', N'', N'Notification #2 appears at the top of the account dashboard and below Notification #1. If Notification #1 is enabled, the message will appear in a specific browser until the user dismisses the message. It will re-appear if the message is changed or the user logs in from a different browser. This field can contain HTML or plain text.', 5, 1, CAST(N'2020-06-19T06:54:38.7433333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.notification2Body', N'', N'Notification #2 appears at the top of the account dashboard and below Notification #1. If Notification #1 is enabled, the message will appear in a specific browser until the user dismisses the message. It will re-appear if the message is changed or the user logs in from a different browser. This field can contain HTML or plain text.', 5, 1, CAST(N'2020-06-19T06:54:38.7433333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.notification2Enabled', N'0', N'Toggle to turn Notification #2 on or off', 4, 1, CAST(N'2020-06-19T06:54:38.7466667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.notification2Enabled', N'0', N'Toggle to turn Notification #2 on or off', 4, 1, CAST(N'2020-06-19T06:54:38.7466667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.notification2Title', N'', N'This is a mandatory component of Notification #2. It appears in bold at the top of the message. It can contain HTML or plain text.', 5, 1, CAST(N'2020-06-19T06:54:38.7433333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.notification2Title', N'', N'This is a mandatory component of Notification #2. It appears in bold at the top of the message. It can contain HTML or plain text.', 5, 1, CAST(N'2020-06-19T06:54:38.7433333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.resource1Body', N'The occupations that are expected to have above-average opportunities are highlighted in this section.', N'Description for the 1st recommended resource at the bottom of the account dashboard page', 2, 1, CAST(N'2020-06-19T06:54:41.0033333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.resource1Body', N'The occupations that are expected to have above-average opportunities are highlighted in this section.', N'Description for the 1st recommended resource at the bottom of the account dashboard page', 2, 1, CAST(N'2020-06-19T06:54:41.0033333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.resource1Title', N'View high demand occupations', N'Title for the 1st recommended resource at the bottom of the account dashboard page', 1, 1, CAST(N'2020-06-19T06:54:41.0033333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.resource1Title', N'View high demand occupations', N'Title for the 1st recommended resource at the bottom of the account dashboard page', 1, 1, CAST(N'2020-06-19T06:54:41.0033333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.resource1Url', N'/Labour-Market-Industry/High-Opportunity-Occupations.aspx', N'URL for the 1st recommended resource at the bottom of the account dashboard page', 1, 1, CAST(N'2020-06-19T06:54:41.0033333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.resource1Url', N'/Labour-Market-Industry/High-Opportunity-Occupations.aspx', N'URL for the 1st recommended resource at the bottom of the account dashboard page', 1, 1, CAST(N'2020-06-19T06:54:41.0033333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.resource2Body', N'WorkBC Employment Services Centres support you in finding a job and keeping it.', N'Description for the 2nd recommended resource at the bottom of the account dashboard page', 2, 1, CAST(N'2020-06-19T06:54:41.0033333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.resource2Body', N'WorkBC Employment Services Centres support you in finding a job and keeping it.', N'Description for the 2nd recommended resource at the bottom of the account dashboard page', 2, 1, CAST(N'2020-06-19T06:54:41.0033333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.resource2Title', N'Visit a WorkBC Centre', N'Title for the 2nd recommended resource at the bottom of the account dashboard page', 1, 1, CAST(N'2020-06-19T06:54:41.0033333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.resource2Title', N'Visit a WorkBC Centre', N'Title for the 2nd recommended resource at the bottom of the account dashboard page', 1, 1, CAST(N'2020-06-19T06:54:41.0033333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.resource2Url', N'/Employment-Services/WorkBC-Centres.aspx', N'URL for the 2nd recommended resource at the bottom of the account dashboard page', 1, 1, CAST(N'2020-06-19T06:54:41.0033333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.resource2Url', N'/Employment-Services/WorkBC-Centres.aspx', N'URL for the 2nd recommended resource at the bottom of the account dashboard page', 1, 1, CAST(N'2020-06-19T06:54:41.0033333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.resource3Body', N'Find labour market details on each of the seven regions in B.C., as well as the employment outlooks for the years to come.', N'Description for the 3rd recommended resource at the bottom of the account dashboard page', 2, 1, CAST(N'2020-06-19T06:54:41.0066667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.resource3Body', N'Find labour market details on each of the seven regions in B.C., as well as the employment outlooks for the years to come.', N'Description for the 3rd recommended resource at the bottom of the account dashboard page', 2, 1, CAST(N'2020-06-19T06:54:41.0066667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.resource3Title', N'Explore Regional Profiles', N'Title for the 3rd recommended resource at the bottom of the account dashboard page', 1, 1, CAST(N'2020-06-19T06:54:41.0033333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.resource3Title', N'Explore Regional Profiles', N'Title for the 3rd recommended resource at the bottom of the account dashboard page', 1, 1, CAST(N'2020-06-19T06:54:41.0033333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.resource3Url', N'/Labour-Market-Industry/Regional-Profiles.aspx', N'URL for the 3rd recommended resource at the bottom of the account dashboard page', 1, 1, CAST(N'2020-06-19T06:54:41.0066667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.dashboard.resource3Url', N'/Labour-Market-Industry/Regional-Profiles.aspx', N'URL for the 3rd recommended resource at the bottom of the account dashboard page', 1, 1, CAST(N'2020-06-19T06:54:41.0066667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.errors.emptyPassword', N'Please enter password', N'Error message shown on the login page when the password field is blank', 1, 1, CAST(N'2020-06-19T06:54:40.8566667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.errors.emptyPassword', N'Please enter password', N'Error message shown on the login page when the password field is blank', 1, 1, CAST(N'2020-06-19T06:54:40.8566667' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.errors.forgotPasswordEmailNotFound', N'<strong>Ooops! The email address could not be found.</strong>
-<div>Try again or create a new account.</div>', N'Error message for password reset shown when a user account does not exist for the email address entered', 5, 1, CAST(N'2020-06-19T06:54:40.7966667' AS DateTime2))
+<div>Try again or create a new account.</div>', N'Error message for password reset shown when a user account does not exist for the email address entered', 5, 1, CAST(N'2020-06-19T06:54:40.7966667' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.errors.forgotPasswordInvalidToken', N'<h3 class=""mb-3"">Invalid Link</h3>
-<p>This password reset link has now expired. Please <a href=""#/login""><u>click here</u></a> to login.</p>', N'Error message for an invalid password reset token', 5, 1, CAST(N'2020-06-19T06:54:40.7966667' AS DateTime2))
+<p>This password reset link has now expired. Please <a href=""#/login""><u>click here</u></a> to login.</p>', N'Error message for an invalid password reset token', 5, 1, CAST(N'2020-06-19T06:54:40.7966667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.errors.invalidEmail', N'Please enter a valid email address.', N'Error message shown on the login and password reset screens when an invalid email address is entered', 1, 1, CAST(N'2020-06-19T06:54:40.7933333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.errors.invalidEmail', N'Please enter a valid email address.', N'Error message shown on the login and password reset screens when an invalid email address is entered', 1, 1, CAST(N'2020-06-19T06:54:40.7933333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.errors.loginFailed', N'The password you entered is incorrect', N'Error message shown on the login page for incorrect password', 1, 1, CAST(N'2020-06-19T06:54:40.7933333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.errors.loginFailed', N'The password you entered is incorrect', N'Error message shown on the login page for incorrect password', 1, 1, CAST(N'2020-06-19T06:54:40.7933333' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.errors.recommendedJobsNoResultsMultipleCheckboxes', N'<h4 class=""mt-4"">There are no results matching your search criteria</h4>
 <p>Search suggestions:</p>
@@ -202,28 +202,28 @@ INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [Mod
 <li>Clear all your filters</li>
 <li>Add the filters back one at a time</li>
 <li>Click the Apply Filter button after every selection</li>
-</ul>', N'Error message shown on the recommended jobs page if zero results are returned and the user has checked multiple filter checkboxes', 5, 1, CAST(N'2020-06-19T06:54:40.7966667' AS DateTime2))
+</ul>', N'Error message shown on the recommended jobs page if zero results are returned and the user has checked multiple filter checkboxes', 5, 1, CAST(N'2020-06-19T06:54:40.7966667' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.errors.recommendedJobsNoResultsOneCheckbox', N'<h4 class=""mt-4"">There are no results matching your search criteria</h4>
 <p>Search suggestions:</p>
 <ul>
 <li>Clear all your filters</li>
 <li >Select a different filter</li>
-</ul>', N'Error message shown on the recommended jobs page if zero results are returned and the user has only checked one filter checkboxes', 5, 1, CAST(N'2020-06-19T06:54:40.7966667' AS DateTime2))
+</ul>', N'Error message shown on the recommended jobs page if zero results are returned and the user has only checked one filter checkboxes', 5, 1, CAST(N'2020-06-19T06:54:40.7966667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.errors.termsOfUseRequired', N'You must agree to the WorkBC Terms of Use before continuing', N'Error message shown on the registration page if the user does not accept the terms of use', 1, 1, CAST(N'2020-06-19T06:54:40.7966667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.errors.termsOfUseRequired', N'You must agree to the WorkBC Terms of Use before continuing', N'Error message shown on the registration page if the user does not accept the terms of use', 1, 1, CAST(N'2020-06-19T06:54:40.7966667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.industryProfiles.callToAction1BodyText', N'See data for B.C.''s major industries, including employment trends, earning potential and more.', N'Description for the 1st call-to-action on the saved industry profiles page', 2, 1, CAST(N'2020-06-19T06:54:41.0200000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.industryProfiles.callToAction1BodyText', N'See data for B.C.''s major industries, including employment trends, earning potential and more.', N'Description for the 1st call-to-action on the saved industry profiles page', 2, 1, CAST(N'2020-06-19T06:54:41.0200000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.industryProfiles.callToAction1LinkText', N'View Industry Profiles', N'Link text for the 1st call-to-action on the saved industry profiles page', 1, 1, CAST(N'2020-06-19T06:54:41.0200000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.industryProfiles.callToAction1LinkText', N'View Industry Profiles', N'Link text for the 1st call-to-action on the saved industry profiles page', 1, 1, CAST(N'2020-06-19T06:54:41.0200000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.industryProfiles.callToAction1LinkUrl', N'/Labour-Market-Industry/Industry-and-Sector-Information/Industry-Profiles.aspx', N'Link URL for the 1st call-to-action on the saved industry profiles page', 1, 1, CAST(N'2020-06-19T06:54:41.0200000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.industryProfiles.callToAction1LinkUrl', N'/Labour-Market-Industry/Industry-and-Sector-Information/Industry-Profiles.aspx', N'Link URL for the 1st call-to-action on the saved industry profiles page', 1, 1, CAST(N'2020-06-19T06:54:41.0200000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.industryProfiles.callToAction2BodyText', N'Use the sub-industry outlooks to identify trends and opportunities, and help you make career decisions.', N'Description for the 2nd call-to-action on the saved industry profiles page', 2, 1, CAST(N'2020-06-19T06:54:41.0200000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.industryProfiles.callToAction2BodyText', N'Use the sub-industry outlooks to identify trends and opportunities, and help you make career decisions.', N'Description for the 2nd call-to-action on the saved industry profiles page', 2, 1, CAST(N'2020-06-19T06:54:41.0200000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.industryProfiles.callToAction2LinkText', N'Explore Industry and Sector Outlooks', N'Link text for the 2nd call-to-action on the saved industry profiles page', 1, 1, CAST(N'2020-06-19T06:54:41.0200000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.industryProfiles.callToAction2LinkText', N'Explore Industry and Sector Outlooks', N'Link text for the 2nd call-to-action on the saved industry profiles page', 1, 1, CAST(N'2020-06-19T06:54:41.0200000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.industryProfiles.callToAction2LinkUrl', N'/Labour-Market-Industry/Industry-and-Sector-Information/Industry-and-Sector-Outlooks.aspx', N'Link URL for the 2nd call-to-action on the saved industry profiles page', 1, 1, CAST(N'2020-06-19T06:54:41.0200000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.industryProfiles.callToAction2LinkUrl', N'/Labour-Market-Industry/Industry-and-Sector-Information/Industry-and-Sector-Outlooks.aspx', N'Link URL for the 2nd call-to-action on the saved industry profiles page', 1, 1, CAST(N'2020-06-19T06:54:41.0200000' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.jobAlerts.noEmailHelpAnswer', N'<p class=""""pl-2"""">
     If you''ve turned your email notifications off, you will need to log in to your account and navigate to Job Alerts to view jobs that match an alert you''ve created. Once you''re logged in, you can access Job Alerts in two ways:
@@ -231,19 +231,19 @@ INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [Mod
 <ul>
     <li>Click on <strong>Job Alerts</strong> under the <em>Jobs</em> section in your Account Dashboard</li>
     <li> From the top navigation in your profile, hover your mouse over the <em>Jobs</em> menu and click on <strong>Job Alerts</strong></li>
- </ul>', N'Explanatory text on the create/edit job alert page for users who select an email alert frequency of ""Never""', 5, 1, CAST(N'2020-06-19T06:54:41.0166667' AS DateTime2))
+ </ul>', N'Explanatory text on the create/edit job alert page for users who select an email alert frequency of ""Never""', 5, 1, CAST(N'2020-06-19T06:54:41.0166667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.jobAlerts.noEmailHelpQuestion', N' Where do I find my Job Alerts if email notifications are turned off? ', N'Title for the explanatory text on the create/edit job alert page for users who select an email alert frequency of ""Never""', 1, 1, CAST(N'2020-06-19T06:54:41.0166667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.jobAlerts.noEmailHelpQuestion', N' Where do I find my Job Alerts if email notifications are turned off? ', N'Title for the explanatory text on the create/edit job alert page for users who select an email alert frequency of ""Never""', 1, 1, CAST(N'2020-06-19T06:54:41.0166667' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.login.forgotPasswordConfirmationBody', N'<p><strong>We''ve sent your password reset instructions to {0}.</strong></p>
 <p><i>If you cannot find the email, try checking your junk folder. If you use a spam or security filter, change your email settings to allow messages from noreply@gov.bc.ca.</i></p>
-<p><i>For help, contact the WorkBC.ca call centre at: <span class=""text-nowrap"">250-952-6914</span> or toll free at: <span class=""text-nowrap"">1-877-952-6914.</span></i></p>', N'The body of the message displayed after a user resets their password. Placeholder {0} is for the user''s email address.', 5, 1, CAST(N'2020-06-19T06:54:42.7266667' AS DateTime2))
+<p><i>For help, contact the WorkBC.ca call centre at: <span class=""text-nowrap"">250-952-6914</span> or toll free at: <span class=""text-nowrap"">1-877-952-6914.</span></i></p>', N'The body of the message displayed after a user resets their password. Placeholder {0} is for the user''s email address.', 5, 1, CAST(N'2020-06-19T06:54:42.7266667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.login.forgotPasswordConfirmationTitle', N'Please check your email.', N'The title of the message displayed after a user resets their password.', 1, 1, CAST(N'2020-06-19T06:54:42.7266667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.login.forgotPasswordConfirmationTitle', N'Please check your email.', N'The title of the message displayed after a user resets their password.', 1, 1, CAST(N'2020-06-19T06:54:42.7266667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.login.forgotPasswordIntroText', N'To reset your password, enter the email address you use to log into your account.', N'Introductory text on the reset password dialog', 1, 1, CAST(N'2020-06-19T06:54:41.0233333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.login.forgotPasswordIntroText', N'To reset your password, enter the email address you use to log into your account.', N'Introductory text on the reset password dialog', 1, 1, CAST(N'2020-06-19T06:54:41.0233333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.recommendedJobs.filterIntroText ', N'You can also filter your recommended jobs by adjusting the reason for the recommendations below.', N'Explanatory text at the top of the recommended jobs filter', 1, 1, CAST(N'2020-06-19T06:54:41.0166667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.recommendedJobs.filterIntroText ', N'You can also filter your recommended jobs by adjusting the reason for the recommendations below.', N'Explanatory text at the top of the recommended jobs filter', 1, 1, CAST(N'2020-06-19T06:54:41.0166667' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.recommendedJobs.introText', N'<p>Welcome to your recommended jobs! Jobs are suggested to you if they:</p>
 <ul>
@@ -253,7 +253,7 @@ INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [Mod
     <li>are in the same city as you specified in your <em>Personal Settings</em>, or if</li>
     <li>an employer has chosen to encourage applicants from a group you have self-identified as in your <em>Personal Settings</em>. </li>
 </ul>
-<p>To make sure the job recommendations that come up are the most meaningful to you, we have not included jobs that you have already saved in your profile.</p>', N'Introductory text that appears at the top of the recommended jobs page', 5, 1, CAST(N'2020-06-19T06:54:41.0166667' AS DateTime2))
+<p>To make sure the job recommendations that come up are the most meaningful to you, we have not included jobs that you have already saved in your profile.</p>', N'Introductory text that appears at the top of the recommended jobs page', 5, 1, CAST(N'2020-06-19T06:54:41.0166667' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.recommendedJobs.introTextNoRecommendedJobs', N'<p>You do not have any recommended jobs yet. Jobs are suggested to you if they:</p>
 <ul>
@@ -263,11 +263,11 @@ INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [Mod
     <li>are in the same city as you specified in your <em>Personal Settings</em>, or if</li>
     <li>an employer has chosen to encourage applicants from a group you have self-identified as in your <em>Personal Settings</em>. </li>
 </ul>
-<p class=''no-recommended-jobs''> To increase the number of recommendations, you can either <a href=''#/saved-jobs''>save a job</a>, <a href=''#/personal-settings#location''>change your city</a> or <a href=''#/personal-settings''>add group/s that you self-identify as</a> in your <em>Personal Settings</em>. </p>', N'Introductory text that appears at the top of the recommended jobs page for users with no recommended jobs', 5, 1, CAST(N'2020-06-19T06:54:41.0166667' AS DateTime2))
+<p class=''no-recommended-jobs''> To increase the number of recommendations, you can either <a href=''#/saved-jobs''>save a job</a>, <a href=''#/personal-settings#location''>change your city</a> or <a href=''#/personal-settings''>add group/s that you self-identify as</a> in your <em>Personal Settings</em>. </p>', N'Introductory text that appears at the top of the recommended jobs page for users with no recommended jobs', 5, 1, CAST(N'2020-06-19T06:54:41.0166667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.registration.activationBody', N'You are now being redirected to log in or you can <a href=""#/login"">click here</a>.', N'The body of the message shown after a user clicks the email confirmation link to activate their account.', 5, 1, CAST(N'2020-06-19T06:54:41.0000000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.registration.activationBody', N'You are now being redirected to log in or you can <a href=""#/login"">click here</a>.', N'The body of the message shown after a user clicks the email confirmation link to activate their account.', 5, 1, CAST(N'2020-06-19T06:54:41.0000000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.registration.activationTitle', N'You have successfully activated your account!', N'The title of the message shown after a user clicks the email confirmation link to activate their account', 1, 1, CAST(N'2020-06-19T06:54:41.0000000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.registration.activationTitle', N'You have successfully activated your account!', N'The title of the message shown after a user clicks the email confirmation link to activate their account', 1, 1, CAST(N'2020-06-19T06:54:41.0000000' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.registration.confirmationBody', N'<p>
     <strong>
@@ -276,13 +276,13 @@ INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [Mod
 </p>
 <p>
     <i>
-    If you have not received the activation email, try checking your junk folder. 
-    If you use a spam or security filter for your emails, make sure to set it to allow messages from noreply@gov.bc.ca. 
+    If you have not received the activation email, try checking your junk folder.
+    If you use a spam or security filter for your emails, make sure to set it to allow messages from noreply@gov.bc.ca.
     To have the activation email resent, use the button below:
     </i>
-</p>', N'The body of the message displayed after a user completes the registration form.  Placeholder {0} is for the user''s email address.', 5, 1, CAST(N'2020-06-19T06:54:41.0000000' AS DateTime2))
+</p>', N'The body of the message displayed after a user completes the registration form.  Placeholder {0} is for the user''s email address.', 5, 1, CAST(N'2020-06-19T06:54:41.0000000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.registration.confirmationTitle ', N'Thanks for registering!', N'The title of the message shown after a user completes the registration form', 1, 1, CAST(N'2020-06-19T06:54:41.0000000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.registration.confirmationTitle ', N'Thanks for registering!', N'The title of the message shown after a user completes the registration form', 1, 1, CAST(N'2020-06-19T06:54:41.0000000' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.registration.termsOfUseText', N'<h4><strong>Introduction</strong></h4>
 <p>The WorkBC website is provided by the Province of British Columbia (the ""Province"").</p>
@@ -377,22 +377,22 @@ INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [Mod
 <p>You are responsible for keeping your WorkBC Job Board account login information, including password, secure. You must not share this information with any third party for any purpose.</p>
 <h4><strong>Agreement to WorkBC Job Board''s Terms of Use</strong></h4>
 <p>By clicking on ""I Agree"", you confirm that you have read, understood and agree to be bound by these Terms of Use for the WorkBC Job Board. By accessing and using the WorkBC Job Board you agree the job board service is used entirely at your own risk and accept that WorkBC Job Board is not liable for events outside of its control.</p>
-<p>If you do not agree to be bound by these Terms of Use, you must not access this website or use the job board.</p>', N'HTML text for the terms of use', 5, 1, CAST(N'2020-06-19T06:54:37.6433333' AS DateTime2))
+<p>If you do not agree to be bound by these Terms of Use, you must not access this website or use the job board.</p>', N'HTML text for the terms of use', 5, 1, CAST(N'2020-06-19T06:54:37.6433333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.registration.termsOfUseTitle', N'WorkBC Job Board''s Terms of Use', N'Title for the terms of use.', 1, 1, CAST(N'2020-06-19T06:54:37.6466667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.registration.termsOfUseTitle', N'WorkBC Job Board''s Terms of Use', N'Title for the terms of use.', 1, 1, CAST(N'2020-06-19T06:54:37.6466667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.shared.passwordComplexity', N'Passwords must be at least six characters long, with at least one upper-case letter and one number.', N'Text explaining our password complexity rules', 1, 1, CAST(N'2020-06-19T06:54:41.0200000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.shared.passwordComplexity', N'Passwords must be at least six characters long, with at least one upper-case letter and one number.', N'Text explaining our password complexity rules', 1, 1, CAST(N'2020-06-19T06:54:41.0200000' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbAccount.shared.whyIdentify', N'<strong>Why identify?</strong>
-<p>Some employers encourage applications from select groups. Choose the boxes that describe how you identify. You will receive an alert when matching jobs are posted.</p>', N'Explanatory text for the ""How do you identify?"" section of the registration and personal settings pages', 5, 1, CAST(N'2020-06-19T06:54:41.0200000' AS DateTime2))
+<p>Some employers encourage applications from select groups. Choose the boxes that describe how you identify. You will receive an alert when matching jobs are posted.</p>', N'Explanatory text for the ""How do you identify?"" section of the registration and personal settings pages', 5, 1, CAST(N'2020-06-19T06:54:41.0200000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.errors.duplicateCity', N'The city <strong>{0}</strong> has already been added.', N'Error message shown when a user attempts to add the same city twice on the location filter', 5, 1, CAST(N'2020-06-19T06:54:40.6166667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.errors.duplicateCity', N'The city <strong>{0}</strong> has already been added.', N'Error message shown when a user attempts to add the same city twice on the location filter', 5, 1, CAST(N'2020-06-19T06:54:40.6166667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.errors.duplicatePostal', N'The postal code <strong>{0}</strong> has already been added.', N'Error message shown when a user attempts to add the same postal code twice on the location filter', 5, 1, CAST(N'2020-06-19T06:54:40.6166667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.errors.duplicatePostal', N'The postal code <strong>{0}</strong> has already been added.', N'Error message shown when a user attempts to add the same postal code twice on the location filter', 5, 1, CAST(N'2020-06-19T06:54:40.6166667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.errors.invalidCity', N'The city <strong>{0}</strong> could not be found. Please ensure the spelling is correct.', N'Error message shown when a user enters an invalid city on the job search page', 5, 1, CAST(N'2020-06-19T06:54:40.6166667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.errors.invalidCity', N'The city <strong>{0}</strong> could not be found. Please ensure the spelling is correct.', N'Error message shown when a user enters an invalid city on the job search page', 5, 1, CAST(N'2020-06-19T06:54:40.6166667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.errors.invalidPostalCode', N'The postal code <strong>{0}</strong> is invalid. Please ensure the format is correct.', N'Error message shown when a user enters an invalid postal code on the job search page', 5, 1, CAST(N'2020-06-19T06:54:40.6166667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.errors.invalidPostalCode', N'The postal code <strong>{0}</strong> is invalid. Please ensure the format is correct.', N'Error message shown when a user enters an invalid postal code on the job search page', 5, 1, CAST(N'2020-06-19T06:54:40.6166667' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.errors.noSearchResults', N'<h4>There are no results matching your search criteria</h4>
 <p>Search suggestions:</p>
@@ -401,39 +401,39 @@ INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [Mod
   <li>Try broader search terms</li>
   <li>Use different synonyms</li>
   <li>Replace abbreviations with the entire word</li>
-</ul>', N'Error message shown when a search returns zero results', 5, 1, CAST(N'2020-06-19T06:54:40.6166667' AS DateTime2))
+</ul>', N'Error message shown when a search returns zero results', 5, 1, CAST(N'2020-06-19T06:54:40.6166667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction1BodyText', N'Get the details you need on 500 jobs - including duties, education required, salary and employment outlook.', N'Description for the 1st call-to-action on the job detail page', 2, 1, CAST(N'2020-06-19T06:54:41.0066667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction1BodyText', N'Get the details you need on 500 jobs - including duties, education required, salary and employment outlook.', N'Description for the 1st call-to-action on the job detail page', 2, 1, CAST(N'2020-06-19T06:54:41.0066667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction1Intro', N'CAREER PROFILES', N'Introductory title for the 1st call-to-action on the job detail page', 1, 1, CAST(N'2020-06-19T06:54:41.0066667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction1Intro', N'CAREER PROFILES', N'Introductory title for the 1st call-to-action on the job detail page', 1, 1, CAST(N'2020-06-19T06:54:41.0066667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction1LinkText', N'View Career Profiles', N'Button text for the 1st call-to-action on the job detail page', 1, 1, CAST(N'2020-06-19T06:54:41.0066667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction1LinkText', N'View Career Profiles', N'Button text for the 1st call-to-action on the job detail page', 1, 1, CAST(N'2020-06-19T06:54:41.0066667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction1LinkUrl', N'/Jobs-Careers/Explore-Careers.aspx', N'Link URL for the 1st call-to-action on the job detail page', 1, 1, CAST(N'2020-06-19T06:54:41.0100000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction1LinkUrl', N'/Jobs-Careers/Explore-Careers.aspx', N'Link URL for the 1st call-to-action on the job detail page', 1, 1, CAST(N'2020-06-19T06:54:41.0100000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction1Title', N'EXPLORE CAREERS', N'Main title for the 1st call-to-action on the job detail page', 1, 1, CAST(N'2020-06-19T06:54:41.0066667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction1Title', N'EXPLORE CAREERS', N'Main title for the 1st call-to-action on the job detail page', 1, 1, CAST(N'2020-06-19T06:54:41.0066667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction2BodyText', N'Discover jobs that are expected to be in high demand over the next decade.', N'Description for the 2nd call-to-action on the job detail page', 2, 1, CAST(N'2020-06-19T06:54:41.0100000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction2BodyText', N'Discover jobs that are expected to be in high demand over the next decade.', N'Description for the 2nd call-to-action on the job detail page', 2, 1, CAST(N'2020-06-19T06:54:41.0100000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction2Intro', N'LABOUR MARKET INFORMATION', N'Introductory title for the 2nd call-to-action on the job detail page', 1, 1, CAST(N'2020-06-19T06:54:41.0100000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction2Intro', N'LABOUR MARKET INFORMATION', N'Introductory title for the 2nd call-to-action on the job detail page', 1, 1, CAST(N'2020-06-19T06:54:41.0100000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction2LinkText', N'View High Demand Jobs', N'Button text for the 2nd call-to-action on the job detail page', 1, 1, CAST(N'2020-06-19T06:54:41.0100000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction2LinkText', N'View High Demand Jobs', N'Button text for the 2nd call-to-action on the job detail page', 1, 1, CAST(N'2020-06-19T06:54:41.0100000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction2LinkUrl', N'/Labour-Market-Industry/High-Demand-Occupations.aspx', N'Link URL for the 2nd call-to-action on the job detail page', 1, 1, CAST(N'2020-06-19T06:54:41.0100000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction2LinkUrl', N'/Labour-Market-Industry/High-Demand-Occupations.aspx', N'Link URL for the 2nd call-to-action on the job detail page', 1, 1, CAST(N'2020-06-19T06:54:41.0100000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction2Title', N'HIGH DEMAND JOBS', N'Main title for the 2nd call-to-action on the job detail page', 1, 1, CAST(N'2020-06-19T06:54:41.0100000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.jobDetail.callToAction2Title', N'HIGH DEMAND JOBS', N'Main title for the 2nd call-to-action on the job detail page', 1, 1, CAST(N'2020-06-19T06:54:41.0100000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.settings.newJobPeriodDays', N'3', N'A job is considered new if it was posted within this number of days.', 3, 1, CAST(N'2020-06-19T06:54:26.0166667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'jbSearch.settings.newJobPeriodDays', N'3', N'A job is considered new if it was posted within this number of days.', 3, 1, CAST(N'2020-06-19T06:54:26.0166667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.errors.jobAlertTitleDuplicate', N'The title already exists', N'Error message shown when a user tries to add a duplicate title to a job alert', 1, 1, CAST(N'2020-06-19T06:54:40.6166667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.errors.jobAlertTitleDuplicate', N'The title already exists', N'Error message shown when a user tries to add a duplicate title to a job alert', 1, 1, CAST(N'2020-06-19T06:54:40.6166667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.errors.jobAlertTitleRequired', N'Please specify a title for this alert', N'Error message for required job alert title', 1, 1, CAST(N'2020-06-19T06:54:40.6166667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.errors.jobAlertTitleRequired', N'Please specify a title for this alert', N'Error message for required job alert title', 1, 1, CAST(N'2020-06-19T06:54:40.6166667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.datePostedTitle', N'Date Posted', N'Main title for the date posted filter', 1, 1, CAST(N'2020-06-19T06:54:41.0133333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.datePostedTitle', N'Date Posted', N'Main title for the date posted filter', 1, 1, CAST(N'2020-06-19T06:54:41.0133333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.educationNote', N'<i>Note: You may see fewer results than you were expecting because an algorithm is used to get minimum education levels for job postings that are external to WorkBC.ca. If you see this, try removing the filter.</i>', N'Explanatory text that appears on the education filter', 5, 1, CAST(N'2020-06-19T06:54:41.0133333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.educationNote', N'<i>Note: You may see fewer results than you were expecting because an algorithm is used to get minimum education levels for job postings that are external to WorkBC.ca. If you see this, try removing the filter.</i>', N'Explanatory text that appears on the education filter', 5, 1, CAST(N'2020-06-19T06:54:41.0133333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.educationTitle', N'Education', N'Main title for the education filter', 1, 1, CAST(N'2020-06-19T06:54:41.0133333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.educationTitle', N'Education', N'Main title for the education filter', 1, 1, CAST(N'2020-06-19T06:54:41.0133333' AS timestamp))
 GO
 INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.howIsSalaryCalculatedBody', N'<p>When you select a value from the salary drop-down menu, that figure is automatically converted to the equivalent annual salary even when a pay period other than Annually is selected. </p>
 <p>The conversion is calculated as follows:</p>
@@ -445,37 +445,37 @@ INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [Mod
 </ul>
 <p>Using this conversion, the search is able to return results matching your salary requirements regardless of whether you select Annually, Hourly, Weekly, Biweekly or Monthly as the pay period. The search will include all jobs posted with a salary equal to or higher than the amount selected.</p>
 <p>Example: A user searches for salaries: $15 hourly. This will be converted by multiplying $15 by the conversion factor of 2080 (in this case, approximate number of work hours in a year)</p>
-<p>Salary searches apply to jobs where employers publicly posted salary amounts (e.g., annual, monthly, biweekly, weekly or hourly). Note: Some employers do not specify a salary amount.</p>', N'Explanatory text that appears at the bottom of the salary filter', 5, 1, CAST(N'2020-06-19T06:54:41.0100000' AS DateTime2))
+<p>Salary searches apply to jobs where employers publicly posted salary amounts (e.g., annual, monthly, biweekly, weekly or hourly). Note: Some employers do not specify a salary amount.</p>', N'Explanatory text that appears at the bottom of the salary filter', 5, 1, CAST(N'2020-06-19T06:54:41.0100000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.howIsSalaryCalculatedTitle', N'How is salary calculated?', N'Title for the explanatory text at the bottom of the salary filter', 1, 1, CAST(N'2020-06-19T06:54:41.0100000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.howIsSalaryCalculatedTitle', N'How is salary calculated?', N'Title for the explanatory text at the bottom of the salary filter', 1, 1, CAST(N'2020-06-19T06:54:41.0100000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.industryTitle', N'Industry', N'Main title for the industry filter', 1, 1, CAST(N'2020-06-19T06:54:41.0133333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.industryTitle', N'Industry', N'Main title for the industry filter', 1, 1, CAST(N'2020-06-19T06:54:41.0133333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.jobTypeTitle', N'Job type', N'Main title for the job type filter', 1, 1, CAST(N'2020-06-19T06:54:41.0133333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.jobTypeTitle', N'Job type', N'Main title for the job type filter', 1, 1, CAST(N'2020-06-19T06:54:41.0133333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.keywordInputPlaceholder', N'Keyword(s)', N'Placeholder text for the main keyword search input', 1, 1, CAST(N'2020-06-19T06:54:42.7266667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.keywordInputPlaceholder', N'Keyword(s)', N'Placeholder text for the main keyword search input', 1, 1, CAST(N'2020-06-19T06:54:42.7266667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.locationRadiusNote', N'<i>Note: You can select a search radius around a <strong>single city or postal code</strong>. The search radius doesn''t apply when you enter more than one location.</i>', N'Explanatory text that appears below the radius dropdown on the location filter', 5, 1, CAST(N'2020-06-19T06:54:41.0100000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.locationRadiusNote', N'<i>Note: You can select a search radius around a <strong>single city or postal code</strong>. The search radius doesn''t apply when you enter more than one location.</i>', N'Explanatory text that appears below the radius dropdown on the location filter', 5, 1, CAST(N'2020-06-19T06:54:41.0100000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.locationRegionSearchLabel', N'Narrow down by region', N'The label for the region checkboxes on the location filter', 1, 1, CAST(N'2020-06-19T06:54:41.0133333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.locationRegionSearchLabel', N'Narrow down by region', N'The label for the region checkboxes on the location filter', 1, 1, CAST(N'2020-06-19T06:54:41.0133333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.locationSearchLabel', N'Narrow down by city name or postal code', N'The label of the city or postal code search input on the location filter', 1, 1, CAST(N'2020-06-19T06:54:41.0133333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.locationSearchLabel', N'Narrow down by city name or postal code', N'The label of the city or postal code search input on the location filter', 1, 1, CAST(N'2020-06-19T06:54:41.0133333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.locationTitle', N'Location', N'Main title for the location filter', 1, 1, CAST(N'2020-06-19T06:54:41.0133333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.locationTitle', N'Location', N'Main title for the location filter', 1, 1, CAST(N'2020-06-19T06:54:41.0133333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.moreFiltersTitle', N'More Filters', N'Main title for the more filters filter', 1, 1, CAST(N'2020-06-19T06:54:41.0166667' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.moreFiltersTitle', N'More Filters', N'Main title for the more filters filter', 1, 1, CAST(N'2020-06-19T06:54:41.0166667' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.salaryTitle', N'Salary and Benefits', N'Main title for the salary filter', 1, 1, CAST(N'2020-06-19T06:54:41.0133333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.filters.salaryTitle', N'Salary and Benefits', N'Main title for the salary filter', 1, 1, CAST(N'2020-06-19T06:54:41.0133333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.settings.defaultSearchRadius', N'15', N'Default radius (km) for location searches. Valid values are 10, 15, 25, 50, 75 or 100. If you enter an invalid value then 15 will be used instead.', 3, 1, CAST(N'2020-06-19T06:54:40.6700000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.settings.defaultSearchRadius', N'15', N'Default radius (km) for location searches. Valid values are 10, 15, 25, 50, 75 or 100. If you enter an invalid value then 15 will be used instead.', 3, 1, CAST(N'2020-06-19T06:54:40.6700000' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.tooltips.jobSource', N'WorkBC jobs are verified by the National Job Bank. External jobs are B.C. job postings from other job boards (For example Monster and Indeed).', N'Tooltip for Job Source in the more filters filter', 1, 1, CAST(N'2020-06-19T06:54:42.1433333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.tooltips.jobSource', N'WorkBC jobs are verified by the National Job Bank. External jobs are B.C. job postings from other job boards (For example Monster and Indeed).', N'Tooltip for Job Source in the more filters filter', 1, 1, CAST(N'2020-06-19T06:54:42.1433333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.tooltips.nocCode', N'The <a href=""http://noc.esdc.gc.ca/English/noc/welcome.aspx?ver=16"" target=""_blank"" style=""text-decoration: underline;"">National Occupational Classification</a> system classifies all occupations in Canada.', N'Tooltip for 2016 NOC code in the more filters filter', 5, 1, CAST(N'2020-06-19T06:54:40.4933333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.tooltips.nocCode', N'The <a href=""http://noc.esdc.gc.ca/English/noc/welcome.aspx?ver=16"" target=""_blank"" style=""text-decoration: underline;"">National Occupational Classification</a> system classifies all occupations in Canada.', N'Tooltip for 2016 NOC code in the more filters filter', 5, 1, CAST(N'2020-06-19T06:54:40.4933333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.tooltips.unknownSalaries', N'Use this filter to include jobs that do not report a salary', N'Tooltip for the unknown salaries option in the salary filter', 1, 1, CAST(N'2020-06-19T06:54:40.4933333' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.tooltips.unknownSalaries', N'Use this filter to include jobs that do not report a salary', N'Tooltip for the unknown salaries option in the salary filter', 1, 1, CAST(N'2020-06-19T06:54:40.4933333' AS timestamp))
 GO
-INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.tooltips.youth', N'Youth are people between 15 and 30 years of age.', N'Tooltip for the youth option in the more filters filter', 1, 1, CAST(N'2020-06-19T06:54:26.0200000' AS DateTime2))
+INSERT [dbo].[SystemSettings] ([Name], [Value], [Description], [FieldType], [ModifiedByAdminUserId], [DateUpdated]) VALUES (N'shared.tooltips.youth', N'Youth are people between 15 and 30 years of age.', N'Tooltip for the youth option in the more filters filter', 1, 1, CAST(N'2020-06-19T06:54:26.0200000' AS timestamp))
 GO
 ");
         }

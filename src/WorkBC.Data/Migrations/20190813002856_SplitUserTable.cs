@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WorkBC.Data.Migrations
@@ -43,7 +43,7 @@ namespace WorkBC.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     JobSeekerId = table.Column<string>(nullable: true),
                     IsApprentice = table.Column<bool>(nullable: false),
                     IsIndigenousPerson = table.Column<bool>(nullable: false),
@@ -98,37 +98,37 @@ namespace WorkBC.Data.Migrations
                 principalTable: "SecurityQuestion",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
-            
+
             migrationBuilder.InsertData("SecurityQuestion",
-                new[] { "Id", "QuestionText" }, 
+                new[] { "Id", "QuestionText" },
                 new object[] { 1, "My favourite TV show that isn't on anymore?" });
 
             migrationBuilder.InsertData("SecurityQuestion",
-                new[] { "Id", "QuestionText" }, 
+                new[] { "Id", "QuestionText" },
                 new object[] { 2, "Where did my mother and father meet?" });
 
             migrationBuilder.InsertData("SecurityQuestion",
-                new[] { "Id", "QuestionText" }, 
+                new[] { "Id", "QuestionText" },
                 new object[] { 3, "Destination of my first airplane trip?" });
 
             migrationBuilder.InsertData("SecurityQuestion",
-                new[] { "Id", "QuestionText" }, 
+                new[] { "Id", "QuestionText" },
                 new object[] { 4, "My childhood nickname?" });
 
             migrationBuilder.InsertData("SecurityQuestion",
-                new[] { "Id", "QuestionText" }, 
+                new[] { "Id", "QuestionText" },
                 new object[] { 5, "Name of the first company I worked for?" });
 
-            migrationBuilder.InsertData("SecurityQuestion", 
-                new[] { "Id", "QuestionText" }, 
+            migrationBuilder.InsertData("SecurityQuestion",
+                new[] { "Id", "QuestionText" },
                 new object[] { 6, "Make of my first car?" });
 
-            migrationBuilder.InsertData("SecurityQuestion", 
-                new[] { "Id", "QuestionText" }, 
+            migrationBuilder.InsertData("SecurityQuestion",
+                new[] { "Id", "QuestionText" },
                 new object[] { 7, "Last name of my favourite high school teacher?" });
 
-            migrationBuilder.InsertData("SecurityQuestion", 
-                new[] { "Id", "QuestionText" }, 
+            migrationBuilder.InsertData("SecurityQuestion",
+                new[] { "Id", "QuestionText" },
                 new object[] { 8, "First name of my childhood best friend?" });
 
         }

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Authors>OXD</Authors>
+    <Authors>OXD, Quartech</Authors>
     <Company>WorkBC</Company>
     <Product>WorkBC Job Board</Product>
   </PropertyGroup>
@@ -22,9 +22,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.9" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="6.0.9" />
-	<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />	  
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.7" />
   </ItemGroup>
 
 </Project>

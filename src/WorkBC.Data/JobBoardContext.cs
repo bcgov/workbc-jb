@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.SqlServer.Infrastructure.Internal;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 using WorkBC.Data.Model.JobBoard;
 using WorkBC.Data.Model.JobBoard.ReportData;
 
@@ -17,7 +17,7 @@ namespace WorkBC.Data
             try
             {
 #pragma warning disable EF1001 // Internal EF Core API usage.
-                _connectionString = options.GetExtension<SqlServerOptionsExtension>().ConnectionString;
+                _connectionString = options.GetExtension<NpgsqlOptionsExtension>().ConnectionString;
 #pragma warning restore EF1001 // Internal EF Core API usage.
             }
             catch
@@ -85,7 +85,7 @@ namespace WorkBC.Data
         public DbSet<NocCategory2021> NocCategories2021 { get; set; }
 
         public DbSet<NocCode> NocCodes { get; set; }
-        public DbSet<NocCode2021> NocCodes2021 { get; set; } 
+        public DbSet<NocCode2021> NocCodes2021 { get; set; }
 
         public DbSet<Province> Provinces { get; set; }
 
@@ -98,7 +98,7 @@ namespace WorkBC.Data
         public DbSet<SavedIndustryProfile> SavedIndustryProfiles { get; set; }
 
         public DbSet<SavedJob> SavedJobs { get; set; }
-        
+
         public DbSet<SecurityQuestion> SecurityQuestions { get; set; }
 
         public DbSet<SystemSetting> SystemSettings { get; set; }
@@ -109,7 +109,7 @@ namespace WorkBC.Data
         {
             if (!string.IsNullOrEmpty(_connectionString))
             {
-                optionsBuilder.UseSqlServer(_connectionString);
+                optionsBuilder.UseNpgsql(_connectionString);
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Npgsql;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -118,7 +118,7 @@ namespace WorkBC.Indexers.Federal.Services
                         }
                     }
 
-                    //If we processed 100 records, update the database 
+                    //If we processed 100 records, update the database
                     if (_lstIds.Count > 100)
                     {
                         UpdateIds();
@@ -163,7 +163,7 @@ namespace WorkBC.Indexers.Federal.Services
                 if (json == null || json == "null")
                 {
                     // We found a few jobs that didn't have a french translation. Just ignore it because we
-                    // mostly care about the English for WorkBC.  
+                    // mostly care about the English for WorkBC.
                     if (index == General.FrenchIndex)
                     {
                         Console.Write($"[Missing French XML {jobId}]-");
@@ -193,20 +193,18 @@ namespace WorkBC.Indexers.Federal.Services
             try
             {
                 //Create SQL Connection object
-                using (var cn = new SqlConnection(_connectionSettings.DefaultConnection))
+                using (var cn = new NpgsqlConnection(_connectionSettings.DefaultConnection))
                 {
                     //open connection to SQL
                     cn.Open();
 
-                    string idList = $";{string.Join(";", _lstIds)};";
-                    var sql = @"UPDATE [ImportedJobsFederal] SET [ReIndexNeeded] = 0 
-                                WHERE @IdList LIKE '%;' + Convert(nvarchar(20),[JobId]) + ';%'";
+                    var sql = @"UPDATE ""ImportedJobsWanted"" SET ""ReIndexNeeded"" = false WHERE ""JobId"" = ANY(@ids)";
 
                     //Create command
-                    using (var cmd = new SqlCommand(sql, cn))
+                    using (var cmd = new NpgsqlCommand(sql, cn))
                     {
                         //Add parameter
-                        cmd.Parameters.AddWithValue("@IdList", idList);
+                        cmd.Parameters.AddWithValue("@ids", _lstIds.ToArray());
 
                         //Execute statement
                         cmd.ExecuteNonQuery();

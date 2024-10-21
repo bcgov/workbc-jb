@@ -57,12 +57,12 @@ namespace WorkBC.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AspNetUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Field = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    AspNetUserId = table.Column<string>(type: "varchar(450)", nullable: true),
+                    DateUpdated = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    Field = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true),
                     ModifiedByAdminUserId = table.Column<int>(type: "int", nullable: false),
-                    NewValue = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OldValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    NewValue = table.Column<string>(type: "varchar", nullable: true),
+                    OldValue = table.Column<string>(type: "varchar", nullable: true)
                 },
                 constraints: table =>
                 {

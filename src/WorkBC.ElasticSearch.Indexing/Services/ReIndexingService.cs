@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using Microsoft.Extensions.Configuration;
 using Serilog;
-using WorkBC.Data;
 using WorkBC.ElasticSearch.Indexing.Settings;
 using WorkBC.Shared.Constants;
 using WorkBC.Shared.Settings;
@@ -97,17 +96,17 @@ namespace WorkBC.ElasticSearch.Indexing.Services
         private void FlagAllJobsForReIndexing()
         {
             //Create SQL Connection object
-            using (var cn = new SqlConnection(_connectionSettings.DefaultConnection))
+            using (var cn = new NpgsqlConnection(_connectionSettings.DefaultConnection))
             {
                 //open connection to SQL
                 cn.Open();
 
-                using (var cmd = new SqlCommand("UPDATE ImportedJobsWanted SET ReIndexNeeded = 1", cn))
+                using (var cmd = new NpgsqlCommand(@"UPDATE ""ImportedJobsWanted"" SET ""ReIndexNeeded"" = true", cn))
                 {
                     cmd.ExecuteNonQuery();
                 }
 
-                using (var cmd = new SqlCommand("UPDATE ImportedJobsFederal SET ReIndexNeeded = 1", cn))
+                using (var cmd = new NpgsqlCommand(@"UPDATE ""ImportedJobsFederal"" SET ""ReIndexNeeded"" = true", cn))
                 {
                     cmd.ExecuteNonQuery();
                 }
