@@ -1,44 +1,6 @@
 version: '3'
 name: workbc-jb-local
 services:
-  web:
-    depends_on:
-      postgres:
-        condition: service_healthy
-      elasticsearch:
-        condition: service_healthy
-  admin:
-    depends_on:
-      postgres:
-        condition: service_healthy
-  importers-wanted:
-    depends_on:
-      postgres:
-        condition: service_healthy
-  importers-federal:
-    depends_on:
-      postgres:
-        condition: service_healthy
-  indexers-federal:
-    depends_on:
-      postgres:
-        condition: service_healthy
-      elasticsearch:
-        condition: service_healthy
-  indexers-wanted:
-    depends_on:
-      postgres:
-        condition: service_healthy
-      elasticsearch:
-        condition: service_healthy
-  notifications-job-alerts:
-    depends_on:
-      postgres:
-        condition: service_healthy
-  migration-runner:
-    depends_on:
-      postgres:
-        condition: service_healthy
   elasticsearch:
     image: elasticsearch:7.17.8
     ports:
@@ -69,7 +31,7 @@ services:
       POSTGRES_USER: workbc
       POSTGRES_PASSWORD: workbc
     healthcheck:
-      test: "pg_isready --dbname=jobboard --username=workbc && psql --username=workbc --list jobboard"
+      test: "pg_isready --dbname=jobboard --username=postgres && psql --username=postgres --list jobboard"
       timeout: 5s
       retries: 20
     volumes:
