@@ -1,15 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
 using System.Xml;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Npgsql;
 using Serilog;
-using WorkBC.Data;
 using WorkBC.Data.Model.JobBoard;
 using WorkBC.ElasticSearch.Indexing;
 using WorkBC.ElasticSearch.Indexing.Services;
@@ -95,17 +91,13 @@ namespace WorkBC.Importers.Wanted.Services
                             VersionNumber = 1
                         };
 
-                        //using (var trans = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-                        //set connection string
-                        //string connectionString = configuration.GetConnectionString("DefaultConnection");
-                        //_dbContext = new JobBoardContext(connectionString);
-                        //using (var conn = new NpgsqlConnection())
-                        //{
+                       // using (var trans = new TransactionScope())
+                       // {
                             DbContext.Jobs.Add(job);
                             DbContext.JobVersions.Add(jobVersion);
                             await DbContext.SaveChangesAsync();
-                            //trans.Complete();
-                        //}
+                        //    trans.Complete();
+                        // }
 
                         Console.Write("I");
                     }
@@ -166,8 +158,8 @@ namespace WorkBC.Importers.Wanted.Services
 
                         SetJobTypeFlags(xmlString, job);
 
-                        //using (var trans = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-                        //{
+                       // using (var trans = new TransactionScope())
+                       // {
                             if (needsNewVersion)
                             {
                                 IncrementJobVersion(job);
@@ -179,7 +171,7 @@ namespace WorkBC.Importers.Wanted.Services
 
                             await DbContext.SaveChangesAsync();
 
-                        //    trans.Complete();
+                        //   trans.Complete();
                         //}
                     }
                     else if (job != null)
