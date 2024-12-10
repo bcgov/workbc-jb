@@ -39,6 +39,8 @@ services:
         build:
             context: .
             dockerfile: ./WorkBC.Importers.Wanted/Dockerfile
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
         env_file:
             - .env
     importers-federal:
@@ -47,6 +49,8 @@ services:
         build:
             context: .
             dockerfile: ./WorkBC.Importers.Federal/Dockerfile
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
         env_file:
             - .env
     indexers-federal:
@@ -63,6 +67,8 @@ services:
         build:
             context: .
             dockerfile: ./WorkBC.Indexers.Wanted/Dockerfile
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
         env_file:
             - .env
     notifications-job-alerts:
@@ -71,6 +77,8 @@ services:
         build:
             context: .
             dockerfile: ./WorkBC.Notifications.JobAlerts/Dockerfile
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
         env_file:
             - .env
     migration-runner:
@@ -79,6 +87,8 @@ services:
         build:
             context: .
             dockerfile: ./EFMigrationRunner/Dockerfile
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
         env_file:
             - .env
     dotnet-cli:

@@ -12,7 +12,7 @@ namespace WorkBC.Data.Migrations
                 maxLength: 300,
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(120)",
+                oldType: "varchar(120)",
                 oldMaxLength: 120,
                 oldNullable: true);
         }
@@ -22,7 +22,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "Title",
                 table: "Jobs",
-                type: "nvarchar(120)",
+                type: "varchar(120)",
                 maxLength: 120,
                 nullable: true,
                 oldClrType: typeof(string),

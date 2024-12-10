@@ -231,7 +231,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AddColumn<DateTime>(
                 name: "DateFirstSeen",
                 table: "JobIds",
-                type: "datetime2",
+                type: "timestamp",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 

@@ -78,7 +78,7 @@ namespace WorkBC.Data.Migrations
                 maxLength: 120,
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
+                oldType: "varchar",
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<short>(
@@ -101,7 +101,7 @@ namespace WorkBC.Data.Migrations
                 maxLength: 100,
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
+                oldType: "varchar",
                 oldNullable: true);
 
             migrationBuilder.AddColumn<bool>(
@@ -366,7 +366,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "Title",
                 table: "Job",
-                type: "nvarchar(max)",
+                type: "varchar",
                 nullable: true,
                 oldClrType: typeof(string),
                 oldMaxLength: 120,
@@ -389,7 +389,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "EmployerName",
                 table: "Job",
-                type: "nvarchar(max)",
+                type: "varchar",
                 nullable: true,
                 oldClrType: typeof(string),
                 oldMaxLength: 100,
@@ -398,21 +398,21 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AddColumn<DateTime>(
                 name: "DateUpdated",
                 table: "Job",
-                type: "datetime2",
+                type: "timestamp",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "DisplayUntil",
                 table: "Job",
-                type: "datetime2",
+                type: "timestamp",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
             migrationBuilder.AddColumn<string>(
                 name: "JobType",
                 table: "Job",
-                type: "nvarchar(max)",
+                type: "varchar",
                 nullable: true);
 
             migrationBuilder.AddPrimaryKey(
@@ -459,7 +459,7 @@ namespace WorkBC.Data.Migrations
                     SkillId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "varchar", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -471,7 +471,7 @@ namespace WorkBC.Data.Migrations
                 columns: table => new
                 {
                     CategoryId = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Name = table.Column<string>(type: "varchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {

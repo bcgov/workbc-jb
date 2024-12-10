@@ -18,10 +18,10 @@ namespace WorkBC.Data.Migrations
                 columns: table => new
                 {
                     JobId = table.Column<long>(type: "bigint", nullable: false),
-                    ApiDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateLastImported = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateRemoved = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    JobPostEnglish = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ApiDate = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    DateLastImported = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    DateRemoved = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    JobPostEnglish = table.Column<string>(type: "varchar", nullable: true),
                     JobSourceId = table.Column<byte>(type: "tinyint", nullable: false),
                     RemovedFromElasticsearch = table.Column<bool>(type: "bit", nullable: false)
                 },
