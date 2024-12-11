@@ -81,13 +81,10 @@ namespace WorkBC.Importers.Federal.Services
                             VersionNumber = 1
                         };
 
-                        using (var trans = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-                        {
                             DbContext.Jobs.Add(job);
                             DbContext.JobVersions.Add(jobVersion);
                             await DbContext.SaveChangesAsync();
-                            trans.Complete();
-                        }
+
 
                         Console.Write("I");
                     }
@@ -131,8 +128,6 @@ namespace WorkBC.Importers.Federal.Services
 
                         SetJobTypeFlags(xmlString, job);
 
-                        using (var trans = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-                        {
                             if (needsNewVersion)
                             {
                                 IncrementJobVersion(job);
@@ -144,8 +139,6 @@ namespace WorkBC.Importers.Federal.Services
 
                             await DbContext.SaveChangesAsync();
 
-                            trans.Complete();
-                        }
                     }
                 }
             }

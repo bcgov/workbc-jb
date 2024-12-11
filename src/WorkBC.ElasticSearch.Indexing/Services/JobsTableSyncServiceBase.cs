@@ -73,8 +73,6 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 JobVersion oldVersion = DbContext.JobVersions
                     .FirstOrDefault(j => j.JobId == jobToDeactivate.JobId && j.IsCurrentVersion);
 
-                using (var trans = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-                {
                     if (oldVersion != null)
                     {
                         oldVersion.IsCurrentVersion = false;
@@ -108,9 +106,6 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     Console.Write("D");
 
                     await DbContext.SaveChangesAsync();
-
-                    trans.Complete();
-                }
             }
 
             if (jobsToDeactivate.Any())
