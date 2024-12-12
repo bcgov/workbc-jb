@@ -35,8 +35,6 @@ namespace WorkBC.Shared.Repositories
 
         public async Task<(JobSeeker, IdentityResult)> CreateUserAsync(JobSeeker jobSeeker, string password, int? adminUserId = null)
         {
-            using (var trans = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-            {
                 // set date fields
                 var now = DateTime.Now;
                 jobSeeker.DateRegistered = now;
@@ -79,11 +77,9 @@ namespace WorkBC.Shared.Repositories
                     await _versionRepo.CreateNewVersionIfNeeded(jobSeeker, jobSeeker.JobSeekerFlags);
                     await _context.SaveChangesAsync();
 
-                    trans.Complete();
                 }
 
-                return (jobSeeker, result);
-            }
+                return (jobSeeker, result);            
         }
 
         /// <summary>
@@ -123,8 +119,6 @@ namespace WorkBC.Shared.Repositories
             RemoveInvalidForeignKeys(userParam);
 
             // update user properties
-            using (var trans = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-            {
                 bool modified = await ApplyJobSeekerChanges(jobSeeker, userParam, adminUserId, regionId);
 
                 modified = modified | await ApplyJobSeekerFlagsChangesAsync(userParam, adminUserId);
@@ -147,9 +141,6 @@ namespace WorkBC.Shared.Repositories
                 // save the changes
                 result = await _userManager.UpdateAsync(jobSeeker);
                 await _context.SaveChangesAsync();
-
-                trans.Complete();
-            }
 
             return result;
         }
@@ -186,8 +177,6 @@ namespace WorkBC.Shared.Repositories
             jobSeeker.EmailConfirmed = false;
 
             //update user
-            using (var trans = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-            {
                 //job seeker admin event log
                 var changeEventDeleteUser = new JobSeekerChangeEvent
                 {
@@ -212,15 +201,11 @@ namespace WorkBC.Shared.Repositories
                 await _versionRepo.CreateNewVersionIfNeeded(jobSeeker, jobSeeker.JobSeekerFlags);
                 IdentityResult result = await _userManager.UpdateAsync(jobSeeker);
                 await _context.SaveChangesAsync();
-                trans.Complete();
                 return result;
-            }
         }
 
         public async Task<IdentityResult> ConfirmEmailAsync(JobSeeker jobSeeker, string token)
         {
-            using (var trans = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-            {
                 // update these two fields
                 jobSeeker.LastModified = DateTime.Now;
                 jobSeeker.AccountStatus = AccountStatus.Active;
@@ -234,9 +219,7 @@ namespace WorkBC.Shared.Repositories
                 jobSeeker = await _userManager.FindByIdAsync(jobSeeker.Id);
                 await _versionRepo.CreateNewVersionIfNeeded(jobSeeker, jobSeeker.JobSeekerFlags);
                 await _context.SaveChangesAsync();
-                trans.Complete();
                 return result;
-            }
         }
 
         public async Task LogJobSeekerEvent(string aspNetUserId, EventType eventType, bool saveChanges = true)
