@@ -91,13 +91,9 @@ namespace WorkBC.Importers.Wanted.Services
                             VersionNumber = 1
                         };
 
-                       // using (var trans = new TransactionScope())
-                       // {
                             DbContext.Jobs.Add(job);
                             DbContext.JobVersions.Add(jobVersion);
                             await DbContext.SaveChangesAsync();
-                        //    trans.Complete();
-                        // }
 
                         Console.Write("I");
                     }
@@ -158,8 +154,6 @@ namespace WorkBC.Importers.Wanted.Services
 
                         SetJobTypeFlags(xmlString, job);
 
-                       // using (var trans = new TransactionScope())
-                       // {
                             if (needsNewVersion)
                             {
                                 IncrementJobVersion(job);
@@ -171,8 +165,6 @@ namespace WorkBC.Importers.Wanted.Services
 
                             await DbContext.SaveChangesAsync();
 
-                        //   trans.Complete();
-                        //}
                     }
                     else if (job != null)
                     {
