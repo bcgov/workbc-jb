@@ -78,6 +78,8 @@ namespace WorkBC.Admin.Areas.Jobs.Services
 
         public async Task DeleteJob(long jobId, int currentAdminUserId)
         {
+          using (var trans = new TransactionScope(TransactionScopeAsyncFlowOption.Suppress))
+            {
                 #region change job status to inactive
 
                 Job job = _jobBoardContext.Jobs.FirstOrDefault(j => j.JobId == jobId);
@@ -193,7 +195,8 @@ namespace WorkBC.Admin.Areas.Jobs.Services
 
                 //save all changes to the database
                 await _jobBoardContext.SaveChangesAsync();
-
+                //complete transaction
+                trans.Complete();
         }
 
         private async Task<(List<JobSearchViewModel> result,
