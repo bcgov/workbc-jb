@@ -78,9 +78,21 @@ resource "aws_rds_cluster" "postgres" {
   tags = var.common_tags
 }
 
+#Babelfish parameter group
+resource "aws_rds_cluster_parameter_group" "babelfish_pg" {
+	name = "babelfish-pg-group"
+	family = "aurora-postgresql16"
+	
+	parameter {
+	   name = "rds.babelfish_status"
+	   value = "on"
+	   }
+	}
+	   
+
 #Postgres Babelfish
 resource "aws_rds_cluster" "postgres_babelfish" {
-  cluster_identifier		 = "jb-babeldb"
+  cluster_identifier		 = "jb-babeldb-final"
   engine 			 = "aurora-postgresql"
   engine_version		 = "16.4"
   master_username		 = local.db_creds.username
@@ -91,6 +103,7 @@ resource "aws_rds_cluster" "postgres_babelfish" {
   kms_key_id              	 = data.aws_kms_key.workbc-jb-kms-key.arn
   storage_encrypted       	 = true
   vpc_security_group_ids 	 = [data.aws_security_group.data.id]
+  cluster_parameter_group_name = awd_rds_cluster_parameter_group.babelfish_pg.name
   final_snapshot_identifier 	 = "jbabel-finalsnapshot"
   
   serverlessv2_scaling_configuration {
@@ -100,6 +113,15 @@ resource "aws_rds_cluster" "postgres_babelfish" {
 
   tags = var.common_tags
 }
+
+resource "aws_rds_cluster_instance" "postgres_babelfish" {
+  count = 2
+  cluster_identifier = aws_rds_cluster.postgres_babelfish.id
+  instance_class     = "db.serverless"
+  engine             = aws_rds_cluster.postgres_babelfish.engine
+  engine_version     = aws_rds_cluster.postgres_babelfish.engine_version
+}
+
 
 
 resource "aws_rds_cluster_instance" "postgres" {
