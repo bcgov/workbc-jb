@@ -197,6 +197,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
                 await _jobBoardContext.SaveChangesAsync();
                 //complete transaction
                 trans.Complete();
+            }
         }
 
         private async Task<(List<JobSearchViewModel> result,
