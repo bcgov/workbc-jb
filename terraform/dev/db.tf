@@ -103,7 +103,7 @@ resource "aws_rds_cluster" "postgres_babelfish" {
   kms_key_id              	 = data.aws_kms_key.workbc-jb-kms-key.arn
   storage_encrypted       	 = true
   vpc_security_group_ids 	 = [data.aws_security_group.data.id]
-  cluster_parameter_group_name = aws_rds_cluster_parameter_group.babelfish_pg.name
+  db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.babelfish_pg.name
   final_snapshot_identifier 	 = "jbabel-finalsnapshot"
   
   serverlessv2_scaling_configuration {
