@@ -86,6 +86,7 @@ resource "aws_rds_cluster_parameter_group" "babelfish_pg" {
 	parameter {
 	   name = "rds.babelfish_status"
 	   value = "on"
+	   apply_method = "pending-reboot"
 	   }
 	}
 	   
