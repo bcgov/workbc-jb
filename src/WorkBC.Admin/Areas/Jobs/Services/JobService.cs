@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
 using LinqKit;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using WorkBC.Admin.Areas.Jobs.Models;
@@ -16,6 +17,7 @@ using WorkBC.Admin.Models;
 using WorkBC.Data;
 using WorkBC.Data.Model.JobBoard;
 using WorkBC.Shared.Constants;
+using WorkBC.Shared.Settings;
 using WorkBC.Shared.Utilities;
 using JobSource = WorkBC.Shared.Constants.JobSource;
 
@@ -30,13 +32,15 @@ namespace WorkBC.Admin.Areas.Jobs.Services
 
     public class JobService : IJobService
     {
+       
         private readonly IConfiguration _configuration;
         private readonly JobBoardContext _jobBoardContext;
-
+        private readonly ConnectionSettings _connectionSettings;
         public JobService(JobBoardContext jobBoardContext, IConfiguration configuration)
         {
             _jobBoardContext = jobBoardContext;
             _configuration = configuration;
+            configuration.GetSection("ConnectionStrings").Bind(_connectionSettings);
         }
 
 
@@ -78,7 +82,8 @@ namespace WorkBC.Admin.Areas.Jobs.Services
 
         public async Task DeleteJob(long jobId, int currentAdminUserId)
         {
-          using (var trans = new TransactionScope(TransactionScopeAsyncFlowOption.Suppress))
+            //Create SQL Connection object
+            using (var cn = new SqlConnection(_connectionSettings.DefaultConnection))
             {
                 #region change job status to inactive
 
@@ -195,9 +200,8 @@ namespace WorkBC.Admin.Areas.Jobs.Services
 
                 //save all changes to the database
                 await _jobBoardContext.SaveChangesAsync();
-                //complete transaction
-                trans.Complete();
-            }
+            } 
+
         }
 
         private async Task<(List<JobSearchViewModel> result,
