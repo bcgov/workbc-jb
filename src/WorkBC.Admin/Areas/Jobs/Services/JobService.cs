@@ -82,9 +82,6 @@ namespace WorkBC.Admin.Areas.Jobs.Services
 
         public async Task DeleteJob(long jobId, int currentAdminUserId)
         {
-            //Create SQL Connection object
-            using (var cn = new SqlConnection(_connectionSettings.DefaultConnection))
-            {
                 #region change job status to inactive
 
                 Job job = _jobBoardContext.Jobs.FirstOrDefault(j => j.JobId == jobId);
@@ -199,8 +196,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
                 #endregion
 
                 //save all changes to the database
-                await _jobBoardContext.SaveChangesAsync();
-            } 
+                await _jobBoardContext.SaveChangesAsync();           
 
         }
 
