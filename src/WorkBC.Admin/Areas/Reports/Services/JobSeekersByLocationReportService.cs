@@ -39,14 +39,14 @@ namespace WorkBC.Admin.Areas.Reports.Services
                         weeklyPeriodIds.Contains(period.WeeklyPeriodId) && !period.IsTotalToDate)
                     .ToListAsync();
 
-            foreach (WeeklyPeriod period in weeklyPeriods)
-            {
-                if (jobSeekersByLocationPeriods.All(j => j.WeeklyPeriodId != period.Id))
-                {
-                    // run the stored procedure to populate the missing data
-                    await _dapperContext.Persistence.GenerateJobSeekerStats(period.WeekEndDate);
-                }
-            }
+            //foreach (WeeklyPeriod period in weeklyPeriods)
+            //{
+            //    if (jobSeekersByLocationPeriods.All(j => j.WeeklyPeriodId != period.Id))
+            //    {
+            //        // run the stored procedure to populate the missing data
+            //        await _dapperContext.Persistence.GenerateJobSeekerStats(period.WeekEndDate);
+            //    }
+            //}
         }
 
         public MatrixReport GroupUsers(IList<JobSeekersByLocationResult> results)
