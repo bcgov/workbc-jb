@@ -35,18 +35,18 @@ namespace WorkBC.Admin.Areas.Reports.Services
             IList<ReportPersistenceControl> jobSeekersByLocationPeriods =
                 await _jobBoardContext.ReportPersistenceControl
                     .Where(period =>
-                        period.TableName == "JobSeekersByLocation" && 
+                        period.TableName == "JobSeekersByLocation" &&
                         weeklyPeriodIds.Contains(period.WeeklyPeriodId) && !period.IsTotalToDate)
                     .ToListAsync();
 
-            foreach (WeeklyPeriod period in weeklyPeriods)
-            {
-                if (jobSeekersByLocationPeriods.All(j => j.WeeklyPeriodId != period.Id))
-                {
-                    // run the stored procedure to populate the missing data
-                    await _dapperContext.Persistence.GenerateJobSeekerStats(period.WeekEndDate);
-                }
-            }
+            //foreach (WeeklyPeriod period in weeklyPeriods)
+            //{
+            //    if (jobSeekersByLocationPeriods.All(j => j.WeeklyPeriodId != period.Id))
+            //    {
+            //        // run the stored procedure to populate the missing data
+            //        await _dapperContext.Persistence.GenerateJobSeekerStats(period.WeekEndDate);
+            //    }
+            //}
         }
 
         public MatrixReport GroupUsers(IList<JobSeekersByLocationResult> results)
@@ -54,11 +54,11 @@ namespace WorkBC.Admin.Areas.Reports.Services
             IEnumerable<IGrouping<string, JobSeekersByLocationResult>> grouped = results.GroupBy(r => r.Label);
 
             List<MatrixRow> users = grouped.Select(grouping => new MatrixRow
-                {
-                    Label = grouping.Key,
-                    Values = grouping.Select(g => g.Users).ToList(),
-                    SortOrder = grouping.First().SortOrder
-                }
+            {
+                Label = grouping.Key,
+                Values = grouping.Select(g => g.Users).ToList(),
+                SortOrder = grouping.First().SortOrder
+            }
             ).ToList();
 
             return new MatrixReport {TableData = users};
