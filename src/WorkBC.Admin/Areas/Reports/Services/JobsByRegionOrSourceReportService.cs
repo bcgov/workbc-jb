@@ -36,19 +36,19 @@ namespace WorkBC.Admin.Areas.Reports.Services
 
             IList<ReportPersistenceControl> jobsByRegionPeriods =
                 await _jobBoardContext.ReportPersistenceControl
-                    .Where(period => 
-                        period.TableName == "JobsByRegionOrSource" && 
+                    .Where(period =>
+                        period.TableName == "JobsByRegionOrSource" &&
                         weeklyPeriodIds.Contains(period.WeeklyPeriodId) && !period.IsTotalToDate)
                     .ToListAsync();
 
-            foreach (WeeklyPeriod period in weeklyPeriods)
-            {
-                if (jobsByRegionPeriods.All(j => j.WeeklyPeriodId != period.Id))
-                {
-                    // run the stored procedure to populate the missing data
-                    await _dapperContext.Persistence.GenerateJobStats(period.WeekEndDate);
-                }
-            }
+            //foreach (WeeklyPeriod period in weeklyPeriods)
+            //{
+            //    if (jobsByRegionPeriods.All(j => j.WeeklyPeriodId != period.Id))
+            //    {
+            //        // run the stored procedure to populate the missing data
+            //        await _dapperContext.Persistence.GenerateJobStats(period.WeekEndDate);
+            //    }
+            //}
         }
 
         public MatrixReport GroupVacancies(IList<JobStatsResult> results, bool isJobsByRegion = false)
@@ -56,14 +56,14 @@ namespace WorkBC.Admin.Areas.Reports.Services
             IEnumerable<IGrouping<string, JobStatsResult>> grouped = results.GroupBy(r => r.Label);
 
             var vacancies = grouped.Select(grouping => new MatrixRow
-                {
-                    Label = grouping.Key,
-                    Values = grouping.Select(g => g.Vacancies).ToList(),
-                    // Jobs By Source is sorted by label, not by vacancies
-                    SortOrder = isJobsByRegion
+            {
+                Label = grouping.Key,
+                Values = grouping.Select(g => g.Vacancies).ToList(),
+                // Jobs By Source is sorted by label, not by vacancies
+                SortOrder = isJobsByRegion
                         ? grouping.First().SortOrder > 1000 ? grouping.First().SortOrder : 0
                         : grouping.Key == _externalJobSourceLabel ? 1 : 0
-                }
+            }
             ).ToList();
 
             return new MatrixReport {TableData = vacancies};
@@ -74,11 +74,11 @@ namespace WorkBC.Admin.Areas.Reports.Services
             IEnumerable<IGrouping<string, JobStatsResult>> grouped = results.GroupBy(r => r.Label);
 
             var postings = grouped.Select(grouping => new MatrixRow
-                {
-                    Label = grouping.Key,
-                    Values = grouping.Select(g => g.Postings).ToList(),
-                    // Jobs By Source is sorted by label, not by postings
-                    SortOrder = isJobsByRegion
+            {
+                Label = grouping.Key,
+                Values = grouping.Select(g => g.Postings).ToList(),
+                // Jobs By Source is sorted by label, not by postings
+                SortOrder = isJobsByRegion
                         ? grouping.First().SortOrder > 1000 ? grouping.First().SortOrder : 0
                         : grouping.Key == _externalJobSourceLabel ? 1 : 0
             }
