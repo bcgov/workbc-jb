@@ -6,7 +6,7 @@ resource "aws_ecs_cluster" "jobboard" {
 }
 
 resource "aws_ecs_cluster_capacity_providers" "jobboard" {
-  cluster_name = aws_ecs_cluster.main.jobboard
+  cluster_name = aws_ecs_cluster.jobboard.name
   capacity_providers = ["FARGATE_SPOT"]
   default_capacity_provider_strategy {
     capacity_provider = "FARGATE_SPOT"
