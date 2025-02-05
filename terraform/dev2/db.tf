@@ -48,10 +48,6 @@ data "aws_db_instance" "mssql" {
   */
 }
 
-data "aws_db_instance" "postgres_babelfish" {
-  db_instance_identifier = "jb-babeldb-final"
-}
-
 # create this manually
 #TODO after db creation
 data "aws_secretsmanager_secret_version" "creds" {
