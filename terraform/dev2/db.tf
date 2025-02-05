@@ -49,7 +49,7 @@ data "aws_db_instance" "mssql" {
 }
 
 data "aws_db_instance" "postgres_babelfish" {
-  db_instance_identifier = "jb-postgres-cluster"
+  db_instance_identifier = "jb-babeldb-final"
 }
 
 # create this manually
