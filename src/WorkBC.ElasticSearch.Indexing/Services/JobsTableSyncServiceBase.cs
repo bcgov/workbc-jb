@@ -50,16 +50,16 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             if (jobSourceId == JobSource.Wanted)
             {
                 jobsToDeactivate = (from j in DbContext.Jobs
-                    where j.JobSourceId == JobSource.Wanted && j.IsActive &&
-                          !(from ij in DbContext.ImportedJobsWanted select ij.JobId).Contains(j.JobId)
-                    select j).ToList();
+                                    where j.JobSourceId == JobSource.Wanted && j.IsActive &&
+                                          !(from ij in DbContext.ImportedJobsWanted select ij.JobId).Contains(j.JobId)
+                                    select j).ToList();
             }
             else // jobSourceId == JobSource.Federal
             {
                 jobsToDeactivate = (from j in DbContext.Jobs
-                    where j.JobSourceId == JobSource.Federal && j.IsActive &&
-                          !(from ij in DbContext.ImportedJobsFederal select ij.JobId).Contains(j.JobId)
-                    select j).ToList();
+                                    where j.JobSourceId == JobSource.Federal && j.IsActive &&
+                                          !(from ij in DbContext.ImportedJobsFederal select ij.JobId).Contains(j.JobId)
+                                    select j).ToList();
             }
 
             Logger.Information($"{jobsToDeactivate.Count()} jobs found to deactivate");
@@ -73,44 +73,40 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 JobVersion oldVersion = DbContext.JobVersions
                     .FirstOrDefault(j => j.JobId == jobToDeactivate.JobId && j.IsCurrentVersion);
 
-                using (var trans = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                if (oldVersion != null)
                 {
-                    if (oldVersion != null)
+                    oldVersion.IsCurrentVersion = false;
+                    oldVersion.DateVersionEnd = now;
+
+                    var newVersion = new JobVersion
                     {
-                        oldVersion.IsCurrentVersion = false;
-                        oldVersion.DateVersionEnd = now;
+                        JobId = jobToDeactivate.JobId,
+                        DateVersionStart = now,
+                        DatePosted = oldVersion.DatePosted,
+                        JobSourceId = oldVersion.JobSourceId,
+                        IndustryId = oldVersion.IndustryId,
+                        NocCodeId = oldVersion.NocCodeId,
+                        IsActive = false,
+                        PositionsAvailable = oldVersion.PositionsAvailable,
+                        LocationId = oldVersion.LocationId,
+                        IsCurrentVersion = true,
+                        ActualDatePosted = oldVersion.ActualDatePosted,
+                        DateFirstImported = oldVersion.DateFirstImported,
+                        VersionNumber = (short)(oldVersion.VersionNumber + 1)
+                    };
 
-                        var newVersion = new JobVersion
-                        {
-                            JobId = jobToDeactivate.JobId,
-                            DateVersionStart = now,
-                            DatePosted = oldVersion.DatePosted,
-                            JobSourceId = oldVersion.JobSourceId,
-                            IndustryId = oldVersion.IndustryId,
-                            NocCodeId = oldVersion.NocCodeId,
-                            IsActive = false,
-                            PositionsAvailable = oldVersion.PositionsAvailable,
-                            LocationId = oldVersion.LocationId,
-                            IsCurrentVersion = true,
-                            ActualDatePosted = oldVersion.ActualDatePosted,
-                            DateFirstImported = oldVersion.DateFirstImported,
-                            VersionNumber = (short) (oldVersion.VersionNumber + 1)
-                        };
-
-                        DbContext.JobVersions.Update(oldVersion);
-                        DbContext.JobVersions.Add(newVersion);
-                    }
-
-                    //deactivate job
-                    jobToDeactivate.IsActive = false;
-                    DbContext.Jobs.Update(jobToDeactivate);
-
-                    Console.Write("D");
-
-                    await DbContext.SaveChangesAsync();
-
-                    trans.Complete();
+                    DbContext.JobVersions.Update(oldVersion);
+                    DbContext.JobVersions.Add(newVersion);
                 }
+
+                //deactivate job
+                jobToDeactivate.IsActive = false;
+                DbContext.Jobs.Update(jobToDeactivate);
+
+                Console.Write("D");
+
+                await DbContext.SaveChangesAsync();
+
             }
 
             if (jobsToDeactivate.Any())
