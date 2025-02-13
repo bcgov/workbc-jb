@@ -53,6 +53,18 @@ locals {
   )
 }
 
+#Babelfish parameter group
+resource "aws_rds_cluster_parameter_group" "babelfish_pg" {
+	name = "babelfish-pg-group"
+	family = "aurora-postgresql16"
+	
+	parameter {
+	   name = "rds.babelfish_status"
+	   value = "on"
+	   apply_method = "pending-reboot"
+	   }
+	}
+
 #Postgres Babelfish
 resource "aws_rds_cluster" "postgres_babelfish" {
   cluster_identifier		 = "jb-babeldb-final"
