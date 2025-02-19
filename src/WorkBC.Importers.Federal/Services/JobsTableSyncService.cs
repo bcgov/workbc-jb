@@ -28,7 +28,7 @@ namespace WorkBC.Importers.Federal.Services
         public async Task ImportJobs()
         {
             List<long> jobsToImport = DbContext.ImportedJobsFederal
-                .Where(ij => 
+                .Where(ij =>
                     DbContext.Jobs.All(j => j.JobId != ij.JobId) && ij.DisplayUntil > DateTime.Now)
                 .Select(ij => ij.JobId)
                 .ToList();
@@ -39,7 +39,7 @@ namespace WorkBC.Importers.Federal.Services
             {
                 IImportedJob importedJob = DbContext.ImportedJobsFederal.FirstOrDefault(j => j.JobId == jobId);
 
-                //Load english 
+                //Load english
                 if (importedJob != null && importedJob.JobPostEnglish.Length > 0)
                 {
                     string xmlString = importedJob.JobPostEnglish;
@@ -81,9 +81,9 @@ namespace WorkBC.Importers.Federal.Services
                             VersionNumber = 1
                         };
 
-                            DbContext.Jobs.Add(job);
-                            DbContext.JobVersions.Add(jobVersion);
-                            await DbContext.SaveChangesAsync();
+                        DbContext.Jobs.Add(job);
+                        DbContext.JobVersions.Add(jobVersion);
+                        await DbContext.SaveChangesAsync();
 
                         Console.Write("I");
                     }
@@ -99,9 +99,9 @@ namespace WorkBC.Importers.Federal.Services
         public async Task UpdateJobs()
         {
             List<long> jobsToUpdate = (from ij in DbContext.ImportedJobsFederal
-                join j in DbContext.Jobs on ij.JobId equals j.JobId
-                where j.DateLastImported != ij.DateLastImported || !j.IsActive || _commandLineOptions.ReImport
-                select ij.JobId).ToList();
+                                       join j in DbContext.Jobs on ij.JobId equals j.JobId
+                                       where j.DateLastImported != ij.DateLastImported || !j.IsActive || _commandLineOptions.ReImport
+                                       select ij.JobId).ToList();
 
             Logger.Information($"{jobsToUpdate.Count()} jobs found to update");
 
@@ -110,33 +110,33 @@ namespace WorkBC.Importers.Federal.Services
                 IImportedJob importedJob = DbContext.ImportedJobsFederal.FirstOrDefault(j => j.JobId == jobId);
                 Job job = DbContext.Jobs.FirstOrDefault(j => j.JobId == jobId);
 
-                //Load english 
+                //Load english
                 if (job != null && importedJob != null && importedJob.JobPostEnglish.Length > 0)
                 {
                     string xmlString = importedJob.JobPostEnglish;
 
                     ElasticSearchJob elasticJob = _xmlParsingService.ConvertToElasticJob(xmlString);
-                    
+
                     if (elasticJob != null)
                     {
                         bool needsNewVersion = CopyElasticJob(elasticJob, job);
-                        
+
                         job.LastUpdated = elasticJob.LastUpdated ?? importedJob.DateLastImported;
                         //job.DateFirstImported = importedJob.DateFirstImported;  /* Don't change DateFirstImported or it will mess up reports!! */
                         job.DateLastImported = importedJob.DateLastImported;
 
                         SetJobTypeFlags(xmlString, job);
 
-                            if (needsNewVersion)
-                            {
-                                IncrementJobVersion(job);
-                            }
+                        if (needsNewVersion)
+                        {
+                            IncrementJobVersion(job);
+                        }
 
-                            DbContext.Jobs.Update(job);
+                        DbContext.Jobs.Update(job);
 
-                            Console.Write("U");
+                        Console.Write("U");
 
-                            await DbContext.SaveChangesAsync();
+                        await DbContext.SaveChangesAsync();
 
                     }
                 }
