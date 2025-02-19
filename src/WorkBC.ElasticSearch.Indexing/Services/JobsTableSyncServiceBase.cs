@@ -92,7 +92,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                         IsCurrentVersion = true,
                         ActualDatePosted = oldVersion.ActualDatePosted,
                         DateFirstImported = oldVersion.DateFirstImported,
-                            VersionNumber = (short) (oldVersion.VersionNumber + 1)
+                        VersionNumber = (short)(oldVersion.VersionNumber + 1)
                     };
 
                     DbContext.JobVersions.Update(oldVersion);

@@ -23,7 +23,7 @@ jobs:
   # workaround for the intermittent skip issue        
   get_workflow_conclusion:
     name: Lookup conclusion of workflow_run event
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       conclusion: ${{ fromJson(steps.get_conclusion.outputs.data).conclusion }}
     steps:
@@ -37,7 +37,7 @@ jobs:
   # automated deployment to DEV
   cd:
     name: cd
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:

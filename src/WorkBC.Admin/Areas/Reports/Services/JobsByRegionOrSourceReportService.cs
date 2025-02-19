@@ -40,15 +40,6 @@ namespace WorkBC.Admin.Areas.Reports.Services
                         period.TableName == "JobsByRegionOrSource" &&
                         weeklyPeriodIds.Contains(period.WeeklyPeriodId) && !period.IsTotalToDate)
                     .ToListAsync();
-
-            //foreach (WeeklyPeriod period in weeklyPeriods)
-            //{
-            //    if (jobsByRegionPeriods.All(j => j.WeeklyPeriodId != period.Id))
-            //    {
-            //        // run the stored procedure to populate the missing data
-            //        await _dapperContext.Persistence.GenerateJobStats(period.WeekEndDate);
-            //    }
-            //}
         }
 
         public MatrixReport GroupVacancies(IList<JobStatsResult> results, bool isJobsByRegion = false)

@@ -15,7 +15,10 @@ namespace WorkBC.ElasticSearch.Indexing.Services
     public class XmlParsingServiceFederal : XmlParsingServiceBase
     {
         private const int WorkplaceInfoSkillCategoryId = 100000;
-        private const int BenefitsSkillCategoryId = 102001;
+        private const int HealthBenefitsCategoryId = 102001;
+        private const int FinancialBenefitsCategoryId = 102002;
+        private const int LongTermBenefitsCategoryId = 102003;
+        private const int OtherBenefitsCategoryId = 102004;
         private const string VirtualJobBasedIn_EN = "Virtual job based in";
         private const string VirtualJobBasedIn_FR = "Emploi virtuel basé à";
         private readonly IGeocodingService _geocodingService;
@@ -309,18 +312,32 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                         continue;
                     }
 
-                    if (id == BenefitsSkillCategoryId)
+                    if (id == FinancialBenefitsCategoryId || id == LongTermBenefitsCategoryId)
                     {
                         xmlSkillOptions = skillCategory.SelectNodes("options/option_name");
                         foreach (XmlNode option in xmlSkillOptions)
                         {
+                            // capitalize the first letter and lower case all others
                             var benefit = option.InnerText.Capitalize();
 
-                            if (benefit.StartsWith("Rrsp") || benefit.StartsWith("Resp"))
+                            if (benefit.Contains("rrsp"))
                             {
-                                benefit = benefit
-                                    .Replace("Rrsp", "RRSP")
-                                    .Replace("Resp", "RESP");
+                                benefit = "RRSP benefits";
+                            }
+                            
+                            if (benefit.Contains("resp"))
+                            {
+                                benefit = "RESP benefits";
+                            }
+                            
+                            if (benefit.Contains("Life insurance"))
+                            {
+                                benefit = "Life insurance benefits";
+                            }
+                            
+                            if (benefit.Contains("Pension plan"))
+                            {
+                                benefit = "Pension plan benefits";
                             }
 
                             job.SalaryConditions.Description.Add(benefit);
@@ -328,7 +345,35 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                         continue;
                     }
+                    
+                    if (id == HealthBenefitsCategoryId)
+                    {
+                        xmlSkillOptions = skillCategory.SelectNodes("options/option_name");
+                        foreach (XmlNode option in xmlSkillOptions)
+                        {
+                            var benefit = option.InnerText.Capitalize();
+                            
+                            /*
+                             Examples of Health Benefits include:
+                              - Dental plan
+                              - Disability benefits
+                              - Health care plan
+                              - Vision care benefits
+                            */
 
+                            job.SalaryConditions.Description.Add(benefit);
+                        }
+
+                        continue;
+                    }
+
+                    
+                    if (id == OtherBenefitsCategoryId)
+                    {
+                        job.SalaryConditions.Description.Add("Other benefits");
+
+                        continue;
+                    }
 
                     switch (name.ToLower())
                     {
