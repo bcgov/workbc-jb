@@ -120,7 +120,7 @@ namespace WorkBC.Shared.Repositories
 
             // update user properties
             bool modified = await ApplyJobSeekerChanges(jobSeeker, userParam, adminUserId, regionId);
-            bool modifiedFlags = await ApplyJobSeekerFlagsChangesAsync(userParam, adminUserId);           
+            bool modifiedFlags = ApplyJobSeekerFlagsChanges(userParam, adminUserId);           
 
             // update password if it was entered
             if (!string.IsNullOrWhiteSpace(password))
@@ -531,12 +531,12 @@ namespace WorkBC.Shared.Repositories
             return modified;
         }
 
-        private async Task<bool> ApplyJobSeekerFlagsChangesAsync(JobSeeker jobSeeker, int? adminUserId = null)
+        private bool ApplyJobSeekerFlagsChanges(JobSeeker jobSeeker, int? adminUserId = null)
         {
             var modified = false;
             if (jobSeeker.JobSeekerFlags != null)
             {
-                JobSeekerFlags flags = await _context.JobSeekerFlags.FirstOrDefaultAsync(x => x.AspNetUserId == jobSeeker.Id);
+                JobSeekerFlags flags = _context.JobSeekerFlags.FirstOrDefault(x => x.AspNetUserId == jobSeeker.Id);
 
                 // if flags is not found then create
                 if (flags == null)
@@ -545,7 +545,7 @@ namespace WorkBC.Shared.Repositories
                     {
                         AspNetUserId = jobSeeker.Id
                     };
-                    await _context.JobSeekerFlags.AddAsync(flags);
+                    _context.JobSeekerFlags.Add(flags);
                 }
 
                 if (flags.IsApprentice != jobSeeker.JobSeekerFlags.IsApprentice)
@@ -559,7 +559,7 @@ namespace WorkBC.Shared.Repositories
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsApprentice);
+                    _context.JobSeekerChangeLog.Add(changeEventIsApprentice);
 
                     flags.IsApprentice = jobSeeker.JobSeekerFlags.IsApprentice;
                     modified = true;
@@ -576,7 +576,7 @@ namespace WorkBC.Shared.Repositories
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsIndigenousPerson);
+                     _context.JobSeekerChangeLog.Add(changeEventIsIndigenousPerson);
 
                     flags.IsIndigenousPerson = jobSeeker.JobSeekerFlags.IsIndigenousPerson;
                     modified = true;
@@ -593,7 +593,7 @@ namespace WorkBC.Shared.Repositories
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsMature);
+                     _context.JobSeekerChangeLog.Add(changeEventIsMature);
 
                     flags.IsMatureWorker = jobSeeker.JobSeekerFlags.IsMatureWorker;
                     modified = true;
@@ -610,7 +610,7 @@ namespace WorkBC.Shared.Repositories
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsNewImmigrant);
+                    _context.JobSeekerChangeLog.Add(changeEventIsNewImmigrant);
 
                     flags.IsNewImmigrant = jobSeeker.JobSeekerFlags.IsNewImmigrant;
                     modified = true;
@@ -627,7 +627,7 @@ namespace WorkBC.Shared.Repositories
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsPersonWithDisability);
+                    _context.JobSeekerChangeLog.Add(changeEventIsPersonWithDisability);
 
                     flags.IsPersonWithDisability = jobSeeker.JobSeekerFlags.IsPersonWithDisability;
                     modified = true;
@@ -644,7 +644,7 @@ namespace WorkBC.Shared.Repositories
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsStudent);
+                    _context.JobSeekerChangeLog.Add(changeEventIsStudent);
 
                     flags.IsStudent = jobSeeker.JobSeekerFlags.IsStudent;
                     modified = true;
@@ -661,7 +661,7 @@ namespace WorkBC.Shared.Repositories
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsVeteran);
+                    _context.JobSeekerChangeLog.Add(changeEventIsVeteran);
 
                     flags.IsVeteran = jobSeeker.JobSeekerFlags.IsVeteran;
                     modified = true;
@@ -678,7 +678,7 @@ namespace WorkBC.Shared.Repositories
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsVisibleMinority);
+                    _context.JobSeekerChangeLog.Add(changeEventIsVisibleMinority);
 
                     flags.IsVisibleMinority = jobSeeker.JobSeekerFlags.IsVisibleMinority;
                     modified = true;
@@ -695,7 +695,7 @@ namespace WorkBC.Shared.Repositories
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsYouth);
+                    _context.JobSeekerChangeLog.Add(changeEventIsYouth);
 
                     flags.IsYouth = jobSeeker.JobSeekerFlags.IsYouth;
                     modified = true;
