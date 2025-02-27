@@ -20,7 +20,6 @@ permissions:
   contents: read
 
 jobs:
-
   # # workaround for the intermittent skip issue
   # get_workflow_conclusion:
   #   name: Lookup conclusion of workflow_run event
