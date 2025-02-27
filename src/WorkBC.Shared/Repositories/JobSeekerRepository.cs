@@ -563,8 +563,6 @@ namespace WorkBC.Shared.Repositories
 
                     flags.IsApprentice = jobSeeker.JobSeekerFlags.IsApprentice;
                     modified = true;
-                    // save the changes
-                    await _context.SaveChangesAsync();
                 }
 
                 if (flags.IsIndigenousPerson != jobSeeker.JobSeekerFlags.IsIndigenousPerson)
@@ -582,8 +580,6 @@ namespace WorkBC.Shared.Repositories
 
                     flags.IsIndigenousPerson = jobSeeker.JobSeekerFlags.IsIndigenousPerson;
                     modified = true;
-                    // save the changes
-                    await _context.SaveChangesAsync();
                 }
 
                 if (flags.IsMatureWorker != jobSeeker.JobSeekerFlags.IsMatureWorker)
@@ -601,8 +597,6 @@ namespace WorkBC.Shared.Repositories
 
                     flags.IsMatureWorker = jobSeeker.JobSeekerFlags.IsMatureWorker;
                     modified = true;
-                    // save the changes
-                    await _context.SaveChangesAsync();
                 }
 
                 if (flags.IsNewImmigrant != jobSeeker.JobSeekerFlags.IsNewImmigrant)
@@ -620,8 +614,6 @@ namespace WorkBC.Shared.Repositories
 
                     flags.IsNewImmigrant = jobSeeker.JobSeekerFlags.IsNewImmigrant;
                     modified = true;
-                    // save the changes
-                    await _context.SaveChangesAsync();
                 }
 
                 if (flags.IsPersonWithDisability != jobSeeker.JobSeekerFlags.IsPersonWithDisability)
@@ -639,8 +631,6 @@ namespace WorkBC.Shared.Repositories
 
                     flags.IsPersonWithDisability = jobSeeker.JobSeekerFlags.IsPersonWithDisability;
                     modified = true;
-                    // save the changes
-                    await _context.SaveChangesAsync();
                 }
 
                 if (flags.IsStudent != jobSeeker.JobSeekerFlags.IsStudent)
@@ -658,8 +648,6 @@ namespace WorkBC.Shared.Repositories
 
                     flags.IsStudent = jobSeeker.JobSeekerFlags.IsStudent;
                     modified = true;
-                    // save the changes
-                    await _context.SaveChangesAsync();
                 }
 
                 if (flags.IsVeteran != jobSeeker.JobSeekerFlags.IsVeteran)
@@ -677,8 +665,6 @@ namespace WorkBC.Shared.Repositories
 
                     flags.IsVeteran = jobSeeker.JobSeekerFlags.IsVeteran;
                     modified = true;
-                    // save the changes
-                    await _context.SaveChangesAsync();
                 }
 
                 if (flags.IsVisibleMinority != jobSeeker.JobSeekerFlags.IsVisibleMinority)
@@ -696,8 +682,6 @@ namespace WorkBC.Shared.Repositories
 
                     flags.IsVisibleMinority = jobSeeker.JobSeekerFlags.IsVisibleMinority;
                     modified = true;
-                    // save the changes
-                    await _context.SaveChangesAsync();
                 }
 
                 if (flags.IsYouth != jobSeeker.JobSeekerFlags.IsYouth)
@@ -715,8 +699,6 @@ namespace WorkBC.Shared.Repositories
 
                     flags.IsYouth = jobSeeker.JobSeekerFlags.IsYouth;
                     modified = true;
-                    // save the changes
-                    await _context.SaveChangesAsync();
                 }
             }
             return modified;
