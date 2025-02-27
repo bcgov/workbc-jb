@@ -201,7 +201,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     PositionsAvailable = job.PositionsAvailable,
                     LocationId = job.LocationId,
                     IsCurrentVersion = true,
-                    VersionNumber = (short) (oldVersion.VersionNumber + 1)
+                    VersionNumber = (short)(oldVersion.VersionNumber + 1)
                 };
             }
             else

@@ -49,7 +49,7 @@ namespace WorkBC.Shared.Repositories
             // get the user back from the db
             jobSeeker = await _userManager.FindByEmailAsync(jobSeeker.Email);
 
-            //check if the jobSeeker could be created 
+            //check if the jobSeeker could be created
             if (jobSeeker != null)
             {
                 // log the event
@@ -106,7 +106,7 @@ namespace WorkBC.Shared.Repositories
 
         public async Task<IdentityResult> UpdateJobSeekerAsync(JobSeeker jobSeeker, JobSeeker userParam, string password = "", int? adminUserId = null, int? regionId = null)
         {
-            // don't allow the jobseeker to be updated if they have been deleted in another browser window.  
+            // don't allow the jobseeker to be updated if they have been deleted in another browser window.
             if (jobSeeker.AccountStatus == AccountStatus.Deleted)
             {
                 throw new InvalidDataException(
@@ -538,7 +538,7 @@ namespace WorkBC.Shared.Repositories
             {
                 JobSeekerFlags flags = await _context.JobSeekerFlags.FirstOrDefaultAsync(x => x.AspNetUserId == jobSeeker.Id);
 
-                // if flags is not found then create 
+                // if flags is not found then create
                 if (flags == null)
                 {
                     flags = new JobSeekerFlags
