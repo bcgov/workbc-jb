@@ -532,7 +532,7 @@ namespace WorkBC.Shared.Repositories
             return modified;
         }
 
-        private async Task<bool> ApplyJobSeekerFlagsChangesAsync(JobSeeker jobSeeker, int? adminUserId = null)
+        private async Task<bool> ApplyJobSeekerFlagsChangesAsync(JobSeeker jobSeeker, int? adminUserId)
         {
             var modified = false;
             if (jobSeeker.JobSeekerFlags != null)
