@@ -684,10 +684,10 @@ namespace WorkBC.Shared.Repositories
                         NewValue = jobSeeker.JobSeekerFlags.IsVisibleMinority ? "Yes" : "No",
                         AspNetUserId = jobSeeker.Id,
                         DateUpdated = DateTime.Now,
-                        ModifiedByAdminUserId = 1
+                        ModifiedByAdminUserId = adminUserId
                     };
                     await _context.JobSeekerChangeLog.AddAsync(changeEventIsVisibleMinority);
-                    await _context.SaveChangesAsync();
+                    await _context..SaveChangesAsync();
 
                     flags.IsVisibleMinority = jobSeeker.JobSeekerFlags.IsVisibleMinority;
                     modified = true;
@@ -702,7 +702,7 @@ namespace WorkBC.Shared.Repositories
                         NewValue = jobSeeker.JobSeekerFlags.IsYouth ? "Yes" : "No",
                         AspNetUserId = jobSeeker.Id,
                         DateUpdated = DateTime.Now,
-                        ModifiedByAdminUserId = 1
+                        ModifiedByAdminUserId = adminUserId
                     };
                     await _context.JobSeekerChangeLog.AddAsync(changeEventIsYouth);
                     await _context.SaveChangesAsync();
