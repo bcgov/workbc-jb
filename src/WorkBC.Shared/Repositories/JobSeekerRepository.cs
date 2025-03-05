@@ -561,8 +561,6 @@ namespace WorkBC.Shared.Repositories
                         ModifiedByAdminUserId = adminUserId
                     };
                     await _context.JobSeekerChangeLog.AddAsync(changeEventIsApprentice);
-                    // create a new version record
-                    await _versionRepo.CreateNewVersionIfNeeded(jobSeeker, jobSeeker.JobSeekerFlags);
                     await _context.SaveChangesAsync();
 
                     flags.IsApprentice = jobSeeker.JobSeekerFlags.IsApprentice;
@@ -581,8 +579,6 @@ namespace WorkBC.Shared.Repositories
                         ModifiedByAdminUserId = adminUserId
                     };
                     await _context.JobSeekerChangeLog.AddAsync(changeEventIsIndigenousPerson);
-                    // create a new version record
-                    await _versionRepo.CreateNewVersionIfNeeded(jobSeeker, jobSeeker.JobSeekerFlags);
                     await _context.SaveChangesAsync();
 
                     flags.IsIndigenousPerson = jobSeeker.JobSeekerFlags.IsIndigenousPerson;
@@ -601,6 +597,7 @@ namespace WorkBC.Shared.Repositories
                         ModifiedByAdminUserId = adminUserId
                     };
                     await _context.JobSeekerChangeLog.AddAsync(changeEventIsMature);
+                    await _context.SaveChangesAsync();
 
                     flags.IsMatureWorker = jobSeeker.JobSeekerFlags.IsMatureWorker;
                     modified = true;
@@ -618,6 +615,7 @@ namespace WorkBC.Shared.Repositories
                         ModifiedByAdminUserId = adminUserId
                     };
                     await _context.JobSeekerChangeLog.AddAsync(changeEventIsNewImmigrant);
+                    await _context.SaveChangesAsync();
 
                     flags.IsNewImmigrant = jobSeeker.JobSeekerFlags.IsNewImmigrant;
                     modified = true;
@@ -635,6 +633,7 @@ namespace WorkBC.Shared.Repositories
                         ModifiedByAdminUserId = adminUserId
                     };
                     await _context.JobSeekerChangeLog.AddAsync(changeEventIsPersonWithDisability);
+                    await _context.SaveChangesAsync();
 
                     flags.IsPersonWithDisability = jobSeeker.JobSeekerFlags.IsPersonWithDisability;
                     modified = true;
@@ -652,6 +651,7 @@ namespace WorkBC.Shared.Repositories
                         ModifiedByAdminUserId = adminUserId
                     };
                     await _context.JobSeekerChangeLog.AddAsync(changeEventIsStudent);
+                    await _context.SaveChangesAsync();
 
                     flags.IsStudent = jobSeeker.JobSeekerFlags.IsStudent;
                     modified = true;
@@ -669,6 +669,7 @@ namespace WorkBC.Shared.Repositories
                         ModifiedByAdminUserId = adminUserId
                     };
                     await _context.JobSeekerChangeLog.AddAsync(changeEventIsVeteran);
+                    await _context.SaveChangesAsync();
 
                     flags.IsVeteran = jobSeeker.JobSeekerFlags.IsVeteran;
                     modified = true;
@@ -686,6 +687,7 @@ namespace WorkBC.Shared.Repositories
                         ModifiedByAdminUserId = 1
                     };
                     await _context.JobSeekerChangeLog.AddAsync(changeEventIsVisibleMinority);
+                    await _context.SaveChangesAsync();
 
                     flags.IsVisibleMinority = jobSeeker.JobSeekerFlags.IsVisibleMinority;
                     modified = true;
@@ -703,6 +705,7 @@ namespace WorkBC.Shared.Repositories
                         ModifiedByAdminUserId = 1
                     };
                     await _context.JobSeekerChangeLog.AddAsync(changeEventIsYouth);
+                    await _context.SaveChangesAsync();
 
                     flags.IsYouth = jobSeeker.JobSeekerFlags.IsYouth;
                     modified = true;
