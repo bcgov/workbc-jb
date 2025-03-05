@@ -679,7 +679,7 @@ namespace WorkBC.Shared.Repositories
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    //await _context.JobSeekerChangeLog.AddAsync(changeEventIsVisibleMinority);
+                    await _context.JobSeekerChangeLog.AddRangeAsync(changeEventIsVisibleMinority);
 
                     flags.IsVisibleMinority = jobSeeker.JobSeekerFlags.IsVisibleMinority;
                     modified = true;
@@ -696,7 +696,7 @@ namespace WorkBC.Shared.Repositories
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    //await _context.JobSeekerChangeLog.AddAsync(changeEventIsYouth);
+                    await _context.JobSeekerChangeLog.AddRangeAsync(changeEventIsYouth);
 
                     flags.IsYouth = jobSeeker.JobSeekerFlags.IsYouth;
                     modified = true;
