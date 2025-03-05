@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -679,7 +679,7 @@ namespace WorkBC.Shared.Repositories
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsVisibleMinority);
+                    //await _context.JobSeekerChangeLog.AddAsync(changeEventIsVisibleMinority);
 
                     flags.IsVisibleMinority = jobSeeker.JobSeekerFlags.IsVisibleMinority;
                     modified = true;
@@ -696,7 +696,7 @@ namespace WorkBC.Shared.Repositories
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsYouth);
+                    //await _context.JobSeekerChangeLog.AddAsync(changeEventIsYouth);
 
                     flags.IsYouth = jobSeeker.JobSeekerFlags.IsYouth;
                     modified = true;
