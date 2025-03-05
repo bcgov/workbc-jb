@@ -687,7 +687,7 @@ namespace WorkBC.Shared.Repositories
                         ModifiedByAdminUserId = adminUserId
                     };
                     await _context.JobSeekerChangeLog.AddAsync(changeEventIsVisibleMinority);
-                    await _context..SaveChangesAsync();
+                    await _context.SaveChangesAsync();
 
                     flags.IsVisibleMinority = jobSeeker.JobSeekerFlags.IsVisibleMinority;
                     modified = true;
