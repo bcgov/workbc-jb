@@ -561,6 +561,9 @@ namespace WorkBC.Shared.Repositories
                         ModifiedByAdminUserId = adminUserId
                     };
                     await _context.JobSeekerChangeLog.AddAsync(changeEventIsApprentice);
+                    // create a new version record
+                    await _versionRepo.CreateNewVersionIfNeeded(jobSeeker, jobSeeker.JobSeekerFlags);
+                    await _context.SaveChangesAsync();
 
                     flags.IsApprentice = jobSeeker.JobSeekerFlags.IsApprentice;
                     modified = true;
@@ -578,6 +581,9 @@ namespace WorkBC.Shared.Repositories
                         ModifiedByAdminUserId = adminUserId
                     };
                     await _context.JobSeekerChangeLog.AddAsync(changeEventIsIndigenousPerson);
+                    // create a new version record
+                    await _versionRepo.CreateNewVersionIfNeeded(jobSeeker, jobSeeker.JobSeekerFlags);
+                    await _context.SaveChangesAsync();
 
                     flags.IsIndigenousPerson = jobSeeker.JobSeekerFlags.IsIndigenousPerson;
                     modified = true;
