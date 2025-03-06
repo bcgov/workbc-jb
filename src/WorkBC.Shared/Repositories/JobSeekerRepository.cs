@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -121,7 +122,7 @@ namespace WorkBC.Shared.Repositories
             // update user properties
             bool modified = await ApplyJobSeekerChanges(jobSeeker, userParam, adminUserId, regionId);
 
-            modified = modified | await ApplyJobSeekerFlagsChangesAsync(jobSeeker, userParam, adminUserId);
+            modified = modified | await ApplyJobSeekerFlagsChangesAsync(userParam, adminUserId);
 
             // update password if it was entered
             if (!string.IsNullOrWhiteSpace(password))
@@ -532,174 +533,189 @@ namespace WorkBC.Shared.Repositories
             return modified;
         }
 
-        private async Task<bool> ApplyJobSeekerFlagsChangesAsync(JobSeeker jobSeeker, JobSeeker userParam, int? adminUserId = null)
+        private async Task<bool> ApplyJobSeekerFlagsChangesAsync(JobSeeker jobSeeker, int? adminUserId = null)
         {
             var modified = false;
-            if (userParam.JobSeekerFlags != null)
+            List<JobSeekerChangeEvent> jobSeekerChangeEvents = new List<JobSeekerChangeEvent>();
+            if (jobSeeker.JobSeekerFlags != null)
             {
-                //JobSeekerFlags flags = await _context.JobSeekerFlags.FirstOrDefaultAsync(x => x.AspNetUserId == userParam.Id);
+                JobSeekerFlags flags = await _context.JobSeekerFlags.FirstOrDefaultAsync(x => x.AspNetUserId == jobSeeker.Id);
+               
                 // if flags is not found then create 
-                if (jobSeeker.JobSeekerFlags == null)
+                if (flags == null)
                 {
-                    jobSeeker.JobSeekerFlags = new JobSeekerFlags
+                    flags = new JobSeekerFlags
                     {
-                        AspNetUserId = userParam.Id
+                        AspNetUserId = jobSeeker.Id
                     };
-                    await _context.JobSeekerFlags.AddAsync(jobSeeker.JobSeekerFlags);
+                    await _context.JobSeekerFlags.AddAsync(flags);
                 }
 
-                if (jobSeeker.JobSeekerFlags.IsApprentice != userParam.JobSeekerFlags.IsApprentice)
+                if (flags.IsApprentice != jobSeeker.JobSeekerFlags.IsApprentice)
                 {
                     var changeEventIsApprentice = new JobSeekerChangeEvent
                     {
                         Field = "Apprentice edited",
-                        OldValue = jobSeeker.JobSeekerFlags.IsApprentice ? "Yes" : "No",
-                        NewValue = userParam.JobSeekerFlags.IsApprentice ? "Yes" : "No",
-                        AspNetUserId = userParam.Id,
+                        OldValue = flags.IsApprentice ? "Yes" : "No",
+                        NewValue = jobSeeker.JobSeekerFlags.IsApprentice ? "Yes" : "No",
+                        AspNetUserId = jobSeeker.Id,
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsApprentice);
+                    jobSeekerChangeEvents.Add(changeEventIsApprentice);
+                    //await _context.JobSeekerChangeLog.AddAsync(changeEventIsApprentice);
 
-                    jobSeeker.JobSeekerFlags.IsApprentice = userParam.JobSeekerFlags.IsApprentice;
+                    flags.IsApprentice = jobSeeker.JobSeekerFlags.IsApprentice;
                     modified = true;
                 }
 
-                if (jobSeeker.JobSeekerFlags.IsIndigenousPerson != userParam.JobSeekerFlags.IsIndigenousPerson)
+                if (flags.IsIndigenousPerson != jobSeeker.JobSeekerFlags.IsIndigenousPerson)
                 {
                     var changeEventIsIndigenousPerson = new JobSeekerChangeEvent
                     {
                         Field = "Indigenous person edited",
-                        OldValue = jobSeeker.JobSeekerFlags.IsIndigenousPerson ? "Yes" : "No",
-                        NewValue = userParam.JobSeekerFlags.IsIndigenousPerson ? "Yes" : "No",
-                        AspNetUserId = userParam.Id,
+                        OldValue = flags.IsIndigenousPerson ? "Yes" : "No",
+                        NewValue = jobSeeker.JobSeekerFlags.IsIndigenousPerson ? "Yes" : "No",
+                        AspNetUserId = jobSeeker.Id,
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsIndigenousPerson);
+                    jobSeekerChangeEvents.Add(changeEventIsIndigenousPerson);
+                    //await _context.JobSeekerChangeLog.AddAsync(changeEventIsIndigenousPerson);
 
-                    jobSeeker.JobSeekerFlags.IsIndigenousPerson = userParam.JobSeekerFlags.IsIndigenousPerson;
+                    flags.IsIndigenousPerson = jobSeeker.JobSeekerFlags.IsIndigenousPerson;
                     modified = true;
                 }
 
-                if (jobSeeker.JobSeekerFlags.IsMatureWorker != userParam.JobSeekerFlags.IsMatureWorker)
+                if (flags.IsMatureWorker != jobSeeker.JobSeekerFlags.IsMatureWorker)
                 {
                     var changeEventIsMature = new JobSeekerChangeEvent()
                     {
                         Field = "Mature edited",
-                        OldValue = jobSeeker.JobSeekerFlags.IsMatureWorker ? "Yes" : "No",
-                        NewValue = userParam.JobSeekerFlags.IsMatureWorker ? "Yes" : "No",
-                        AspNetUserId = userParam.Id,
+                        OldValue = flags.IsMatureWorker ? "Yes" : "No",
+                        NewValue = jobSeeker.JobSeekerFlags.IsMatureWorker ? "Yes" : "No",
+                        AspNetUserId = jobSeeker.Id,
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsMature);
+                    jobSeekerChangeEvents.Add(changeEventIsMature);
+                    //await _context.JobSeekerChangeLog.AddAsync(changeEventIsMature);
 
-                    jobSeeker.JobSeekerFlags.IsMatureWorker = userParam.JobSeekerFlags.IsMatureWorker;
+                    flags.IsMatureWorker = jobSeeker.JobSeekerFlags.IsMatureWorker;
                     modified = true;
                 }
 
-                if (jobSeeker.JobSeekerFlags.IsNewImmigrant != userParam.JobSeekerFlags.IsNewImmigrant)
+                if (flags.IsNewImmigrant != jobSeeker.JobSeekerFlags.IsNewImmigrant)
                 {
                     var changeEventIsNewImmigrant = new JobSeekerChangeEvent
                     {
                         Field = "Newcomer to B.C. edited",
-                        OldValue = jobSeeker.JobSeekerFlags.IsNewImmigrant ? "Yes" : "No",
-                        NewValue = userParam.JobSeekerFlags.IsNewImmigrant ? "Yes" : "No",
-                        AspNetUserId = userParam.Id,
+                        OldValue = flags.IsNewImmigrant ? "Yes" : "No",
+                        NewValue = jobSeeker.JobSeekerFlags.IsNewImmigrant ? "Yes" : "No",
+                        AspNetUserId = jobSeeker.Id,
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsNewImmigrant);
+                    jobSeekerChangeEvents.Add(changeEventIsNewImmigrant);
+                    //await _context.JobSeekerChangeLog.AddAsync(changeEventIsNewImmigrant);
 
-                    jobSeeker.JobSeekerFlags.IsNewImmigrant = userParam.JobSeekerFlags.IsNewImmigrant;
+                    flags.IsNewImmigrant = jobSeeker.JobSeekerFlags.IsNewImmigrant;
                     modified = true;
                 }
 
-                if (jobSeeker.JobSeekerFlags.IsPersonWithDisability != userParam.JobSeekerFlags.IsPersonWithDisability)
+                if (flags.IsPersonWithDisability != jobSeeker.JobSeekerFlags.IsPersonWithDisability)
                 {
                     var changeEventIsPersonWithDisability = new JobSeekerChangeEvent
                     {
                         Field = "Person with a disability edited",
-                        OldValue = jobSeeker.JobSeekerFlags.IsPersonWithDisability ? "Yes" : "No",
-                        NewValue = userParam.JobSeekerFlags.IsPersonWithDisability ? "Yes" : "No",
-                        AspNetUserId = userParam.Id,
+                        OldValue = flags.IsPersonWithDisability ? "Yes" : "No",
+                        NewValue = jobSeeker.JobSeekerFlags.IsPersonWithDisability ? "Yes" : "No",
+                        AspNetUserId = jobSeeker.Id,
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsPersonWithDisability);
+                    jobSeekerChangeEvents.Add(changeEventIsPersonWithDisability);
+                    //await _context.JobSeekerChangeLog.AddAsync(changeEventIsPersonWithDisability);
 
-                    jobSeeker.JobSeekerFlags.IsPersonWithDisability = userParam.JobSeekerFlags.IsPersonWithDisability;
+                    flags.IsPersonWithDisability = jobSeeker.JobSeekerFlags.IsPersonWithDisability;
                     modified = true;
                 }
 
-                if (jobSeeker.JobSeekerFlags.IsStudent != userParam.JobSeekerFlags.IsStudent)
+                if (flags.IsStudent != jobSeeker.JobSeekerFlags.IsStudent)
                 {
                     var changeEventIsStudent = new JobSeekerChangeEvent()
                     {
                         Field = "Student edited",
-                        OldValue = jobSeeker.JobSeekerFlags.IsStudent ? "Yes" : "No",
-                        NewValue = userParam.JobSeekerFlags.IsStudent ? "Yes" : "No",
-                        AspNetUserId = userParam.Id,
+                        OldValue = flags.IsStudent ? "Yes" : "No",
+                        NewValue = jobSeeker.JobSeekerFlags.IsStudent ? "Yes" : "No",
+                        AspNetUserId = jobSeeker.Id,
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsStudent);
+                    jobSeekerChangeEvents.Add(changeEventIsStudent);
+                    //await _context.JobSeekerChangeLog.AddAsync(changeEventIsStudent);
 
-                    jobSeeker.JobSeekerFlags.IsStudent = userParam.JobSeekerFlags.IsStudent;
+                    flags.IsStudent = jobSeeker.JobSeekerFlags.IsStudent;
                     modified = true;
                 }
 
-                if (jobSeeker.JobSeekerFlags.IsVeteran != userParam.JobSeekerFlags.IsVeteran)
+                if (flags.IsVeteran != jobSeeker.JobSeekerFlags.IsVeteran)
                 {
                     var changeEventIsVeteran = new JobSeekerChangeEvent()
                     {
                         Field = "Veteran of the Canadian Armed Forces edited",
-                        OldValue = jobSeeker.JobSeekerFlags.IsVeteran ? "Yes" : "No",
-                        NewValue = userParam.JobSeekerFlags.IsVeteran ? "Yes" : "No",
-                        AspNetUserId = userParam.Id,
+                        OldValue = flags.IsVeteran ? "Yes" : "No",
+                        NewValue = jobSeeker.JobSeekerFlags.IsVeteran ? "Yes" : "No",
+                        AspNetUserId = jobSeeker.Id,
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsVeteran);
+                    jobSeekerChangeEvents.Add(changeEventIsVeteran);
+                    //await _context.JobSeekerChangeLog.AddAsync(changeEventIsVeteran);
 
-                    jobSeeker.JobSeekerFlags.IsVeteran = userParam.JobSeekerFlags.IsVeteran;
+                    flags.IsVeteran = jobSeeker.JobSeekerFlags.IsVeteran;
                     modified = true;
                 }
 
-                if (jobSeeker.JobSeekerFlags.IsVisibleMinority != userParam.JobSeekerFlags.IsVisibleMinority)
+                if (flags.IsVisibleMinority != jobSeeker.JobSeekerFlags.IsVisibleMinority)
                 {
                     var changeEventIsVisibleMinority = new JobSeekerChangeEvent()
                     {
                         Field = "Visible minority edited",
-                        OldValue = jobSeeker.JobSeekerFlags.IsVisibleMinority ? "Yes" : "No",
-                        NewValue = userParam.JobSeekerFlags.IsVisibleMinority ? "Yes" : "No",
-                        AspNetUserId = userParam.Id,
+                        OldValue = flags.IsVisibleMinority ? "Yes" : "No",
+                        NewValue = jobSeeker.JobSeekerFlags.IsVisibleMinority ? "Yes" : "No",
+                        AspNetUserId = jobSeeker.Id,
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsVisibleMinority);
+                    jobSeekerChangeEvents.Add(changeEventIsVisibleMinority);
+                    //await _context.JobSeekerChangeLog.AddAsync(changeEventIsVisibleMinority);
 
-                    jobSeeker.JobSeekerFlags.IsVisibleMinority = userParam.JobSeekerFlags.IsVisibleMinority;
+                    flags.IsVisibleMinority = jobSeeker.JobSeekerFlags.IsVisibleMinority;
                     modified = true;
                 }
 
-                if (jobSeeker.JobSeekerFlags.IsYouth != userParam.JobSeekerFlags.IsYouth)
+                if (flags.IsYouth != jobSeeker.JobSeekerFlags.IsYouth)
                 {
                     var changeEventIsYouth = new JobSeekerChangeEvent()
                     {
                         Field = "Youth edited",
-                        OldValue = jobSeeker.JobSeekerFlags.IsYouth ? "Yes" : "No",
-                        NewValue = userParam.JobSeekerFlags.IsYouth ? "Yes" : "No",
-                        AspNetUserId = userParam.Id,
+                        OldValue = flags.IsYouth ? "Yes" : "No",
+                        NewValue = jobSeeker.JobSeekerFlags.IsYouth ? "Yes" : "No",
+                        AspNetUserId = jobSeeker.Id,
                         DateUpdated = DateTime.Now,
                         ModifiedByAdminUserId = adminUserId
                     };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventIsYouth);
+                    jobSeekerChangeEvents.Add(changeEventIsYouth);
+                    //await _context.JobSeekerChangeLog.AddAsync(changeEventIsYouth);
 
-                    jobSeeker.JobSeekerFlags.IsYouth = userParam.JobSeekerFlags.IsYouth;
+                    flags.IsYouth = jobSeeker.JobSeekerFlags.IsYouth;
                     modified = true;
                 }
+            }
+            foreach(JobSeekerChangeEvent j in jobSeekerChangeEvents)
+            {
+                await _context.JobSeekerChangeLog.AddAsync(j);
             }
             return modified;
         }
