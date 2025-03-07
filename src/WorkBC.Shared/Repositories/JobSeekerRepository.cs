@@ -716,15 +716,23 @@ namespace WorkBC.Shared.Repositories
             if(modified)
             {
                 var changeEvents = new JobSeekerChangeEvent();
+                var fields = new List<string>();
+                var oldValues = new List<string>();
+                var newValues = new List<string>();
                 foreach (JobSeekerChangeEvent j in jobSeekerChangeEvents)
                 {
-                    changeEvents.Field = changeEvents.Field + "," + j.Field;
-                    changeEvents.OldValue = changeEvents.OldValue + "," + j.OldValue;
-                    changeEvents.NewValue = changeEvents.NewValue + "," + j.NewValue;
+                    fields.Add(j.Field);
+                    oldValues.Add(j.OldValue);
+                    newValues.Add(j.NewValue);
                     changeEvents.AspNetUserId = j.AspNetUserId;
                     changeEvents.DateUpdated = DateTime.Now;
                     changeEvents.ModifiedByAdminUserId = j.ModifiedByAdminUserId;
                 }
+
+                changeEvents.Field = string.Join(", ", fields);
+                changeEvents.OldValue = string.Join(", ", oldValues);
+                changeEvents.NewValue = string.Join(", ", newValues);
+
                 await _context.JobSeekerChangeLog.AddAsync(changeEvents);
             }
             return modified;
