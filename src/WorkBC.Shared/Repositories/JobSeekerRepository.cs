@@ -713,9 +713,19 @@ namespace WorkBC.Shared.Repositories
                     modified = true;
                 }
             }
-            foreach(JobSeekerChangeEvent j in jobSeekerChangeEvents)
+            if(modified)
             {
-                await _context.JobSeekerChangeLog.AddAsync(j);
+                var changeEvents = new JobSeekerChangeEvent();
+                foreach (JobSeekerChangeEvent j in jobSeekerChangeEvents)
+                {
+                    changeEvents.Field = changeEvents.Field + "," + j.Field;
+                    changeEvents.OldValue = changeEvents.OldValue + "," + j.OldValue;
+                    changeEvents.NewValue = changeEvents.NewValue + "," + j.NewValue;
+                    changeEvents.AspNetUserId = j.AspNetUserId;
+                    changeEvents.DateUpdated = DateTime.Now;
+                    changeEvents.ModifiedByAdminUserId = j.ModifiedByAdminUserId;
+                }
+                await _context.JobSeekerChangeLog.AddAsync(changeEvents);
             }
             return modified;
         }
