@@ -82,8 +82,8 @@ resource "aws_rds_cluster" "postgres_babelfish" {
   final_snapshot_identifier 	 = "jbabel-finalsnapshot"
   
   serverlessv2_scaling_configuration {
-    max_capacity = 2.0
-    min_capacity = 1.0
+    max_capacity = 8.0
+    min_capacity = 4.0
   }
 
   tags = var.common_tags
