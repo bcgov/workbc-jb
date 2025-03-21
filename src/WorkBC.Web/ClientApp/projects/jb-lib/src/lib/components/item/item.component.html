@@ -18,7 +18,7 @@
       <div *ngIf="!item.IsFederalJob">
         <strong>Source: </strong>{{item.ExternalSource?.Source.length > 0 ? item.ExternalSource.Source[0].Source : 'N/A'}}
       </div>
-      <div class="location" *ngIf="item.City != 'Unavailable'">
+      <div class="location" *ngIf="item.City && item.City != 'Unavailable'">
         <strong>Location: </strong>{{item.City}}
       </div>
       <div class="salary">
