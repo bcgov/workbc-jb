@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Serilog.Extensions.Logging;
 using StackExchange.Redis;
 using System;
 using System.IO;
@@ -92,6 +93,11 @@ namespace WorkBC.Web
             IConfigurationSection appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
             _appSettings = appSettingsSection.Get<AppSettings>();
+
+            //Temp logs
+            var logger1 = new SerilogLoggerFactory().CreateLogger<Startup>();
+            logger1.LogWarning("WorkBC Web logs- Value of UseRedisCache setting is :" + _appSettings.UseRedisCache);
+
             // EmailSettings
             IConfigurationSection emailSettingsSection = Configuration.GetSection("EmailSettings");
             services.Configure<EmailSettings>(emailSettingsSection);
@@ -216,6 +222,9 @@ namespace WorkBC.Web
             {
                 ConfigurationOptions redisOptions =
                     ConfigurationOptions.Parse(Configuration.GetConnectionString("Redis"));
+                //Temp logs
+                var logger2 = new SerilogLoggerFactory().CreateLogger<Startup>();
+                logger2.LogWarning("WorkBC Web logs- Value of redisOptions.Sslhost setting is :" + redisOptions.SslHost);
 
                 redisOptions.TieBreaker = "";
                 redisOptions.AllowAdmin = true;

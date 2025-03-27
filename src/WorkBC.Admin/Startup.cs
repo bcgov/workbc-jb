@@ -83,10 +83,16 @@ namespace WorkBC.Admin
             services.AddScoped(db => new DapperContext(connectionString));
 
             //Cache
+            //Temp logs
+            var logger1 = new SerilogLoggerFactory().CreateLogger<Startup>();
+            logger1.LogWarning("WorkBC Admin logs- Value of UseRedisCache setting is :" + Configuration["AppSettings:UseRedisCache"]);
+            
             if (Configuration["AppSettings:UseRedisCache"] == "true")
             {
                 ConfigurationOptions redisOptions =
                     ConfigurationOptions.Parse(Configuration.GetConnectionString("Redis"));
+
+                logger1.LogWarning("WorkBC Admin logs- Value of redisOptions.SslHost setting is :" + redisOptions.SslHost);
 
                 redisOptions.TieBreaker = "";
                 redisOptions.AllowAdmin = true;
