@@ -85,8 +85,7 @@ namespace WorkBC.Admin
             //Cache
             //Temp logs
             var logger1 = new SerilogLoggerFactory().CreateLogger<Startup>();
-            logger1.LogWarning("WorkBC Admin logs- Value of UseRedisCache setting is :" + Configuration["AppSettings:UseRedisCache"]);
-
+  
             if (Configuration["AppSettings:UseRedisCache"] == "true")
             {
                 ConfigurationOptions redisOptions =
