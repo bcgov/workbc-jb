@@ -14,7 +14,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
-using Serilog.Extensions.Logging;
 using StackExchange.Redis;
 using System;
 using System.IO;
