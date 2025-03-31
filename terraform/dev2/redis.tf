@@ -10,6 +10,7 @@ resource "aws_elasticache_replication_group" "jb_redis_rg" {
 	parameter_group_name		=	"default.redis6.x"
 	engine_version = "6.x"
 	port				=	6379
+	apply_immediately = true
 	
 	lifecycle {
 		ignore_changes	=	[num_cache_clusters]
