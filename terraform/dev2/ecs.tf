@@ -99,7 +99,7 @@ resource "aws_ecs_task_definition" "app" {
 			},
 			{
 				name = "ConnectionStrings__Redis",
-				value = "${aws_elasticache_replication_group.jb_redis_rg.primary_endpoint_address}"
+				value = "${aws_elasticache_replication_group.jb_redis_rg.primary_endpoint_address}:${aws_elasticache_replication_group.jb_redis_rg.port}"
 			},
 			{
 				name = "EmailSettings__UseSes",
