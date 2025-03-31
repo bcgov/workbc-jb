@@ -220,8 +220,7 @@ namespace WorkBC.Web
                 //Temp logs
                 var logger1 = new SerilogLoggerFactory().CreateLogger<Startup>();
                 logger1.LogWarning("WorkBC Web logs- Value of UseRedisCache setting is :" + _appSettings.UseRedisCache);
-                logger1.LogWarning("WorkBC Web logs- Value of redisOptions.Sslhost setting is :" + redisOptions.SslHost);
-                
+                logger1.LogWarning("WorkBC Web logs- Value of redisOptions.Sslhost setting is :" + redisOptions.SslHost);                
                 redisOptions.TieBreaker = "";
                 redisOptions.AllowAdmin = true;
                 redisOptions.AbortOnConnectFail = false;
