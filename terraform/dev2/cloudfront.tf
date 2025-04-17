@@ -5,7 +5,7 @@ resource "random_integer" "cf_origin_id" {
   max = 100
 }
 
-resource "aws_cloudfront_distribution" "workbc-jb-noc" {
+resource "aws_cloudfront_distribution" "workbc-jb-dev2" {
 
   count = var.cloudfront ? 1 : 0
 
@@ -23,14 +23,14 @@ resource "aws_cloudfront_distribution" "workbc-jb-noc" {
 	
 	custom_header {
 	  name = "X-Forwarded-Host"
-	  value = "devnoc-api-jobboard.workbc.ca"
+	  value = "dev2-api-jobboard.workbc.ca"
 	}
 	
   }
 
   enabled         = true
   is_ipv6_enabled = true
-  comment         = "WorkBC NOC JobBoard API"
+  comment         = "WorkBC DEV2 JobBoard API"
 
   default_cache_behavior {
     allowed_methods = [
@@ -76,7 +76,7 @@ resource "aws_cloudfront_distribution" "workbc-jb-noc" {
 
   tags = var.common_tags
   
-  aliases = ["devnoc-api-jobboard.workbc.ca"]
+  aliases = ["dev2-api-jobboard.workbc.ca"]
 
   viewer_certificate {
     acm_certificate_arn = "arn:aws:acm:us-east-1:873424993519:certificate/1e340149-4680-45d0-9897-5a628ff04d07"
@@ -86,7 +86,7 @@ resource "aws_cloudfront_distribution" "workbc-jb-noc" {
 }
 
 output "cloudfront_url" {
-  value = "https://${aws_cloudfront_distribution.workbc-jb-noc[0].domain_name}"
+  value = "https://${aws_cloudfront_distribution.workbc-jb-dev2[0].domain_name}"
 
 }
 

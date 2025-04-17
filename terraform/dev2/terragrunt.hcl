@@ -17,9 +17,9 @@ generate "dev_tfvars" {
   contents          = <<-EOF
     alb_name = "default"
     cloudfront = true
-    cloudfront_origin_domain = "workbc-jb-noc.${local.project}-dev.nimbus.cloud.gov.bc.ca"
-	cloudfront_origin_domain2 = "workbc-jb-noc-adm.${local.project}-dev.nimbus.cloud.gov.bc.ca"
-    service_names = ["workbc-jb-noc"]
-	service_names2 = ["workbc-jb-noc-adm"]
+    cloudfront_origin_domain = "workbc-jb-dev2.${local.project}-dev.nimbus.cloud.gov.bc.ca"
+	cloudfront_origin_domain2 = "workbc-jb-dev2-adm.${local.project}-dev.nimbus.cloud.gov.bc.ca"
+    service_names = ["workbc-jb-dev2"]
+	service_names2 = ["workbc-jb-dev2-adm"]
   EOF
 }

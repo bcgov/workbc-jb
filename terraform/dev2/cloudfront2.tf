@@ -1,6 +1,6 @@
 # cloudfront.tf
 
-resource "aws_cloudfront_distribution" "workbc-jb-noc-adm" {
+resource "aws_cloudfront_distribution" "workbc-jb-dev2-adm" {
 
   count = var.cloudfront ? 1 : 0
 
@@ -18,14 +18,14 @@ resource "aws_cloudfront_distribution" "workbc-jb-noc-adm" {
 	
 	custom_header {
 	  name = "X-Forwarded-Host"
-	  value = "devnoc-admin-jobboard.workbc.ca"
+	  value = "dev2-admin-jobboard.workbc.ca"
 	}
 	
   }
 
   enabled         = true
   is_ipv6_enabled = true
-  comment         = "WorkBC NOC JobBoard Admin"
+  comment         = "WorkBC DEV2 JobBoard Admin"
 
   default_cache_behavior {
     allowed_methods = [
@@ -68,7 +68,7 @@ resource "aws_cloudfront_distribution" "workbc-jb-noc-adm" {
 
   tags = var.common_tags
   
-  aliases = ["devnoc-admin-jobboard.workbc.ca"]
+  aliases = ["dev2-admin-jobboard.workbc.ca"]
 
   viewer_certificate {
     acm_certificate_arn = "arn:aws:acm:us-east-1:873424993519:certificate/1e340149-4680-45d0-9897-5a628ff04d07"
@@ -78,7 +78,7 @@ resource "aws_cloudfront_distribution" "workbc-jb-noc-adm" {
 }
 
 output "cloudfront_url2" {
-  value = "https://${aws_cloudfront_distribution.workbc-jb-noc-adm[0].domain_name}"
+  value = "https://${aws_cloudfront_distribution.workbc-jb-dev2-adm[0].domain_name}"
 
 }
 

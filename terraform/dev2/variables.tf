@@ -32,7 +32,7 @@ variable "ecs_task_execution_role_name" {
 variable "app_name" {
   description = "Name of the application"
   type        = string
-  default     = "workbc-jb-noc"
+  default     = "workbc-jb-dev2"
 }
 
 variable "app_image" {
@@ -90,19 +90,19 @@ variable "fargate_memory" {
 variable "common_tags" {
   description = "Common tags for created resources"
   default = {
-    Application = "WorkBC JobBoard NOC"
+    Application = "WorkBC JobBoard DEV2"
   }
 }
 
 variable "service_names" {
   description = "List of service names to use as subdomains"
-  default     = ["workbc-jb-noc"]
+  default     = ["workbc-jb-dev2"]
   type        = list(string)
 }
 
 variable "service_names2" {
   description = "List of service names to use as subdomains"
-  default     = ["workbc-jb-noc-adm"]
+  default     = ["workbc-jb-dev2-adm"]
   type        = list(string)
 }
 

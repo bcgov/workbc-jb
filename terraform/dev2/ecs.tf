@@ -38,7 +38,7 @@ resource "aws_ecs_task_definition" "app" {
 			logDriver = "awslogs"
 			options = {
 				awslogs-create-group  = "true"
-				awslogs-group         = "/ecs/workbc-jb-noc-migration"
+				awslogs-group         = "/ecs/workbc-jb-dev2-migration"
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
@@ -70,7 +70,7 @@ resource "aws_ecs_task_definition" "app" {
 			logDriver = "awslogs"
 			options = {
 				awslogs-create-group  = "true"
-				awslogs-group         = "/ecs/workbc-jb-noc"
+				awslogs-group         = "/ecs/workbc-jb-dev2"
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
@@ -119,11 +119,11 @@ resource "aws_ecs_task_definition" "app" {
 			},
 			{
 				name = "AppSettings__JbAccountUrl",
-				value = "https://devnoc.workbc.ca/account"
+				value = "https://dev2.workbc.ca/account"
 			},
 			{
 				name = "AppSettings__JbSearchUrl",
-				value = "https://devnoc.workbc.ca/search-and-prepare-job/find-jobs"
+				value = "https://dev2.workbc.ca/search-and-prepare-job/find-jobs"
 			},
 			{
 				name = "AppSettings__ApplyMigrations",
@@ -178,7 +178,7 @@ resource "aws_ecs_task_definition" "app" {
 			logDriver = "awslogs"
 			options = {
 				awslogs-create-group  = "true"
-				awslogs-group         = "/ecs/workbc-jb-noc-admin"
+				awslogs-group         = "/ecs/workbc-jb-dev2-admin"
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
@@ -227,11 +227,11 @@ resource "aws_ecs_task_definition" "app" {
 			},
 			{
 				name = "AppSettings__JbAccountUrl",
-				value = "https://devnoc.workbc.ca/account"
+				value = "https://dev2.workbc.ca/account"
 			},
 			{
 				name = "AppSettings__JbSearchUrl",
-				value = "https://devnoc.workbc.ca/search-and-prepare-job/find-jobs"
+				value = "https://dev2.workbc.ca/search-and-prepare-job/find-jobs"
 			},
 			{
 				name = "AppSettings__ApplyMigrations",
@@ -282,7 +282,7 @@ resource "aws_ecs_task_definition" "app" {
 			logDriver = "awslogs"
 			options = {
 				awslogs-create-group  = "true"
-				awslogs-group         = "/ecs/workbc-jb-noc-cli"
+				awslogs-group         = "/ecs/workbc-jb-dev2-cli"
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}

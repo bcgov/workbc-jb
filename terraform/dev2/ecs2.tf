@@ -20,7 +20,7 @@ resource "aws_ecs_task_definition" "import-job" {
 			logDriver = "awslogs"
 			options = {
 				awslogs-create-group  = "true"
-				awslogs-group         = "/ecs/workbc-jb-noc-wanted-importer"
+				awslogs-group         = "/ecs/workbc-jb-dev2-wanted-importer"
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
@@ -54,7 +54,7 @@ resource "aws_ecs_task_definition" "import-job" {
 			logDriver = "awslogs"
 			options = {
 				awslogs-create-group  = "true"
-				awslogs-group         = "/ecs/workbc-jb-noc-wanted-indexer"
+				awslogs-group         = "/ecs/workbc-jb-dev2-wanted-indexer"
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
@@ -102,7 +102,7 @@ resource "aws_ecs_task_definition" "import-job" {
 			logDriver = "awslogs"
 			options = {
 				awslogs-create-group  = "true"
-				awslogs-group         = "/ecs/workbc-jb-noc-federal-importer"
+				awslogs-group         = "/ecs/workbc-jb-dev2-federal-importer"
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
@@ -146,7 +146,7 @@ resource "aws_ecs_task_definition" "import-job" {
 			logDriver = "awslogs"
 			options = {
 				awslogs-create-group  = "true"
-				awslogs-group         = "/ecs/workbc-jb-noc-federal-indexer"
+				awslogs-group         = "/ecs/workbc-jb-dev2-federal-indexer"
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
@@ -239,7 +239,7 @@ resource "aws_ecs_task_definition" "notify-job" {
 			logDriver = "awslogs"
 			options = {
 				awslogs-create-group  = "true"
-				awslogs-group         = "/ecs/workbc-jb-noc-notifications"
+				awslogs-group         = "/ecs/workbc-jb-dev2-notifications"
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
@@ -269,7 +269,7 @@ resource "aws_ecs_task_definition" "notify-job" {
 			},
 			{
 				name = "AppSettings__JbSearchUrl",
-				value = "https://devnoc.workbc.ca/search-and-prepare-job/find-jobs"
+				value = "https://dev2.workbc.ca/search-and-prepare-job/find-jobs"
 			},
 			{
 				name = "AppSettings__SendEmailTestingTo",
