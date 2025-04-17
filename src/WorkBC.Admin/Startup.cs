@@ -70,24 +70,27 @@ namespace WorkBC.Admin
             // We need to hook up IdentityService in the admin site so we can get an instance of the UserManager to
             // add and edit users.  It's not actually used for logins on the admin site (Keycloak is used instead).
             services.AddDefaultIdentity<JobSeeker>(options =>
-                {
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireLowercase = false;
-                    options.SignIn.RequireConfirmedEmail = true;
-                    // don't restrict characters allowed in usernames (trust email address validation instead)
-                    options.User.AllowedUserNameCharacters = null;
-                })
+            {
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.SignIn.RequireConfirmedEmail = true;
+                // don't restrict characters allowed in usernames (trust email address validation instead)
+                options.User.AllowedUserNameCharacters = null;
+            })
                 .AddEntityFrameworkStores<JobBoardContext>();
 
             // Custom Dapper DB context
             services.AddScoped(db => new DapperContext(connectionString));
 
-            //Cache
+            //Cache  
+            //Temp logs
+            var logger1 = new SerilogLoggerFactory().CreateLogger<Startup>();
+            logger1.LogWarning("WorkBC Admin logs- Value of UseRedisCache setting is :" + Configuration["AppSettings:UseRedisCache"]);
             if (Configuration["AppSettings:UseRedisCache"] == "true")
             {
                 ConfigurationOptions redisOptions =
                     ConfigurationOptions.Parse(Configuration.GetConnectionString("Redis"));
-
+                logger1.LogWarning("WorkBC Admin logs- Value of redisOptions.SslHost setting is :" + redisOptions.SslHost);                
                 redisOptions.TieBreaker = "";
                 redisOptions.AllowAdmin = true;
                 redisOptions.AbortOnConnectFail = false;
@@ -105,10 +108,10 @@ namespace WorkBC.Admin
             services.AddTransient<SelectListService>();
 
             services.AddAuthentication(options =>
-                {
-                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                })
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            })
                 .AddCookie(options =>
                 {
                     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;

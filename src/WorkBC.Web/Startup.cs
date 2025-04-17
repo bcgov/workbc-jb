@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Serilog.Extensions.Logging;
 using StackExchange.Redis;
 using System;
 using System.IO;
@@ -65,19 +66,19 @@ namespace WorkBC.Web
             services.AddDbContext<JobBoardContext>(options =>
                 options
                     .EnableSensitiveDataLogging()
-                    .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")), 
+                    .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")),
                 ServiceLifetime.Transient);
 
             services.AddDefaultIdentity<JobSeeker>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;
-                options.SignIn.RequireConfirmedEmail = true; 
+                options.SignIn.RequireConfirmedEmail = true;
                 // lockout for 10 minutes after 50 failed login attempts
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
                 // don't restrict characters allowed in usernames (trust email address validation instead)
-                options.User.AllowedUserNameCharacters = null; 
+                options.User.AllowedUserNameCharacters = null;
             })
                 .AddEntityFrameworkStores<JobBoardContext>();
 
@@ -91,7 +92,7 @@ namespace WorkBC.Web
             // AppSettings
             IConfigurationSection appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
-            _appSettings = appSettingsSection.Get<AppSettings>();
+            _appSettings = appSettingsSection.Get<AppSettings>();           
             // EmailSettings
             IConfigurationSection emailSettingsSection = Configuration.GetSection("EmailSettings");
             services.Configure<EmailSettings>(emailSettingsSection);
@@ -114,10 +115,10 @@ namespace WorkBC.Web
 
             // configure jwt authentication
             services.AddAuthentication(x =>
-                {
-                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
                 .AddJwtBearer(x =>
                 {
                     x.Events = new JwtBearerEvents
@@ -216,7 +217,10 @@ namespace WorkBC.Web
             {
                 ConfigurationOptions redisOptions =
                     ConfigurationOptions.Parse(Configuration.GetConnectionString("Redis"));
-
+                //Temp logs
+                var logger1 = new SerilogLoggerFactory().CreateLogger<Startup>();
+                logger1.LogWarning("WorkBC Web logs- Value of UseRedisCache setting is :" + _appSettings.UseRedisCache);
+                logger1.LogWarning("WorkBC Web logs- Value of redisOptions.Sslhost setting is :" + redisOptions.SslHost);                
                 redisOptions.TieBreaker = "";
                 redisOptions.AllowAdmin = true;
                 redisOptions.AbortOnConnectFail = false;
