@@ -69,7 +69,7 @@ resource "aws_rds_cluster_parameter_group" "babelfish_pg" {
 resource "aws_rds_cluster" "postgres_babelfish" {
   cluster_identifier		 = "jb-babeldb-final"
   engine 			 = "aurora-postgresql"
-  engine_version		 = "16.4"
+  engine_version		 = "16.6"
   master_username		 = local.db_creds.username
   master_password     		 = local.db_creds.babelpassword
   backup_retention_period	 = 5
