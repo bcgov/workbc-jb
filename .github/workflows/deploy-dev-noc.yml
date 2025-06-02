@@ -1,9 +1,9 @@
-name: Deploy-Dev-NOC
+name: Deploy-Dev2
 
 on:
   workflow_run:
     workflows:
-      - CI-NOC
+      - CI-DEV2
     types:
       - completed
 

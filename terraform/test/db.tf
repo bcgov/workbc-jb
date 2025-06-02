@@ -69,7 +69,7 @@ resource "aws_rds_cluster_parameter_group" "babelfish_pg" {
 resource "aws_rds_cluster" "postgres_babelfish" {
   cluster_identifier		 = "jb-babeldb-final"
   engine 			 = "aurora-postgresql"
-  engine_version		 = "16.4"
+  engine_version		 = "16.6"
   master_username		 = local.db_creds.username
   master_password     		 = local.db_creds.babelpassword
   backup_retention_period	 = 5
@@ -82,8 +82,8 @@ resource "aws_rds_cluster" "postgres_babelfish" {
   final_snapshot_identifier 	 = "jbabel-finalsnapshot"
   
   serverlessv2_scaling_configuration {
-    max_capacity = 2.0
-    min_capacity = 1.0
+    max_capacity = 8.0
+    min_capacity = 4.0
   }
 
   tags = var.common_tags
