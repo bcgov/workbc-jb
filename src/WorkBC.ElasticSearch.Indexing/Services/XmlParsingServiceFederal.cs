@@ -905,10 +905,9 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             var maxWeeklySalary = 100000m;
             var maxYearlySalary = 5000000m;
 
-            // Minimum is wage as at June 2024. This doesn't have to be exact.  The purpose of
+            // Minimum wage was added as SystemSettings in June 2025. The purpose of
             // this is to filter out some bad data coming from the national job bank, not to ensure,
-            // that employers pay minimum wage.            
-            //const decimal minimumWage = 17.40m;
+            // that employers pay minimum wage.  
             
             SystemSetting systemSetting = _jobBoardContext.SystemSettings.FirstOrDefault(s => s.Name == "shared.settings.minimumWage");
             decimal minimumWage = Convert.ToDecimal(systemSetting.Value);

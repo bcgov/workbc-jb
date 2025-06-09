@@ -13,7 +13,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.InsertData(
                 table: "SystemSettings",
                 columns: new[] { "Name", "Value", "Description", "FieldType", "ModifiedByAdminUserId", "DateUpdated", "DefaultValue" },
-                values: new object[] { "shared.settings.minimumWage", "17.48", "shared.settings.minimumWage", 1, 1, DateTime.Now, "17.48"});
+                values: new object[] { "shared.settings.minimumWage", "17.85", "shared.settings.minimumWage", 1, 1, DateTime.Now, "17.85"});
 
         }
 
