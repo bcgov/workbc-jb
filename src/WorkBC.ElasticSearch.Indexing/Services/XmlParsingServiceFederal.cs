@@ -1,14 +1,18 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml;
-using Microsoft.Extensions.Configuration;
+using System.Xml.Linq;
+using WorkBC.Data;
+using WorkBC.Data.Migrations;
 using WorkBC.Data.Model.JobBoard;
 using WorkBC.ElasticSearch.Indexing.XmlParsingHelpers;
 using WorkBC.Shared.Constants;
 using WorkBC.Shared.Extensions;
 using WorkBC.Shared.Services;
+using WorkBC.Shared.Settings;
 
 namespace WorkBC.ElasticSearch.Indexing.Services
 {
@@ -24,15 +28,17 @@ namespace WorkBC.ElasticSearch.Indexing.Services
         private readonly IGeocodingService _geocodingService;
         //NOC-387-Special case scenario fix for NOC 2021 codes 00011 to 00015
         private List<int> specialNocs = new List<int>() { 00011, 00012, 00013, 00014, 00015 };
+        private readonly JobBoardContext _jobBoardContext;
 
 
 
         public XmlParsingServiceFederal(IConfiguration configuration) : base(configuration)
         {
             _geocodingService = new GeocodingService(JobBoardContext, configuration);
+            _jobBoardContext = JobBoardContext;
         }
 
-        public XmlParsingServiceFederal(List<Data.Model.JobBoard.Location> duplicateCities,
+        public XmlParsingServiceFederal(List<Data.Model.JobBoard.Location> duplicateCities, 
             Dictionary<string, string> uniqueCities, List<NocCode> nocCodes, List<NocCode2021> nocCodes2021, IGeocodingService geocodingService) : base(duplicateCities, uniqueCities, nocCodes, nocCodes2021)
         {
             this._geocodingService = geocodingService;
@@ -901,8 +907,11 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
             // Minimum is wage as at June 2024. This doesn't have to be exact.  The purpose of
             // this is to filter out some bad data coming from the national job bank, not to ensure,
-            // that employers pay minimum wage.
-            const decimal minimumWage = 17.40m;
+            // that employers pay minimum wage.            
+            //const decimal minimumWage = 17.40m;
+            
+            SystemSetting systemSetting = _jobBoardContext.SystemSettings.FirstOrDefault(s => s.Name == "shared.settings.minimumWage");
+            decimal minimumWage = Convert.ToDecimal(systemSetting.Value);
 
             // if hourly is going to appear on the job listing, then use hourly wage
             if (salaryString.ToLower().Contains("hour"))
