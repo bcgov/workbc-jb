@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace WorkBC.Shared.SystemSettings
 {
@@ -12,6 +13,7 @@ namespace WorkBC.Shared.SystemSettings
         public JbLibSettings(Dictionary<string, string> settings)
         {
             Settings.DefaultSearchRadius = GetDefaultSearchRadius(settings);
+            Settings.MinimumWage = GetMinimumWage(settings);
 
             Tooltips.NocCode = settings["shared.tooltips.nocCode"];
             Tooltips.UnknownSalaries = settings["shared.tooltips.unknownSalaries"];
@@ -67,10 +69,18 @@ namespace WorkBC.Shared.SystemSettings
             }
         }
 
+        private static decimal GetMinimumWage(Dictionary<string, string> settings)
+        {
+            Decimal.TryParse(settings["shared.settings.minimumWage"], out decimal minimumWage);
+            return minimumWage;
+
+        }
         public class SettingsClass
         {
             public int DefaultSearchRadius { get; set; }
             public bool IsProduction { get; set; }
+
+            public decimal MinimumWage { get; set; }
         }
 
         public class ErrorsClass

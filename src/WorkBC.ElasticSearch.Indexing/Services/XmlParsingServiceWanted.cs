@@ -14,7 +14,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
         {
         }
 
-        public XmlParsingServiceWanted(List<Data.Model.JobBoard.Location> duplicateCities, Dictionary<string, string> uniqueCities, List<NocCode> nocCodes, List<NocCode2021> nocCodes2021) : base(duplicateCities, uniqueCities, nocCodes, nocCodes2021)
+        public XmlParsingServiceWanted(List<Data.Model.JobBoard.Location> duplicateCities, Dictionary<string, string> uniqueCities, List<NocCode> nocCodes, List<NocCode2021> nocCodes2021, List<SystemSetting> systemSettings) : base(duplicateCities, uniqueCities, nocCodes, nocCodes2021, systemSettings)
         {
         }
 

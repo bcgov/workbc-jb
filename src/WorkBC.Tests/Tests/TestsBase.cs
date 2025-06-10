@@ -61,9 +61,10 @@ namespace WorkBC.Tests.Tests
             List<Location> duplicateCities = FakeCityService.GetDuplicateCitiesForIndexing();
             List<NocCode> lstNocs = NocFixture.NocCodes;
             List<NocCode2021> lstNocs2021 = NocFixture.NocCodes2021;
+            List<SystemSetting> systemSettings = SystemSettingsFixture.systemSetting;
 
-            var xmlServiceFederal = new XmlParsingServiceFederal(duplicateCities, uniqueCities, lstNocs, lstNocs2021, GeocodingService);
-            var xmlServiceWanted = new XmlParsingServiceWanted(duplicateCities, uniqueCities, lstNocs, lstNocs2021);
+            var xmlServiceFederal = new XmlParsingServiceFederal(duplicateCities, uniqueCities, lstNocs, lstNocs2021, GeocodingService, systemSettings);
+            var xmlServiceWanted = new XmlParsingServiceWanted(duplicateCities, uniqueCities, lstNocs, lstNocs2021, systemSettings);
 
             ElasticService = new ElasticSearchSetupHelpers(
                 Configuration,

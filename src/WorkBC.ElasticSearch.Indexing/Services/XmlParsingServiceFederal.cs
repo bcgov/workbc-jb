@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml;
-using Microsoft.Extensions.Configuration;
+using System.Xml.Linq;
+using WorkBC.Data;
+using WorkBC.Data.Migrations;
 using WorkBC.Data.Model.JobBoard;
 using WorkBC.ElasticSearch.Indexing.XmlParsingHelpers;
 using WorkBC.Shared.Constants;
@@ -24,16 +27,17 @@ namespace WorkBC.ElasticSearch.Indexing.Services
         private readonly IGeocodingService _geocodingService;
         //NOC-387-Special case scenario fix for NOC 2021 codes 00011 to 00015
         private List<int> specialNocs = new List<int>() { 00011, 00012, 00013, 00014, 00015 };
+        private readonly JobBoardContext _jobBoardContext;
 
 
 
         public XmlParsingServiceFederal(IConfiguration configuration) : base(configuration)
         {
-            _geocodingService = new GeocodingService(JobBoardContext, configuration);
+            _geocodingService = new GeocodingService(JobBoardContext, configuration);         
         }
 
-        public XmlParsingServiceFederal(List<Data.Model.JobBoard.Location> duplicateCities,
-            Dictionary<string, string> uniqueCities, List<NocCode> nocCodes, List<NocCode2021> nocCodes2021, IGeocodingService geocodingService) : base(duplicateCities, uniqueCities, nocCodes, nocCodes2021)
+        public XmlParsingServiceFederal(List<Data.Model.JobBoard.Location> duplicateCities, 
+            Dictionary<string, string> uniqueCities, List<NocCode> nocCodes, List<NocCode2021> nocCodes2021, IGeocodingService geocodingService, List<SystemSetting> systemSettings) : base(duplicateCities, uniqueCities, nocCodes, nocCodes2021, systemSettings)
         {
             this._geocodingService = geocodingService;
         }
@@ -869,6 +873,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             decimal hourlyRate = 0;
             decimal weeklyRate = 0;
             decimal yearlyRate = 0;
+            decimal minimumWage = 0;
             string salaryString = "";
 
             if (hourlyEl != null)
@@ -899,11 +904,20 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             var maxWeeklySalary = 100000m;
             var maxYearlySalary = 5000000m;
 
-            // Minimum is wage as at June 2024. This doesn't have to be exact.  The purpose of
-            // this is to filter out some bad data coming from the national job bank, not to ensure,
-            // that employers pay minimum wage.
-            const decimal minimumWage = 17.40m;
+            // Minimum wage was added as part of SystemSettings in June 2025. The purpose of
+            // this is to filter out the inaccurate data coming from the national job bank, not to ensure,
+            // that employers pay minimum wage.  
 
+            
+            // make sure the system setting is available
+            if (SystemSettings.All(c => c.Name == "shared.settings.minimumWage"))
+            {
+                minimumWage = Convert.ToDecimal(SystemSettings.FirstOrDefault(c => c.Name == "shared.settings.minimumWage").Value);
+                    
+            }
+            
+            
+            //const decimal minimumWage = 17.40m;
             // if hourly is going to appear on the job listing, then use hourly wage
             if (salaryString.ToLower().Contains("hour"))
             {
