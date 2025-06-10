@@ -904,8 +904,8 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             var maxWeeklySalary = 100000m;
             var maxYearlySalary = 5000000m;
 
-            // Minimum wage was added as SystemSettings in June 2025. The purpose of
-            // this is to filter out some bad data coming from the national job bank, not to ensure,
+            // Minimum wage was added as part of SystemSettings in June 2025. The purpose of
+            // this is to filter out the inaccurate data coming from the national job bank, not to ensure,
             // that employers pay minimum wage.  
 
             
