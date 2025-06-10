@@ -13,7 +13,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.InsertData(
                 table: "SystemSettings",
                 columns: new[] { "Name", "Value", "Description", "FieldType", "ModifiedByAdminUserId", "DateUpdated", "DefaultValue" },
-                values: new object[] { "shared.settings.minimumWage", "17.85", "shared.settings.minimumWage", 1, 1, DateTime.Now, "17.85"});
+                values: new object[] { "shared.settings.minimumWage", "17.85", "All job posts should adhere to the new minimum wage increase of $17.85/hr as of June 30, 2025. ", 1, 1, DateTime.Now, "17.85"});
 
         }
 
