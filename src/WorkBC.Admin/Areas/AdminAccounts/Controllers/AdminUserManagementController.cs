@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
-using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -226,19 +225,9 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
             var tenantId = _configuration["AzureAdSettings:TenantId"];
             var clientId = _configuration["AzureAdSettings:ClientId"];
             //var clientSecret = _configuration["AzureAdSettings:ClientSecret"];
+            var clientCert = _configuration["AzureAdSettings:ClientCertificate"];
 
-            //var creds = new ClientSecretCredential(tenantId, clientId, clientSecret);
-
-            var certificatePath = "path/to/your/certificate.pfx"; // Or .cer if no private key
-            //var certificatePassword = "certificate_password"; // If the PFX has a password
-           // string[] scopes = { "https://graph.microsoft.com/.default" };
-
-            // Option 1: Using ClientSecretCredential from Azure.Identity
-            var creds = new ClientSecretCredential(tenantId, clientId, certificatePath);
-
-            //Option 2: Using ClientCredentialCertificateContext (if you don't want to use Azure.Identity)
-            //var certificate = new X509Certificate2(certificatePath, certificatePassword);
-            //var tokenContext = new ClientCredentialCertificateContext(tenantId, clientId, certificate, certificatePassword);
+            var creds = new ClientSecretCredential(tenantId, clientId, clientCert);
 
             GraphServiceClient graphClient = new GraphServiceClient(creds);
 
