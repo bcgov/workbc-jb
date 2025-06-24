@@ -1,14 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Azure.Identity;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using WorkBC.Admin.Areas.AdminAccounts.Models;
 using WorkBC.Admin.Controllers;
 using WorkBC.Admin.Services;
@@ -224,9 +224,10 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
 
             var tenantId = _configuration["AzureAdSettings:TenantId"];
             var clientId = _configuration["AzureAdSettings:ClientId"];
-            var clientSecret = _configuration["AzureAdSettings:ClientSecret"];
+            //var clientSecret = _configuration["AzureAdSettings:ClientSecret"];
+            var clientCert = _configuration["AzureAdSettings:ClientCertificate"];
 
-            var creds = new ClientSecretCredential(tenantId, clientId, clientSecret);
+            var creds = new ClientSecretCredential(tenantId, clientId, clientCert);
 
             GraphServiceClient graphClient = new GraphServiceClient(creds);
 
