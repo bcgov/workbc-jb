@@ -226,6 +226,8 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
             var clientId = _configuration["AzureAdSettings:ClientId"];
             //var clientSecret = _configuration["AzureAdSettings:ClientSecret"];
             var clientCert = _configuration["AzureAdSettings:ClientCertificate"];
+            byte[] data = Convert.FromBase64String(clientCert);
+            string decodedString = System.Text.Encoding.UTF8.GetString(data);
 
             var creds = new ClientSecretCredential(tenantId, clientId, clientCert);
 
