@@ -229,7 +229,7 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
             byte[] data = Convert.FromBase64String(clientCert);
             string decodedString = System.Text.Encoding.UTF8.GetString(data);
 
-            var creds = new ClientSecretCredential(tenantId, clientId, clientCert);
+            var creds = new ClientSecretCredential(tenantId, clientId, decodedString);
 
             GraphServiceClient graphClient = new GraphServiceClient(creds);
 
