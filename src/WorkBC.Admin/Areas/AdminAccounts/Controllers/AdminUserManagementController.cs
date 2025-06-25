@@ -230,13 +230,13 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
             _logger.LogError("Encoded client Cert: " + clientCert);
 
             byte[] data = Convert.FromBase64String(clientCert);
-            string decodedString = System.Text.Encoding.UTF8.GetString(data);
-            _logger.LogError("Decoded client Cert: " + decodedString);
+            //string decodedString = System.Text.Encoding.UTF8.GetString(data);
+            //_logger.LogError("Decoded client Cert: " + decodedString);
 
             //var creds = new ClientSecretCredential(tenantId, clientId, decodedString);
 
             //Option 2: Using ClientCertificateCredential (if you don't want to use Azure.Identity)
-            var certificate = new X509Certificate2(decodedString);
+            var certificate = new X509Certificate2(data);
             var tokenContext = new ClientCertificateCredential(tenantId, clientId, certificate);
 
             GraphServiceClient graphClient = new GraphServiceClient(tokenContext);
