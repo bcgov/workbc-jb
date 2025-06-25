@@ -227,13 +227,16 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
             var clientId = _configuration["AzureAdSettings:ClientId"];
             //var clientSecret = _configuration["AzureAdSettings:ClientSecret"];
             var clientCert = _configuration["AzureAdSettings:ClientCertificate"];
-            //byte[] data = Convert.FromBase64String(clientCert);
-            //string decodedString = System.Text.Encoding.UTF8.GetString(data);
+            _logger.LogError("Encoded client Cert: " + clientCert);
+
+            byte[] data = Convert.FromBase64String(clientCert);
+            string decodedString = System.Text.Encoding.UTF8.GetString(data);
+            _logger.LogError("Decoded client Cert: " + decodedString);
 
             //var creds = new ClientSecretCredential(tenantId, clientId, decodedString);
 
             //Option 2: Using ClientCertificateCredential (if you don't want to use Azure.Identity)
-            var certificate = new X509Certificate2(clientCert);
+            var certificate = new X509Certificate2(decodedString);
             var tokenContext = new ClientCertificateCredential(tenantId, clientId, certificate);
 
             GraphServiceClient graphClient = new GraphServiceClient(tokenContext);
