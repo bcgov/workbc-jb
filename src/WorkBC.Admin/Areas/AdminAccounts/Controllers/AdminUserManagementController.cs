@@ -225,17 +225,11 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
 
             var tenantId = _configuration["AzureAdSettings:TenantId"];
             var clientId = _configuration["AzureAdSettings:ClientId"];
-            //var clientSecret = _configuration["AzureAdSettings:ClientSecret"];
-            var clientCert = _configuration["AzureAdSettings:ClientCertificate"];
-            _logger.LogError("Encoded client Cert: " + clientCert);
-
+            //Read the Client Certificate environment variable rather than the Client Seceret.
+            var clientCert = _configuration["AzureAdSettings:ClientCertificate"];         
             byte[] data = Convert.FromBase64String(clientCert);
-            //string decodedString = System.Text.Encoding.UTF8.GetString(data);
-            //_logger.LogError("Decoded client Cert: " + decodedString);
 
-            //var creds = new ClientSecretCredential(tenantId, clientId, decodedString);
-
-            //Option 2: Using ClientCertificateCredential (if you don't want to use Azure.Identity)
+            //Using ClientCertificateCredential (passing the environment variable from Azure AD settings)
             var certificate = new X509Certificate2(data);
             var tokenContext = new ClientCertificateCredential(tenantId, clientId, certificate);
 
