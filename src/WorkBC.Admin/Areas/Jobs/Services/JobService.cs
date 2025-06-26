@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
 using LinqKit;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using WorkBC.Admin.Areas.Jobs.Models;
@@ -16,6 +17,7 @@ using WorkBC.Admin.Models;
 using WorkBC.Data;
 using WorkBC.Data.Model.JobBoard;
 using WorkBC.Shared.Constants;
+using WorkBC.Shared.Settings;
 using WorkBC.Shared.Utilities;
 using JobSource = WorkBC.Shared.Constants.JobSource;
 
@@ -30,13 +32,15 @@ namespace WorkBC.Admin.Areas.Jobs.Services
 
     public class JobService : IJobService
     {
+
         private readonly IConfiguration _configuration;
         private readonly JobBoardContext _jobBoardContext;
-
+        private readonly ConnectionSettings _connectionSettings;
         public JobService(JobBoardContext jobBoardContext, IConfiguration configuration)
         {
             _jobBoardContext = jobBoardContext;
             _configuration = configuration;
+            configuration.GetSection("ConnectionStrings").Bind(_connectionSettings);
         }
 
 
@@ -178,7 +182,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
                 }
                 else
                 {
-                    //update the job in the expired jobs 
+                    //update the job in the expired jobs
                     existingExpiredJob.DateRemoved = DateTime.Now;
                     existingExpiredJob.RemovedFromElasticsearch = true;
 
@@ -252,7 +256,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
             // search on workbc.ca and jobbank.gc.ca
             if (searchBy.Contains("workbc.ca") || searchBy.Contains("jobbank.gc.ca") || searchBy.Contains("localhost") || searchBy.Contains("idir."))
             {
-                // get the biggest number from the string 
+                // get the biggest number from the string
                 string[] numbers = Regex.Split(searchBy, @"\D+");
                 if (numbers.Any())
                 {

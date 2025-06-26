@@ -39,7 +39,7 @@ namespace WorkBC.Importers.Federal.Services
             {
                 IImportedJob importedJob = DbContext.ImportedJobsFederal.FirstOrDefault(j => j.JobId == jobId);
 
-                //Load english 
+                //Load english
                 if (importedJob != null && importedJob.JobPostEnglish.Length > 0)
                 {
                     string xmlString = importedJob.JobPostEnglish;
@@ -110,7 +110,7 @@ namespace WorkBC.Importers.Federal.Services
                 IImportedJob importedJob = DbContext.ImportedJobsFederal.FirstOrDefault(j => j.JobId == jobId);
                 Job job = DbContext.Jobs.FirstOrDefault(j => j.JobId == jobId);
 
-                //Load english 
+                //Load english
                 if (job != null && importedJob != null && importedJob.JobPostEnglish.Length > 0)
                 {
                     string xmlString = importedJob.JobPostEnglish;

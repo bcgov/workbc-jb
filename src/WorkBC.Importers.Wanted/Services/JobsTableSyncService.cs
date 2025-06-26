@@ -44,7 +44,7 @@ namespace WorkBC.Importers.Wanted.Services
             {
                 ImportedJobWanted importedJob = DbContext.ImportedJobsWanted.First(j => j.JobId == jobId);
 
-                //Load english 
+                //Load english
                 if (importedJob != null && importedJob.JobPostEnglish.Length > 0)
                 {
                     string xmlString = importedJob.JobPostEnglish;
@@ -130,7 +130,7 @@ namespace WorkBC.Importers.Wanted.Services
                 ImportedJobWanted importedJob = DbContext.ImportedJobsWanted.FirstOrDefault(j => j.JobId == jobId);
                 Job job = DbContext.Jobs.FirstOrDefault(j => j.JobId == jobId);
 
-                //Load english 
+                //Load english
                 if (importedJob != null && importedJob.JobPostEnglish.Length > 0)
                 {
                     string xmlString = importedJob.JobPostEnglish;
