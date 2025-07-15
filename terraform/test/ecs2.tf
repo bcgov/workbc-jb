@@ -31,7 +31,7 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "ConnectionStrings__DefaultConnection",
 				value = "${local.df_conn}"
-			}
+			},
 			#{
 				name = "ConnectionStrings__EnterpriseConnection",
 				value = "${local.ent_conn}"
