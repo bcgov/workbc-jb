@@ -72,8 +72,8 @@ resource "aws_ecs_task_definition" "import-job" {
 				value = "${local.df_conn}"
 			},
 			#{
-				name = "ConnectionStrings__EnterpriseConnection",
-				value = "${local.ent_conn}"
+				#name = "ConnectionStrings__EnterpriseConnection",
+				#value = "${local.ent_conn}"
 			#},
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
@@ -124,8 +124,8 @@ resource "aws_ecs_task_definition" "import-job" {
 				value = "${local.df_conn}"
 			},
 			#{
-				name = "ConnectionStrings__EnterpriseConnection",
-				value = "${local.ent_conn}"
+				#name = "ConnectionStrings__EnterpriseConnection",
+				#value = "${local.ent_conn}"
 			#},
 			{
 				name = "AppSettings__IsProduction",
@@ -174,8 +174,8 @@ resource "aws_ecs_task_definition" "import-job" {
 				value = "${local.df_conn}"
 			},
 			#{
-				name = "ConnectionStrings__EnterpriseConnection",
-				value = "${local.ent_conn}"
+				#name = "ConnectionStrings__EnterpriseConnection",
+				#value = "${local.ent_conn}"
 			#},
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
@@ -273,8 +273,8 @@ resource "aws_ecs_task_definition" "notify-job" {
 				value = "${local.df_conn}"
 			},
 			#{
-				name = "ConnectionStrings__EnterpriseConnection",
-				value = "${local.ent_conn}"
+				#name = "ConnectionStrings__EnterpriseConnection",
+				#value = "${local.ent_conn}"
 			#},
 			{
 				name = "ConnectionStrings__ElasticSearchServer",

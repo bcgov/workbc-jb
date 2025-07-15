@@ -97,8 +97,8 @@ resource "aws_ecs_task_definition" "app" {
 				value = "${local.df_conn}"
 			},
 			#{
-				name = "ConnectionStrings__EnterpriseConnection",
-				value = "${local.ent_conn}"
+				#name = "ConnectionStrings__EnterpriseConnection",
+				#value = "${local.ent_conn}"
 			#},
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
@@ -209,8 +209,8 @@ resource "aws_ecs_task_definition" "app" {
 				value = "${local.df_conn}"
 			},
 			#{
-				name = "ConnectionStrings__EnterpriseConnection",
-				value = "${local.ent_conn}"
+				#name = "ConnectionStrings__EnterpriseConnection",
+				#value = "${local.ent_conn}"
 			#},
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
@@ -309,8 +309,8 @@ resource "aws_ecs_task_definition" "app" {
 				value = "${local.df_conn}"
 			},
 			#{
-				name = "ConnectionStrings__EnterpriseConnection",
-				value = "${local.ent_conn}"
+				#name = "ConnectionStrings__EnterpriseConnection",
+				#value = "${local.ent_conn}"
 			#},
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
