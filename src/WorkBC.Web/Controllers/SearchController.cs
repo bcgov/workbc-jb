@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Nest;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
+using SendGrid;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using WorkBC.Data;
 using WorkBC.Data.Model.JobBoard;
 using WorkBC.ElasticSearch.Models.Filters;
@@ -52,47 +58,90 @@ namespace WorkBC.Web.Controllers
         [HttpPost]
         [Route("api/[controller]/[action]")]
         [Route("api/[controller]/[action]/{language}")]
-        public async Task<IActionResult> JobSearch([FromBody] JobSearchFilters filters, string language = "")
+        public async Task<IActionResult> JobSearch([FromBody] object PostValues, string language = "")
         {
             string index = language != "fr" 
                 ? _configuration["IndexSettings:DefaultIndex"] 
                 : General.FrenchIndex;
-
-            //Search object that we will use to search Elastic Search
-            var esq = new JobSearchQuery(_geocodingService, _configuration, filters);
-
-            //Get search results from Elastic search
-            ElasticSearchResponse results = await esq.GetSearchResults(index: index);
-
-            //Build the object that we will return to the client
-            var sr = new SearchResultsModel
+            JobSearchFilters filters = new JobSearchFilters();
+            var postValString = JsonConvert.SerializeObject(PostValues);
+            JObject jObj = (JObject)JsonConvert.DeserializeObject(postValString);
+            int count = jObj.Count;
+            if (PostValues != null && count > 0)
             {
-                PageNumber = filters.Page,
-                PageSize = filters.PageSize
-            };
-
-            if (results != null)
-            {
-                if (results.Hits?.HitsHits != null)
+                if (count <= 51)
                 {
-                    sr.Result = results.Hits.HitsHits.Select(hit => hit.Source).ToArray();
-                    sr.Count = results.Hits.Total.Value ?? 0;
-
-                    //Send the jobs to the cache service 
-                    //Get the number of views for each job and get the data back
-                    sr.Result = await _viewCountService.GetJobViews(sr.Result);
-
-                    // set the IsNew bit on new jobs
-                    await SetNewJobs(sr.Result);
+                    // Newtonsoft.Json.Linq;
+                    JObject PostObject = (JObject)PostValues;
+                    // Converting the raw incoming object PostValues to JobSearchFilters class object:
+                    var data1 = JsonConvert.SerializeObject(PostObject);
+                    filters = JsonConvert.DeserializeObject<JobSearchFilters>(data1);
+                    var data2 = JsonConvert.SerializeObject(filters);
+                    JObject jObj1 = (JObject)JsonConvert.DeserializeObject(data2);
+                    int count1 = jObj1.Count;
                 }
                 else
                 {
-                    sr.Result = Array.Empty<Source>();
+                    return BadRequest("Too many parameters in the request!");
                 }
-            }
 
-            //convert to JSON and return to the client
-            return Ok(sr);
+            }
+            else
+            {
+                return BadRequest("Empty request body");
+            }
+            //var filters = JsonConvert.DeserializeObject<JobSearchFilters>(filtersInput);
+            var data = JsonConvert.SerializeObject(filters);
+            var schema = System.IO.File.ReadAllText(@"C:\JobBoard_AMS\src\WorkBC.Web\jobSearchSchema.json");
+
+            var model = JObject.Parse(data);
+            var json_schema = JSchema.Parse(schema);
+
+            IList<string> messages;
+            bool valid = model.IsValid(json_schema, out messages); // properly validates
+
+
+                //Search object that we will use to search Elastic Search
+                var esq = new JobSearchQuery(_geocodingService, _configuration, filters);
+
+                //Get search results from Elastic search
+                ElasticSearchResponse results = await esq.GetSearchResults(index: index);
+
+                //Build the object that we will return to the client
+                var sr = new SearchResultsModel
+                {
+                    PageNumber = filters.Page,
+                    PageSize = filters.PageSize
+                };
+
+                if (results != null)
+                {
+                    if (results.Hits?.HitsHits != null)
+                    {
+                        sr.Result = results.Hits.HitsHits.Select(hit => hit.Source).ToArray();
+                        sr.Count = results.Hits.Total.Value ?? 0;
+
+                        //Send the jobs to the cache service 
+                        //Get the number of views for each job and get the data back
+                        sr.Result = await _viewCountService.GetJobViews(sr.Result);
+
+                        // set the IsNew bit on new jobs
+                        await SetNewJobs(sr.Result);
+                    }
+                    else
+                    {
+                        sr.Result = Array.Empty<Source>();
+                    }
+                }
+            //if (valid)
+            //{
+                //convert to JSON and return to the client
+                return Ok(sr);
+            //}
+            //else
+            //{
+            //    return BadRequest("Incorrect input. Please verify the request body.");
+            //}
         }
 
         /// <summary>
