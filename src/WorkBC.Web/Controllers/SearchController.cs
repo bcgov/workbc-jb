@@ -2,15 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Nest;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema;
-using SendGrid;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using WorkBC.Data;
@@ -75,7 +70,7 @@ namespace WorkBC.Web.Controllers
                 try
                 {
                     JObject PostObject = (JObject)PostValues;
-                    // Adding n option to filter any missing member from the request body which are not present in the JobSearchFilter class
+                    // Adding an option to filter any missing member from the request body which are not present in the JobSearchFilter class
                     // during deserialization
                     var settings = new JsonSerializerSettings
                     {
@@ -86,7 +81,8 @@ namespace WorkBC.Web.Controllers
                 }
                 catch(JsonException ex)
                 {
-                    return BadRequest("Unexpected parameters in the request! Exception message: " + ex.ToString());
+                    _logger.LogError(ex, ex.Message);
+                    return BadRequest("Unexpected parameters in the request!");
                 }
 
             }
