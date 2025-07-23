@@ -66,19 +66,16 @@ namespace WorkBC.Web.Controllers
             JobSearchFilters filters = new JobSearchFilters();
             var postValString = JsonConvert.SerializeObject(PostValues);
             JObject jObj = (JObject)JsonConvert.DeserializeObject(postValString);
-            int count = jObj.Count;
-            if (PostValues != null && count > 0)
+            int countPostValues = jObj.Count;
+            if (PostValues != null && countPostValues > 0)
             {
-                if (count <= 51)
+                if (countPostValues <= 51)
                 {
                     // Newtonsoft.Json.Linq;
                     JObject PostObject = (JObject)PostValues;
                     // Converting the raw incoming object PostValues to JobSearchFilters class object:
-                    var data1 = JsonConvert.SerializeObject(PostObject);
-                    filters = JsonConvert.DeserializeObject<JobSearchFilters>(data1);
-                    var data2 = JsonConvert.SerializeObject(filters);
-                    JObject jObj1 = (JObject)JsonConvert.DeserializeObject(data2);
-                    int count1 = jObj1.Count;
+                    var dataPostvalue = JsonConvert.SerializeObject(PostObject);
+                    filters = JsonConvert.DeserializeObject<JobSearchFilters>(dataPostvalue);
                 }
                 else
                 {
@@ -90,16 +87,6 @@ namespace WorkBC.Web.Controllers
             {
                 return BadRequest("Empty request body");
             }
-            //var filters = JsonConvert.DeserializeObject<JobSearchFilters>(filtersInput);
-            var data = JsonConvert.SerializeObject(filters);
-            var schema = System.IO.File.ReadAllText(@"C:\JobBoard_AMS\src\WorkBC.Web\jobSearchSchema.json");
-
-            var model = JObject.Parse(data);
-            var json_schema = JSchema.Parse(schema);
-
-            IList<string> messages;
-            bool valid = model.IsValid(json_schema, out messages); // properly validates
-
 
                 //Search object that we will use to search Elastic Search
                 var esq = new JobSearchQuery(_geocodingService, _configuration, filters);
