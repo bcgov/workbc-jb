@@ -63,6 +63,9 @@ namespace WorkBC.Web.Controllers
             string index = language != "fr" 
                 ? _configuration["IndexSettings:DefaultIndex"] 
                 : General.FrenchIndex;
+
+            //Adding a logic to extract the request body and count the parameters being passed.
+            // If the number of parameters is not as per expected object, 400 Bad reqest error is thrown with the appropriate error message.
             JobSearchFilters filters = new JobSearchFilters();
             var postValString = JsonConvert.SerializeObject(PostValues);
             JObject jObj = (JObject)JsonConvert.DeserializeObject(postValString);
@@ -71,7 +74,6 @@ namespace WorkBC.Web.Controllers
             {
                 if (countPostValues <= 51)
                 {
-                    // Newtonsoft.Json.Linq;
                     JObject PostObject = (JObject)PostValues;
                     // Converting the raw incoming object PostValues to JobSearchFilters class object:
                     var dataPostvalue = JsonConvert.SerializeObject(PostObject);
@@ -120,15 +122,7 @@ namespace WorkBC.Web.Controllers
                         sr.Result = Array.Empty<Source>();
                     }
                 }
-            //if (valid)
-            //{
-                //convert to JSON and return to the client
                 return Ok(sr);
-            //}
-            //else
-            //{
-            //    return BadRequest("Incorrect input. Please verify the request body.");
-            //}
         }
 
         /// <summary>
