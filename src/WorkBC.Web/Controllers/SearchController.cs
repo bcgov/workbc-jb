@@ -72,16 +72,21 @@ namespace WorkBC.Web.Controllers
             int countPostValues = jObj.Count;
             if (PostValues != null && countPostValues > 0)
             {
-                if (countPostValues <= 51)
+                try
                 {
                     JObject PostObject = (JObject)PostValues;
-                    // Converting the raw incoming object PostValues to JobSearchFilters class object:
+                    // Adding n option to filter any missing member from the request body which are not present in the JobSearchFilter class
+                    // during deserialization
+                    var settings = new JsonSerializerSettings
+                    {
+                        MissingMemberHandling = MissingMemberHandling.Error
+                    };
                     var dataPostvalue = JsonConvert.SerializeObject(PostObject);
-                    filters = JsonConvert.DeserializeObject<JobSearchFilters>(dataPostvalue);
+                    filters = JsonConvert.DeserializeObject<JobSearchFilters>(dataPostvalue, settings);
                 }
-                else
+                catch(JsonException ex)
                 {
-                    return BadRequest("Too many parameters in the request!");
+                    return BadRequest("Unexpected parameters in the request! Exception message: " + ex.ToString());
                 }
 
             }

@@ -190,6 +190,7 @@ namespace WorkBC.ElasticSearch.Models.Filters
 
         [DefaultValue(false)]
         public bool SearchExcludePlacementAgencyJobs { get; set; }
+        public string NocCode { get; set; }
     }
 
     public class DateField
@@ -222,7 +223,7 @@ namespace WorkBC.ElasticSearch.Models.Filters
         public int Hour { get; set; }
         public int Minute { get; set; }
         public int Second { get; set; }
-        public int Millisecond { get; set; }
+        public int Millisecond { get; set; }      
 
         // returns a YYYY-MM-DD string
         public override string ToString()
