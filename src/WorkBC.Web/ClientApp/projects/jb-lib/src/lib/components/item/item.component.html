@@ -66,7 +66,7 @@
       </div>
       <div class="cta text-nowrap d-print-none">
         <lib-jb-a-link class="mr-2" [jobId]="item.JobId" [job]="item" *ngIf="!inSavedJobsView && !inRecommendedJobsView"></lib-jb-a-link>
-        <a href="{{printRoot}}Print/Job?jobid={{item.JobId}}" *ngIf="!inSavedJobsView && !inRecommendedJobsView && item.IsFederalJob" target="_blank">
+        <a href="{{printRoot}}Print/Job?jobid={{item.JobId}}" *ngIf="!inSavedJobsView && !inRecommendedJobsView && item.IsFederalJob" target="_blank" rel="noopener noreferrer">
           <span class="icon-wrap blue small">
             <lib-svg-icon icon="print" width="12px" height="12px"></lib-svg-icon>
           </span>
