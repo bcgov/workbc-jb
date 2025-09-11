@@ -120,7 +120,7 @@
               <lib-jb-a-link [jobId]="jobDetail.JobId" [isEnglish]="!jobLanguage"></lib-jb-a-link>
             </div>
             <div class="cta">
-              <a href="{{printRoot}}Print/Job?jobid={{jobDetail.JobId}}&lang={{jobLanguage ? 'fr' : 'en'}}" target="_blank">
+              <a href="{{printRoot}}Print/Job?jobid={{jobDetail.JobId}}&lang={{jobLanguage ? 'fr' : 'en'}}" target="_blank" rel="noopener noreferrer">
                 <span class="icon-wrap blue small">
                   <lib-svg-icon icon="print" width="14px" height="14px"></lib-svg-icon>
                 </span>
@@ -199,7 +199,7 @@
                 <div class="row" *ngIf="jobDetail.ApplyWebsite">
                   <strong class="col-sm-2">{{textHeaders.online}}: </strong>
                   <div class="col-sm-10">
-                    <a target="_blank" href="{{jobDetail.ApplyWebsite}}">{{jobDetail.ApplyWebsite}}</a>
+                    <a target="_blank" rel="noopener noreferrer" href="{{jobDetail.ApplyWebsite}}">{{jobDetail.ApplyWebsite}}</a>
                   </div>
                 </div>
                 <!-- Email -->

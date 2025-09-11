@@ -128,8 +128,11 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
     * This is usually because webpack did not run, you need to run webpack to compile the css for the admin project.
 * CSS changes isn't showing on the site
     * Webpack needs to run in order for your change to display.
+	
+### 6. Troubleshooting steps:
+ 1. If you are facing issues with the connection string being read during launch of solution, please check the secrets.json file by clicking "Manage user secrets" on project settings. That is the default place from which connection string is read from.
 
-### 6. Running the SSOT
+### 7. Running the SSOT
 
 * Download SSOT dump at https://github.com/bcgov/workbc-ssot/blob/master/ssot-full.sql.gz
 * Unzip it to `ssot-full.sql`
@@ -149,7 +152,8 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
     ```
 then retry the steps above.
 
-### 6. Running with Docker Desktop
+
+### 8. Running with Docker Desktop
 
 * Get the key/value pairs from the "ENV" tab of the spredsheet in step 2 above, and put them into a file in /src called `.env`
     * You might need to change the Server name in ConnectionStrings__DefaultConnection, and ConnectionStrings__MigrationRunnerConnection to include an instance name if your SQL server was installed with an instance name (e.g. localhost\SQLEXPRESS)

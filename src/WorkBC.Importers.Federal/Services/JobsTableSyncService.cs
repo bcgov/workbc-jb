@@ -81,10 +81,9 @@ namespace WorkBC.Importers.Federal.Services
                             VersionNumber = 1
                         };
 
-                            DbContext.Jobs.Add(job);
-                            DbContext.JobVersions.Add(jobVersion);
-                            await DbContext.SaveChangesAsync();
-
+                        DbContext.Jobs.Add(job);
+                        DbContext.JobVersions.Add(jobVersion);
+                        await DbContext.SaveChangesAsync();
 
                         Console.Write("I");
                     }

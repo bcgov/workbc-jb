@@ -18,6 +18,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
         protected readonly List<NocCode> NocCodes;
         protected readonly List<NocCode2021> NocCodes2021;
         protected readonly Dictionary<string, string> UniqueCities;
+        protected readonly List<SystemSetting> SystemSettings;
 
         protected int WantedJobExpiryDays { get; set; }
         protected readonly JobBoardContext JobBoardContext;
@@ -34,7 +35,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 WantedJobExpiryDays = configuration.GetSection("WantedSettings").Exists()
                     ? int.Parse(configuration["WantedSettings:JobExpiryDays"])
                     : General.DefaultWantedJobExpiryDays;
-            } 
+            }
             catch
             {
                 WantedJobExpiryDays = General.DefaultWantedJobExpiryDays;
@@ -48,10 +49,11 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             NocCodes2021 = JobBoardContext.NocCodes2021.ToList();
             // store the cities for quick lookup during indexing
             DuplicateCityNames = DuplicateCities.Select(c => c.City.ToLower()).Distinct().ToList();
+            SystemSettings = JobBoardContext.SystemSettings.ToList();
         }
 
         protected XmlParsingServiceBase(List<Data.Model.JobBoard.Location> duplicateCities,
-            Dictionary<string, string> uniqueCities, List<NocCode> nocCodes, List<NocCode2021> nocCodes2021)
+            Dictionary<string, string> uniqueCities, List<NocCode> nocCodes, List<NocCode2021> nocCodes2021, List<SystemSetting> systemSettings)
         {
             UniqueCities = uniqueCities;
             DuplicateCities = duplicateCities;
@@ -60,6 +62,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             // store the cities for quick lookup during indexing
             DuplicateCityNames = DuplicateCities.Select(c => c.City.ToLower()).Distinct().ToList();
             WantedJobExpiryDays = General.DefaultWantedJobExpiryDays;
+            SystemSettings = systemSettings;
         }
 
         /// <summary>
@@ -248,7 +251,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             if (String.IsNullOrEmpty(nocId))
             {
                 return null;
-            }         
+            }
 
 
             try

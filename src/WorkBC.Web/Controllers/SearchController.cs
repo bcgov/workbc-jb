@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using WorkBC.Data;
 using WorkBC.Data.Model.JobBoard;
 using WorkBC.ElasticSearch.Models.Filters;
@@ -52,47 +53,77 @@ namespace WorkBC.Web.Controllers
         [HttpPost]
         [Route("api/[controller]/[action]")]
         [Route("api/[controller]/[action]/{language}")]
-        public async Task<IActionResult> JobSearch([FromBody] JobSearchFilters filters, string language = "")
+        public async Task<IActionResult> JobSearch([FromBody] object PostValues, string language = "")
         {
             string index = language != "fr" 
                 ? _configuration["IndexSettings:DefaultIndex"] 
                 : General.FrenchIndex;
 
-            //Search object that we will use to search Elastic Search
-            var esq = new JobSearchQuery(_geocodingService, _configuration, filters);
-
-            //Get search results from Elastic search
-            ElasticSearchResponse results = await esq.GetSearchResults(index: index);
-
-            //Build the object that we will return to the client
-            var sr = new SearchResultsModel
+            //Adding a logic to extract the request body and count the parameters being passed.
+            // If the number of parameters is not as per expected object, 400 Bad reqest error is thrown with the appropriate error message.
+            JobSearchFilters filters = new JobSearchFilters();
+            var postValString = JsonConvert.SerializeObject(PostValues);
+            JObject jObj = (JObject)JsonConvert.DeserializeObject(postValString);
+            int countPostValues = jObj.Count;
+            if (PostValues != null && countPostValues > 0)
             {
-                PageNumber = filters.Page,
-                PageSize = filters.PageSize
-            };
+                try
+                {
+                    JObject PostObject = (JObject)PostValues;
+                    // Adding an option to filter any missing member from the request body which are not present in the JobSearchFilter class
+                    // during deserialization
+                    var settings = new JsonSerializerSettings
+                    {
+                        MissingMemberHandling = MissingMemberHandling.Error
+                    };
+                    var dataPostvalue = JsonConvert.SerializeObject(PostObject);
+                    filters = JsonConvert.DeserializeObject<JobSearchFilters>(dataPostvalue, settings);
+                }
+                catch(JsonException ex)
+                {
+                    _logger.LogError(ex, ex.Message);
+                    return BadRequest("Unexpected parameters in the request!");
+                }
 
-            if (results != null)
+            }
+            else
             {
-                if (results.Hits?.HitsHits != null)
-                {
-                    sr.Result = results.Hits.HitsHits.Select(hit => hit.Source).ToArray();
-                    sr.Count = results.Hits.Total.Value ?? 0;
-
-                    //Send the jobs to the cache service 
-                    //Get the number of views for each job and get the data back
-                    sr.Result = await _viewCountService.GetJobViews(sr.Result);
-
-                    // set the IsNew bit on new jobs
-                    await SetNewJobs(sr.Result);
-                }
-                else
-                {
-                    sr.Result = Array.Empty<Source>();
-                }
+                return BadRequest("Empty request body");
             }
 
-            //convert to JSON and return to the client
-            return Ok(sr);
+                //Search object that we will use to search Elastic Search
+                var esq = new JobSearchQuery(_geocodingService, _configuration, filters);
+
+                //Get search results from Elastic search
+                ElasticSearchResponse results = await esq.GetSearchResults(index: index);
+
+                //Build the object that we will return to the client
+                var sr = new SearchResultsModel
+                {
+                    PageNumber = filters.Page,
+                    PageSize = filters.PageSize
+                };
+
+                if (results != null)
+                {
+                    if (results.Hits?.HitsHits != null)
+                    {
+                        sr.Result = results.Hits.HitsHits.Select(hit => hit.Source).ToArray();
+                        sr.Count = results.Hits.Total.Value ?? 0;
+
+                        //Send the jobs to the cache service 
+                        //Get the number of views for each job and get the data back
+                        sr.Result = await _viewCountService.GetJobViews(sr.Result);
+
+                        // set the IsNew bit on new jobs
+                        await SetNewJobs(sr.Result);
+                    }
+                    else
+                    {
+                        sr.Result = Array.Empty<Source>();
+                    }
+                }
+                return Ok(sr);
         }
 
         /// <summary>

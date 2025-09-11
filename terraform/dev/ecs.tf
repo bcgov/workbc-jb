@@ -2,15 +2,21 @@
 
 resource "aws_ecs_cluster" "jobboard" {
   name               = "workbc-jb-cluster"
-  capacity_providers = ["FARGATE_SPOT"]
-
-  default_capacity_provider_strategy {
-    capacity_provider = "FARGATE_SPOT"
-    weight            = 100
-  }
-
   tags = var.common_tags
 }
+
+resource "aws_ecs_cluster_capacity_providers" "jobboard" {
+    cluster_name =  aws_ecs_cluster.jobboard.name
+    capacity_providers = ["FARGATE_SPOT"]
+
+    default_capacity_provider_strategy {
+      weight            = 100
+      capacity_provider = "FARGATE_SPOT"
+  }
+
+
+}
+
 
 resource "aws_ecs_task_definition" "app" {
   count                    = local.create_ecs_service
@@ -29,7 +35,7 @@ resource "aws_ecs_task_definition" "app" {
 		name        = "migration"
 		image       = "${var.app_repo}/jb-migration:${var.app_version}"
 		networkMode = "awsvpc"
-		
+
 		logConfiguration = {
 			logDriver = "awslogs"
 			options = {
@@ -38,7 +44,7 @@ resource "aws_ecs_task_definition" "app" {
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
-		}		
+		}
 
 		environment = [
 			{
@@ -57,7 +63,7 @@ resource "aws_ecs_task_definition" "app" {
 		name        = "web"
 		image       = "${var.app_repo}/jb:${var.app_version}"
 		networkMode = "awsvpc"
-		
+
 		logConfiguration = {
 			logDriver = "awslogs"
 			options = {
@@ -66,7 +72,7 @@ resource "aws_ecs_task_definition" "app" {
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
-		}		
+		}
 
 		portMappings = [
 			{
@@ -75,16 +81,16 @@ resource "aws_ecs_task_definition" "app" {
 				containerPort = 8081
 			}
 		]
-		
+
 		environment = [
 			{
 				name = "ConnectionStrings__DefaultConnection",
 				value = "${local.df_conn}"
 			},
-			{
-				name = "ConnectionStrings__EnterpriseConnection",
-				value = "${local.ent_conn}"
-			},
+			#{
+				#name = "ConnectionStrings__EnterpriseConnection",
+				#value = "${local.ent_conn}"
+			#},
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
 				value = "${local.es_conn}"
@@ -100,7 +106,7 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "EmailSettings__FromEmail",
 				value = "noreply@workbc.ca"
-			},			
+			},
 			{
 				name = "ASPNETCORE_URLS",
 				value = "http://*:8081"
@@ -165,7 +171,7 @@ resource "aws_ecs_task_definition" "app" {
 		name        = "admin"
 		image       = "${var.app_repo}/jb-admin:${var.app_version}"
 		networkMode = "awsvpc"
-		
+
 		logConfiguration = {
 			logDriver = "awslogs"
 			options = {
@@ -174,7 +180,7 @@ resource "aws_ecs_task_definition" "app" {
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
-		}		
+		}
 
 		portMappings = [
 			{
@@ -183,16 +189,16 @@ resource "aws_ecs_task_definition" "app" {
 				containerPort = 8080
 			}
 		]
-		
+
 		environment = [
 			{
 				name = "ConnectionStrings__DefaultConnection",
 				value = "${local.df_conn}"
 			},
-			{
-				name = "ConnectionStrings__EnterpriseConnection",
-				value = "${local.ent_conn}"
-			},
+			#{
+				#name = "ConnectionStrings__EnterpriseConnection",
+				#value = "${local.ent_conn}"
+			#},
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
 				value = "${local.es_conn}"
@@ -255,6 +261,10 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "AzureAdSettings__ClientSecret",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:azure_secret::"
+			},
+			{
+				name = "AzureAdSettings__ClientCertificate",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:azure_certificate::"
 			}
 		]
 		dependsOn = [
@@ -269,7 +279,7 @@ resource "aws_ecs_task_definition" "app" {
 		name        = "cli"
 		image       = "${var.app_repo}/jb-cli:${var.app_version}"
 		networkMode = "awsvpc"
-		
+
 		logConfiguration = {
 			logDriver = "awslogs"
 			options = {
@@ -278,17 +288,17 @@ resource "aws_ecs_task_definition" "app" {
 				awslogs-region        = var.aws_region
 				awslogs-stream-prefix = "ecs"
 			}
-		}		
+		}
 
 		environment = [
 			{
 				name = "ConnectionStrings__DefaultConnection",
 				value = "${local.df_conn}"
 			},
-			{
-				name = "ConnectionStrings__EnterpriseConnection",
-				value = "${local.ent_conn}"
-			},
+			#{
+				#name = "ConnectionStrings__EnterpriseConnection",
+				#value = "${local.ent_conn}"
+			#},
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
 				value = "${local.es_conn}"
@@ -339,7 +349,7 @@ resource "aws_ecs_task_definition" "app" {
 		]
 	}
   ])
-  
+
   runtime_platform {
     operating_system_family = "LINUX"
     cpu_architecture        = "X86_64"
@@ -376,7 +386,7 @@ resource "aws_ecs_service" "jobboard" {
     container_name   = "web"
     container_port   = "8081"
   }
-  
+
   load_balancer {
     target_group_arn = aws_alb_target_group.admin.id
     container_name   = "admin"
