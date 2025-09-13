@@ -54,6 +54,17 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+  dotnet-cli:
+    volumes:
+      - ./WorkBC.Importers.Wanted/appsettings.linux.json:/app/workbc-importers-wanted/appsettings.json
+      - ./WorkBC.Importers.Federal/appsettings.linux.json:/app/workbc-importers-federal/appsettings.json
+      - ./WorkBC.Indexers.Wanted/appsettings.linux.json:/app/workbc-indexers-wanted/appsettings.json
+      - ./WorkBC.Indexers.Federal/appsettings.linux.json:/app/workbc-indexers-federal/appsettings.json
+      - ./WorkBC.Notifications.JobAlerts/appsettings.linux.json:/app/workbc-notifications-jobalerts/appsettings.json
+      - ./EFMigrationRunner/appsettings.linux.json:/app/efmigrationrunner/appsettings.json
+    depends_on:
+      postgres:
+        condition: service_healthy
   elasticsearch:
     image: elasticsearch:7.17.8
     ports:
