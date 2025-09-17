@@ -31,7 +31,7 @@ namespace WorkBC.Importers.Wanted.Services
         {
             List<long> jobsToImport = DbContext.ImportedJobsWanted
                 .Where(ij =>
-                    !ij.IsFederalOrWorkBc && 
+                    !ij.IsFederalOrWorkBc &&
                     DbContext.Jobs.All(j => j.JobId != ij.JobId) &&
                     DbContext.DeletedJobs.All(dj => dj.JobId != ij.JobId) &&
                     ij.ApiDate.AddDays(_jobExpiryDays) > DateTime.Now)
@@ -44,7 +44,7 @@ namespace WorkBC.Importers.Wanted.Services
             {
                 ImportedJobWanted importedJob = DbContext.ImportedJobsWanted.First(j => j.JobId == jobId);
 
-                //Load english 
+                //Load english
                 if (importedJob != null && importedJob.JobPostEnglish.Length > 0)
                 {
                     string xmlString = importedJob.JobPostEnglish;
@@ -91,9 +91,9 @@ namespace WorkBC.Importers.Wanted.Services
                             VersionNumber = 1
                         };
 
-                            DbContext.Jobs.Add(job);
-                            DbContext.JobVersions.Add(jobVersion);
-                            await DbContext.SaveChangesAsync();
+                        DbContext.Jobs.Add(job);
+                        DbContext.JobVersions.Add(jobVersion);
+                        await DbContext.SaveChangesAsync();
 
                         Console.Write("I");
                     }
@@ -117,11 +117,11 @@ namespace WorkBC.Importers.Wanted.Services
         public async Task UpdateJobs()
         {
             List<long> jobsToUpdate = (from ij in DbContext.ImportedJobsWanted
-                join j in DbContext.Jobs on ij.JobId equals j.JobId
-                where !ij.IsFederalOrWorkBc 
-                      && DbContext.DeletedJobs.All(dj => dj.JobId != ij.JobId)
-                      && (j.DateLastImported != ij.DateLastImported || !j.IsActive || _commandLineOptions.ReImport)
-                select ij.JobId).ToList();
+                                       join j in DbContext.Jobs on ij.JobId equals j.JobId
+                                       where !ij.IsFederalOrWorkBc
+                                             && DbContext.DeletedJobs.All(dj => dj.JobId != ij.JobId)
+                                             && (j.DateLastImported != ij.DateLastImported || !j.IsActive || _commandLineOptions.ReImport)
+                                       select ij.JobId).ToList();
 
             Logger.Information($"{jobsToUpdate.Count()} jobs found to update");
 
@@ -130,7 +130,7 @@ namespace WorkBC.Importers.Wanted.Services
                 ImportedJobWanted importedJob = DbContext.ImportedJobsWanted.FirstOrDefault(j => j.JobId == jobId);
                 Job job = DbContext.Jobs.FirstOrDefault(j => j.JobId == jobId);
 
-                //Load english 
+                //Load english
                 if (importedJob != null && importedJob.JobPostEnglish.Length > 0)
                 {
                     string xmlString = importedJob.JobPostEnglish;
@@ -154,16 +154,16 @@ namespace WorkBC.Importers.Wanted.Services
 
                         SetJobTypeFlags(xmlString, job);
 
-                            if (needsNewVersion)
-                            {
-                                IncrementJobVersion(job);
-                            }
+                        if (needsNewVersion)
+                        {
+                            IncrementJobVersion(job);
+                        }
 
-                            DbContext.Jobs.Update(job);
+                        DbContext.Jobs.Update(job);
 
-                            Console.Write("U");
+                        Console.Write("U");
 
-                            await DbContext.SaveChangesAsync();
+                        await DbContext.SaveChangesAsync();
 
                     }
                     else if (job != null)

@@ -189,7 +189,7 @@ namespace WorkBC.Shared.Repositories
 
             var jsEventDeleteUser = new JobSeekerEvent
             {
-                AspNetUserId    = jobSeeker.Id,
+                AspNetUserId = jobSeeker.Id,
                 DateLogged = DateTime.Now,
                 EventTypeId = EventType.DeleteAccount,
             };
@@ -416,7 +416,7 @@ namespace WorkBC.Shared.Repositories
                     modified = true;
                 }
             }
-            else  if (jobSeeker.LocationId != userParam.LocationId)
+            else if (jobSeeker.LocationId != userParam.LocationId)
             {
                 //not creating an admin event log here
                 //the location translate to the City field, and we do log the city field.
