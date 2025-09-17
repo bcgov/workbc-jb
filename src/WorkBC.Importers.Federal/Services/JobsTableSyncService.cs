@@ -99,9 +99,9 @@ namespace WorkBC.Importers.Federal.Services
         public async Task UpdateJobs()
         {
             List<long> jobsToUpdate = (from ij in DbContext.ImportedJobsFederal
-                join j in DbContext.Jobs on ij.JobId equals j.JobId
-                where j.DateLastImported != ij.DateLastImported || !j.IsActive || _commandLineOptions.ReImport
-                select ij.JobId).ToList();
+                                       join j in DbContext.Jobs on ij.JobId equals j.JobId
+                                       where j.DateLastImported != ij.DateLastImported || !j.IsActive || _commandLineOptions.ReImport
+                                       select ij.JobId).ToList();
 
             Logger.Information($"{jobsToUpdate.Count()} jobs found to update");
 
@@ -127,16 +127,16 @@ namespace WorkBC.Importers.Federal.Services
 
                         SetJobTypeFlags(xmlString, job);
 
-                            if (needsNewVersion)
-                            {
-                                IncrementJobVersion(job);
-                            }
+                        if (needsNewVersion)
+                        {
+                            IncrementJobVersion(job);
+                        }
 
-                            DbContext.Jobs.Update(job);
+                        DbContext.Jobs.Update(job);
 
-                            Console.Write("U");
+                        Console.Write("U");
 
-                            await DbContext.SaveChangesAsync();
+                        await DbContext.SaveChangesAsync();
 
                     }
                 }
