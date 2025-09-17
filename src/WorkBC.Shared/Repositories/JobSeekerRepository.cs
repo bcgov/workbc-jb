@@ -35,51 +35,51 @@ namespace WorkBC.Shared.Repositories
 
         public async Task<(JobSeeker, IdentityResult)> CreateUserAsync(JobSeeker jobSeeker, string password, int? adminUserId = null)
         {
-                // set date fields
-                var now = DateTime.Now;
-                jobSeeker.DateRegistered = now;
-                jobSeeker.LastModified = now;
+            // set date fields
+            var now = DateTime.Now;
+            jobSeeker.DateRegistered = now;
+            jobSeeker.LastModified = now;
 
-                // make sure there are no zeroes where there should be nulls
-                RemoveInvalidForeignKeys(jobSeeker);
+            // make sure there are no zeroes where there should be nulls
+            RemoveInvalidForeignKeys(jobSeeker);
 
-                // create the user
-                IdentityResult result = await _userManager.CreateAsync(jobSeeker, password);
+            // create the user
+            IdentityResult result = await _userManager.CreateAsync(jobSeeker, password);
 
-                // get the user back from the db
-                jobSeeker = await _userManager.FindByEmailAsync(jobSeeker.Email);
+            // get the user back from the db
+            jobSeeker = await _userManager.FindByEmailAsync(jobSeeker.Email);
 
-                //check if the jobSeeker could be created
-                if (jobSeeker != null)
+            //check if the jobSeeker could be created
+            if (jobSeeker != null)
+            {
+                // log the event
+                var eventActivateUser = new JobSeekerEvent
                 {
-                    // log the event
-                    var eventActivateUser = new JobSeekerEvent
-                    {
-                        AspNetUserId = jobSeeker.Id,
-                        DateLogged = DateTime.Now,
-                        EventTypeId = EventType.Register
-                    };
-                    await _context.JobSeekerEventLog.AddAsync(eventActivateUser);
+                    AspNetUserId = jobSeeker.Id,
+                    DateLogged = DateTime.Now,
+                    EventTypeId = EventType.Register
+                };
+                await _context.JobSeekerEventLog.AddAsync(eventActivateUser);
 
-                    //job seeker admin event log
-                    var changeEventCreateUser = new JobSeekerChangeEvent()
-                    {
-                        Field = "Job seeker created",
-                        OldValue = "-",
-                        NewValue = "-",
-                        AspNetUserId = jobSeeker.Id,
-                        DateUpdated = DateTime.Now,
-                        ModifiedByAdminUserId = adminUserId
-                    };
-                    await _context.JobSeekerChangeLog.AddAsync(changeEventCreateUser);
+                //job seeker admin event log
+                var changeEventCreateUser = new JobSeekerChangeEvent()
+                {
+                    Field = "Job seeker created",
+                    OldValue = "-",
+                    NewValue = "-",
+                    AspNetUserId = jobSeeker.Id,
+                    DateUpdated = DateTime.Now,
+                    ModifiedByAdminUserId = adminUserId
+                };
+                await _context.JobSeekerChangeLog.AddAsync(changeEventCreateUser);
 
-                    // create a new version record
-                    await _versionRepo.CreateNewVersionIfNeeded(jobSeeker, jobSeeker.JobSeekerFlags);
-                    await _context.SaveChangesAsync();
+                // create a new version record
+                await _versionRepo.CreateNewVersionIfNeeded(jobSeeker, jobSeeker.JobSeekerFlags);
+                await _context.SaveChangesAsync();
 
-                }
+            }
 
-                return (jobSeeker, result);
+            return (jobSeeker, result);
         }
 
         /// <summary>
@@ -119,26 +119,26 @@ namespace WorkBC.Shared.Repositories
             RemoveInvalidForeignKeys(userParam);
 
             // update user properties
-                bool modified = await ApplyJobSeekerChanges(jobSeeker, userParam, adminUserId, regionId);
+            bool modified = await ApplyJobSeekerChanges(jobSeeker, userParam, adminUserId, regionId);
 
-                // update password if it was entered
-                if (!string.IsNullOrWhiteSpace(password))
-                {
-                    await _userManager.AddPasswordAsync(jobSeeker, password);
-                    modified = true;
-                }
+            // update password if it was entered
+            if (!string.IsNullOrWhiteSpace(password))
+            {
+                await _userManager.AddPasswordAsync(jobSeeker, password);
+                modified = true;
+            }
 
-                // set the LastModified date
-                if (modified)
-                {
-                    jobSeeker.LastModified = DateTime.Now;
-                }
+            // set the LastModified date
+            if (modified)
+            {
+                jobSeeker.LastModified = DateTime.Now;
+            }
 
-                await _versionRepo.CreateNewVersionIfNeeded(jobSeeker, userParam.JobSeekerFlags);
+            await _versionRepo.CreateNewVersionIfNeeded(jobSeeker, userParam.JobSeekerFlags);
 
-                // save the changes
-                result = await _userManager.UpdateAsync(jobSeeker);
-                await _context.SaveChangesAsync();
+            // save the changes
+            result = await _userManager.UpdateAsync(jobSeeker);
+            await _context.SaveChangesAsync();
 
             return result;
         }
@@ -175,49 +175,49 @@ namespace WorkBC.Shared.Repositories
             jobSeeker.EmailConfirmed = false;
 
             //update user
-                //job seeker admin event log
-                var changeEventDeleteUser = new JobSeekerChangeEvent
-                {
-                    Field = "Job seeker deleted",
-                    OldValue = "-",
-                    NewValue = "-",
-                    AspNetUserId = jobSeeker.Id,
-                    DateUpdated = DateTime.Now,
-                    ModifiedByAdminUserId = adminUserId
-                };
-                await _context.JobSeekerChangeLog.AddAsync(changeEventDeleteUser);
+            //job seeker admin event log
+            var changeEventDeleteUser = new JobSeekerChangeEvent
+            {
+                Field = "Job seeker deleted",
+                OldValue = "-",
+                NewValue = "-",
+                AspNetUserId = jobSeeker.Id,
+                DateUpdated = DateTime.Now,
+                ModifiedByAdminUserId = adminUserId
+            };
+            await _context.JobSeekerChangeLog.AddAsync(changeEventDeleteUser);
 
-                var jsEventDeleteUser = new JobSeekerEvent
-                {
-                    AspNetUserId    = jobSeeker.Id,
-                    DateLogged = DateTime.Now,
-                    EventTypeId = EventType.DeleteAccount,
-                };
-                await _context.JobSeekerEventLog.AddAsync(jsEventDeleteUser);
+            var jsEventDeleteUser = new JobSeekerEvent
+            {
+                AspNetUserId    = jobSeeker.Id,
+                DateLogged = DateTime.Now,
+                EventTypeId = EventType.DeleteAccount,
+            };
+            await _context.JobSeekerEventLog.AddAsync(jsEventDeleteUser);
 
-                jobSeeker.LastModified = DateTime.Now;
-                await _versionRepo.CreateNewVersionIfNeeded(jobSeeker, jobSeeker.JobSeekerFlags);
-                IdentityResult result = await _userManager.UpdateAsync(jobSeeker);
-                await _context.SaveChangesAsync();
-                return result;
+            jobSeeker.LastModified = DateTime.Now;
+            await _versionRepo.CreateNewVersionIfNeeded(jobSeeker, jobSeeker.JobSeekerFlags);
+            IdentityResult result = await _userManager.UpdateAsync(jobSeeker);
+            await _context.SaveChangesAsync();
+            return result;
         }
 
         public async Task<IdentityResult> ConfirmEmailAsync(JobSeeker jobSeeker, string token)
         {
-                // update these two fields
-                jobSeeker.LastModified = DateTime.Now;
-                jobSeeker.AccountStatus = AccountStatus.Active;
+            // update these two fields
+            jobSeeker.LastModified = DateTime.Now;
+            jobSeeker.AccountStatus = AccountStatus.Active;
 
-                await LogJobSeekerEvent(jobSeeker.Id, EventType.ConfirmEmail, false);
+            await LogJobSeekerEvent(jobSeeker.Id, EventType.ConfirmEmail, false);
 
-                // confirm the email
-                IdentityResult result = await _userManager.ConfirmEmailAsync(jobSeeker, token);
+            // confirm the email
+            IdentityResult result = await _userManager.ConfirmEmailAsync(jobSeeker, token);
 
-                // get a new copy of the jobseeker object
-                jobSeeker = await _userManager.FindByIdAsync(jobSeeker.Id);
-                await _versionRepo.CreateNewVersionIfNeeded(jobSeeker, jobSeeker.JobSeekerFlags);
-                await _context.SaveChangesAsync();
-                return result;
+            // get a new copy of the jobseeker object
+            jobSeeker = await _userManager.FindByIdAsync(jobSeeker.Id);
+            await _versionRepo.CreateNewVersionIfNeeded(jobSeeker, jobSeeker.JobSeekerFlags);
+            await _context.SaveChangesAsync();
+            return result;
         }
 
         public async Task LogJobSeekerEvent(string aspNetUserId, EventType eventType, bool saveChanges = true)
