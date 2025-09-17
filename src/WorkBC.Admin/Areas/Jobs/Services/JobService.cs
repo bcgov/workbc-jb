@@ -79,121 +79,121 @@ namespace WorkBC.Admin.Areas.Jobs.Services
 
         public async Task DeleteJob(long jobId, int currentAdminUserId)
         {
-                #region change job status to inactive
+            #region change job status to inactive
 
-                Job job = _jobBoardContext.Jobs.FirstOrDefault(j => j.JobId == jobId);
-                if (job != null)
+            Job job = _jobBoardContext.Jobs.FirstOrDefault(j => j.JobId == jobId);
+            if (job != null)
+            {
+                job.IsActive = false;
+                _jobBoardContext.Jobs.Update(job);
+            }
+
+            #endregion
+
+            #region add job ID to DeletedJobs table
+
+            var deletedJob = new DeletedJob
+            {
+                DateDeleted = DateTime.Now,
+                DeletedByAdminUserId = currentAdminUserId,
+                JobId = jobId
+            };
+            _jobBoardContext.DeletedJobs.Add(deletedJob);
+
+            #endregion
+
+            #region delete job from Elastic search index (english only since exernal jobs aren't in the french index)
+
+            string index = General.EnglishIndex;
+            await DeleteFromElastic(jobId.ToString(), index);
+
+            #endregion
+
+            #region add new record in JobVersions to keep track of changes
+
+            JobVersion oldVersion =
+                _jobBoardContext.JobVersions.FirstOrDefault(j => j.JobId == jobId && j.IsCurrentVersion);
+            if (oldVersion != null)
+            {
+                oldVersion.IsCurrentVersion = false;
+                oldVersion.DateVersionEnd = DateTime.Now;
+
+                var newVersion = new JobVersion
                 {
-                    job.IsActive = false;
-                    _jobBoardContext.Jobs.Update(job);
-                }
-
-                #endregion
-
-                #region add job ID to DeletedJobs table
-
-                var deletedJob = new DeletedJob
-                {
-                    DateDeleted = DateTime.Now,
-                    DeletedByAdminUserId = currentAdminUserId,
-                    JobId = jobId
+                    JobId = jobId,
+                    DateVersionStart = DateTime.Now,
+                    DatePosted = oldVersion.DatePosted,
+                    JobSourceId = oldVersion.JobSourceId,
+                    IndustryId = oldVersion.IndustryId,
+                    NocCodeId2021 = oldVersion.NocCodeId2021,
+                    IsActive = false,
+                    PositionsAvailable = oldVersion.PositionsAvailable,
+                    LocationId = oldVersion.LocationId,
+                    IsCurrentVersion = true,
+                    VersionNumber = (short) (oldVersion.VersionNumber + 1)
                 };
-                _jobBoardContext.DeletedJobs.Add(deletedJob);
 
-                #endregion
+                _jobBoardContext.JobVersions.Update(oldVersion);
+                _jobBoardContext.JobVersions.Add(newVersion);
+            }
 
-                #region delete job from Elastic search index (english only since exernal jobs aren't in the french index)
+            #endregion
 
-                string index = General.EnglishIndex;
-                await DeleteFromElastic(jobId.ToString(), index);
+            #region update SavedJobs to deleted
 
-                #endregion
+            List<SavedJob> savedJobs = _jobBoardContext.SavedJobs.Where(s => s.JobId == jobId).ToList();
+            foreach (SavedJob savedJob in savedJobs)
+            {
+                savedJob.DateDeleted = DateTime.Now;
+                savedJob.IsDeleted = true;
 
-                #region add new record in JobVersions to keep track of changes
+                //Not sure if we need to add a note?
+                savedJob.Note = "Job deleted";
+                savedJob.NoteUpdatedDate = DateTime.Now;
 
-                JobVersion oldVersion =
-                    _jobBoardContext.JobVersions.FirstOrDefault(j => j.JobId == jobId && j.IsCurrentVersion);
-                if (oldVersion != null)
+                _jobBoardContext.SavedJobs.Update(savedJob);
+            }
+
+            #endregion
+
+            #region Copy job from ImportedJobsWanted to ExpiredJobs
+
+            ImportedJobWanted importedJob = _jobBoardContext.ImportedJobsWanted
+                .FirstOrDefault(j => j.JobId == jobId);
+
+            ExpiredJob existingExpiredJob = _jobBoardContext.ExpiredJobs
+                .FirstOrDefault(e => e.JobId == jobId);
+
+            if (importedJob != null)
+            {
+                if (existingExpiredJob == null)
                 {
-                    oldVersion.IsCurrentVersion = false;
-                    oldVersion.DateVersionEnd = DateTime.Now;
-
-                    var newVersion = new JobVersion
+                    //add new expired job
+                    var expiredJob = new ExpiredJob
                     {
+                        DateRemoved = DateTime.Now,
                         JobId = jobId,
-                        DateVersionStart = DateTime.Now,
-                        DatePosted = oldVersion.DatePosted,
-                        JobSourceId = oldVersion.JobSourceId,
-                        IndustryId = oldVersion.IndustryId,
-                        NocCodeId2021 = oldVersion.NocCodeId2021,
-                        IsActive = false,
-                        PositionsAvailable = oldVersion.PositionsAvailable,
-                        LocationId = oldVersion.LocationId,
-                        IsCurrentVersion = true,
-                        VersionNumber = (short) (oldVersion.VersionNumber + 1)
+                        RemovedFromElasticsearch = true
                     };
-
-                    _jobBoardContext.JobVersions.Update(oldVersion);
-                    _jobBoardContext.JobVersions.Add(newVersion);
+                    await _jobBoardContext.ExpiredJobs.AddAsync(expiredJob);
                 }
-
-                #endregion
-
-                #region update SavedJobs to deleted
-
-                List<SavedJob> savedJobs = _jobBoardContext.SavedJobs.Where(s => s.JobId == jobId).ToList();
-                foreach (SavedJob savedJob in savedJobs)
+                else
                 {
-                    savedJob.DateDeleted = DateTime.Now;
-                    savedJob.IsDeleted = true;
+                    //update the job in the expired jobs
+                    existingExpiredJob.DateRemoved = DateTime.Now;
+                    existingExpiredJob.RemovedFromElasticsearch = true;
 
-                    //Not sure if we need to add a note?
-                    savedJob.Note = "Job deleted";
-                    savedJob.NoteUpdatedDate = DateTime.Now;
-
-                    _jobBoardContext.SavedJobs.Update(savedJob);
+                    _jobBoardContext.ExpiredJobs.Update(existingExpiredJob);
                 }
 
-                #endregion
+                //remove from ImportedJobsWanted
+                _jobBoardContext.ImportedJobsWanted.Remove(importedJob);
+            }
 
-                #region Copy job from ImportedJobsWanted to ExpiredJobs
+            #endregion
 
-                ImportedJobWanted importedJob = _jobBoardContext.ImportedJobsWanted
-                    .FirstOrDefault(j => j.JobId == jobId);
-
-                ExpiredJob existingExpiredJob = _jobBoardContext.ExpiredJobs
-                    .FirstOrDefault(e => e.JobId == jobId);
-
-                if (importedJob != null)
-                {
-                    if (existingExpiredJob == null)
-                    {
-                        //add new expired job
-                        var expiredJob = new ExpiredJob
-                        {
-                            DateRemoved = DateTime.Now,
-                            JobId = jobId,
-                            RemovedFromElasticsearch = true
-                        };
-                        await _jobBoardContext.ExpiredJobs.AddAsync(expiredJob);
-                    }
-                    else
-                    {
-                        //update the job in the expired jobs
-                        existingExpiredJob.DateRemoved = DateTime.Now;
-                        existingExpiredJob.RemovedFromElasticsearch = true;
-
-                        _jobBoardContext.ExpiredJobs.Update(existingExpiredJob);
-                    }
-
-                    //remove from ImportedJobsWanted
-                    _jobBoardContext.ImportedJobsWanted.Remove(importedJob);
-                }
-
-                #endregion
-
-                //save all changes to the database
-                await _jobBoardContext.SaveChangesAsync();
+            //save all changes to the database
+            await _jobBoardContext.SaveChangesAsync();
 
         }
 
