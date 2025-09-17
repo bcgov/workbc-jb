@@ -61,7 +61,7 @@
                             case SystemSettingFieldType.Number:
                             case SystemSettingFieldType.SingleLineText:
 
-                                var shortenValue = setting.Value;
+                                var shortenValue = setting.Value ?? "";
                                 if (shortenValue.Length > 150)
                                 {
                                     shortenValue = shortenValue.Substring(0, 150) + "...";
