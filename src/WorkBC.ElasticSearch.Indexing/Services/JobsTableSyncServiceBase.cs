@@ -50,14 +50,14 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             {
                 jobsToDeactivate = (from j in DbContext.Jobs
                                     where j.JobSourceId == JobSource.Wanted && j.IsActive &&
-                                        !(from ij in DbContext.ImportedJobsWanted select ij.JobId).Contains(j.JobId)
+                                          !(from ij in DbContext.ImportedJobsWanted select ij.JobId).Contains(j.JobId)
                                     select j).ToList();
             }
             else // jobSourceId == JobSource.Federal
             {
                 jobsToDeactivate = (from j in DbContext.Jobs
                                     where j.JobSourceId == JobSource.Federal && j.IsActive &&
-                                        !(from ij in DbContext.ImportedJobsFederal select ij.JobId).Contains(j.JobId)
+                                          !(from ij in DbContext.ImportedJobsFederal select ij.JobId).Contains(j.JobId)
                                     select j).ToList();
             }
 
