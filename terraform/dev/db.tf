@@ -135,7 +135,8 @@ resource "aws_rds_cluster_instance" "postgres" {
 
 resource "aws_rds_cluster" "postgres_jbnew" {
 	cluster_identifier = "jbnew"
-	engine = "16.6:
+	engine             = "aurora-postgresql"
+	engine_version = "16.6"
 	master_username = local.db_creds.username
 	master_password = local.db_creds.newjbpost
 	backup_retention_period = 5
