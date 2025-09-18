@@ -133,8 +133,8 @@ resource "aws_rds_cluster_instance" "postgres" {
   engine_version     = aws_rds_cluster.postgres.engine_version
 }
 
-resource "aws_rds_cluster" "postgres_jbnew" {
-	cluster_identifier = "jbnew"
+resource "aws_rds_cluster" "postgres_jbnewfinal" {
+	cluster_identifier = "jbnewfinal"
 	engine             = "aurora-postgresql"
 	engine_version = "16.6"
 	master_username = local.db_creds.username
@@ -157,9 +157,9 @@ resource "aws_rds_cluster" "postgres_jbnew" {
 }
 
 
-resource "aws_rds_cluster_instance" "postgres_jbnew" {
+resource "aws_rds_cluster_instance" "postgres_jbnewfinal" {
   count = 2
-  cluster_identifier = aws_rds_cluster.postgres_jbnew.id
+  cluster_identifier = aws_rds_cluster.postgres_jbnewfinal.id
   instance_class     = "db.serverless"
   engine             = aws_rds_cluster.postgres.engine
   engine_version     = aws_rds_cluster.postgres.engine_version
