@@ -35,7 +35,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 WantedJobExpiryDays = configuration.GetSection("WantedSettings").Exists()
                     ? int.Parse(configuration["WantedSettings:JobExpiryDays"])
                     : General.DefaultWantedJobExpiryDays;
-            } 
+            }
             catch
             {
                 WantedJobExpiryDays = General.DefaultWantedJobExpiryDays;
@@ -63,8 +63,6 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             DuplicateCityNames = DuplicateCities.Select(c => c.City.ToLower()).Distinct().ToList();
             WantedJobExpiryDays = General.DefaultWantedJobExpiryDays;
             SystemSettings = systemSettings;
-
-
         }
 
         /// <summary>
@@ -253,7 +251,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             if (String.IsNullOrEmpty(nocId))
             {
                 return null;
-            }         
+            }
 
 
             try

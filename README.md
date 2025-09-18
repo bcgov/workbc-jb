@@ -34,6 +34,12 @@ See [Linux_Setup.md](docs/Linux_Setup.md) for instructions related to Linux deve
 * [WorkBC.Shared](src/WorkBC.Shared) - Miscellaneous helpers, constants, extensions, shared by different projects
 * [WorkBC.Tests](src/WorkBC.Tests) - C# unit tests & integration tests (xunit)
 
+## Troubleshooting steps
+
+* If the appSettings are not being read properly in the Visual Studio solution or their values appear to be being overwritten, please check the "User secrets".
+* To access "User secrets", please right click on a project in Solution Explorer and click "Manage User secrets".
+* Check if the settings here are the ones that are overwriting the project appSettings. If yes, please delete the user secrets.
+
 ## License
 
     Copyright 2022 Province of British Columbia

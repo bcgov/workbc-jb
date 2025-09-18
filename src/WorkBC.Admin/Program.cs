@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +17,9 @@ namespace WorkBC.Admin
 
         public static void Main(string[] args)
         {
+            // Set Npgsql to avoid complaining about Datetimes.
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             // configuration
             IConfigurationBuilder builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())

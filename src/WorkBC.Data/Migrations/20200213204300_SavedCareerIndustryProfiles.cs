@@ -121,7 +121,7 @@ namespace WorkBC.Data.Migrations
             var seedAdminUsers =
                 @"SET identity_insert AdminUsers ON
                   GO
-                  IF NOT EXISTS (SELECT * FROM AdminUsers WHERE Id = 1) 
+                  IF NOT EXISTS (SELECT * FROM AdminUsers WHERE Id = 1)
                   -- CREDENTIALS WERE REMOVED FOR GITHUB MIGRATION. THIS WAS USED TO SEED THE DATABASE INITIALLY AND WILL NEVER BE RUN AGAIN
                   INSERT INTO [AdminUsers]
                                ([Id],[SamAccountName],[Email],[FirstName],[LastName],[DateUpdated],[AdminLevel],[DateCreated],[Deleted],[Guid],[ModifiedByAdminUserId])
@@ -198,7 +198,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AddColumn<DateTime>(
                 name: "LockDate",
                 table: "AdminUsers",
-                type: "datetime2",
+                type: "timestamp",
                 nullable: true);
         }
     }

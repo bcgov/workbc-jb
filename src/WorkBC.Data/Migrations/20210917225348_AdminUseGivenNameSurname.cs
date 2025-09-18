@@ -9,14 +9,14 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "GivenName",
                 table: "AdminUsers",
-                type: "nvarchar(40)",
+                type: "varchar(40)",
                 maxLength: 40,
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
                 name: "Surname",
                 table: "AdminUsers",
-                type: "nvarchar(40)",
+                type: "varchar(40)",
                 maxLength: 40,
                 nullable: true);
         }

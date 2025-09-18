@@ -18,7 +18,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AddColumn<string>(
             name: "Code2016",
             table: "NocCodes2021",
-            type: "nvarchar(30)",
+            type: "varchar(30)",
             maxLength: 30,
             nullable: true);
 
@@ -27,7 +27,7 @@ namespace WorkBC.Data.Migrations
             foreach (var noc in allNocs)
             {
                 if (!String.IsNullOrEmpty(noc.noc_2021))
-                {                    
+                {
                     string code2016 = noc.noc_2016.ToString();
 
                     //The field 'Id' is derived from the field 'Code' and is not an auto-generated Identity field.

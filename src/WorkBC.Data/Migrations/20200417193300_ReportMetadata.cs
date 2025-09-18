@@ -95,8 +95,8 @@ namespace WorkBC.Data.Migrations
                 columns: table => new
                 {
                     WeeklyPeriodId = table.Column<int>(type: "int", nullable: false),
-                    Label = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Group = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    Label = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    Group = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: true),
                     SortOrder = table.Column<short>(type: "smallint", nullable: false),
                     Value = table.Column<int>(type: "int", nullable: false)
                 },

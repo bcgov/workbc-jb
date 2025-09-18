@@ -65,7 +65,7 @@ namespace WorkBC.Admin
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<JobBoardContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseNpgsql(connectionString));
 
             // We need to hook up IdentityService in the admin site so we can get an instance of the UserManager to
             // add and edit users.  It's not actually used for logins on the admin site (Keycloak is used instead).

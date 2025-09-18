@@ -12,8 +12,8 @@ namespace WorkBC.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FriendlyName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Xml = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    FriendlyName = table.Column<string>(type: "varchar", nullable: true),
+                    Xml = table.Column<string>(type: "varchar", nullable: true)
                 },
                 constraints: table =>
                 {

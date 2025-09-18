@@ -127,7 +127,7 @@
                                                 data-userId="@user.AdminUser.Id"
                                                 data-date-locked="@user.AdminUser.DateLocked.Value.ToString("MMM. dd, yyyy")"
                                                 data-time-locked="@user.AdminUser.DateLocked.Value.ToString("HH:mm")"
-                                                data-user-locked-displayname="@user.AdminUser.LockedByAdminUser.DisplayName"
+                                                data-user-locked-displayname="@(user.AdminUser.LockedByAdminUser == null ? "unknown admin user" : user.AdminUser.LockedByAdminUser.DisplayName)"
                                                 data-continue-editing="@user.ContinueEditing">
                                             <i class="fa fa-pencil fa-left"></i>
                                             Edit
@@ -167,8 +167,8 @@
             </div>
             <div class="modal-body">
                 <p>
-                    This user was locked by <span class="text-nowrap" id="currentUserLockedDisplayName"></span> 
-                    on <span class="text-nowrap" id="currentUserDateLocked"></span> 
+                    This user was locked by <span class="text-nowrap" id="currentUserLockedDisplayName"></span>
+                    on <span class="text-nowrap" id="currentUserDateLocked"></span>
                     at <span class="text-nowrap" id="currentUserTimeLocked"></span>.
                 </p>
             </div>

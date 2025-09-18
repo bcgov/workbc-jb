@@ -17,6 +17,9 @@ namespace WorkBC.Importers.Wanted
 
         private static async Task Main(string[] args)
         {
+            // Set Npgsql to avoid complaining about Datetimes.
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             CultureInfo.CurrentCulture = new CultureInfo("en-CA", false);
 
             IConfigurationBuilder builder = new ConfigurationBuilder()

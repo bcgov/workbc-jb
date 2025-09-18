@@ -102,7 +102,7 @@ INSERT [dbo].[SystemSettings] ([Name], [DefaultValue], [Description], [FieldType
 <p>You are responsible for keeping your WorkBC Job Board account login information, including password, secure. You must not share this information with any third party for any purpose.</p>
 <h4><strong>Agreement to WorkBC Job Board''s Terms of Use</strong></h4>
 <p>By clicking on ""I Agree"", you confirm that you have read, understood and agree to be bound by these Terms of Use for the WorkBC Job Board. By accessing and using the WorkBC Job Board you agree the job board service is used entirely at your own risk and accept that WorkBC Job Board is not liable for events outside of its control.</p>
-<p>If you do not agree to be bound by these Terms of Use, you must not access this website or use the job board.</p>', N'HTML text for the terms of use', 5, 1, CAST(N'2020-06-19T06:54:37.6433333' AS DateTime2))
+<p>If you do not agree to be bound by these Terms of Use, you must not access this website or use the job board.</p>', N'HTML text for the terms of use', 5, 1, CAST(N'2020-06-19T06:54:37.6433333' AS timestamp))
 GO
 UPDATE [dbo].[SystemSettings] SET [Value] = [DefaultValue]
 GO

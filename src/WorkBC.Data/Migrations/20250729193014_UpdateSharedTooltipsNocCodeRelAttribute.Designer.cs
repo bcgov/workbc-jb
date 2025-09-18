@@ -2,7 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkBC.Data;
@@ -22,7 +22,7 @@ namespace WorkBC.Data.Migrations
                 .HasAnnotation("ProductVersion", "6.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            NpgsqlModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
                 {
@@ -30,7 +30,7 @@ namespace WorkBC.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    NpgsqlPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("FriendlyName")
                         .HasColumnType("nvarchar(max)");
@@ -76,7 +76,7 @@ namespace WorkBC.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    NpgsqlPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -101,7 +101,7 @@ namespace WorkBC.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    NpgsqlPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -186,7 +186,7 @@ namespace WorkBC.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    NpgsqlPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AdminLevel")
                         .HasColumnType("int");
@@ -302,7 +302,7 @@ namespace WorkBC.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    NpgsqlPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("City")
                         .HasMaxLength(80)
@@ -579,7 +579,7 @@ namespace WorkBC.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    NpgsqlPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<byte>("AlertFrequency")
                         .HasColumnType("tinyint");
@@ -750,17 +750,17 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("DateRegistered");
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("DateRegistered"), new[] { "LastName", "FirstName", "Email", "AccountStatus" });
+                    NpgsqlIndexBuilderExtensions.IncludeProperties(b.HasIndex("DateRegistered"), new[] { "LastName", "FirstName", "Email", "AccountStatus" });
 
                     b.HasIndex("Email")
                         .IsUnique()
                         .HasFilter("[Email] IS NOT NULL");
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("Email"), new[] { "LastName", "FirstName", "AccountStatus" });
+                    NpgsqlIndexBuilderExtensions.IncludeProperties(b.HasIndex("Email"), new[] { "LastName", "FirstName", "AccountStatus" });
 
                     b.HasIndex("LastModified");
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("LastModified"), new[] { "LastName", "FirstName", "Email", "AccountStatus" });
+                    NpgsqlIndexBuilderExtensions.IncludeProperties(b.HasIndex("LastModified"), new[] { "LastName", "FirstName", "Email", "AccountStatus" });
 
                     b.HasIndex("LocationId");
 
@@ -780,15 +780,15 @@ namespace WorkBC.Data.Migrations
 
                     b.HasIndex("FirstName", "LastName");
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("FirstName", "LastName"), new[] { "Email", "AccountStatus" });
+                    NpgsqlIndexBuilderExtensions.IncludeProperties(b.HasIndex("FirstName", "LastName"), new[] { "Email", "AccountStatus" });
 
                     b.HasIndex("LastName", "FirstName");
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("LastName", "FirstName"), new[] { "Email", "AccountStatus" });
+                    NpgsqlIndexBuilderExtensions.IncludeProperties(b.HasIndex("LastName", "FirstName"), new[] { "Email", "AccountStatus" });
 
                     b.HasIndex("AccountStatus", "LastName", "FirstName");
 
-                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("AccountStatus", "LastName", "FirstName"), new[] { "Email" });
+                    NpgsqlIndexBuilderExtensions.IncludeProperties(b.HasIndex("AccountStatus", "LastName", "FirstName"), new[] { "Email" });
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -799,7 +799,7 @@ namespace WorkBC.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    NpgsqlPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
@@ -831,7 +831,7 @@ namespace WorkBC.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    NpgsqlPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
@@ -867,7 +867,7 @@ namespace WorkBC.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    NpgsqlPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
@@ -893,7 +893,7 @@ namespace WorkBC.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    NpgsqlPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
@@ -940,7 +940,7 @@ namespace WorkBC.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    NpgsqlPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<short>("AccountStatus")
                         .HasColumnType("smallint");
@@ -1048,7 +1048,7 @@ namespace WorkBC.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    NpgsqlPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("ActualDatePosted")
                         .HasColumnType("datetime2");
@@ -1389,7 +1389,7 @@ namespace WorkBC.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    NpgsqlPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<byte>("CalendarMonth")
                         .HasColumnType("tinyint");
@@ -1428,7 +1428,7 @@ namespace WorkBC.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    NpgsqlPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
@@ -1467,7 +1467,7 @@ namespace WorkBC.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    NpgsqlPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
@@ -1502,7 +1502,7 @@ namespace WorkBC.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    NpgsqlPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AspNetUserId")
                         .HasColumnType("nvarchar(450)");
