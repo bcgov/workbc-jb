@@ -163,3 +163,4 @@ resource "aws_rds_cluster_instance" "postgres_jbnew" {
   instance_class     = "db.serverless"
   engine             = aws_rds_cluster.postgres.engine
   engine_version     = aws_rds_cluster.postgres.engine_version
+}
