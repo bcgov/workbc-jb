@@ -78,7 +78,7 @@ namespace WorkBC.Web.Services
             {
                 return regions;
             }
-            
+
             var locations = await _jobBoardContext.Locations.AsNoTracking()
                 .Where(x => x.City.ToLower() == city.ToLower() && !x.IsHidden)
                 .ToListAsync();
@@ -96,10 +96,10 @@ namespace WorkBC.Web.Services
 
             var cities = await _cacheService.GetObjectAsync<IEnumerable<string>>(cacheKey);
 
-            if (cities != null)
-            {
-                return cities;
-            }
+            // if (cities != null)
+            // {
+            //     return cities;
+            // }
 
             cities =  (await _jobBoardContext.Locations.AsNoTracking()
                     .Where(x => !x.IsHidden &&
