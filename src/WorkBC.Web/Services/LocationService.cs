@@ -104,9 +104,9 @@ namespace WorkBC.Web.Services
             cities =  (await _jobBoardContext.Locations.AsNoTracking()
                     .Where(x => !x.IsHidden &&
                                 x.LocationId > 0 &&
-                                (MEF.Functions.Like(includeRegion ? x.Label : x.City, city + "%") ||
+                                (MEF.Functions.ILike(includeRegion ? x.Label : x.City, city + "%") ||
                                  city.Length > 1 &&
-                                 MEF.Functions.Like(includeRegion ? x.Label : x.City, "% " + city + "%")))
+                                 MEF.Functions.ILike(includeRegion ? x.Label : x.City, "% " + city + "%")))
                     .Select(x => includeRegion ? x.Label : x.City)
                     .Distinct()
                     .ToListAsync())
