@@ -113,7 +113,7 @@ namespace WorkBC.Admin
                 {
                     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                     options.Cookie.HttpOnly = true;
-                    options.Cookie.SameSite = SameSiteMode.None;
+                    options.Cookie.SameSite = SameSiteMode.Lax;
                     options.LoginPath = "/home/NotAuthorized";
                     options.AccessDeniedPath = "/home/NotAuthorized";
                     options.Events = new CookieAuthenticationEvents
