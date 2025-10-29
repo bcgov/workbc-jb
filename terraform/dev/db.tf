@@ -57,7 +57,7 @@ locals {
 resource "aws_rds_cluster" "postgres" {
   cluster_identifier      = "jb-postgres-cluster"
   engine                  = "aurora-postgresql"
-  engine_version          = "16.6"
+  engine_version          = "16.8"
 # engine_mode		  = "provisioned"
   master_username         = local.db_creds.username
   master_password         = local.db_creds.password
@@ -95,7 +95,7 @@ resource "aws_rds_cluster_parameter_group" "babelfish_pg" {
 resource "aws_rds_cluster" "postgres_babelfish" {
   cluster_identifier		 = "jb-babeldb-final"
   engine 			 = "aurora-postgresql"
-  engine_version		 = "16.6"
+  engine_version		 = "16.8"
   master_username		 = local.db_creds.username
   master_password     		 = local.db_creds.babelpassword
   backup_retention_period	 = 5
@@ -136,7 +136,7 @@ resource "aws_rds_cluster_instance" "postgres" {
 resource "aws_rds_cluster" "postgres_jbnewfinal" {
 	cluster_identifier = "jbnewfinal"
 	engine             = "aurora-postgresql"
-	engine_version = "16.6"
+	engine_version = "16.8"
 	master_username = local.db_creds.username
 	master_password = local.db_creds.newjbpost
 	backup_retention_period = 5
