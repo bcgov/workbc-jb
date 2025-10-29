@@ -55,20 +55,8 @@ jobs:
 
       - uses: peter-murray/terragrunt-github-action@v1.0.0
         with:
-          terragrunt_version: ${{ env.TG_VERSION }}
-      
-      # Debug enviroment variables before deploy
-      - name: Debug Enviroment
-        run: |
-          echo "Checking enviroment variables"
-          if [ -n "${LICENSE_PLATE}" ]; then echo "LICENSE_PLATE is set"; else echo "LICENSE_PLATE is MISSING "; fi
-          if [ -n "${app_repo}" ]; then echo "app_repo is set"; else echo "app_repo is MISSING"; fi
-          if [ -n "${app_version}" ]; then echo "app_version is set"; else echo "app_version is MISSING"; fi
-          echo "Current working directory:"
-          pwd
-          echo "Listing files:"
-          ls -la
-          
+          terragrunt_version: ${{ env.TG_VERSION }}  
+               
 
       - name: Terragrunt Apply
         working-directory: ${{ env.TG_SRC_PATH }}/${{ env.TFC_WORKSPACE }}
