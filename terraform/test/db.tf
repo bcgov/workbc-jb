@@ -120,5 +120,12 @@ resource "aws_rds_cluster" "postgres_jbnewfinal" {
   tags = var.common_tags
 }
 
+resource "aws_rds_cluster_instance" "postgres_jbnewfinal" {
+  count = 2
+  cluster_identifier = aws_rds_cluster.postgres_jbnewfinal.id
+  instance_class     = "db.serverless"
+  engine             = aws_rds_cluster.postgres.engine
+  engine_version     = aws_rds_cluster.postgres.engine_version
+}
 
 
