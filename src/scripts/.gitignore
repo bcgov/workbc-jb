@@ -1,2 +1,3 @@
 *.csv
-jobboard-full.sql.gz
+*.sql.gz
+*.json.gz
