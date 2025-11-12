@@ -134,11 +134,11 @@ LEFT OUTER JOIN UsersWithCareerProfiles cp ON cp.""AspNetUserId"" = u.""Id""
 LEFT OUTER JOIN UsersWithIndustryProfiles ip ON ip.""AspNetUserId"" = u.""Id""
 LEFT OUTER JOIN UsersWithSavedJobs sj ON sj.""AspNetUserId"" = u.""Id""
 WHERE (
-    @StartDate IS NULL
+    CAST(@StartDate AS DATE) IS NULL
     OR u.""DateRegistered"" >= @StartDate
     )
   AND (
-    @EndDate IS NULL
+    CAST(@EndDate AS DATE) IS NULL
     OR u.""DateRegistered"" <= @EndDate
     )
 ORDER BY ""AccountStatus""
@@ -179,11 +179,11 @@ LIMIT @MaxRows;
 SELECT COUNT(*)
 FROM ""AspNetUsers"" u
 WHERE (
-    @StartDate IS NULL
+    CAST(@StartDate AS DATE) IS NULL
     OR u.""DateRegistered"" >= @StartDate
     )
   AND (
-    @EndDate IS NULL
+    CAST(@EndDate AS DATE) IS NULL
     OR u.""DateRegistered"" <= @EndDate
     );
             ";

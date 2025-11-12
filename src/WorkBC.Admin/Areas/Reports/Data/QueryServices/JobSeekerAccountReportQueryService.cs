@@ -46,7 +46,7 @@ AS (
   INNER JOIN ""JobSeekerStatLabels"" rm ON rm.""Key"" = jss.""LabelKey""
   WHERE rm.""IsTotal"" = false
     AND (
-      @RegionId IS NULL
+      CAST (@RegionId AS INT4) IS NULL
       OR jss.""RegionId"" = @RegionId
       )
   GROUP BY jss.""LabelKey""
@@ -64,7 +64,7 @@ AS (
       OR wp.""Id"" = @CurrentPeriodId
       )
     AND (
-      @RegionId IS NULL
+      CAST (@RegionId AS INT4) IS NULL
       OR jss.""RegionId"" = @RegionId
       )
   GROUP BY jss.""LabelKey""
@@ -127,7 +127,7 @@ AS (
   INNER JOIN ""JobSeekerStatLabels"" rm ON rm.""Key"" = jss.""LabelKey""
   WHERE rm.""IsTotal"" = false
     AND (
-      @RegionId IS NULL
+      CAST (@RegionId AS INT4) IS NULL
       OR jss.""RegionId"" = @RegionId
       )
   GROUP BY jss.""LabelKey""
@@ -147,7 +147,7 @@ AS (
       OR wp.""Id"" = @CurrentPeriodId
       )
     AND (
-      @RegionId IS NULL
+      CAST (@RegionId AS INT4) IS NULL
       OR jss.""RegionId"" = @RegionId
       )
   GROUP BY jss.""LabelKey""
@@ -212,7 +212,7 @@ AS (
     ,SUM(jss.""Value"") AS ""Value""
   FROM ""JobSeekerStats"" jss
   INNER JOIN ""WeeklyPeriods"" wp ON wp.""Id"" = jss.""WeeklyPeriodId""
-  WHERE @RegionId IS NULL
+  WHERE CAST (@RegionId AS INT4) IS NULL
     OR jss.""RegionId"" = @RegionId
   GROUP BY jss.""LabelKey""
     ,jss.""WeeklyPeriodId""
