@@ -10,10 +10,10 @@ resource "aws_db_option_group" "mssql-og" {
 	option_group_description = "Option for native backup and restore"
 	engine_name = "sqlserver-web"
 	major_engine_version = "15.00"
-	
+
 	option {
 		option_name = "SQLSERVER_BACKUP_RESTORE"
-		
+
 		option_settings {
 			name = "IAM_ROLE_ARN"
 			value = aws_iam_role.mssql_native_backup_restore_role.arn
@@ -69,7 +69,7 @@ resource "aws_rds_cluster" "postgres" {
   vpc_security_group_ids  = [data.aws_security_group.data.id]
   skip_final_snapshot     = true
   final_snapshot_identifier = "jb-finalsnapshot"
-  
+
   serverlessv2_scaling_configuration {
     max_capacity = 2.0
     min_capacity = 1.0
@@ -82,14 +82,14 @@ resource "aws_rds_cluster" "postgres" {
 resource "aws_rds_cluster_parameter_group" "babelfish_pg" {
 	name = "babelfish-pg-group"
 	family = "aurora-postgresql16"
-	
+
 	parameter {
 	   name = "rds.babelfish_status"
 	   value = "on"
 	   apply_method = "pending-reboot"
 	   }
 	}
-	   
+
 
 #Postgres Babelfish
 resource "aws_rds_cluster" "postgres_babelfish" {
@@ -106,7 +106,7 @@ resource "aws_rds_cluster" "postgres_babelfish" {
   vpc_security_group_ids 	 = [data.aws_security_group.data.id]
   db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.babelfish_pg.name
   final_snapshot_identifier 	 = "jbabel-finalsnapshot"
-  
+
   serverlessv2_scaling_configuration {
     max_capacity = 2.0
     min_capacity = 1.0
@@ -147,7 +147,7 @@ resource "aws_rds_cluster" "postgres_jbnewfinal" {
 	vpc_security_group_ids  = [data.aws_security_group.data.id]
 	skip_final_snapshot     = true
 	final_snapshot_identifier = "jbnew-finalsnapshot"
-	
+
     serverlessv2_scaling_configuration {
     max_capacity = 2.0
     min_capacity = 1.0

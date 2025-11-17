@@ -22,25 +22,25 @@ resource "aws_db_option_group" "mssql-og" {
 }
 
 # SQL Server
-resource "aws_db_instance" "mssql" {
-  allocated_storage       = 100
-  max_allocated_storage   = 200
-  engine                  = "sqlserver-web"
-  engine_version	  = "15.00"
-  instance_class          = "db.t3.medium"
-  identifier              = "ceu-mssql"
-  username                = local.db_creds.username
-  password                = local.db_creds.password
-  skip_final_snapshot     = true
-  backup_retention_period = 5
-  db_subnet_group_name    = data.aws_db_subnet_group.data_subnet.name
-  kms_key_id              = data.aws_kms_key.workbc-jb-kms-key.arn
-  storage_encrypted       = true
-  vpc_security_group_ids  = [data.aws_security_group.data.id, aws_security_group.mssql_security_group.id]
-  option_group_name	  = aws_db_option_group.mssql-og.name
-  timezone		  = "Pacific Standard Time"
-  apply_immediately	  = true
-}
+#resource "aws_db_instance" "mssql" {
+#  allocated_storage       = 100
+#  max_allocated_storage   = 200
+#  engine                  = "sqlserver-web"
+#  engine_version	  = "15.00"
+#  instance_class          = "db.t3.medium"
+#  identifier              = "ceu-mssql"
+#  username                = local.db_creds.username
+#  password                = local.db_creds.password
+#  skip_final_snapshot     = true
+#  backup_retention_period = 5
+#  db_subnet_group_name    = data.aws_db_subnet_group.data_subnet.name
+#  kms_key_id              = data.aws_kms_key.workbc-jb-kms-key.arn
+#  storage_encrypted       = true
+#  vpc_security_group_ids  = [data.aws_security_group.data.id, aws_security_group.mssql_security_group.id]
+#  option_group_name	  = aws_db_option_group.mssql-og.name
+#  timezone		  = "Pacific Standard Time"
+#  apply_immediately	  = true
+#}
 
 # create this manually
 data "aws_secretsmanager_secret_version" "creds" {
@@ -69,7 +69,7 @@ resource "aws_rds_cluster_parameter_group" "babelfish_pg" {
 resource "aws_rds_cluster" "postgres_babelfish" {
   cluster_identifier		 = "jb-babeldb-final"
   engine 			 = "aurora-postgresql"
-  engine_version		 = "16.4"
+  engine_version		 = "16.6"
   master_username		 = local.db_creds.username
   master_password     		 = local.db_creds.babelpassword
   backup_retention_period	 = 5

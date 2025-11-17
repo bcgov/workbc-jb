@@ -92,10 +92,10 @@ resource "aws_ecs_task_definition" "app" {
 				name = "ConnectionStrings__DefaultConnection",
 				value = "${local.df_conn}"
 			},
-			{
-				name = "ConnectionStrings__EnterpriseConnection",
-				value = "${local.ent_conn}"
-			},
+			#{
+				#name = "ConnectionStrings__EnterpriseConnection",
+				#value = "${local.ent_conn}"
+			#},
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
 				value = "${local.es_conn}"
@@ -200,10 +200,10 @@ resource "aws_ecs_task_definition" "app" {
 				name = "ConnectionStrings__DefaultConnection",
 				value = "${local.df_conn}"
 			},
-			{
-				name = "ConnectionStrings__EnterpriseConnection",
-				value = "${local.ent_conn}"
-			},
+			#{
+				#name = "ConnectionStrings__EnterpriseConnection",
+				#value = "${local.ent_conn}"
+			#},
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
 				value = "${local.es_conn}"
@@ -266,7 +266,12 @@ resource "aws_ecs_task_definition" "app" {
 			{
 				name = "AzureAdSettings__ClientSecret",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:azure_secret::"
+			},
+			{
+				name = "AzureAdSettings__ClientCertificate",
+				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:azure_certificate::"
 			}
+			
 		]
 		dependsOn = [
 			{
@@ -296,10 +301,10 @@ resource "aws_ecs_task_definition" "app" {
 				name = "ConnectionStrings__DefaultConnection",
 				value = "${local.df_conn}"
 			},
-			{
-				name = "ConnectionStrings__EnterpriseConnection",
-				value = "${local.ent_conn}"
-			},
+			#{
+				#name = "ConnectionStrings__EnterpriseConnection",
+				#value = "${local.ent_conn}"
+			#},
 			{
 				name = "ConnectionStrings__ElasticSearchServer",
 				value = "${local.es_conn}"
