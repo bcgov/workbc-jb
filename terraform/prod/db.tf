@@ -69,7 +69,7 @@ resource "aws_rds_cluster_parameter_group" "babelfish_pg" {
 resource "aws_rds_cluster" "postgres_babelfish" {
   cluster_identifier		 = "jb-babeldb-final"
   engine 			 = "aurora-postgresql"
-  engine_version		 = "16.6"
+  engine_version		 = "16.8"
   master_username		 = local.db_creds.username
   master_password     		 = local.db_creds.babelpassword
   backup_retention_period	 = 5
@@ -96,3 +96,44 @@ resource "aws_rds_cluster_instance" "postgres_babelfish" {
   engine             = aws_rds_cluster.postgres_babelfish.engine
   engine_version     = aws_rds_cluster.postgres_babelfish.engine_version
 }
+
+# resource "aws_rds_cluster_instance" "postgres" {
+#  count = 2
+#  cluster_identifier = aws_rds_cluster.postgres.id
+#  instance_class     = "db.serverless"
+#  engine             = aws_rds_cluster.postgres.engine
+#  engine_version     = aws_rds_cluster.postgres.engine_version
+#}
+
+resource "aws_rds_cluster" "postgres_jbnewfinal" {
+	cluster_identifier = "jbnewfinal"
+	engine             = "aurora-postgresql"
+	engine_version = "16.8"
+	master_username = local.db_creds.username
+	master_password = local.db_creds.newjbpost
+	backup_retention_period = 5
+	preferred_backup_window = "07:00-09:00"
+	db_subnet_group_name    = data.aws_db_subnet_group.data_subnet.name
+	kms_key_id              = data.aws_kms_key.workbc-jb-kms-key.arn
+	storage_encrypted       = true
+	vpc_security_group_ids  = [data.aws_security_group.data.id]
+	skip_final_snapshot     = true
+	final_snapshot_identifier = "jbnew-finalsnapshot"
+	
+    serverlessv2_scaling_configuration {
+    max_capacity = 2.0
+    min_capacity = 1.0
+  }
+
+  tags = var.common_tags
+}
+
+resource "aws_rds_cluster_instance" "postgres_jbnewfinal" {
+  count = 2
+  cluster_identifier = aws_rds_cluster.postgres_jbnewfinal.id
+  instance_class     = "db.serverless"
+  engine             = aws_rds_cluster.postgres_jbnewfinal.engine
+  engine_version     = aws_rds_cluster.postgres_jbnewfinal.engine_version
+}
+
+
