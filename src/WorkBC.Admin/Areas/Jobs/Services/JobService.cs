@@ -5,14 +5,11 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Transactions;
 using LinqKit;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using WorkBC.Admin.Areas.Jobs.Models;
 using WorkBC.Admin.Areas.JobSeekers.Extentions;
-using WorkBC.Admin.Areas.JobSeekers.Models;
 using WorkBC.Admin.Models;
 using WorkBC.Data;
 using WorkBC.Data.Model.JobBoard;
@@ -133,7 +130,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
                     PositionsAvailable = oldVersion.PositionsAvailable,
                     LocationId = oldVersion.LocationId,
                     IsCurrentVersion = true,
-                        VersionNumber = (short) (oldVersion.VersionNumber + 1)
+                    VersionNumber = (short) (oldVersion.VersionNumber + 1)
                 };
 
                 _jobBoardContext.JobVersions.Update(oldVersion);

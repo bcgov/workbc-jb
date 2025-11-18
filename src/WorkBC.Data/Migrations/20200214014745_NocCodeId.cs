@@ -18,7 +18,7 @@ namespace WorkBC.Data.Migrations
                 maxLength: 4,
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(4)",
+                oldType: "varchar(4)",
                 oldMaxLength: 4);
 
             migrationBuilder.AddColumn<short>(
@@ -58,7 +58,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "Code",
                 table: "NocCodes",
-                type: "nvarchar(4)",
+                type: "varchar(4)",
                 maxLength: 4,
                 nullable: false,
                 oldClrType: typeof(string),

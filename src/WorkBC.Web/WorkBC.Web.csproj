@@ -12,7 +12,7 @@
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
     <AssemblyName>WorkBC.Web</AssemblyName>
     <RootNamespace>WorkBC.Web</RootNamespace>
-    <Authors>OXD</Authors>
+    <Authors>OXD, Quartech</Authors>
     <Company>WorkBC</Company>
     <Product>WorkBC Job Board</Product>
 	<UserSecretsId>WorkBC-JobBoard-faa7f933-396f-4d5c-aeba-e868c0457626</UserSecretsId>
@@ -54,6 +54,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.4.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.34.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.7" />
   </ItemGroup>
 
   <ItemGroup>

@@ -5,7 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
 	<UserSecretsId>WorkBC-JobBoard-faa7f933-396f-4d5c-aeba-e868c0457626</UserSecretsId>
 	<RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
-	<Authors>OXD</Authors>
+	<Authors>OXD, Quartech</Authors>
 	<Company>WorkBC</Company>
 	<Product>WorkBC Job Board</Product>
     <Version>1.0.1</Version>
@@ -17,6 +17,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.7" />
   </ItemGroup>
 
   <ItemGroup>

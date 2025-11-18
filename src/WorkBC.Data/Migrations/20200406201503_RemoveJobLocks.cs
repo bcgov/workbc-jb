@@ -29,7 +29,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AddColumn<DateTime>(
                 name: "DateLocked",
                 table: "Jobs",
-                type: "datetime2",
+                type: "timestamp",
                 nullable: true);
 
             migrationBuilder.AddColumn<int>(

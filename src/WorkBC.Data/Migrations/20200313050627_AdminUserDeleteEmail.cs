@@ -16,7 +16,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "Email",
                 table: "AdminUsers",
-                type: "nvarchar(40)",
+                type: "varchar(40)",
                 maxLength: 40,
                 nullable: true);
         }

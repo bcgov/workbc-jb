@@ -27,7 +27,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AddColumn<string>(
             name: "TitleBC",
             table: "Industries",
-            type: "nvarchar(150)",
+            type: "varchar(150)",
             maxLength: 150,
             nullable: true);
 

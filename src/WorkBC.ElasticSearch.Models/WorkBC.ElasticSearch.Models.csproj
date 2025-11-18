@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
-		<Authors>OXD</Authors>
+		<Authors>OXD, Quartech</Authors>
 		<Company>WorkBC</Company>
 		<Product>WorkBC Job Board</Product>
 	</PropertyGroup>

@@ -18,6 +18,9 @@ namespace WorkBC.Notifications.JobAlerts
         /// </summary>
         private static async Task Main(string[] args)
         {
+            // Set Npgsql to avoid complaining about Datetimes.
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             CultureInfo.CurrentCulture = new CultureInfo("en-CA", false);
 
             IConfigurationBuilder builder = new ConfigurationBuilder()
@@ -32,7 +35,7 @@ namespace WorkBC.Notifications.JobAlerts
             logger.Information("JOB ALERT TASK STARTED");
 
 
-            if (configuration["AppSettings:IsProduction"] == "true" || !string.IsNullOrWhiteSpace(configuration["AppSettings:SendEmailTestingTo"])) 
+            if (configuration["AppSettings:IsProduction"] == "true" || !string.IsNullOrWhiteSpace(configuration["AppSettings:SendEmailTestingTo"]))
             {
                 try
                 {
@@ -43,7 +46,7 @@ namespace WorkBC.Notifications.JobAlerts
                 {
                     logger.Error($"Failed sending notifications:\n{exc}");
                 }
-            } 
+            }
             else
             {
                 logger.Information("No emails were sent. AppSettings__SendEmailTestingTo is blank and AppSettings__IsProduction is false.");

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Transactions;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using WorkBC.Data;
@@ -106,7 +105,6 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 Console.Write("D");
 
                 await DbContext.SaveChangesAsync();
-
             }
 
             if (jobsToDeactivate.Any())

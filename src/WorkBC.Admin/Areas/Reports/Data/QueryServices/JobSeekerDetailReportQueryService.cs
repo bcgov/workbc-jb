@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using WorkBC.Admin.Areas.Reports.Data.QueryResultModels;
 
 namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
@@ -34,66 +34,119 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
             }
 
             // set up the query
-            string sql =
-                @"WITH UsersWithJobAlerts AS (
-	                SELECT DISTINCT AspNetUserId 
-	                FROM JobAlerts 
-	                WHERE IsDeleted = 0
-                ),
-                UsersWithCareerProfiles AS (
-	                SELECT DISTINCT AspNetUserId 
-	                FROM SavedCareerProfiles 
-	                WHERE IsDeleted = 0
-                ),
-                UsersWithIndustryProfiles AS (
-	                SELECT DISTINCT AspNetUserId 
-	                FROM SavedIndustryProfiles
-	                WHERE IsDeleted = 0
-                ),
-                UsersWithSavedJobs AS (
-	                SELECT DISTINCT AspNetUserId
-	                FROM SavedJobs
-	                WHERE IsDeleted = 0
-                )
-                SELECT TOP (@MaxRows) u.Id,
-	                u.Email,
-	                u.FirstName,
-	                u.LastName,
-	                u.AccountStatus,
-	                l.City,
-	                r.[Name] AS Region,
-	                (CASE WHEN u.CountryId = 37 AND u.ProvinceId = 2 AND u.LocationId IS NULL THEN NULL ELSE c.[Name] END) AS Country,
-	                (CASE WHEN u.CountryId = 37 AND u.ProvinceId = 2 AND u.LocationId IS NULL THEN NULL ELSE p.[Name] END) AS Province,
-	                u.DateRegistered,
-	                u.LastModified,
-	                f.IsApprentice,
-	                f.IsIndigenousPerson,
-	                f.IsMatureWorker,
-	                f.IsNewImmigrant,
-	                f.IsPersonWithDisability,
-	                f.IsStudent,
-	                f.IsVeteran, 
-	                f.IsVisibleMinority,
-	                f.IsYouth,
-	                (CASE WHEN ja.AspNetUserId IS NOT NULL THEN 1 ELSE 0 END) AS HasJobAlerts,
-	                (CASE WHEN cp.AspNetUserId IS NOT NULL THEN 1 ELSE 0 END) AS HasSavedCareerProfiles,
-	                (CASE WHEN ip.AspNetUserId IS NOT NULL THEN 1 ELSE 0 END) AS HasSavedIndustryProfiles,
-	                (CASE WHEN sj.AspNetUserId IS NOT NULL THEN 1 ELSE 0 END) AS HasSavedJobs
-                FROM AspNetUsers u
-                LEFT OUTER JOIN Locations l ON l.LocationId = u.LocationId
-                LEFT OUTER JOIN Regions r ON r.Id = l.RegionId
-                LEFT OUTER JOIN Provinces p ON p.ProvinceId = u.ProvinceId
-                LEFT OUTER JOIN Countries c ON c.Id = u.CountryId
-                LEFT OUTER JOIN JobSeekerFlags f ON f.AspNetUserId = u.Id
-                LEFT OUTER JOIN UsersWithJobAlerts ja ON ja.AspNetUserId = u.Id
-                LEFT OUTER JOIN UsersWithCareerProfiles cp ON cp.AspNetUserId = u.Id
-                LEFT OUTER JOIN UsersWithIndustryProfiles ip ON ip.AspNetUserId = u.Id
-                LEFT OUTER JOIN UsersWithSavedJobs sj ON sj.AspNetUserId = u.Id
-                WHERE (@StartDate IS NULL OR u.DateRegistered >= @StartDate) 
-	                AND (@EndDate IS NULL OR u.DateRegistered <= @EndDate)
-                ORDER BY AccountStatus, DateRegistered DESC";
+            string sql = @"
+WITH UsersWithJobAlerts
+AS (
+  SELECT DISTINCT ""AspNetUserId""
+  FROM ""JobAlerts""
+  WHERE ""IsDeleted"" = false
+  )
+  ,UsersWithCareerProfiles
+AS (
+  SELECT DISTINCT ""AspNetUserId""
+  FROM ""SavedCareerProfiles""
+  WHERE ""IsDeleted"" = false
+  )
+  ,UsersWithIndustryProfiles
+AS (
+  SELECT DISTINCT ""AspNetUserId""
+  FROM ""SavedIndustryProfiles""
+  WHERE ""IsDeleted"" = false
+  )
+  ,UsersWithSavedJobs
+AS (
+  SELECT DISTINCT ""AspNetUserId""
+  FROM ""SavedJobs""
+  WHERE ""IsDeleted"" = false
+  )
+SELECT DISTINCT u.""Id""
+  ,u.""Email""
+  ,u.""FirstName""
+  ,u.""LastName""
+  ,u.""AccountStatus""
+  ,l.""City""
+  ,r.""Name"" AS ""Region""
+  ,(
+    CASE
+      WHEN u.""CountryId"" = 37
+        AND u.""ProvinceId"" = 2
+        AND u.""LocationId"" IS NULL
+        THEN NULL
+      ELSE c.""Name""
+      END
+    ) AS ""Country""
+  ,(
+    CASE
+      WHEN u.""CountryId"" = 37
+        AND u.""ProvinceId"" = 2
+        AND u.""LocationId"" IS NULL
+        THEN NULL
+      ELSE p.""Name""
+      END
+    ) AS ""Province""
+  ,u.""DateRegistered""
+  ,u.""LastModified""
+  ,f.""IsApprentice""
+  ,f.""IsIndigenousPerson""
+  ,f.""IsMatureWorker""
+  ,f.""IsNewImmigrant""
+  ,f.""IsPersonWithDisability""
+  ,f.""IsStudent""
+  ,f.""IsVeteran""
+  ,f.""IsVisibleMinority""
+  ,f.""IsYouth""
+  ,(
+    CASE
+      WHEN ja.""AspNetUserId"" IS NOT NULL
+        THEN true
+      ELSE false
+      END
+    ) AS ""HasJobAlerts""
+  ,(
+    CASE
+      WHEN cp.""AspNetUserId"" IS NOT NULL
+        THEN true
+      ELSE false
+      END
+    ) AS ""HasSavedCareerProfiles""
+  ,(
+    CASE
+      WHEN ip.""AspNetUserId"" IS NOT NULL
+        THEN true
+      ELSE false
+      END
+    ) AS ""HasSavedIndustryProfiles""
+  ,(
+    CASE
+      WHEN sj.""AspNetUserId"" IS NOT NULL
+        THEN true
+      ELSE false
+      END
+    ) AS ""HasSavedJobs""
+FROM ""AspNetUsers"" u
+LEFT OUTER JOIN ""Locations"" l ON l.""LocationId"" = u.""LocationId""
+LEFT OUTER JOIN ""Regions"" r ON r.""Id"" = l.""RegionId""
+LEFT OUTER JOIN ""Provinces"" p ON p.""ProvinceId"" = u.""ProvinceId""
+LEFT OUTER JOIN ""Countries"" c ON c.""Id"" = u.""CountryId""
+LEFT OUTER JOIN ""JobSeekerFlags"" f ON f.""AspNetUserId"" = u.""Id""
+LEFT OUTER JOIN UsersWithJobAlerts ja ON ja.""AspNetUserId"" = u.""Id""
+LEFT OUTER JOIN UsersWithCareerProfiles cp ON cp.""AspNetUserId"" = u.""Id""
+LEFT OUTER JOIN UsersWithIndustryProfiles ip ON ip.""AspNetUserId"" = u.""Id""
+LEFT OUTER JOIN UsersWithSavedJobs sj ON sj.""AspNetUserId"" = u.""Id""
+WHERE (
+    CAST(@StartDate AS DATE) IS NULL
+    OR u.""DateRegistered"" >= @StartDate
+    )
+  AND (
+    CAST(@EndDate AS DATE) IS NULL
+    OR u.""DateRegistered"" <= @EndDate
+    )
+ORDER BY ""AccountStatus""
+  ,""DateRegistered"" DESC
+LIMIT @MaxRows;
+            ";
 
-            using (var conn = new SqlConnection(ConnectionString))
+            using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 return (await conn.QueryAsync<JobSeekerDetailResult>(sql,
                     new
@@ -122,13 +175,20 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
             }
 
             // set up the query
-            string sql =
-                @"SELECT COUNT(*)
-                FROM AspNetUsers u
-                WHERE (@StartDate IS NULL OR u.DateRegistered >= @StartDate) 
-	                AND (@EndDate IS NULL OR u.DateRegistered <= @EndDate)";
+            string sql = @"
+SELECT COUNT(*)
+FROM ""AspNetUsers"" u
+WHERE (
+    CAST(@StartDate AS DATE) IS NULL
+    OR u.""DateRegistered"" >= @StartDate
+    )
+  AND (
+    CAST(@EndDate AS DATE) IS NULL
+    OR u.""DateRegistered"" <= @EndDate
+    );
+            ";
 
-            using (var conn = new SqlConnection(ConnectionString))
+            using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 return (await conn.QueryFirstOrDefaultAsync<int>(sql,
                     new

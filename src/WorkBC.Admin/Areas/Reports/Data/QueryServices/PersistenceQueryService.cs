@@ -2,7 +2,7 @@
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 
 namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
 {
@@ -54,7 +54,7 @@ namespace WorkBC.Admin.Areas.Reports.Data.QueryServices
             queryParams.Add("@WeekEndDate", dbType: DbType.DateTime, value: weekEndDate);
             queryParams.Add("@RetVal", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
-            using (var conn = new SqlConnection(ConnectionString))
+            using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 await conn.ExecuteAsync(procedureName, queryParams,
                     commandType: CommandType.StoredProcedure);

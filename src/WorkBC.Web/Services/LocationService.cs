@@ -78,7 +78,7 @@ namespace WorkBC.Web.Services
             {
                 return regions;
             }
-            
+
             var locations = await _jobBoardContext.Locations.AsNoTracking()
                 .Where(x => x.City.ToLower() == city.ToLower() && !x.IsHidden)
                 .ToListAsync();
@@ -96,17 +96,17 @@ namespace WorkBC.Web.Services
 
             var cities = await _cacheService.GetObjectAsync<IEnumerable<string>>(cacheKey);
 
-            if (cities != null)
-            {
-                return cities;
-            }
+            // if (cities != null)
+            // {
+            //     return cities;
+            // }
 
             cities =  (await _jobBoardContext.Locations.AsNoTracking()
                     .Where(x => !x.IsHidden &&
                                 x.LocationId > 0 &&
-                                (MEF.Functions.Like(includeRegion ? x.Label : x.City, city + "%") ||
+                                (MEF.Functions.ILike(includeRegion ? x.Label : x.City, city + "%") ||
                                  city.Length > 1 &&
-                                 MEF.Functions.Like(includeRegion ? x.Label : x.City, "% " + city + "%")))
+                                 MEF.Functions.ILike(includeRegion ? x.Label : x.City, "% " + city + "%")))
                     .Select(x => includeRegion ? x.Label : x.City)
                     .Distinct()
                     .ToListAsync())

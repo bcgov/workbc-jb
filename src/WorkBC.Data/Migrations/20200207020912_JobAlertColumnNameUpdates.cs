@@ -39,7 +39,7 @@ namespace WorkBC.Data.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "ElasticSearchQuery",
                 table: "JobAlerts",
-                type: "nvarchar(max)",
+                type: "varchar",
                 nullable: true);
 
             migrationBuilder.AddColumn<int>(

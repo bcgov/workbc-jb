@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Transactions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WorkBC.Data;
@@ -565,7 +564,7 @@ namespace WorkBC.Shared.Repositories
                 await _context.JobSeekerChangeLog.AddAsync(changeEvents);
             }
 
-                return modified;
+            return modified;
         }
 
         private async Task<List<JobSeekerChangeEvent>> ApplyJobSeekerFlagsChangesAsync(JobSeeker jobSeeker, int? adminUserId = null)

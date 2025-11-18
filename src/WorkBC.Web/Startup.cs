@@ -59,25 +59,25 @@ namespace WorkBC.Web
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
+                options.MinimumSameSitePolicy = SameSiteMode.Lax;
             });
 
             services.AddDbContext<JobBoardContext>(options =>
                 options
                     .EnableSensitiveDataLogging()
-                    .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")), 
+                    .UseNpgsql(Configuration.GetConnectionString("DefaultConnection")),
                 ServiceLifetime.Transient);
 
             services.AddDefaultIdentity<JobSeeker>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;
-                options.SignIn.RequireConfirmedEmail = true; 
+                options.SignIn.RequireConfirmedEmail = true;
                 // lockout for 10 minutes after 50 failed login attempts
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
                 // don't restrict characters allowed in usernames (trust email address validation instead)
-                options.User.AllowedUserNameCharacters = null; 
+                options.User.AllowedUserNameCharacters = null;
             })
                 .AddEntityFrameworkStores<JobBoardContext>();
 
