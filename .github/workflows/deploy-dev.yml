@@ -53,15 +53,15 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN_TO_USE_DEV }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - uses: peter-murray/terragrunt-github-action@v1.0.0
-        with:
-          terragrunt_version: ${{ env.TG_VERSION }}  
+#      - uses: peter-murray/terragrunt-github-action@v1.0.0
+#        with:
+#          terragrunt_version: ${{ env.TG_VERSION }}  
                
 
-      - name: Terragrunt Apply
-        working-directory: ${{ env.TG_SRC_PATH }}/${{ env.TFC_WORKSPACE }}
-        env:
-          app_repo: ${{ env.IMAGE_ID }}
-          app_version: ${{ github.event.workflow_run.head_sha }}
-          LICENSE_PLATE: ${{ secrets.MY_LICENSE_PLATE }}
-        run: terragrunt run-all apply --terragrunt-non-interactive
+#      - name: Terragrunt Apply
+#        working-directory: ${{ env.TG_SRC_PATH }}/${{ env.TFC_WORKSPACE }}
+#        env:
+#          app_repo: ${{ env.IMAGE_ID }}
+#          app_version: ${{ github.event.workflow_run.head_sha }}
+#          LICENSE_PLATE: ${{ secrets.MY_LICENSE_PLATE }}
+#        run: terragrunt run-all apply --terragrunt-non-interactive
