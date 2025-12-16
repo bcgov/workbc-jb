@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: jb-migrate
+  namespace: app
+spec:
+  backoffLimit: 1
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrate
+          image: __IMAGE__
+          envFrom:
+            - configMapRef:
+                name: jb-config
+          env:
+            - name: AppSettings__ApplyMigrations
+              value: "true"

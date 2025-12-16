@@ -65,3 +65,18 @@ jobs:
 #          app_version: ${{ github.event.workflow_run.head_sha }}
 #          LICENSE_PLATE: ${{ secrets.MY_LICENSE_PLATE }}
 #        run: terragrunt run-all apply --terragrunt-non-interactive
+      - name: Update Kubeconfig
+        run: |
+          aws eks update-kubeconfig --name workbc-cluster --region ${{ secrets.AWS_REGION }}
+
+      - name: Set image on Kubernetes deployment
+        env:
+          IMAGE: ${{ env.IMAGE_ID }}/jb-migration:${{ github.event.workflow_run.head_sha }}
+          IMAGE2: ${{ env.IMAGE_ID }}/jb:${{ github.event.workflow_run.head_sha }}
+          IMAGE3: ${{ env.IMAGE_ID }}/jb-admin:${{ github.event.workflow_run.head_sha }}
+          IMAGE4: ${{ env.IMAGE_ID }}/jb-cli:${{ github.event.workflow_run.head_sha }}
+        run: |
+          kubectl delete job jb-migrate -n app --ignore-not-found
+          sed "s|__IMAGE__|$IMAGE|g" yaml/migrate.yaml | kubectl apply -f -
+          kubectl wait --for=condition=complete job/jb-migrate --timeout=300s -n app
+          kubectl set image deployment/jb web=$IMAGE2 admin=$IMAGE3 cli=$IMAGE4 --namespace=app
