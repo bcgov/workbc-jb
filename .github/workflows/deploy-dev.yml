@@ -78,5 +78,5 @@ jobs:
         run: |
           kubectl delete job jb-migrate -n app --ignore-not-found
           sed "s|__IMAGE__|$IMAGE|g" yaml/migrate.yaml | kubectl apply -f -
-          kubectl wait --for=condition=complete job/drupal-drush-workbc --timeout=300s -n app
+          kubectl wait --for=condition=complete job/jb-migrate --timeout=300s -n app
           kubectl set image deployment/jb web=$IMAGE2 admin=$IMAGE3 cli=$IMAGE4 --namespace=app
