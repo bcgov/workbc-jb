@@ -87,8 +87,13 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE_ARN_TO_USE_TOOLS }}
+#          role-duration-seconds: 900
+#          role-session-name: workbc-jb-github-action
+#          role-skip-session-tagging: true
           
       # Login to ECR
       - name: Login to Amazon ECR
