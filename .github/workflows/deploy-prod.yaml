@@ -53,14 +53,37 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN_TO_USE_PROD }}
           aws-region: ${{ secrets.AWS_REGION }}
           
-      - uses: peter-murray/terragrunt-github-action@v1.0.0
-        with:
-          terragrunt_version: ${{ env.TG_VERSION }}
+#      - uses: peter-murray/terragrunt-github-action@v1.0.0
+#        with:
+#          terragrunt_version: ${{ env.TG_VERSION }}
 
-      - name: Terragrunt Apply
-        working-directory: ${{ env.TG_SRC_PATH }}/${{ env.TFC_WORKSPACE }}
+#      - name: Terragrunt Apply
+#        working-directory: ${{ env.TG_SRC_PATH }}/${{ env.TFC_WORKSPACE }}
+#        env:
+#          app_repo: ${{ env.IMAGE_ID }}
+#          app_version: ${{ github.event.workflow_run.head_branch}}
+#          LICENSE_PLATE: ${{ secrets.MY_LICENSE_PLATE }}          
+#        run: terragrunt run-all apply --terragrunt-non-interactive
+
+      - name: Update Kubeconfig
+        run: |
+          aws eks update-kubeconfig --name workbc-cluster --region ${{ secrets.AWS_REGION }}
+
+      - name: Set image on Kubernetes deployment
         env:
-          app_repo: ${{ env.IMAGE_ID }}
-          app_version: ${{ github.event.workflow_run.head_branch}}
-          LICENSE_PLATE: ${{ secrets.MY_LICENSE_PLATE }}          
-        run: terragrunt run-all apply --terragrunt-non-interactive
+          IMAGE: ${{ env.IMAGE_ID }}/jb-migration:${{ github.event.workflow_run.head_branch }}
+          IMAGE2: ${{ env.IMAGE_ID }}/jb:${{ github.event.workflow_run.head_branch }}
+          IMAGE3: ${{ env.IMAGE_ID }}/jb-admin:${{ github.event.workflow_run.head_branch }}
+          IMAGE4: ${{ env.IMAGE_ID }}/jb-cli:${{ github.event.workflow_run.head_branch }}
+          IMAGE5: ${{ env.IMAGE_ID }}/jb-importers-wanted:${{ github.event.workflow_run.head_branch }}
+          IMAGE6: ${{ env.IMAGE_ID }}/jb-importers-federal:${{ github.event.workflow_run.head_branch }}
+          IMAGE7: ${{ env.IMAGE_ID }}/jb-indexers-wanted:${{ github.event.workflow_run.head_branch }}
+          IMAGE8: ${{ env.IMAGE_ID }}/jb-indexers-federal:${{ github.event.workflow_run.head_branch }}
+          IMAGE9: ${{ env.IMAGE_ID }}/jb-notifications:${{ github.event.workflow_run.head_branch }}
+        run: |
+          kubectl delete job jb-migrate -n app --ignore-not-found
+          sed "s|__IMAGE__|$IMAGE|g" yaml/migrate.yaml | kubectl apply -f -
+          kubectl wait --for=condition=complete job/jb-migrate --timeout=300s -n app
+          kubectl set image deployment/jb web=$IMAGE2 admin=$IMAGE3 cli=$IMAGE4 --namespace=app
+          kubectl set image cronjob/jb-importer-indexer wanted-importer=$IMAGE5 federal-importer=$IMAGE6 wanted-indexer=$IMAGE7 federal-indexer=$IMAGE8 --namespace=app
+          kubectl set image cronjob/jb-notifications notifications=$IMAGE9 --namespace=app
