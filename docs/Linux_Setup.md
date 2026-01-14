@@ -22,12 +22,25 @@ docker-compose-jb up
 - Allow for ~30 minutes to repopulate the full database, including jobs import, until the Docker logs settle.
 - Run the full indexing job manually:
 ```bash
-docker-compose-jb exec dotnet-cli
+docker-compose-jb exec dotnet-cli bash
 cd /app/workbc-indexers-wanted
 dotnet WorkBC.Indexers.Wanted.dll -r
 cd /app/workbc-indexers-federal
 dotnet WorkBC.Indexers.Federal.dll # without -r to avoid resetting the index
 ```
+
+## Development
+- Start the full app:
+```bash
+cd src
+alias docker-compose-jb='docker-compose -f docker-compose.yml -f docker-compose.linux-dev.yml'
+docker-compose-jb up
+```
+- Open the Job Board Search at http://localhost:8081/Test/JbSearch
+- Open the Job Board Account at http://localhost:8081/Test/JbAccount
+- Open the Job Board Admin at http://localhost:8080
+- Open the Elasticsearch Kibana development console at http://localhost:5601/app/dev_tools#/console
+- Access the Elasticsearch API at http://localhost:9200
 
 ## Backup/restore database and index
 - Take a full database snapshot:
