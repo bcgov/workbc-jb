@@ -67,7 +67,7 @@ jobs:
 #        run: terragrunt run-all apply --terragrunt-non-interactive
       - name: Update Kubeconfig
         run: |
-          aws eks update-kubeconfig --name workbc-cluster --region ${{ secrets.AWS_REGION }}
+          aws eks update-kubeconfig --name workbc-cluster2 --region ${{ secrets.AWS_REGION }}
 
       - name: Set image on Kubernetes deployment
         env:
