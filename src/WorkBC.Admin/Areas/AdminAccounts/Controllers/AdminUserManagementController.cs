@@ -107,8 +107,8 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
                     user.LockedByAdminUser = null;
 
                     // Don't update these non-editable fields
-                    // - Guid 
-                    // - SamAccountName 
+                    // - Guid
+                    // - SamAccountName
                     // - Deleted
                     // - Email
                     // - DisplayName
@@ -164,8 +164,8 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
         public IActionResult AddAdminUser(AdminUserViewModel model)
         {
             // check for duplicate users
-            string guid = model.Guid.Replace("-", "").ToUpper();
-            if (_dbContext.AdminUsers.Any(u => u.Guid == guid && !u.Deleted))
+            string sam = model.SamAccountName.ToUpper();
+            if (_dbContext.AdminUsers.Any(u => u.SamAccountName.ToUpper() == sam && !u.Deleted))
             {
                 ModelState.AddModelError("SamAccountName", "User already exists");
             }
@@ -226,7 +226,7 @@ namespace WorkBC.Admin.Areas.AdminAccounts.Controllers
             var tenantId = _configuration["AzureAdSettings:TenantId"];
             var clientId = _configuration["AzureAdSettings:ClientId"];
             //Read the Client Certificate environment variable rather than the Client Seceret.
-            var clientCert = _configuration["AzureAdSettings:ClientCertificate"];         
+            var clientCert = _configuration["AzureAdSettings:ClientCertificate"];
             byte[] data = Convert.FromBase64String(clientCert);
 
             //Using ClientCertificateCredential (passing the environment variable from Azure AD settings)
