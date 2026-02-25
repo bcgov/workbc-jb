@@ -29,7 +29,7 @@ namespace WorkBC.Importers.Wanted.Services
 
         public async Task ImportJobs()
         {
-            List<long> jobsToImport = DbContext.ImportedJobsWanted
+            List<string> jobsToImport = DbContext.ImportedJobsWanted
                 .Where(ij =>
                     !ij.IsFederalOrWorkBc &&
                     DbContext.Jobs.All(j => j.JobId != ij.JobId) &&
@@ -40,7 +40,7 @@ namespace WorkBC.Importers.Wanted.Services
 
             Logger.Information(jobsToImport.Count() + " jobs found to import");
 
-            foreach (long jobId in jobsToImport)
+            foreach (string jobId in jobsToImport)
             {
                 ImportedJobWanted importedJob = DbContext.ImportedJobsWanted.First(j => j.JobId == jobId);
 
@@ -55,7 +55,7 @@ namespace WorkBC.Importers.Wanted.Services
                     {
                         var job = new Job
                         {
-                            JobId = long.Parse(elasticJob.JobId),
+                            JobId = elasticJob.JobId,
                             LastUpdated = DateTime.Now,
                             DateFirstImported = importedJob.DateFirstImported,
                             DateLastImported = importedJob.DateLastImported,
@@ -116,7 +116,7 @@ namespace WorkBC.Importers.Wanted.Services
 
         public async Task UpdateJobs()
         {
-            List<long> jobsToUpdate = (from ij in DbContext.ImportedJobsWanted
+            List<string> jobsToUpdate = (from ij in DbContext.ImportedJobsWanted
                                        join j in DbContext.Jobs on ij.JobId equals j.JobId
                                        where !ij.IsFederalOrWorkBc
                                              && DbContext.DeletedJobs.All(dj => dj.JobId != ij.JobId)
@@ -125,7 +125,7 @@ namespace WorkBC.Importers.Wanted.Services
 
             Logger.Information($"{jobsToUpdate.Count()} jobs found to update");
 
-            foreach (long jobId in jobsToUpdate)
+            foreach (string jobId in jobsToUpdate)
             {
                 ImportedJobWanted importedJob = DbContext.ImportedJobsWanted.FirstOrDefault(j => j.JobId == jobId);
                 Job job = DbContext.Jobs.FirstOrDefault(j => j.JobId == jobId);

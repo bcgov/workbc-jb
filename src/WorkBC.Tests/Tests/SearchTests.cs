@@ -249,7 +249,7 @@ namespace WorkBC.Tests.Tests
             List<Source> result = await QueryElasticSearch(esq);
 
             //ensure that specific job is not in result set
-            Assert.DoesNotContain(result, j => j.JobId == 30696242);
+            Assert.DoesNotContain(result, j => j.JobId == "30696242");
 
             //There should be results
             Assert.True(result.Count > 0, "Jobs excluding agency jobs did not return results");

@@ -234,10 +234,10 @@ namespace WorkBC.Web.Controllers
         public JsonResult GetJobXml(string jobId)
         {
             //try and load the data from the database
-            if (jobId.ToString().Length == 8)
+            if (jobId.Length == 8)
             {
                 //Federal
-                var federalJob = _dbContext.ImportedJobsFederal.FirstOrDefault(job => job.JobId == (int)jobId);
+                var federalJob = _dbContext.ImportedJobsFederal.FirstOrDefault(job => job.JobId == jobId);
 
                 //If federal, return federal XML
                 if (federalJob != null)

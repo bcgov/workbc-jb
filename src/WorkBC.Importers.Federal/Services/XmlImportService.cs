@@ -484,7 +484,7 @@ namespace WorkBC.Importers.Federal.Services
                             var jp = new JobPosting
                             {
                                 FileUpdateDate = Convert.ToDateTime(node["file_update_date"].InnerText),
-                                Id = Convert.ToInt32(node["jobs_id"].InnerText)
+                                Id = node["jobs_id"].InnerText
                             };
 
                             //add to list to return
