@@ -1,38 +1,41 @@
-# WorkBC Job Importer
+# WorkBC.Importers.Wanted.Innovibe
 
-PHP cron job that fetches jobs from the **Jobs Innovibe API** and syncs them into an existing **PostgreSQL** database. Packaged as a Docker image, scheduled via **Kubernetes CronJob** every 6 hours.
+PHP cron job that fetches jobs from the **Innovibe API** and syncs them into the existing **PostgreSQL** database used by the WorkBC Job Board. Packaged as a Docker image and scheduled via **Kubernetes CronJob**.
 
-By default, each run fetches only jobs posted **yesterday and today** (`postedFrom` / `postedTo`). Use `php src/import.php --bulk` to fetch all jobs.
+By default each run fetches only jobs posted **yesterday and today** (`postedFrom`). Use the `--bulk` flag to fetch all jobs regardless of date.
 
-## Structure
+## Project Structure
 
 ```
-job-importer/
+WorkBC.Importers.Wanted.Innovibe/
 ├── src/
 │   ├── Api/InnovibeApiClient.php       # Cursor-paginated API client
-│   ├── Config/AppConfig.php            # Env-var config
-│   ├── Service/JobImportService.php    # Import logic
-│   └── import.php                      # Entry point
+│   ├── Config/AppConfig.php            # Env-var configuration
+│   ├── Service/JobImportService.php    # Import / upsert / purge logic
+│   └── import.php                      # CLI entry point
 ├── Dockerfile                          # Multi-stage Alpine build
-├── .env                                # Local config
+├── .dockerignore
+├── .env.example                        # Template — copy to .env
+├── .gitignore
 ├── composer.json
+└── README.md
 ```
 
 ## Import Flow
 
-1. **Fetch** — GET jobs from Innovibe API with date filter (`postedFrom`/`postedTo`), cursor pagination
-2. **Filter** — Skip jobs without salary data (`salaryMin`, `salaryMax`, `salaryValue` all empty)
-3. **Upsert** — Insert new / update changed jobs in `"ImportedJobsWanted"` (duplicate hash check)
-4. **Mark seen** — Update `"DateLastSeen"` on returned jobs
-5. **Purge** — Move expired jobs to `"ExpiredJobs"`, delete from staging
-6. **Sync new** — Insert new jobs into `"Jobs"` table
-7. **Sync updates** — Update changed jobs in `"Jobs"` table
-8. **Deactivate** — Set `"IsActive" = FALSE` on expired entries
+1. **Fetch** — paginate through the Innovibe API (cursor-based) with date and province filters
+2. **Filter** — skip jobs without salary data (`salaryMin`, `salaryMax`, `salaryValue` all empty)
+3. **Upsert** — insert new / update changed jobs in `"ImportedJobsWanted"` (duplicate hash check)
+4. **Mark seen** — update `"DateLastSeen"` on returned jobs
+5. **Purge** — move expired jobs to `"ExpiredJobs"`, delete from staging
+6. **Sync new** — insert new jobs into `"Jobs"` table
+7. **Sync updates** — update changed jobs in `"Jobs"` table
+8. **Deactivate** — set `"IsActive" = FALSE` on expired entries
 
-## Database (existing — no migrations)
+## Database (existing — no schema changes)
 
 | Table | Purpose |
-|-------|---------|
+|---|---|
 | `"ImportedJobsWanted"` | Staging — raw JSON in `"JobPostEnglish"` |
 | `"Jobs"` | Canonical job records |
 | `"ExpiredJobs"` | Archived expired jobs |
@@ -41,52 +44,53 @@ job-importer/
 
 ## Configuration
 
-All from environment variables (`.env` locally, ConfigMap/Secret in K8s):
+All settings are provided via **environment variables**. Locally, copy `.env.example` to `.env` and fill in the required values. In Kubernetes, use ConfigMap / Secret.
 
-| Variable | Default | Required |
-|----------|---------|----------|
-| `DB_HOST` | `postgres` | |
-| `DB_PORT` | `5432` | |
-| `DB_NAME` | `jobboard` | |
-| `DB_USER` | `workbc` | |
-| `DB_PASSWORD` | `workbc` | |
-| `API_BASE_URL` | `https://api-prod.jobs.innovibe.ca/api/v1` | |
-| `API_KEY` | | ✅ |
-| `PAGE_SIZE` | `100` | |
-| `JOB_EXPIRY_DAYS` | `30` | |
-| `DAYS_TO_KEEP_SINCE_LAST_SEEN` | `2` | |
-| `MAX_JOBS_TO_EXPIRE_AT_ONCE` | `1250` | |
-| `LOG_LEVEL` | `INFO` | |
-| `INCLUDE_NOC_UNMATCHED` | `false` | |
+```bash
+cp .env.example .env
+# Edit .env — set DB_USER, DB_PASSWORD, API_KEY at minimum
+```
+
+See `.env.example` for the full list of variables and their defaults.
+
+> **⚠️  Never commit `.env` — it is gitignored.**
 
 ## Build & Run
 
+### Docker (recommended)
+
 ```bash
-# Build
-docker build -t workbc/job-importer:latest .
+# Build the image
+docker build -t workbc/importers-wanted-innovibe:latest .
 
-# Run daily import (yesterday + today)
-php src/import.php
+# Daily import (yesterday + today)
+docker run --rm --env-file .env workbc/importers-wanted-innovibe:latest
 
-# Run bulk import (ALL jobs, no date filter)
-php src/import.php --bulk
-
-# Run via Docker
-docker run --rm --env-file .env workbc/job-importer:latest
+# Bulk import (all jobs, no date filter)
+docker run --rm --env-file .env workbc/importers-wanted-innovibe:latest --bulk
 ```
 
-## API Reference
+### Docker Compose (integrated with WorkBC stack)
+
+From the `src/` directory:
 
 ```bash
-# Daily import (default: postedFrom=yesterday, postedTo=today)
-curl -H "x-api-key: KEY" "https://api-prod.jobs.innovibe.ca/api/v1/jobs?limit=100&state=British+Columbia&includeExpired=false&includeNocUnmatched=false&postedFrom=2026-02-18&postedTo=2026-02-19"
+# Build
+docker compose build importers-wanted-innovibe
 
-# Paginate with cursor
-curl -H "x-api-key: KEY" "https://api-prod.jobs.innovibe.ca/api/v1/jobs?limit=100&cursor={nextCursor}"
+# Run once
+docker compose run --rm importers-wanted-innovibe
 
-# List companies (get IDs for excludeCompanyIds filter)
-curl -H "x-api-key: KEY" "https://api-prod.jobs.innovibe.ca/api/v1/companies?q=CompanyName"
+# Bulk import
+docker compose run --rm importers-wanted-innovibe --bulk
+```
 
-# Available filters (in InnovibeApiClient.php, uncomment as needed):
-#   includeNoSalary, company, excludeCompany[], includeCompanyIds[], excludeCompanyIds[]
+### Local PHP (development only)
+
+```bash
+composer install
+cp .env.example .env
+# Fill in .env
+php src/import.php          # daily
+php src/import.php --bulk   # bulk
 ```

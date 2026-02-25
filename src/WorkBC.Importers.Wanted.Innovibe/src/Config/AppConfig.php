@@ -23,8 +23,7 @@ final class AppConfig
     {
         $host = $this->env('DB_HOST', 'postgres');
         $port = $this->env('DB_PORT', '5432');
-        $name = $this->env('DB_NAME', 'devworkbc');
-        // devworkbc
+        $name = $this->env('DB_NAME', 'jobboard');
 
         $this->dbDsn = "pgsql:host={$host};port={$port};dbname={$name}";
         $this->dbUser = $this->env('DB_USER', 'workbc');
