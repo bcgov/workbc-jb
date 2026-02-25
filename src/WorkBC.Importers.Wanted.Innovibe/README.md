@@ -51,10 +51,6 @@ cp .env.example .env
 # Edit .env — set DB_USER, DB_PASSWORD, API_KEY at minimum
 ```
 
-See `.env.example` for the full list of variables and their defaults.
-
-> **⚠️  Never commit `.env` — it is gitignored.**
-
 ## Build & Run
 
 ### Docker (recommended)
