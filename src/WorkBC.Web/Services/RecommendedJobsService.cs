@@ -182,7 +182,7 @@ namespace WorkBC.Web.Services
                 .ToDictionary(k => k.Term, v => v.Count);
 
             // saved job id's should be ignored
-            string[] savedJobIds = savedJobs.Where(j => j.IsActive).Select(j => j.JobId.ToString()).ToArray();
+            string[] savedJobIds = savedJobs.Where(j => j.IsActive).Select(j => j.JobId).ToArray();
 
             // return all the parameters
             return new AccountCriteria

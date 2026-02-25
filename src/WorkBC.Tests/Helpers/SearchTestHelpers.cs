@@ -24,7 +24,7 @@ namespace WorkBC.Tests.Helpers
             _configuration = configuration;
         }
 
-        public async Task<List<Source>> GetJobsById(long jobId)
+        public async Task<List<Source>> GetJobsById(string jobId)
         {
             //Create an instance with the filters required
             JobSearchQuery esq = new JobSearchQuery(_geocodingService, _configuration, GetFiltersForJobId(jobId));
@@ -81,7 +81,7 @@ namespace WorkBC.Tests.Helpers
 
         #region Filter setup
 
-        private JobSearchFilters GetFiltersForJobId(long jobId)
+        private JobSearchFilters GetFiltersForJobId(string jobId)
         {
             JobSearchFilters esjsf = new JobSearchFilters()
             {

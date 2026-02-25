@@ -26,7 +26,7 @@ namespace WorkBC.Indexers.Wanted.Services
         private readonly JobBoardContext _dbContext;
         private readonly IndexSettings _indexSettings;
         private readonly ILogger _logger;
-        private readonly List<long> _lstIds = new List<long>();
+        private readonly List<string> _lstIds = new List<string>();
         private readonly XmlParsingServiceWanted _xmlService;
         private readonly CommandLineOptions _options;
         private readonly IndexCheckerService _indexChecker;
@@ -144,7 +144,7 @@ namespace WorkBC.Indexers.Wanted.Services
             foreach (ExpiredJob job in jobsToPurge)
             {
                 //Remove from Elastic search
-                await PostToElasticSearch(string.Empty, job.JobId.ToString(), "DELETE");
+                await PostToElasticSearch(string.Empty, job.JobId, "DELETE");
 
                 //Update indicators
                 job.RemovedFromElasticsearch = true;
@@ -167,18 +167,18 @@ namespace WorkBC.Indexers.Wanted.Services
             await _dbContext.SaveChangesAsync();
 
             //use another approach to get a list of jobs that we still need to remove
-            List<long> elasticJobsId = await _indexChecker.GetIndexedWantedJobIds();
-            List<long> sqlJobIds = await _dbContext.ImportedJobsWanted
+            List<string> elasticJobsId = await _indexChecker.GetIndexedWantedJobIds();
+            List<string> sqlJobIds = await _dbContext.ImportedJobsWanted
                 .Where(j => !j.IsFederalOrWorkBc)
                 .Select(j => j.JobId)
                 .ToListAsync();
-            List<long> moreJobsToPurge = elasticJobsId.Except(sqlJobIds).ToList();
+            List<string> moreJobsToPurge = elasticJobsId.Except(sqlJobIds).ToList();
 
             //loop through jobs
-            foreach (long jobId in moreJobsToPurge)
+            foreach (string jobId in moreJobsToPurge)
             {
                 //Remove from Elastic search
-                await PostToElasticSearch(string.Empty, jobId.ToString(), "DELETE");
+                await PostToElasticSearch(string.Empty, jobId, "DELETE");
 
                 //Deleted
                 Console.Write("[D2]");
@@ -252,9 +252,9 @@ namespace WorkBC.Indexers.Wanted.Services
         /// </summary>
         public async Task Debug()
         {
-            List<long> elasticJobIds =
+            List<string> elasticJobIds =
                 await new IndexCheckerService(_logger, _configuration).GetActiveWantedJobIds();
-            List<long> sqlJobIds = await _dbContext.Jobs
+            List<string> sqlJobIds = await _dbContext.Jobs
                 .Where(j => j.JobSourceId == JobSource.Wanted && j.ExpireDate > DateTime.Now && j.IsActive)
                 .Select(j => j.JobId)
                 .ToListAsync();

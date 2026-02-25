@@ -19,8 +19,7 @@ namespace WorkBC.ElasticSearch.Models.ElasticAttributes
         public string Type { get; set; }
 
         [JsonProperty("_id", NullValueHandling = NullValueHandling.Ignore)]
-        [JsonConverter(typeof(StringToLongConverter))]
-        public long? Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("_score")]
         public decimal? Score { get; set; }

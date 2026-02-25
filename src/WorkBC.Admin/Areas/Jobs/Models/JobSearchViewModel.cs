@@ -5,7 +5,7 @@ namespace WorkBC.Admin.Areas.Jobs.Models
     public class JobSearchViewModel
     {
         public string JobSource { get; set; }
-        public long JobId { get; set; }
+        public string JobId { get; set; }
         public string Title { get; set; }
         public string Location { get; set; }
         public string LastUpdated { get; set; }

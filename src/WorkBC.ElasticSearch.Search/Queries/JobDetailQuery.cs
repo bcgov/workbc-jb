@@ -19,7 +19,7 @@ namespace WorkBC.ElasticSearch.Search.Queries
         /// <summary>
         ///     Get results by querying Elastic Search
         /// </summary>
-        public async Task<ElasticSearchResponse> GetSearchResults(long jobId, string language)
+        public async Task<ElasticSearchResponse> GetSearchResults(string jobId, string language)
         {
             // Create a request to the elastic search server 
             var server = _configuration.GetValue<string>("ConnectionStrings:ElasticSearchServer");
@@ -36,10 +36,10 @@ namespace WorkBC.ElasticSearch.Search.Queries
         /// <summary>
         ///     Build JSON string that will be used to query Elastic Search
         /// </summary>
-        private string ToJson(long jobId)
+        private string ToJson(string jobId)
         {
             string json = ResourceFileHelper.ReadFile("jobdetail.json");
-            json = json.Replace("##JOBID##", jobId.ToString());
+            json = json.Replace("##JOBID##", jobId);
             return json;
         }
     }

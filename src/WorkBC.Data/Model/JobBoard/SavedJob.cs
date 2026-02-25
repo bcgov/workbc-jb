@@ -16,7 +16,7 @@ namespace WorkBC.Data.Model.JobBoard
         public virtual JobSeeker JobSeeker { get; set; }
 
         [ForeignKey("Job")]
-        public long JobId { get; set; }
+        public string JobId { get; set; }
 
         public Job Job { get; set; }
 

@@ -27,7 +27,7 @@ namespace WorkBC.Importers.Federal.Services
 
         public async Task ImportJobs()
         {
-            List<long> jobsToImport = DbContext.ImportedJobsFederal
+            List<string> jobsToImport = DbContext.ImportedJobsFederal
                 .Where(ij =>
                     DbContext.Jobs.All(j => j.JobId != ij.JobId) && ij.DisplayUntil > DateTime.Now)
                 .Select(ij => ij.JobId)
@@ -35,7 +35,7 @@ namespace WorkBC.Importers.Federal.Services
 
             Logger.Information(jobsToImport.Count() + " jobs found to import");
 
-            foreach (long jobId in jobsToImport)
+            foreach (string jobId in jobsToImport)
             {
                 IImportedJob importedJob = DbContext.ImportedJobsFederal.FirstOrDefault(j => j.JobId == jobId);
 
@@ -50,7 +50,7 @@ namespace WorkBC.Importers.Federal.Services
                     {
                         var job = new Job
                         {
-                            JobId = long.Parse(elasticJob.JobId),
+                            JobId = elasticJob.JobId,
                             LastUpdated = DateTime.Now,
                             DateFirstImported = importedJob.DateFirstImported,
                             DateLastImported = importedJob.DateLastImported,
@@ -98,14 +98,14 @@ namespace WorkBC.Importers.Federal.Services
 
         public async Task UpdateJobs()
         {
-            List<long> jobsToUpdate = (from ij in DbContext.ImportedJobsFederal
+            List<string> jobsToUpdate = (from ij in DbContext.ImportedJobsFederal
                                        join j in DbContext.Jobs on ij.JobId equals j.JobId
                                        where j.DateLastImported != ij.DateLastImported || !j.IsActive || _commandLineOptions.ReImport
                                        select ij.JobId).ToList();
 
             Logger.Information($"{jobsToUpdate.Count()} jobs found to update");
 
-            foreach (long jobId in jobsToUpdate)
+            foreach (string jobId in jobsToUpdate)
             {
                 IImportedJob importedJob = DbContext.ImportedJobsFederal.FirstOrDefault(j => j.JobId == jobId);
                 Job job = DbContext.Jobs.FirstOrDefault(j => j.JobId == jobId);

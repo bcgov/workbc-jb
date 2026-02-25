@@ -7,7 +7,7 @@ namespace WorkBC.Web.Models
     public class SavedJobsModel
     {
         // Job properties
-        public long JobId { get; set; }
+        public string JobId { get; set; }
         public string Title { get; set; }
         public int LocationId { get; set; }
         public string City { get; set; }

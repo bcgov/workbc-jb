@@ -12,9 +12,9 @@ namespace WorkBC.Web.Services
 {
     public interface ISavedJobsService
     {
-        Task<int> SaveJobsAsync(string userId, long[] jobIds);
+        Task<int> SaveJobsAsync(string userId, string[] jobIds);
         Task DeleteSavedJobAsync(string userId, string jobId);
-        Task<IList<long>> GetSavedJobIdsAsync(string userId);
+        Task<IList<string>> GetSavedJobIdsAsync(string userId);
         Task<IList<SavedJobsModel>> GetSavedJobsAsync(string userId);
         Task SaveJobNoteAsync(JobNoteModel jobNoteModel);
     }
@@ -28,11 +28,11 @@ namespace WorkBC.Web.Services
             _context = context;
         }
 
-        public async Task<int> SaveJobsAsync(string userId, long[] jobIds)
+        public async Task<int> SaveJobsAsync(string userId, string[] jobIds)
         {
             var jobsInserted = 0;
 
-            foreach (long jobId in jobIds)
+            foreach (string jobId in jobIds)
             {
                 Job job = await _context.Jobs.FirstOrDefaultAsync(x => x.JobId == jobId && x.IsActive);
                 if (job != null)
@@ -60,9 +60,9 @@ namespace WorkBC.Web.Services
             return jobsInserted;
         }
 
-        public async Task<IList<long>> GetSavedJobIdsAsync(string userId)
+        public async Task<IList<string>> GetSavedJobIdsAsync(string userId)
         {
-            List<long> result = await _context.SavedJobs
+            List<string> result = await _context.SavedJobs
                 .Where(x => x.AspNetUserId == userId && !x.IsDeleted)
                 .OrderBy(x => x.Id)
                 .Select(x => x.JobId)
@@ -74,7 +74,7 @@ namespace WorkBC.Web.Services
         public async Task DeleteSavedJobAsync(string userId, string jobId)
         {
             SavedJob savedJob = await _context.SavedJobs.FirstOrDefaultAsync(x =>
-                x.JobId.ToString() == jobId && x.AspNetUserId == userId && !x.IsDeleted);
+                x.JobId == jobId && x.AspNetUserId == userId && !x.IsDeleted);
             if (savedJob != null)
             {
                 savedJob.IsDeleted = true;
@@ -121,7 +121,7 @@ namespace WorkBC.Web.Services
         public async Task SaveJobNoteAsync(JobNoteModel jobNoteModel)
         {
             SavedJob savedJob = await _context.SavedJobs.FirstOrDefaultAsync(x =>
-                x.JobId.ToString() == jobNoteModel.JobId && x.AspNetUserId == jobNoteModel.UserId && !x.IsDeleted);
+                x.JobId == jobNoteModel.JobId && x.AspNetUserId == jobNoteModel.UserId && !x.IsDeleted);
             if (savedJob != null && savedJob.Note != jobNoteModel.Note)
             {
                 savedJob.Note = jobNoteModel.Note;

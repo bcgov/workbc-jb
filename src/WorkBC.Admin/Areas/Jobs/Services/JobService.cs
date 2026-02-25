@@ -24,7 +24,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
     {
         Task<(IList<JobSearchViewModel> result, int filteredResultsCount)> Search(DataTablesModel model);
 
-        Task DeleteJob(long jobId, int currentAdminUserId);
+        Task DeleteJob(string jobId, int currentAdminUserId);
     }
 
     public class JobService : IJobService
@@ -77,7 +77,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
             return (result, filteredResultsCount);
         }
 
-        public async Task DeleteJob(long jobId, int currentAdminUserId)
+        public async Task DeleteJob(string jobId, int currentAdminUserId)
         {
             #region change job status to inactive
 
@@ -257,14 +257,15 @@ namespace WorkBC.Admin.Areas.Jobs.Services
                 string[] numbers = Regex.Split(searchBy, @"\D+");
                 if (numbers.Any())
                 {
-                    long jobId = numbers
+                    string jobId = numbers
                         .Where(n => !string.IsNullOrEmpty(n))
-                        .Select(long.Parse)
-                        .Max();
+                        .OrderByDescending(n => n.Length)
+                        .ThenByDescending(n => n)
+                        .FirstOrDefault();
 
-                    if (jobId > 1000000)
+                    if (jobId != null && jobId.Length > 6)
                     {
-                        s = jobId.ToString();
+                        s = jobId;
                     }
                 }
             }
@@ -276,18 +277,18 @@ namespace WorkBC.Admin.Areas.Jobs.Services
                 {
                     case "federal":
                         return _jobBoardContext.Jobs.Where(job =>
-                            (EF.Functions.Like(job.JobId.ToString(), s)
+                            (EF.Functions.Like(job.JobId, s)
                              || job.ExternalSourceUrl.ToLower() == searchBy)
                             && job.JobSourceId == JobSource.Federal && job.IsActive && job.ExpireDate > DateTime.Now);
                     case "external":
                         return _jobBoardContext.Jobs.Where(job =>
-                            (EF.Functions.Like(job.JobId.ToString(), s)
+                            (EF.Functions.Like(job.JobId, s)
                              || job.ExternalSourceUrl.ToLower() == searchBy)
                             && job.JobSourceId == JobSource.Wanted && job.IsActive && job.ExpireDate > DateTime.Now);
                 }
 
                 return _jobBoardContext.Jobs.Where(job =>
-                    (EF.Functions.Like(job.JobId.ToString(), s)
+                    (EF.Functions.Like(job.JobId, s)
                      || job.ExternalSourceUrl.ToLower() == searchBy)
                     && job.IsActive && job.ExpireDate > DateTime.Now);
             }
@@ -297,7 +298,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
             {
                 return _jobBoardContext.Jobs
                     .Where(job =>
-                        (EF.Functions.Like(job.JobId.ToString(), s)
+                        (EF.Functions.Like(job.JobId, s)
                          || job.ExternalSourceUrl.ToLower() == searchBy)
                         && job.IsActive && job.ExpireDate > DateTime.Now);
             }

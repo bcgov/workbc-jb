@@ -4,7 +4,7 @@ namespace WorkBC.Data.Model.JobBoard
 {
     public interface IImportedJob
     {
-        public long JobId { get; set; }
+        public string JobId { get; set; }
         JobId Id { get; set; }
         string JobPostEnglish { get; set; }
         string JobPostFrench { get; set; }

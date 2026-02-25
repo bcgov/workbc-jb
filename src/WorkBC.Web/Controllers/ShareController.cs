@@ -26,7 +26,7 @@ namespace WorkBC.Web.Controllers
         /// </summary>
         /// <param name="jobId">Federal Job ID</param>
         [HttpGet]
-        public async Task<IActionResult> Job([FromQuery(Name="jobid")] long jobId)
+        public async Task<IActionResult> Job([FromQuery(Name="jobid")] string jobId)
         {
             //create new job service
             JobDetailService js = new JobDetailService(_configuration, null);

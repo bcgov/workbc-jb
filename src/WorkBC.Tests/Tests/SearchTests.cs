@@ -21,9 +21,9 @@ namespace WorkBC.Tests.Tests
         }
 
         [Theory(DisplayName = "Find a Federal and Wanted job in the index")]
-        [InlineData(31382167)]
-        [InlineData(4049109571)]
-        public async Task FindJobById(long jobId)
+        [InlineData("31382167")]
+        [InlineData("4049109571")]
+        public async Task FindJobById(string jobId)
         {
             List<Source> result = await _searchHelper.GetJobsById(jobId);
 
@@ -256,13 +256,13 @@ namespace WorkBC.Tests.Tests
         }
 
         [Theory(DisplayName = "When both salary string and salary numeric fields populated, calculate SalarySummary")]
-        [InlineData(39879152, "$2,000.00 monthly + 20% commission per sale")]
-        [InlineData(40098629, "$2,000.00 monthly + 3% commission per sale")]
-        [InlineData(40104984, "$2,000.00 monthly + 3% commission per sale")]
-        [InlineData(40207035, "$27.50 hourly")]
-        [InlineData(40387120, "$46.50 hourly")]
-        [InlineData(6111648176, "$82,795 annually")]
-        public async Task TestSalarySummaryCalculated(long jobId, string expected)
+        [InlineData("39879152", "$2,000.00 monthly + 20% commission per sale")]
+        [InlineData("40098629", "$2,000.00 monthly + 3% commission per sale")]
+        [InlineData("40104984", "$2,000.00 monthly + 3% commission per sale")]
+        [InlineData("40207035", "$27.50 hourly")]
+        [InlineData("40387120", "$46.50 hourly")]
+        [InlineData("6111648176", "$82,795 annually")]
+        public async Task TestSalarySummaryCalculated(string jobId, string expected)
         {
             List<Source> result = await _searchHelper.GetJobsById(jobId);
             Assert.Equivalent( expected, result[0].SalarySummary);

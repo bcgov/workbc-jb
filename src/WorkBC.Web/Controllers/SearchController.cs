@@ -167,7 +167,7 @@ namespace WorkBC.Web.Controllers
         /// <param name="isToggle" example="true">Do not increase view count when the user toggles between English and French</param>
         [HttpGet]
         [Route("api/[controller]/[action]")]
-        public async Task<IActionResult> GetJobDetail(long jobId, string language = "en", bool isToggle = false)
+        public async Task<IActionResult> GetJobDetail(string jobId, string language = "en", bool isToggle = false)
         {
             //create new job service
             var js = new JobDetailService(_configuration, _logger);
@@ -231,7 +231,7 @@ namespace WorkBC.Web.Controllers
         [EnableCors("_API")]
         [HttpGet]
         [Route("api/[controller]/[action]")]
-        public JsonResult GetJobXml(long jobId)
+        public JsonResult GetJobXml(string jobId)
         {
             //try and load the data from the database
             if (jobId.ToString().Length == 8)
