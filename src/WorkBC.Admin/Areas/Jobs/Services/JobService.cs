@@ -253,19 +253,29 @@ namespace WorkBC.Admin.Areas.Jobs.Services
             // search on workbc.ca and jobbank.gc.ca
             if (searchBy.Contains("workbc.ca") || searchBy.Contains("jobbank.gc.ca") || searchBy.Contains("localhost") || searchBy.Contains("idir."))
             {
-                // get the biggest number from the string
-                string[] numbers = Regex.Split(searchBy, @"\D+");
-                if (numbers.Any())
+                // try to extract job ID from URL path (supports both numeric and alphanumeric CUID IDs)
+                // e.g. /job-details/cml8qil9g2naaczmbb1ywzmvb or /job-details/31382167
+                var jobDetailMatch = Regex.Match(searchBy, @"job-details/([a-z0-9]+)", RegexOptions.IgnoreCase);
+                if (jobDetailMatch.Success)
                 {
-                    string jobId = numbers
-                        .Where(n => !string.IsNullOrEmpty(n))
-                        .OrderByDescending(n => n.Length)
-                        .ThenByDescending(n => n)
-                        .FirstOrDefault();
-
-                    if (jobId != null && jobId.Length > 6)
+                    s = jobDetailMatch.Groups[1].Value;
+                }
+                else
+                {
+                    // fallback: get the biggest number from the string (legacy numeric IDs)
+                    string[] numbers = Regex.Split(searchBy, @"\D+");
+                    if (numbers.Any())
                     {
-                        s = jobId;
+                        string jobId = numbers
+                            .Where(n => !string.IsNullOrEmpty(n))
+                            .OrderByDescending(n => n.Length)
+                            .ThenByDescending(n => n)
+                            .FirstOrDefault();
+
+                        if (jobId != null && jobId.Length > 6)
+                        {
+                            s = jobId;
+                        }
                     }
                 }
             }
