@@ -163,3 +163,10 @@ jobs:
       - name: Push Dotnet CLI docker image
         run: |
           docker push ${{ secrets.AWS_ECR_URI }}/jb-cli:${{ github.sha }}
+          
+      - name: Tag the Innovibe Importer docker image
+        run: |
+          docker tag importers-innovibe:latest ${{ secrets.AWS_ECR_URI }}/jb-importers-innovibe:${{ github.sha }}
+      - name: Push Innovibe Importer docker image
+        run: |
+          docker push ${{ secrets.AWS_ECR_URI }}/jb-importers-innovibe:${{ github.sha }}        
