@@ -1,4 +1,4 @@
-# WorkBC.Importers.Wanted.Innovibe
+# WorkBC.Importers.Innovibe
 
 PHP cron job that fetches jobs from the **Innovibe API** and syncs them into the existing **PostgreSQL** database used by the WorkBC Job Board. Packaged as a Docker image and scheduled via **Kubernetes CronJob**.
 
@@ -7,7 +7,7 @@ By default each run fetches only jobs posted **yesterday and today** (`postedFro
 ## Project Structure
 
 ```
-WorkBC.Importers.Wanted.Innovibe/
+WorkBC.Importers.Innovibe/
 ├── src/
 │   ├── Api/InnovibeApiClient.php       # Cursor-paginated API client
 │   ├── Config/AppConfig.php            # Env-var configuration
@@ -57,13 +57,13 @@ cp .env.example .env
 
 ```bash
 # Build the image
-docker build -t workbc/importers-wanted-innovibe:latest .
+docker build -t workbc/importers-innovibe:latest .
 
 # Daily import (yesterday + today)
-docker run --rm --env-file .env workbc/importers-wanted-innovibe:latest
+docker run --rm --env-file .env workbc/importers-innovibe:latest
 
 # Bulk import (all jobs, no date filter)
-docker run --rm --env-file .env workbc/importers-wanted-innovibe:latest --bulk
+docker run --rm --env-file .env workbc/importers-innovibe:latest --bulk
 ```
 
 ### Docker Compose (integrated with WorkBC stack)
@@ -72,13 +72,13 @@ From the `src/` directory:
 
 ```bash
 # Build
-docker compose build importers-wanted-innovibe
+docker compose build importers-innovibe
 
 # Run once
-docker compose run --rm importers-wanted-innovibe
+docker compose run --rm importers-innovibe
 
 # Bulk import
-docker compose run --rm importers-wanted-innovibe --bulk
+docker compose run --rm importers-innovibe --bulk
 ```
 
 ### Local PHP (development only)

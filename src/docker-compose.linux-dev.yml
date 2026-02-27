@@ -20,7 +20,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-  importers-wanted-innovibe:
+  importers-innovibe:
     depends_on:
       postgres:
         condition: service_healthy
