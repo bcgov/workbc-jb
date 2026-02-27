@@ -43,6 +43,17 @@ services:
             - ASPNETCORE_ENVIRONMENT=Development
         env_file:
             - .env
+    importers-innovibe:
+        container_name: importers-innovibe
+        scale: 0
+        build:
+            context: ./WorkBC.Importers.Innovibe
+            dockerfile: Dockerfile
+        env_file:
+            - .env
+        environment:
+            - DB_HOST=postgres
+            - DB_NAME=jobboard
     importers-federal:
         container_name: importers-federal
         scale: 0

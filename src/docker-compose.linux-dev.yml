@@ -20,6 +20,10 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+  importers-innovibe:
+    depends_on:
+      postgres:
+        condition: service_healthy
   importers-federal:
     volumes:
       - ./WorkBC.Importers.Federal/appsettings.linux.json:/app/appsettings.json
