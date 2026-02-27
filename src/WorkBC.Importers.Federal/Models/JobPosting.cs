@@ -4,7 +4,7 @@ namespace WorkBC.Importers.Federal.Models
 {
     public class JobPosting
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public DateTime FileUpdateDate { get; set; }
     }
 }

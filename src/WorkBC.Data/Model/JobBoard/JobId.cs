@@ -8,7 +8,7 @@ namespace WorkBC.Data.Model.JobBoard
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Key]
-        public long Id { get; set; }
+        public string Id { get; set; }
 
         public DateTime DateFirstImported { get; set; }
 

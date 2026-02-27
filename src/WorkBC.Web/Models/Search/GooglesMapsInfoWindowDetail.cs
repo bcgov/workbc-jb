@@ -10,7 +10,7 @@
         public string Salary { get; set; }
         public string City { get; set; }
         public string Company { get; set; }
-        public long JobId { get; set; }
+        public string JobId { get; set; }
         public bool IsFederalJob { get; set; }
         public string JobSource { get; set; }
         public string ExternalUrl { get; set; }

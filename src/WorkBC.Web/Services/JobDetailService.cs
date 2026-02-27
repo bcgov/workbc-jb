@@ -25,7 +25,7 @@ namespace WorkBC.Web.Services
             _logger = logger;
         }
 
-        public async Task<ElasticSearchResponse> GetJobDetail(long jobId, JobBoardContext dbContext,
+        public async Task<ElasticSearchResponse> GetJobDetail(string jobId, JobBoardContext dbContext,
             ViewCountService viewCountService, string language, bool isToggle)
         {
             //Create new object to return

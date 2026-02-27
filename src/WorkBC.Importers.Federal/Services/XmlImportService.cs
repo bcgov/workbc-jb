@@ -27,7 +27,7 @@ namespace WorkBC.Importers.Federal.Services
             new Dictionary<ImportedJobFederal, DateTime>();
         private readonly ProxySettings _proxySettings;
         private int _errorCount;
-        private Dictionary<long, DateTime> _existingJobsDict = new Dictionary<long, DateTime>();
+        private Dictionary<string, DateTime> _existingJobsDict = new Dictionary<string, DateTime>();
         private List<JobPosting> _lstInsert = new List<JobPosting>();
         private List<ImportedJobFederal> _lstPurge = new List<ImportedJobFederal>();
         private XmlDocument _xmlDocumentEnglish = new XmlDocument();
@@ -484,7 +484,7 @@ namespace WorkBC.Importers.Federal.Services
                             var jp = new JobPosting
                             {
                                 FileUpdateDate = Convert.ToDateTime(node["file_update_date"].InnerText),
-                                Id = Convert.ToInt32(node["jobs_id"].InnerText)
+                                Id = node["jobs_id"].InnerText
                             };
 
                             //add to list to return
@@ -505,7 +505,7 @@ namespace WorkBC.Importers.Federal.Services
         /// <summary>
         ///     Get job XML if the job should not be skipped
         /// </summary>
-        private async Task GetXmlContent(long jobId)
+        private async Task GetXmlContent(string jobId)
         {
             _xmlDocumentEnglish = null;
             _xmlDocumentFrench = null;

@@ -1125,7 +1125,7 @@ namespace WorkBC.ElasticSearch.Search.Queries
                         {
                             results.Add((T)(object)new GoogleMapsPinLocation
                             {
-                                JobId = job.JobId.ToString(),
+                                JobId = job.JobId,
                                 Latitude = geo.Lat,
                                 Longitude = geo.Lon
                             });

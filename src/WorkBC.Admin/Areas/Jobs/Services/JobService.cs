@@ -24,7 +24,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
     {
         Task<(IList<JobSearchViewModel> result, int filteredResultsCount)> Search(DataTablesModel model);
 
-        Task DeleteJob(long jobId, int currentAdminUserId);
+        Task DeleteJob(string jobId, int currentAdminUserId);
     }
 
     public class JobService : IJobService
@@ -77,7 +77,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
             return (result, filteredResultsCount);
         }
 
-        public async Task DeleteJob(long jobId, int currentAdminUserId)
+        public async Task DeleteJob(string jobId, int currentAdminUserId)
         {
             #region change job status to inactive
 
@@ -253,18 +253,29 @@ namespace WorkBC.Admin.Areas.Jobs.Services
             // search on workbc.ca and jobbank.gc.ca
             if (searchBy.Contains("workbc.ca") || searchBy.Contains("jobbank.gc.ca") || searchBy.Contains("localhost") || searchBy.Contains("idir."))
             {
-                // get the biggest number from the string
-                string[] numbers = Regex.Split(searchBy, @"\D+");
-                if (numbers.Any())
+                // try to extract job ID from URL path (supports both numeric and alphanumeric CUID IDs)
+                // e.g. /job-details/cml8qil9g2naaczmbb1ywzmvb or /job-details/31382167
+                var jobDetailMatch = Regex.Match(searchBy, @"job-details/([a-z0-9]+)", RegexOptions.IgnoreCase);
+                if (jobDetailMatch.Success)
                 {
-                    long jobId = numbers
-                        .Where(n => !string.IsNullOrEmpty(n))
-                        .Select(long.Parse)
-                        .Max();
-
-                    if (jobId > 1000000)
+                    s = jobDetailMatch.Groups[1].Value;
+                }
+                else
+                {
+                    // fallback: get the biggest number from the string (legacy numeric IDs)
+                    string[] numbers = Regex.Split(searchBy, @"\D+");
+                    if (numbers.Any())
                     {
-                        s = jobId.ToString();
+                        string jobId = numbers
+                            .Where(n => !string.IsNullOrEmpty(n))
+                            .OrderByDescending(n => n.Length)
+                            .ThenByDescending(n => n)
+                            .FirstOrDefault();
+
+                        if (jobId != null && jobId.Length > 6)
+                        {
+                            s = jobId;
+                        }
                     }
                 }
             }
@@ -276,18 +287,18 @@ namespace WorkBC.Admin.Areas.Jobs.Services
                 {
                     case "federal":
                         return _jobBoardContext.Jobs.Where(job =>
-                            (EF.Functions.Like(job.JobId.ToString(), s)
+                            (EF.Functions.Like(job.JobId, s)
                              || job.ExternalSourceUrl.ToLower() == searchBy)
                             && job.JobSourceId == JobSource.Federal && job.IsActive && job.ExpireDate > DateTime.Now);
                     case "external":
                         return _jobBoardContext.Jobs.Where(job =>
-                            (EF.Functions.Like(job.JobId.ToString(), s)
+                            (EF.Functions.Like(job.JobId, s)
                              || job.ExternalSourceUrl.ToLower() == searchBy)
                             && job.JobSourceId == JobSource.Wanted && job.IsActive && job.ExpireDate > DateTime.Now);
                 }
 
                 return _jobBoardContext.Jobs.Where(job =>
-                    (EF.Functions.Like(job.JobId.ToString(), s)
+                    (EF.Functions.Like(job.JobId, s)
                      || job.ExternalSourceUrl.ToLower() == searchBy)
                     && job.IsActive && job.ExpireDate > DateTime.Now);
             }
@@ -297,7 +308,7 @@ namespace WorkBC.Admin.Areas.Jobs.Services
             {
                 return _jobBoardContext.Jobs
                     .Where(job =>
-                        (EF.Functions.Like(job.JobId.ToString(), s)
+                        (EF.Functions.Like(job.JobId, s)
                          || job.ExternalSourceUrl.ToLower() == searchBy)
                         && job.IsActive && job.ExpireDate > DateTime.Now);
             }

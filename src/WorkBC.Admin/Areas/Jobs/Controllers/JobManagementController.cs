@@ -33,7 +33,7 @@ namespace WorkBC.Admin.Areas.Jobs.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteJob(string jobId)
         {
-            await _service.DeleteJob(Convert.ToInt64(jobId), base.CurrentAdminUserId);
+            await _service.DeleteJob(jobId, base.CurrentAdminUserId);
 
             return RedirectToAction("Index", "JobSearch");
         }
@@ -46,7 +46,7 @@ namespace WorkBC.Admin.Areas.Jobs.Controllers
                 return BadRequest("id is required");
             }
 
-            JobPostingHistoryViewModel model = await GetJobPostingHistory(Convert.ToInt64(id));
+            JobPostingHistoryViewModel model = await GetJobPostingHistory(id);
 
             if (model == null)
             {
@@ -56,7 +56,7 @@ namespace WorkBC.Admin.Areas.Jobs.Controllers
             return View(model);
         }
 
-        private async Task<JobPostingHistoryViewModel> GetJobPostingHistory(long id)
+        private async Task<JobPostingHistoryViewModel> GetJobPostingHistory(string id)
         {
             var model = new JobPostingHistoryViewModel
             {

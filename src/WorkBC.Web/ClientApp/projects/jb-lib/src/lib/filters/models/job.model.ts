@@ -95,7 +95,7 @@ export interface SavedJob {
   datePosted: Date;
   expireDate: Date;
   employerName: string;
-  jobId: number;
+  jobId: string;
   salary: number;
   salarySummary: string;
   title: string;
@@ -369,7 +369,7 @@ export class LocationInformation {
   city: string;
   hoursOfWork: string;
   periodOfEmployment: string;
-  jobId: number;
+  jobId: string;
   isFederalJob: boolean;
   jobSource: string;
   externalUrl: string;

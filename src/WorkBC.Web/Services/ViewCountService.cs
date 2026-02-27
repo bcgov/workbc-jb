@@ -31,7 +31,7 @@ namespace WorkBC.Web.Services
         /// </summary>
         /// <param name="jobId">Job ID</param>
         /// <returns>Number of views for this job</returns>
-        private async Task<int> GetViewsForJob(long jobId)
+        private async Task<int> GetViewsForJob(string jobId)
         {
             string cacheKey = $"{CacheKeyPrefix}{jobId}";
             long? views = await _cacheService.GetLongAsync(cacheKey);
@@ -67,7 +67,7 @@ namespace WorkBC.Web.Services
 
         private async Task CacheMultiple(Source[] jobs)
         {
-            var cacheMissJobIds = new List<long>();
+            var cacheMissJobIds = new List<string>();
             foreach (Source job in jobs)
             {
                 if (!await _cacheService.ExistsAsync(CacheKeyPrefix + job.JobId))
@@ -91,7 +91,7 @@ namespace WorkBC.Web.Services
                 await _cacheService.SaveLongAsync(CacheKeyPrefix + job.JobId, job.Views, _cacheMinutes * 60);
             }
 
-            foreach (long jobId in cacheMissJobIds)
+            foreach (string jobId in cacheMissJobIds)
             {
                 // cache zero for any job that wasn't found in the db
                 if (dbViewCounts.All(j => j.JobId != jobId))
@@ -106,7 +106,7 @@ namespace WorkBC.Web.Services
         ///     Clears a specific job from the job view cache
         /// </summary>
         /// <param name="jobId">Job ID to update</param>
-        public async Task RemoveJob(long jobId)
+        public async Task RemoveJob(string jobId)
         {
             string cacheKey = $"{CacheKeyPrefix}{jobId}";
             // cacheService already checks to see if the item exists

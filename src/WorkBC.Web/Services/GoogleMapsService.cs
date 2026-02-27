@@ -14,7 +14,7 @@ namespace WorkBC.Web.Services
     {
         public async Task<List<GooglesMapsInfoWindowDetail>> GetJobsForLocation(string jobIds, IConfiguration configuration)
         {
-            List<long> ids = null;
+            List<string> ids = null;
             List<GooglesMapsInfoWindowDetail> results = new List<GooglesMapsInfoWindowDetail>();
             ElasticSearchResponse esr;
 
@@ -71,9 +71,9 @@ namespace WorkBC.Web.Services
             return results;
         }
 
-        public async Task<Location[]> GetGeoLocation(long jobId, IConfiguration configuration)
+        public async Task<Location[]> GetGeoLocation(string jobId, IConfiguration configuration)
         {
-            if (jobId > 0)
+            if (!string.IsNullOrEmpty(jobId))
             {
                 Source[] job = (await new JobDetailQuery(configuration).GetSearchResults(jobId, "en"))?.Hits?.HitsHits?.Select(hit => hit.Source)?.ToArray();
 
@@ -86,14 +86,14 @@ namespace WorkBC.Web.Services
             return null;
         }
 
-        public List<long> ParseJobIds(string jobIds)
+        public List<string> ParseJobIds(string jobIds)
         {
-            var ids = new List<long>();
+            var ids = new List<string>();
 
             foreach (string j in jobIds.Split(","))
             {
-                long.TryParse(j, out long v);
-                if (v > 0)
+                string v = j.Trim();
+                if (!string.IsNullOrEmpty(v))
                 {
                     ids.Add(v);
                 }

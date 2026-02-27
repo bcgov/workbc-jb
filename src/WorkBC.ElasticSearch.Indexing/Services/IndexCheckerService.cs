@@ -22,32 +22,32 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             _configuration = configuration;
         }
 
-        public async Task<List<long>> GetIndexedEnglishFederalJobIds()
+        public async Task<List<string>> GetIndexedEnglishFederalJobIds()
         {
             return await GetIndexedJobIds(false, true, false);
         }
 
-        public async Task<List<long>> GetIndexedFrenchFederalJobIds()
+        public async Task<List<string>> GetIndexedFrenchFederalJobIds()
         {
             return await GetIndexedJobIds(true, true, false);
         }
 
-        public async Task<List<long>> GetIndexedWantedJobIds()
+        public async Task<List<string>> GetIndexedWantedJobIds()
         {
             return await GetIndexedJobIds(false, false, false);
         }
 
-        public async Task<List<long>> GetActiveEnglishFederalJobIds()
+        public async Task<List<string>> GetActiveEnglishFederalJobIds()
         {
             return await GetIndexedJobIds(false, true, true);
         }
 
-        public async Task<List<long>> GetActiveFrenchFederalJobIds()
+        public async Task<List<string>> GetActiveFrenchFederalJobIds()
         {
             return await GetIndexedJobIds(true, true, true);
         }
 
-        public async Task<List<long>> GetActiveWantedJobIds()
+        public async Task<List<string>> GetActiveWantedJobIds()
         {
             return await GetIndexedJobIds(false, false, true);
         }
@@ -59,9 +59,9 @@ namespace WorkBC.ElasticSearch.Indexing.Services
         /// <param name="isFederal"></param>
         /// <param name="excludeExpired"></param>
         /// <returns>List of Job Ids</returns>
-        private async Task<List<long>> GetIndexedJobIds(bool isFrench, bool isFederal, bool excludeExpired)
+        private async Task<List<string>> GetIndexedJobIds(bool isFrench, bool isFederal, bool excludeExpired)
         {
-            var resultList = new List<long>();
+            var resultList = new List<string>();
             string server = _configuration["ConnectionStrings:ElasticSearchServer"];
 
             try
@@ -120,10 +120,10 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                 if (result == null || result.Hits.HitsHits.Count == 0)
                 {
-                    return new List<long>();
+                    return new List<string>();
                 }
 
-                List<long> tempList = result.Hits.HitsHits.Select(r => r.Id ?? 0).ToList();
+                List<string> tempList = result.Hits.HitsHits.Select(r => r.Id ?? "").ToList();
 
                 var body2 = $@"{{
                               ""scroll"" : ""1m"", 
@@ -140,10 +140,10 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                     if (result == null || result.Hits.HitsHits.Count == 0)
                     {
-                        tempList = new List<long>();
+                        tempList = new List<string>();
                     }
 
-                    tempList = result.Hits.HitsHits.Select(r => r.Id ?? 0).ToList();
+                    tempList = result.Hits.HitsHits.Select(r => r.Id ?? "").ToList();
                 }
             }
             catch (Exception ex)

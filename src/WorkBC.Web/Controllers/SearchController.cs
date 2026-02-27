@@ -167,7 +167,7 @@ namespace WorkBC.Web.Controllers
         /// <param name="isToggle" example="true">Do not increase view count when the user toggles between English and French</param>
         [HttpGet]
         [Route("api/[controller]/[action]")]
-        public async Task<IActionResult> GetJobDetail(long jobId, string language = "en", bool isToggle = false)
+        public async Task<IActionResult> GetJobDetail(string jobId, string language = "en", bool isToggle = false)
         {
             //create new job service
             var js = new JobDetailService(_configuration, _logger);
@@ -231,30 +231,20 @@ namespace WorkBC.Web.Controllers
         [EnableCors("_API")]
         [HttpGet]
         [Route("api/[controller]/[action]")]
-        public JsonResult GetJobXml(long jobId)
+        public JsonResult GetJobXml(string jobId)
         {
             //try and load the data from the database
-            if (jobId.ToString().Length == 8)
+            //Check federal first, then wanted
+            var federalJob = _dbContext.ImportedJobsFederal.FirstOrDefault(job => job.JobId == jobId);
+            if (federalJob != null)
             {
-                //Federal
-                var federalJob = _dbContext.ImportedJobsFederal.FirstOrDefault(job => job.JobId == (int)jobId);
-
-                //If federal, return federal XML
-                if (federalJob != null)
-                {
-                    return new JsonResult(federalJob.JobPostEnglish);
-                }
+                return new JsonResult(federalJob.JobPostEnglish);
             }
-            else
-            {
-                //Wanted
-                ImportedJobWanted wantedJob = _dbContext.ImportedJobsWanted.FirstOrDefault(job => job.JobId == jobId);
 
-                //If wanted, return wanted XML
-                if (wantedJob != null)
-                {
-                    return new JsonResult(wantedJob.JobPostEnglish);
-                }
+            ImportedJobWanted wantedJob = _dbContext.ImportedJobsWanted.FirstOrDefault(job => job.JobId == jobId);
+            if (wantedJob != null)
+            {
+                return new JsonResult(wantedJob.JobPostEnglish);
             }
 
             //If we could not find it anywhere

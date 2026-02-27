@@ -28,7 +28,7 @@ namespace WorkBC.Indexers.Federal.Services
         private readonly JobBoardContext _dbContext;
         private readonly IndexSettings _indexSettings;
         private readonly ILogger _logger;
-        private readonly List<long> _lstIds = new List<long>();
+        private readonly List<string> _lstIds = new List<string>();
         private readonly XmlParsingServiceFederal _xmlService;
         private readonly IndexCheckerService _indexChecker;
 
@@ -235,8 +235,8 @@ namespace WorkBC.Indexers.Federal.Services
             foreach (ExpiredJob job in jobsToPurge)
             {
                 //Remove from Elastic search
-                await PostToElasticSearch(string.Empty, job.JobId.ToString(), "DELETE", _configuration["IndexSetting:DefaultIndex"]);
-                await PostToElasticSearch(string.Empty, job.JobId.ToString(), "DELETE", General.FrenchIndex);
+                await PostToElasticSearch(string.Empty, job.JobId, "DELETE", _configuration["IndexSetting:DefaultIndex"]);
+                await PostToElasticSearch(string.Empty, job.JobId, "DELETE", General.FrenchIndex);
 
                 //Update indicators
                 job.RemovedFromElasticsearch = true;
@@ -259,31 +259,31 @@ namespace WorkBC.Indexers.Federal.Services
             await _dbContext.SaveChangesAsync();
 
             //Use another approach to get a list of jobs that we still need to remove
-            List<long> sqlJobIds = await _dbContext.ImportedJobsFederal.Select(j => j.JobId).ToListAsync();
+            List<string> sqlJobIds = await _dbContext.ImportedJobsFederal.Select(j => j.JobId).ToListAsync();
 
             // ENGLISH
-            List<long> englishElasticJobIds = await _indexChecker.GetIndexedEnglishFederalJobIds();
-            List<long> moreEnglishJobsToPurge = englishElasticJobIds.Where(j => !sqlJobIds.Contains(j)).ToList();
+            List<string> englishElasticJobIds = await _indexChecker.GetIndexedEnglishFederalJobIds();
+            List<string> moreEnglishJobsToPurge = englishElasticJobIds.Where(j => !sqlJobIds.Contains(j)).ToList();
 
             //loop through jobs
-            foreach (long jobId in moreEnglishJobsToPurge)
+            foreach (string jobId in moreEnglishJobsToPurge)
             {
                 //Remove from Elastic search
-                await PostToElasticSearch(string.Empty, jobId.ToString(), "DELETE", General.EnglishIndex);
+                await PostToElasticSearch(string.Empty, jobId, "DELETE", General.EnglishIndex);
 
                 //Deleted
                 Console.Write("[D2E]");
             }
 
             // FRENCH
-            List<long> frenchElasticJobIds = await _indexChecker.GetIndexedFrenchFederalJobIds();
-            List<long> moreFrenchJobsToPurge = frenchElasticJobIds.Where(j => !sqlJobIds.Contains(j)).ToList();
+            List<string> frenchElasticJobIds = await _indexChecker.GetIndexedFrenchFederalJobIds();
+            List<string> moreFrenchJobsToPurge = frenchElasticJobIds.Where(j => !sqlJobIds.Contains(j)).ToList();
 
             //loop through jobs
-            foreach (long jobId in moreFrenchJobsToPurge)
+            foreach (string jobId in moreFrenchJobsToPurge)
             {
                 //Remove from Elastic search
-                await PostToElasticSearch(string.Empty, jobId.ToString(), "DELETE", General.FrenchIndex);
+                await PostToElasticSearch(string.Empty, jobId, "DELETE", General.FrenchIndex);
 
                 //Deleted
                 Console.Write("[D2F]");
@@ -312,9 +312,9 @@ namespace WorkBC.Indexers.Federal.Services
         /// </summary>
         public async Task Debug()
         {
-            List<long> elasticJobIds =
+            List<string> elasticJobIds =
                 await new IndexCheckerService(_logger, _configuration).GetActiveEnglishFederalJobIds();
-            List<long> sqlJobIds = await _dbContext.Jobs
+            List<string> sqlJobIds = await _dbContext.Jobs
                 .Where(j => j.JobSourceId == JobSource.Federal && j.ExpireDate > DateTime.Now && j.IsActive)
                 .Select(j => j.JobId)
                 .ToListAsync();
@@ -323,14 +323,14 @@ namespace WorkBC.Indexers.Federal.Services
             Console.WriteLine($"Active jobs found in the Jobs table: {sqlJobIds.Count}");
             Console.WriteLine();
             Console.WriteLine("JobIds found in Elasticsearch but not in the Jobs table:");
-            foreach (long jobId in elasticJobIds.Except(sqlJobIds))
+            foreach (string jobId in elasticJobIds.Except(sqlJobIds))
             {
                 Console.WriteLine(jobId);
             }
 
             Console.WriteLine();
             Console.WriteLine("JobIds found in the Jobs table but not in Elasticsearch:");
-            foreach (long jobId in sqlJobIds.Except(elasticJobIds))
+            foreach (string jobId in sqlJobIds.Except(elasticJobIds))
             {
                 Console.WriteLine(jobId);
             }

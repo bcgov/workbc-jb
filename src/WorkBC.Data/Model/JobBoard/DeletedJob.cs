@@ -9,7 +9,7 @@ namespace WorkBC.Data.Model.JobBoard
         [Key]
         [ForeignKey("Job")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long JobId { get; set; }
+        public string JobId { get; set; }
 
         public Job Job { get; set; }
 
