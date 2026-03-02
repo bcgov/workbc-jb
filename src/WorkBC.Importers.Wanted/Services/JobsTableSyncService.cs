@@ -187,47 +187,71 @@ namespace WorkBC.Importers.Wanted.Services
             }
         }
 
-        private static void SetJobTypeFlags(string xmlString, Job efJob)
+        private static void SetJobTypeFlags(string jobData, Job efJob)
         {
-            //read XML to XmlDocument
-            var xmlDocument = new XmlDocument();
+            // reset everything to false
+            efJob.FullTime = false;
+            efJob.PartTime = false;
+            efJob.LeadingToFullTime = false;
+            efJob.Permanent = false;
+            efJob.Temporary = false;
+            efJob.Casual = false;
+            efJob.Seasonal = false;
 
-            xmlDocument.LoadXml(xmlString);
-
-            if (xmlDocument.ChildNodes.Count > 0)
+            if (jobData != null && jobData.TrimStart().StartsWith("{"))
             {
-                //Read XML Node
-                XmlNode xmlJobNode = xmlDocument.SelectSingleNode("job");
-
-                // reset everything to false
-                efJob.FullTime = false;
-                efJob.PartTime = false;
-                efJob.LeadingToFullTime = false;
-                efJob.Permanent = false;
-                efJob.Temporary = false;
-                efJob.Casual = false;
-                efJob.Seasonal = false;
-
-                if (xmlJobNode != null)
+                // JSON format
+                try
                 {
-                    foreach (XmlNode jobType in xmlJobNode.SelectNodes("jobtypes/jobtype"))
+                    var j = Newtonsoft.Json.Linq.JObject.Parse(jobData);
+                    var employmentTypes = j["employmentType"]?.ToObject<List<string>>() ?? new List<string>();
+                    string empTypeStr = string.Join(" ", employmentTypes).ToLower();
+
+                    efJob.FullTime = empTypeStr.Contains("full");
+                    efJob.PartTime = empTypeStr.Contains("part");
+                    efJob.Permanent = empTypeStr.Contains("permanent");
+                    efJob.Temporary = empTypeStr.Contains("contract") || empTypeStr.Contains("temporary");
+                    efJob.Casual = empTypeStr.Contains("casual");
+                    efJob.Seasonal = empTypeStr.Contains("seasonal");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception in SetJobTypeFlags(JSON), reason: " + ex.Message);
+                }
+            }
+            else
+            {
+                // XML format
+                var xmlDocument = new XmlDocument();
+
+                xmlDocument.LoadXml(jobData);
+
+                if (xmlDocument.ChildNodes.Count > 0)
+                {
+                    //Read XML Node
+                    XmlNode xmlJobNode = xmlDocument.SelectSingleNode("job");
+
+                    if (xmlJobNode != null)
                     {
-                        string jobTypeStr = jobType.Attributes["label"].InnerText;
-                        switch (jobTypeStr.ToLower())
+                        foreach (XmlNode jobType in xmlJobNode.SelectNodes("jobtypes/jobtype"))
                         {
-                            case "full-time":
-                                efJob.FullTime = true;
-                                break;
-                            case "part-time":
-                                efJob.PartTime = true;
-                                break;
-                            case "permanent":
-                                efJob.Permanent = true;
-                                break;
-                            case "contract":
-                            case "temporary":
-                                efJob.Temporary = true;
-                                break;
+                            string jobTypeStr = jobType.Attributes["label"].InnerText;
+                            switch (jobTypeStr.ToLower())
+                            {
+                                case "full-time":
+                                    efJob.FullTime = true;
+                                    break;
+                                case "part-time":
+                                    efJob.PartTime = true;
+                                    break;
+                                case "permanent":
+                                    efJob.Permanent = true;
+                                    break;
+                                case "contract":
+                                case "temporary":
+                                    efJob.Temporary = true;
+                                    break;
+                            }
                         }
                     }
                 }
