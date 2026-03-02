@@ -262,8 +262,8 @@ namespace WorkBC.Data.Migrations
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.DeletedJob", b =>
                 {
-                    b.Property<long>("JobId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("JobId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("DateDeleted")
                         .HasColumnType("timestamp");
@@ -280,8 +280,8 @@ namespace WorkBC.Data.Migrations
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.ExpiredJob", b =>
                 {
-                    b.Property<long>("JobId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("JobId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("DateRemoved")
                         .HasColumnType("timestamp");
@@ -367,8 +367,8 @@ namespace WorkBC.Data.Migrations
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.ImportedJobFederal", b =>
                 {
-                    b.Property<long>("JobId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("JobId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("ApiDate")
                         .HasColumnType("timestamp");
@@ -398,8 +398,8 @@ namespace WorkBC.Data.Migrations
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.ImportedJobWanted", b =>
                 {
-                    b.Property<long>("JobId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("JobId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("ApiDate")
                         .HasColumnType("timestamp");
@@ -453,8 +453,8 @@ namespace WorkBC.Data.Migrations
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.Job", b =>
                 {
-                    b.Property<long>("JobId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("JobId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("ActualDatePosted")
                         .HasColumnType("timestamp");
@@ -609,8 +609,8 @@ namespace WorkBC.Data.Migrations
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.JobId", b =>
                 {
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("DateFirstImported")
                         .HasColumnType("timestamp");
@@ -1059,8 +1059,8 @@ namespace WorkBC.Data.Migrations
                     b.Property<bool>("IsCurrentVersion")
                         .HasColumnType("bit");
 
-                    b.Property<long>("JobId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("JobId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<byte>("JobSourceId")
                         .HasColumnType("tinyint");
@@ -1098,8 +1098,8 @@ namespace WorkBC.Data.Migrations
 
             modelBuilder.Entity("WorkBC.Data.Model.JobBoard.JobView", b =>
                 {
-                    b.Property<long>("JobId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("JobId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("DateLastViewed")
                         .HasColumnType("timestamp");
@@ -1501,8 +1501,8 @@ namespace WorkBC.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<long>("JobId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("JobId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Note")
                         .HasMaxLength(800)
