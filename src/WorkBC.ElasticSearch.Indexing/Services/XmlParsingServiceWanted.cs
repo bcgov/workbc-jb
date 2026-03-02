@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 using WorkBC.Data.Model.JobBoard;
 
 namespace WorkBC.ElasticSearch.Indexing.Services
@@ -18,7 +19,380 @@ namespace WorkBC.ElasticSearch.Indexing.Services
         {
         }
 
-        public ElasticSearchJob ConvertToElasticJob(string wantedXml)
+        public ElasticSearchJob ConvertToElasticJob(string jobData)
+        {
+            if (jobData != null && jobData.TrimStart().StartsWith("{"))
+            {
+                return ConvertJsonToElasticJob(jobData);
+            }
+
+            return ConvertXmlToElasticJob(jobData);
+        }
+
+        /// <summary>
+        /// Parses JSON job data into an ElasticSearchJob.
+        /// </summary>
+        private ElasticSearchJob ConvertJsonToElasticJob(string jsonData)
+        {
+            var job = new ElasticSearchJob();
+
+            try
+            {
+                var j = JObject.Parse(jsonData);
+
+                string jobId = j.Value<string>("id") ?? "";
+                if (string.IsNullOrWhiteSpace(jobId))
+                {
+                    return job;
+                }
+
+                // Employment type parsing
+                var employmentTypes = j["employmentType"]?.ToObject<List<string>>() ?? new List<string>();
+                string empTypeStr = string.Join(" ", employmentTypes).ToLower();
+
+                // Date parsing
+                string postedDateStr = j.Value<string>("postedDate") ?? j.Value<string>("createdAt");
+                var postedDate = !string.IsNullOrEmpty(postedDateStr) 
+                    ? Convert.ToDateTime(postedDateStr) 
+                    : DateTime.Now;
+
+                string updatedAtStr = j.Value<string>("updatedAt") ?? postedDateStr;
+                var refreshedDate = !string.IsNullOrEmpty(updatedAtStr) 
+                    ? Convert.ToDateTime(updatedAtStr) 
+                    : postedDate;
+
+                // Prefer a BC location since this is a BC job board
+                string city = "";
+                string province = "";
+                string lat = "";
+                string lon = "";
+
+                var locations = j["jobLocations"] as JArray;
+                if (locations != null && locations.Count > 0)
+                {
+                    // Try to find a British Columbia location first
+                    JToken loc = null;
+                    foreach (var candidate in locations)
+                    {
+                        string state = candidate.Value<string>("state") ?? "";
+                        if (state.Equals("British Columbia", StringComparison.OrdinalIgnoreCase))
+                        {
+                            loc = candidate;
+                            break;
+                        }
+                    }
+                    // Fall back to first location if no BC location found
+                    loc ??= locations[0];
+
+                    city = loc.Value<string>("city") ?? "";
+                    province = loc.Value<string>("state") ?? loc.Value<string>("province") ?? "";
+
+                    // Coordinates are in lats/lngs arrays
+                    var lats = loc["lats"] as JArray;
+                    var lngs = loc["lngs"] as JArray;
+                    if (lats != null && lats.Count > 0)
+                    {
+                        lat = lats[0].ToString();
+                    }
+                    if (lngs != null && lngs.Count > 0)
+                    {
+                        lon = lngs[0].ToString();
+                    }
+                }
+
+                // Use province as fallback when city is empty (common for remote jobs)
+                if (string.IsNullOrWhiteSpace(city) && !string.IsNullOrWhiteSpace(province))
+                {
+                    city = province;
+                }
+
+                city = CleanUpCityName(city);
+
+                // Prefer sourceDomain over source (ATS name)
+                string source = j.Value<string>("sourceDomain") ?? j.Value<string>("source") ?? "";
+                string sourceUrl = j.Value<string>("url") ?? "";
+
+                string description = j.Value<string>("description") ?? "";
+
+                string employerName = j["company"]?.Value<string>("name") ?? j.Value<string>("companyName") ?? "";
+
+                string industry = j.Value<string>("industry") 
+                    ?? j["company"]?.Value<string>("linkedinOrgIndustry") ?? "";
+                string function = j.Value<string>("function") ?? j.Value<string>("category") ?? "";
+
+                string title = j.Value<string>("title") ?? "";
+
+                job = new ElasticSearchJob
+                {
+
+                    JobId = jobId,
+                    DatePosted = refreshedDate,
+                    LastUpdated = refreshedDate,
+                    ActualDatePosted = postedDate,
+                    Lang = "en",
+                    SkillCategories = new List<SkillCategory>(),
+                    City = new[] { GetJobCity(city) },
+                    Location = new Location[] { },
+                    Province = province.Trim(),
+                    Region = new[] { GetJobRegion(city, 0, UniqueCities, DuplicateCities) },
+                    HoursOfWork = new HoursOfWork(),
+                    PeriodOfEmployment = new PeriodOfEmployment(),
+                    EmploymentTerms = new EmploymentTerms(),
+                    IsFederalJob = false,
+                    ExpireDate = refreshedDate.AddDays(WantedJobExpiryDays),
+
+
+                    Industry = industry,
+                    JobDescription = description,
+                    Occupation = "",
+                    Function = function
+                };
+
+                #region Employer Name
+
+                var regEnglishWord = new Regex("[a-zA-Z0-9$@!%*?&#^_.+-]+");
+                if (!string.IsNullOrWhiteSpace(employerName))
+                {
+                    Match isMatch = regEnglishWord.Match(employerName.Trim());
+                    job.EmployerName = isMatch.Success ? employerName.Trim() : string.Empty;
+                }
+                else
+                {
+                    job.EmployerName = string.Empty;
+                }
+
+                #endregion
+
+                #region Salary
+
+                decimal? salaryMin = j.Value<decimal?>("salaryMin");
+                decimal? salaryMax = j.Value<decimal?>("salaryMax");
+                decimal? salaryValue = j.Value<decimal?>("salaryValue");
+                string salaryUnit = j.Value<string>("salaryUnitText") ?? "";
+
+                decimal? salary = salaryMin ?? salaryValue ?? salaryMax;
+                if (salary.HasValue && salary.Value >= 0.01m)
+                {
+                    job.Salary = salary;
+
+                    if (salaryMin.HasValue && salaryMax.HasValue)
+                    {
+                        job.SalarySummary = $"${salaryMin.Value:#,##0} - ${salaryMax.Value:#,##0}";
+                    }
+                    else
+                    {
+                        job.SalarySummary = $"${salary.Value:#,##0}";
+                    }
+
+                    if (!string.IsNullOrEmpty(salaryUnit))
+                    {
+                        job.SalarySummary += $" / {salaryUnit.ToUpper()}";
+                    }
+                }
+                else
+                {
+                    job.SalarySummary = "N/A";
+                }
+
+                #endregion
+
+                #region Hours of work
+
+                job.HoursOfWork.Description = new List<string>();
+                if (empTypeStr.Contains("full"))
+                {
+                    job.HoursOfWork.Description.Add("Full-time");
+                }
+                if (empTypeStr.Contains("part"))
+                {
+                    job.HoursOfWork.Description.Add("Part-time");
+                }
+
+                #endregion
+
+                #region Period of Employment
+
+                job.PeriodOfEmployment.Description = new List<string>();
+                if (empTypeStr.Contains("permanent"))
+                {
+                    job.PeriodOfEmployment.Description.Add("Permanent");
+                }
+                if (empTypeStr.Contains("contract") || empTypeStr.Contains("temporary"))
+                {
+                    job.PeriodOfEmployment.Description.Add("Temporary");
+                }
+
+                #endregion
+
+                #region Location
+
+                if (!string.IsNullOrEmpty(lat) && !string.IsNullOrEmpty(lon))
+                {
+                    Location location = Location.LocationOrNull(lat, lon);
+
+                    if (location != null)
+                    {
+                        if (location.Lat.StartsWith("999") && location.Lon.StartsWith("999"))
+                        {
+                            location.Lat = "54.5000992";
+                            location.Lon = "-125.1159973";
+                        }
+
+                        job.Location = new[] { location };
+                        job.LocationGeo = new[] { $"{location.Lat},{location.Lon}" };
+                    }
+                }
+
+                #endregion
+
+                #region Education
+
+
+                string educationLevel = j.Value<string>("educationLevel") ?? "";
+                if (!string.IsNullOrEmpty(educationLevel))
+                {
+                    switch (educationLevel.ToLower())
+                    {
+                        case "less than high school":
+                        case "no education":
+                            job.EduLevel = "No education";
+                            break;
+                        case "some college":
+                        case "associate's degree":
+                        case "postsecondary":
+                        case "college":
+                        case "apprenticeship":
+                            job.EduLevel = "College or apprenticeship";
+                            break;
+                        case "doctoral":
+                        case "master's degree":
+                        case "bachelor's degree":
+                        case "university":
+                            job.EduLevel = "University";
+                            break;
+                        case "high school":
+                        case "high school diploma":
+                            job.EduLevel = "Secondary school or job-specific training";
+                            break;
+                    }
+                }
+
+                #endregion
+
+                #region Apply fields
+
+                job.ApplyEmailAddress = string.Empty;
+                job.ApplyPhoneNumber = string.Empty;
+                job.ApplyWebsite = sourceUrl;
+                job.PositionsAvailable = 1;
+                job.NaicsId = null;
+
+                #endregion
+
+                #region Noc code
+
+                string nocStr = "";
+                string nocLabel = "";
+                var nocMatches = j["nocMatches"] as JArray;
+                if (nocMatches != null && nocMatches.Count > 0)
+                {
+                    nocStr = nocMatches[0].Value<string>("code") ?? "";
+                    nocLabel = nocMatches[0].Value<string>("title") ?? "";
+                }
+
+                var nocInt = 0;
+                if (!string.IsNullOrEmpty(nocStr))
+                {
+                    int.TryParse(nocStr, out nocInt);
+
+                    if (NocCodes.All(c => c.Id != nocInt))
+                    {
+                        nocInt = 0;
+                    }
+
+                    job.Noc = nocInt == 0 ? (int?)null : nocInt;
+                }
+
+                if (nocInt > 0)
+                {
+                    job.NocGroup = GetNocGroup2021(nocInt);
+                    job.NocJobTitle = nocLabel.Replace("\u200B", "");
+                }
+
+
+                if (!string.IsNullOrEmpty(nocLabel))
+                {
+                    job.Occupation = nocLabel;
+                }
+
+                #endregion
+
+                #region Noc code 2021
+
+                job.Noc2021 = GetNoc2021from2016value(job.Noc?.ToString());
+
+                #endregion
+
+                #region Job title
+
+                if (!string.IsNullOrWhiteSpace(title))
+                {
+                    job.Title = title.Trim().Replace("\u200B", "");
+                }
+
+                if (Regex.Matches(job.Title ?? "", @"[a-zA-Z]").Count == 0)
+                {
+                    job.Title = string.IsNullOrEmpty(job.NocJobTitle)
+                        ? "No job title provided"
+                        : job.NocJobTitle;
+                }
+
+                if (!string.IsNullOrEmpty(job.Title) && !job.Title.Any(char.IsLower))
+                {
+                    job.Title = job.Title.ToLower();
+                }
+
+
+                job.Title = Regex.Replace(job.Title ?? "", @"(?i)\bpt\b", "PT");
+
+                job.Title = Regex.Replace(job.Title ?? "", @"(?i)\bft\b", "FT");
+
+                #endregion
+
+                #region External Source
+
+                job.ExternalSource = new ExternalJobSource
+                {
+                    Source = new List<ExternalSource>()
+                };
+
+                if (!string.IsNullOrEmpty(source) || !string.IsNullOrEmpty(sourceUrl))
+                {
+                    job.ExternalSource.Source.Add(new ExternalSource
+                    {
+                        Url = sourceUrl,
+                        Source = source
+                    });
+                }
+
+                #endregion
+
+                SetSalarySort(job);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception in ConvertJsonToElasticJob(), reason: " + ex.Message);
+                Console.WriteLine("JSON: " + jsonData);
+                Console.WriteLine(ex);
+            }
+
+            return job;
+        }
+
+        /// <summary>
+        /// Parses XML job data into an ElasticSearchJob.
+        /// </summary>
+        private ElasticSearchJob ConvertXmlToElasticJob(string wantedXml)
         {
             var job = new ElasticSearchJob();
 
