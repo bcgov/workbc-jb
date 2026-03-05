@@ -54,6 +54,16 @@ services:
         environment:
             - DB_HOST=postgres
             - DB_NAME=jobboard
+    importers-innovibe-persistent:
+        container_name: importers-innovibe-persistent
+        build:
+            context: ./WorkBC.Importers.Innovibe
+            dockerfile: Dockerfile.persistent
+        env_file:
+            - .env
+        environment:
+            - DB_HOST=postgres
+            - DB_NAME=jobboard
     importers-federal:
         container_name: importers-federal
         scale: 0
