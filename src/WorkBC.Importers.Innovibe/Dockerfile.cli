@@ -11,7 +11,7 @@ COPY composer.json ./
 RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-dist
 COPY src/ src/
 
-# ── Runtime stage (persistent – stays alive for kubectl exec) ───
+# ── Runtime stage (CLI – stays alive for kubectl exec) ──────────
 FROM php:8.3-cli-alpine
 
 RUN apk add --no-cache postgresql-libs tzdata \
