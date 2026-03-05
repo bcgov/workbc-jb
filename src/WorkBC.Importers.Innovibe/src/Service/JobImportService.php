@@ -177,7 +177,7 @@ final class JobImportService
         }
     }
 
-    // ── 3. Expire jobs via Innovibe API ─────────────────────────────
+    // ── 3. Expire jobs via Innovibe API ────────────────────────────
 
     private function expireJobsFromApi(): void
     {
@@ -191,40 +191,52 @@ final class JobImportService
             return;
         }
 
-        $this->log->info(count($expiredIds) . ' expired jobs to process');
-        $this->log->info('Expired job IDs: ' . implode(', ', $expiredIds));
+        $this->log->info(count($expiredIds) . ' total expired IDs returned by API');
 
-        $expIns  = $this->db->prepare('
+        // Bulk-filter: only keep IDs that exist in our JobIds table
+        $matchedIds = [];
+        foreach (array_chunk($expiredIds, 500) as $chunk) {
+            $ph   = implode(',', array_map(fn($id) => $this->db->quote($id), $chunk));
+            $rows = $this->db->query("SELECT \"Id\" FROM \"JobIds\" WHERE \"Id\" IN ({$ph})")->fetchAll(PDO::FETCH_COLUMN);
+            $matchedIds = array_merge($matchedIds, $rows);
+        }
+
+        $skipped = count($expiredIds) - count($matchedIds);
+        $this->log->info(count($matchedIds) . " jobs to expire, {$skipped} skipped (not in system)");
+
+        if (empty($matchedIds)) {
+            return;
+        }
+
+        $expIns = $this->db->prepare('
             INSERT INTO "ExpiredJobs" ("JobId","DateRemoved","RemovedFromElasticsearch")
             VALUES (?, NOW(), FALSE)
             ON CONFLICT ("JobId") DO UPDATE SET "DateRemoved" = NOW(), "RemovedFromElasticsearch" = FALSE
         ');
-        $delStmt = $this->db->prepare('DELETE FROM "ImportedJobsWanted" WHERE "JobId" = ?');
+        $delStmt   = $this->db->prepare('DELETE FROM "ImportedJobsWanted" WHERE "JobId" = ?');
         $deactStmt = $this->db->prepare('
             UPDATE "Jobs" SET "IsActive" = FALSE, "LastUpdated" = NOW()
             WHERE "JobId" = ? AND "IsActive" = TRUE
         ');
 
-        $progressExpire = '';
-        $deactivated    = 0;
+        $deactivated = 0;
 
-        foreach ($expiredIds as $id) {
-            $expIns->execute([$id]);
-            $delStmt->execute([$id]);
-            $deactStmt->execute([$id]);
-            if ($deactStmt->rowCount() > 0) {
-                $deactivated++;
+        foreach ($matchedIds as $id) {
+            try {
+                $expIns->execute([$id]);
+                $delStmt->execute([$id]);
+                $deactStmt->execute([$id]);
+                if ($deactStmt->rowCount() > 0) {
+                    $deactivated++;
+                }
+            } catch (\Throwable $e) {
+                $this->log->warning("Failed to expire job {$id}: {$e->getMessage()}");
             }
-            $progressExpire .= 'E';
-        }
-
-        if ($progressExpire !== '') {
-            $this->log->info($progressExpire);
         }
 
         $this->log->info("{$deactivated} jobs deactivated in Jobs table");
 
-        // Mark all newly expired jobs as removed from Elasticsearch
+        // Mark expired jobs as removed from Elasticsearch
         $this->db->exec('
             UPDATE "ExpiredJobs" SET "RemovedFromElasticsearch" = TRUE
             WHERE "RemovedFromElasticsearch" = FALSE
@@ -254,7 +266,6 @@ final class JobImportService
             VALUES (?,?,?,TRUE,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?,?,?,?,?,?)
         ');
 
-        $progress = '';
         foreach ($rows as $r) {
             $m = $this->map(json_decode($r['JobPostEnglish'], true) ?? []);
             $stmt->execute([
@@ -269,11 +280,6 @@ final class JobImportService
                 $m['locationId'], $m['datePosted'],
                 $m['salary'], $m['salarySummary'],
             ]);
-            $progress .= 'I';
-        }
-
-        if ($progress !== '') {
-            $this->log->info($progress);
         }
     }
 
@@ -301,7 +307,6 @@ final class JobImportService
             WHERE "JobId"=?
         ');
 
-        $progress = '';
         foreach ($rows as $r) {
             $m = $this->map(json_decode($r['JobPostEnglish'], true) ?? []);
             $stmt->execute([
@@ -312,11 +317,6 @@ final class JobImportService
                 $m['salary'], $m['salarySummary'],
                 $r['JobId'],
             ]);
-            $progress .= 'U';
-        }
-
-        if ($progress !== '') {
-            $this->log->info($progress);
         }
     }
 

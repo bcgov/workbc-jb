@@ -30,7 +30,6 @@ final class InnovibeApiClient
 
     /**
      * Returns yesterday's date in the America/Vancouver (BC) timezone.
-     * Used for both job import (postedFrom) and expired-jobs API calls.
      */
     public function getBcYesterdayDate(): string
     {
@@ -51,18 +50,11 @@ final class InnovibeApiClient
                 'includeExpired' => 'false',
                 'includeNocUnmatched' => $this->config->includeNocUnmatched ? 'true' : 'false',
                 'state' => 'British Columbia',
-                // 'includeNoSalary' => 'false',        // set to 'true' to include jobs without salary
-                // 'company'         => '',              // narrow to single company by name
-                // 'excludeCompany'  => ['name1'],       // exclude companies by name (array)
-                // 'includeCompanyIds' => ['id1','id2'], // include specific company IDs (array)
-                // 'excludeCompanyIds' => ['id1','id2'], // exclude specific company IDs (array)
             ];
 
             // Date filtering: by default only fetch jobs from yesterday (BC time)
-            // Set BULK_IMPORT=true to fetch all jobs without date filtering
             if (!$this->config->bulkImport) {
                 $query['postedFrom'] = $this->getBcYesterdayDate();
-            // $query['postedTo']   = date('Y-m-d');
             }
 
             if ($cursor) {
@@ -94,15 +86,19 @@ final class InnovibeApiClient
     }
 
     /**
-     * Fetches the list of expired job IDs from the Innovibe API.
+     * Fetches expired job IDs from the Innovibe API.
      * Calls GET /jobs/expired/ids?date=YYYY-MM-DD
      *
      * @return string[] Array of expired job ID strings
      */
     public function fetchExpiredJobIds(string $date): array
     {
-        $query = ['date' => $date];
-
+        $query = [
+            'state' => 'British Columbia',
+            'includeNocUnmatched' => $this->config->includeNocUnmatched ? 'true' : 'false',
+            'postedFrom' => $date,
+            'postedTo' => $date,
+        ];
         $fullUrl = $this->config->apiBaseUrl . '/jobs/expired/ids?' . http_build_query($query);
         $this->log->info("GET {$fullUrl}");
 
@@ -115,17 +111,45 @@ final class InnovibeApiClient
             return [];
         }
 
-        $ids = $body['data'] ?? $body;
-        if (!is_array($ids)) {
-            $this->log->warning('Unexpected expired-jobs response format');
+        // Resolve the ID array from whichever key the API uses
+        $ids = $this->resolveIdArray($body);
+
+        if (empty($ids)) {
             return [];
         }
 
-        // Flatten in case the API returns objects instead of plain IDs
-        $result = array_map(fn($item) => is_array($item) ? (string)($item['id'] ?? $item['jobId'] ?? '') : (string)$item, $ids);
-        $result = array_filter($result, fn($id) => $id !== '');
+        // Normalise to string IDs (handles both plain strings and object formats)
+        $result = array_map(
+        fn($item) => is_array($item) ? (string)($item['id'] ?? $item['jobId'] ?? '') : (string)$item,
+            $ids
+        );
 
-        $this->log->info(count($result) . ' expired job IDs returned by API');
-        return array_values($result);
+        return array_values(array_filter($result, fn($id) => $id !== ''));
+    }
+
+    /**
+     * Resolves the ID array from the API response body,
+     * trying common keys: data, ids, or a plain list.
+     */
+    private function resolveIdArray(array $body): array
+    {
+        if (isset($body['data']) && is_array($body['data'])) {
+            return $body['data'];
+        }
+        if (isset($body['ids']) && is_array($body['ids'])) {
+            return $body['ids'];
+        }
+        if (array_is_list($body)) {
+            return $body;
+        }
+
+        // Fallback: use the first array value found
+        foreach ($body as $value) {
+            if (is_array($value)) {
+                return $value;
+            }
+        }
+
+        return [];
     }
 }
