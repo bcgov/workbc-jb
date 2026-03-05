@@ -262,8 +262,8 @@ final class JobImportService
             INSERT INTO "Jobs" ("JobId","Title","City","IsActive","FullTime","PartTime","Permanent","Temporary",
                 "OriginalSource","ExternalSourceUrl","DateFirstImported","DateLastImported","LastUpdated","JobSourceId",
                 "PositionsAvailable","DatePosted","Casual","Seasonal","LeadingToFullTime","LocationId","ActualDatePosted",
-                "Salary","SalarySummary")
-            VALUES (?,?,?,TRUE,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?,?,?,?,?,?)
+                "Salary","SalarySummary","NocCodeId2021","NocCodeId")
+            VALUES (?,?,?,TRUE,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?,?,?,?,?,?,?,?)
         ');
 
         foreach ($rows as $r) {
@@ -279,6 +279,7 @@ final class JobImportService
                 $m['casual'], $m['seasonal'], $m['leadingToFt'],
                 $m['locationId'], $m['datePosted'],
                 $m['salary'], $m['salarySummary'],
+                $m['nocCode2021'], $m['nocCode2016'],
             ]);
         }
     }
@@ -303,7 +304,8 @@ final class JobImportService
                 "Title"=?, "City"=?, "FullTime"=?, "PartTime"=?, "Permanent"=?, "Temporary"=?,
                 "OriginalSource"=?, "ExternalSourceUrl"=?, "IsActive"=TRUE,
                 "DateLastImported"=?, "LastUpdated"=NOW(),
-                "Salary"=?, "SalarySummary"=?
+                "Salary"=?, "SalarySummary"=?,
+                "NocCodeId2021"=?, "NocCodeId"=?
             WHERE "JobId"=?
         ');
 
@@ -315,6 +317,7 @@ final class JobImportService
                 $m['src'], $m['url'],
                 $r['DateLastImported'],
                 $m['salary'], $m['salarySummary'],
+                $m['nocCode2021'], $m['nocCode2016'],
                 $r['JobId'],
             ]);
         }
@@ -342,6 +345,22 @@ final class JobImportService
             $salarySummary .= ' / ' . strtoupper($salaryUnit);
         }
 
+        // NOC: pick the highest-scored match from nocMatches
+        $nocCode2021 = null;
+        $nocCode2016 = null;
+        $nocMatches  = $j['nocMatches'] ?? [];
+        if (!empty($nocMatches)) {
+            // Sort by score descending, pick the best
+            usort($nocMatches, fn($a, $b) => ($b['score'] ?? 0) <=> ($a['score'] ?? 0));
+            $bestNoc     = $nocMatches[0];
+            $code2021    = $bestNoc['code'] ?? null;
+            if ($code2021 !== null) {
+                $nocCode2021 = (int) $code2021;
+                // Look up the 2016 code from NocCodes2021
+                $nocCode2016 = $this->resolveNocCode2016($nocCode2021);
+            }
+        }
+
         return [
             'title'         => mb_substr($j['title'], 0, 300),
             'city'          => mb_substr($city, 0, 120),
@@ -359,6 +378,39 @@ final class JobImportService
             'locationId'    => 0,
             'salary'        => $salary,
             'salarySummary' => mb_substr($salarySummary, 0, 60),
+            'nocCode2021'   => $nocCode2021,
+            'nocCode2016'   => $nocCode2016,
         ];
+    }
+
+    /**
+     * Cache of 2021→2016 NOC code mappings to avoid repeated DB lookups.
+     */
+    private array $nocCache = [];
+
+    private function resolveNocCode2016(int $nocId2021): ?int
+    {
+        if (array_key_exists($nocId2021, $this->nocCache)) {
+            return $this->nocCache[$nocId2021];
+        }
+
+        static $stmt = null;
+        if ($stmt === null) {
+            $stmt = $this->db->prepare('SELECT "Code2016" FROM "NocCodes2021" WHERE "Id" = ?');
+        }
+
+        $stmt->execute([$nocId2021]);
+        $code2016 = $stmt->fetchColumn();
+
+        // Code2016 can be a comma-separated list (e.g. "0012,0013"); take the first
+        if ($code2016 !== false && $code2016 !== null) {
+            $first = explode(',', (string) $code2016)[0];
+            $result = (int) $first;
+        } else {
+            $result = null;
+        }
+
+        $this->nocCache[$nocId2021] = $result;
+        return $result;
     }
 }
