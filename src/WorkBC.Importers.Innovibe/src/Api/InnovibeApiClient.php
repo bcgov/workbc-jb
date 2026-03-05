@@ -50,6 +50,10 @@ final class InnovibeApiClient
                 'includeExpired' => 'false',
                 'includeNocUnmatched' => $this->config->includeNocUnmatched ? 'true' : 'false',
                 'state' => 'British Columbia',
+                // 'includeNoSalary' => 'false',        // set to 'true' to include jobs without salary
+                // 'company'         => '',              // narrow to single company by name
+                // 'excludeCompany'  => ['name1'],       // exclude companies by name (array)
+                // 'excludeCompanyIds' => ['id1','id2'], // exclude specific company IDs (array)
             ];
 
             // Date filtering: by default only fetch jobs from yesterday (BC time)
