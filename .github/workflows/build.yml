@@ -170,3 +170,10 @@ jobs:
       - name: Push Innovibe Importer docker image
         run: |
           docker push ${{ secrets.AWS_ECR_URI }}/jb-importers-innovibe:${{ github.sha }}        
+
+      - name: Tag the Innovibe Importer Persistent docker image
+        run: |
+          docker tag src_importers-innovibe-persistent:latest ${{ secrets.AWS_ECR_URI }}/jb-importers-innovibe-persistent:${{ github.sha }}
+      - name: Push Innovibe Importer Persistent docker image
+        run: |
+          docker push ${{ secrets.AWS_ECR_URI }}/jb-importers-innovibe-persistent:${{ github.sha }}
