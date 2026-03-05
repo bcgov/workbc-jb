@@ -12,9 +12,6 @@ final class AppConfig
     public readonly string $apiBaseUrl;
     public readonly string $apiKey;
     public readonly int $pageSize;
-    public readonly int $jobExpiryDays;
-    public readonly int $daysToKeepSinceLastSeen;
-    public readonly int $maxJobsToExpireAtOnce;
     public readonly string $logLevel;
     public readonly bool $includeNocUnmatched;
     public bool $bulkImport = false;
@@ -31,9 +28,6 @@ final class AppConfig
         $this->apiBaseUrl = rtrim($this->env('API_BASE_URL', 'https://api-prod.jobs.innovibe.ca/api/v1'), '/');
         $this->apiKey = $this->env('API_KEY', '');
         $this->pageSize = (int) $this->env('PAGE_SIZE', '100');
-        $this->jobExpiryDays = (int) $this->env('JOB_EXPIRY_DAYS', '30');
-        $this->daysToKeepSinceLastSeen = (int) $this->env('DAYS_TO_KEEP_SINCE_LAST_SEEN', '2');
-        $this->maxJobsToExpireAtOnce = (int) $this->env('MAX_JOBS_TO_EXPIRE_AT_ONCE', '1250');
         $this->includeNocUnmatched = strtolower($this->env('INCLUDE_NOC_UNMATCHED', 'false')) === 'true';
         $this->logLevel = strtoupper($this->env('LOG_LEVEL', 'INFO'));
     }
