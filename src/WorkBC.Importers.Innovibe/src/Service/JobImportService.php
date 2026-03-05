@@ -38,17 +38,14 @@ final class JobImportService
         $seen = $this->importFromApi();
         $this->markSeen($seen);
 
-        $this->log->info('Purging jobs');
-        $this->purgeJobs();
+        $this->log->info('Expiring jobs via API...');
+        $this->expireJobsFromApi();
 
         $this->log->info('Importing to Jobs table...');
         $this->importNewJobs();
 
         $this->log->info('Updating Jobs table...');
         $this->updateExistingJobs();
-
-        $this->log->info('Deactivating old jobs in Jobs table...');
-        $this->deactivateExpired();
 
         $this->log->info("IMPORTER FINISHED — fetched={$this->fetched} inserted={$this->inserted} updated={$this->updated} skipped={$this->skipped}");
     }
@@ -180,55 +177,84 @@ final class JobImportService
         }
     }
 
-    // ── 3. Purge expired → "ExpiredJobs" ───────────────────────────
+    // ── 3. Expire jobs via Innovibe API ────────────────────────────
 
-    private function purgeJobs(): void
+    private function expireJobsFromApi(): void
     {
-        $exp  = $this->cfg->jobExpiryDays;
-        $keep = $this->cfg->daysToKeepSinceLastSeen;
-        $max  = $this->cfg->maxJobsToExpireAtOnce;
+        $date = $this->api->getBcYesterdayDate();
+        $this->log->info("Fetching expired job IDs for date: {$date}");
 
-        $rows = $this->db->query("
-            SELECT \"JobId\" FROM \"ImportedJobsWanted\"
-            WHERE \"ApiDate\" < NOW() - INTERVAL '{$exp} days'
-               OR \"DateLastSeen\" < NOW() - INTERVAL '{$keep} days'
-            ORDER BY \"ApiDate\" LIMIT {$max}
-        ")->fetchAll(PDO::FETCH_COLUMN);
+        $expiredIds = $this->api->fetchExpiredJobIds($date);
 
-        $this->log->info(count($rows) . ' jobs found to purge');
+        if (empty($expiredIds)) {
+            $this->log->info('No expired jobs returned by API');
+            return;
+        }
 
-        $expIns  = $this->db->prepare('
+        $this->log->info(count($expiredIds) . ' total expired IDs returned by API');
+
+        // Bulk-filter: only keep IDs that exist in our JobIds table
+        $matchedIds = [];
+        foreach (array_chunk($expiredIds, 500) as $chunk) {
+            $ph   = implode(',', array_map(fn($id) => $this->db->quote($id), $chunk));
+            $rows = $this->db->query("SELECT \"Id\" FROM \"JobIds\" WHERE \"Id\" IN ({$ph})")->fetchAll(PDO::FETCH_COLUMN);
+            $matchedIds = array_merge($matchedIds, $rows);
+        }
+
+        $skipped = count($expiredIds) - count($matchedIds);
+        $this->log->info(count($matchedIds) . " jobs to expire, {$skipped} skipped (not in system)");
+
+        if (empty($matchedIds)) {
+            return;
+        }
+
+        $expIns = $this->db->prepare('
             INSERT INTO "ExpiredJobs" ("JobId","DateRemoved","RemovedFromElasticsearch")
             VALUES (?, NOW(), FALSE)
             ON CONFLICT ("JobId") DO UPDATE SET "DateRemoved" = NOW(), "RemovedFromElasticsearch" = FALSE
         ');
-        $delStmt = $this->db->prepare('DELETE FROM "ImportedJobsWanted" WHERE "JobId" = ?');
+        $delStmt   = $this->db->prepare('DELETE FROM "ImportedJobsWanted" WHERE "JobId" = ?');
+        $deactStmt = $this->db->prepare('
+            UPDATE "Jobs" SET "IsActive" = FALSE, "LastUpdated" = NOW()
+            WHERE "JobId" = ? AND "IsActive" = TRUE
+        ');
 
-        $progress = '';
-        foreach ($rows as $id) {
-            $expIns->execute([$id]);
-            $delStmt->execute([$id]);
-            $progress .= 'D';
+        $deactivated = 0;
+
+        foreach ($matchedIds as $id) {
+            try {
+                $expIns->execute([$id]);
+                $delStmt->execute([$id]);
+                $deactStmt->execute([$id]);
+                if ($deactStmt->rowCount() > 0) {
+                    $deactivated++;
+                }
+            } catch (\Throwable $e) {
+                $this->log->warning("Failed to expire job {$id}: {$e->getMessage()}");
+            }
         }
 
-        if ($progress !== '') {
-            $this->log->info($progress);
-        }
+        $this->log->info("{$deactivated} jobs deactivated in Jobs table");
+
+        // Mark expired jobs as removed from Elasticsearch
+        $this->db->exec('
+            UPDATE "ExpiredJobs" SET "RemovedFromElasticsearch" = TRUE
+            WHERE "RemovedFromElasticsearch" = FALSE
+              AND "JobId" IN (SELECT "JobId" FROM "Jobs" WHERE "IsActive" = FALSE)
+        ');
     }
 
     // ── 4. New jobs → "Jobs" ───────────────────────────────────────
 
     private function importNewJobs(): void
     {
-        $exp  = $this->cfg->jobExpiryDays;
-        $rows = $this->db->query("
-            SELECT ij.\"JobId\", ij.\"JobPostEnglish\", ij.\"DateFirstImported\", ij.\"DateLastImported\"
-            FROM \"ImportedJobsWanted\" ij
-            WHERE ij.\"IsFederalOrWorkBc\" = FALSE
-              AND NOT EXISTS (SELECT 1 FROM \"Jobs\" j WHERE j.\"JobId\" = ij.\"JobId\")
-              AND NOT EXISTS (SELECT 1 FROM \"DeletedJobs\" d WHERE d.\"JobId\" = ij.\"JobId\")
-              AND ij.\"ApiDate\" > NOW() - INTERVAL '{$exp} days'
-        ")->fetchAll();
+        $rows = $this->db->query('
+            SELECT ij."JobId", ij."JobPostEnglish", ij."DateFirstImported", ij."DateLastImported"
+            FROM "ImportedJobsWanted" ij
+            WHERE ij."IsFederalOrWorkBc" = FALSE
+              AND NOT EXISTS (SELECT 1 FROM "Jobs" j WHERE j."JobId" = ij."JobId")
+              AND NOT EXISTS (SELECT 1 FROM "DeletedJobs" d WHERE d."JobId" = ij."JobId")
+        ')->fetchAll();
 
         $this->log->info(count($rows) . ' jobs found to import');
 
@@ -240,7 +266,6 @@ final class JobImportService
             VALUES (?,?,?,TRUE,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?,?,?,?,?,?)
         ');
 
-        $progress = '';
         foreach ($rows as $r) {
             $m = $this->map(json_decode($r['JobPostEnglish'], true) ?? []);
             $stmt->execute([
@@ -255,11 +280,6 @@ final class JobImportService
                 $m['locationId'], $m['datePosted'],
                 $m['salary'], $m['salarySummary'],
             ]);
-            $progress .= 'I';
-        }
-
-        if ($progress !== '') {
-            $this->log->info($progress);
         }
     }
 
@@ -287,7 +307,6 @@ final class JobImportService
             WHERE "JobId"=?
         ');
 
-        $progress = '';
         foreach ($rows as $r) {
             $m = $this->map(json_decode($r['JobPostEnglish'], true) ?? []);
             $stmt->execute([
@@ -298,30 +317,7 @@ final class JobImportService
                 $m['salary'], $m['salarySummary'],
                 $r['JobId'],
             ]);
-            $progress .= 'U';
         }
-
-        if ($progress !== '') {
-            $this->log->info($progress);
-        }
-    }
-
-    // ── 6. Deactivate expired ──────────────────────────────────────
-
-    private function deactivateExpired(): void
-    {
-        $n = $this->db->exec('
-            UPDATE "Jobs" SET "IsActive" = FALSE, "LastUpdated" = NOW()
-            WHERE "IsActive" = TRUE
-              AND "JobId" IN (SELECT "JobId" FROM "ExpiredJobs" WHERE "RemovedFromElasticsearch" = FALSE)
-        ');
-        $this->log->info("{$n} jobs deactivated");
-
-        $this->db->exec('
-            UPDATE "ExpiredJobs" SET "RemovedFromElasticsearch" = TRUE
-            WHERE "RemovedFromElasticsearch" = FALSE
-              AND "JobId" IN (SELECT "JobId" FROM "Jobs" WHERE "IsActive" = FALSE)
-        ');
     }
 
     // ── Field mapping ──────────────────────────────────────────────
