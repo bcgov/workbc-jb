@@ -21,6 +21,8 @@ RUN apk add --no-cache postgresql-libs tzdata \
     && cp /usr/share/zoneinfo/America/Vancouver /etc/localtime \
     && echo "America/Vancouver" > /etc/timezone
 
+COPY php.ini /usr/local/etc/php/conf.d/custom.ini
+
 WORKDIR /app
 COPY --from=build /app/vendor vendor/
 COPY --from=build /app/src src/
