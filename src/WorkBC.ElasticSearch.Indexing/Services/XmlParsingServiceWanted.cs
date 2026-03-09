@@ -175,18 +175,31 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 {
                     job.Salary = salary;
 
-                    if (salaryMin.HasValue && salaryMax.HasValue)
+                    // Map unit text to human-readable label
+                    string unitLabel = salaryUnit.ToUpper() switch
                     {
-                        job.SalarySummary = $"${salaryMin.Value:#,##0} - ${salaryMax.Value:#,##0}";
+                        "YEAR" => "annually",
+                        "HOUR" => "hourly",
+                        "WEEK" => "weekly",
+                        "MONTH" => "monthly",
+                        _ => string.IsNullOrEmpty(salaryUnit) ? "" : salaryUnit.ToLower()
+                    };
+
+                    bool isHourly = salaryUnit.Equals("HOUR", StringComparison.OrdinalIgnoreCase);
+                    string formatAmount(decimal v) => isHourly ? $"${v:#,##0.00}" : $"${v:#,##0}";
+
+                    if (salaryMin.HasValue && salaryMax.HasValue && salaryMin != salaryMax)
+                    {
+                        job.SalarySummary = $"{formatAmount(salaryMin.Value)} - {formatAmount(salaryMax.Value)}";
                     }
                     else
                     {
-                        job.SalarySummary = $"${salary.Value:#,##0}";
+                        job.SalarySummary = formatAmount(salary.Value);
                     }
 
-                    if (!string.IsNullOrEmpty(salaryUnit))
+                    if (!string.IsNullOrEmpty(unitLabel))
                     {
-                        job.SalarySummary += $" / {salaryUnit.ToUpper()}";
+                        job.SalarySummary += $" {unitLabel}";
                     }
                 }
                 else
