@@ -349,33 +349,30 @@ final class JobImportService
             }
         }
 
-        // Salary formatting: "$78,000 annually", "$32.66 hourly"
+        // Salary: convert everything to annual and format as "$XX,XXX annually"
         $salaryMin = $j['salaryMin'] ?? null;
         $salaryMax = $j['salaryMax'] ?? null;
         $salary    = $salaryMin ?? $j['salaryValue'] ?? $salaryMax;
 
         $salaryUnit = strtoupper($j['salaryUnitText'] ?? '');
-        $unitLabel  = match ($salaryUnit) {
-            'YEAR'  => 'annually',
-            'HOUR'  => 'hourly',
-            'WEEK'  => 'weekly',
-            'MONTH' => 'monthly',
-            default => $salaryUnit ? strtolower($salaryUnit) : '',
+        $annualMultiplier = match ($salaryUnit) {
+            'HOUR'  => 2080,   // 40 hrs/week × 52 weeks
+            'WEEK'  => 52,
+            'MONTH' => 12,
+            default => 1,      // YEAR or unknown
         };
 
-        // For hourly rates, keep 2 decimal places; otherwise whole numbers
-        $useDecimals = ($salaryUnit === 'HOUR');
-        $fmt = fn($v) => $useDecimals
-            ? '$' . number_format((float) $v, 2)
-            : '$' . number_format((float) $v);
+        // Convert to annual
+        $annualSalary = $salary !== null ? (float) $salary * $annualMultiplier : null;
+        $annualMin    = $salaryMin !== null ? (float) $salaryMin * $annualMultiplier : null;
+        $annualMax    = $salaryMax !== null ? (float) $salaryMax * $annualMultiplier : null;
 
-        if ($salaryMin !== null && $salaryMax !== null && $salaryMin != $salaryMax) {
-            $salarySummary = $fmt($salaryMin) . ' - ' . $fmt($salaryMax);
+        if ($annualMin !== null && $annualMax !== null && $annualMin != $annualMax) {
+            $salarySummary = '$' . number_format($annualMin) . ' - $' . number_format($annualMax) . ' annually';
+        } elseif ($annualSalary !== null) {
+            $salarySummary = '$' . number_format($annualSalary) . ' annually';
         } else {
-            $salarySummary = $fmt($salary);
-        }
-        if ($unitLabel) {
-            $salarySummary .= ' ' . $unitLabel;
+            $salarySummary = 'N/A';
         }
 
         // NOC 2021: pick the highest-scored match, validate against NocCodes2021
@@ -402,7 +399,7 @@ final class JobImportService
             'casual'        => (int) str_contains($t, 'casual'),
             'seasonal'      => (int) str_contains($t, 'seasonal'),
             'leadingToFt'   => 0,
-            'src'           => mb_substr($j['source'] ?? $j['sourceDomain'] ?? '', 0, 100),
+            'src'           => mb_substr($j['sourceDomain'] ?? $j['source'] ?? '', 0, 100),
             'url'           => mb_substr($j['url'] ?? '', 0, 800),
             'positions'     => 1,
             'datePosted'    => $datePosted,

@@ -173,33 +173,27 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 decimal? salary = salaryMin ?? salaryValue ?? salaryMax;
                 if (salary.HasValue && salary.Value >= 0.01m)
                 {
-                    job.Salary = salary;
-
-                    // Map unit text to human-readable label
-                    string unitLabel = salaryUnit.ToUpper() switch
+                    // Convert to annual equivalent
+                    decimal multiplier = salaryUnit.ToUpper() switch
                     {
-                        "YEAR" => "annually",
-                        "HOUR" => "hourly",
-                        "WEEK" => "weekly",
-                        "MONTH" => "monthly",
-                        _ => string.IsNullOrEmpty(salaryUnit) ? "" : salaryUnit.ToLower()
+                        "HOUR" => 2080m,   // 40 hrs/week × 52 weeks
+                        "WEEK" => 52m,
+                        "MONTH" => 12m,
+                        _ => 1m            // YEAR or unknown
                     };
 
-                    bool isHourly = salaryUnit.Equals("HOUR", StringComparison.OrdinalIgnoreCase);
-                    string formatAmount(decimal v) => isHourly ? $"${v:#,##0.00}" : $"${v:#,##0}";
+                    decimal annualSalary = salary.Value * multiplier;
+                    job.Salary = annualSalary;
 
                     if (salaryMin.HasValue && salaryMax.HasValue && salaryMin != salaryMax)
                     {
-                        job.SalarySummary = $"{formatAmount(salaryMin.Value)} - {formatAmount(salaryMax.Value)}";
+                        decimal annualMin = salaryMin.Value * multiplier;
+                        decimal annualMax = salaryMax.Value * multiplier;
+                        job.SalarySummary = $"${annualMin:#,##0} - ${annualMax:#,##0} annually";
                     }
                     else
                     {
-                        job.SalarySummary = formatAmount(salary.Value);
-                    }
-
-                    if (!string.IsNullOrEmpty(unitLabel))
-                    {
-                        job.SalarySummary += $" {unitLabel}";
+                        job.SalarySummary = $"${annualSalary:#,##0} annually";
                     }
                 }
                 else
