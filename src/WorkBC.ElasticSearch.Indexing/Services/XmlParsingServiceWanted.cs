@@ -108,8 +108,8 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                 city = CleanUpCityName(city);
 
-                // Prefer sourceDomain over source (ATS name)
-                string source = j.Value<string>("sourceDomain") ?? j.Value<string>("source") ?? "";
+                // Prefer source name over sourceDomain (URL)
+                string source = j.Value<string>("source") ?? j.Value<string>("sourceDomain") ?? "";
                 string sourceUrl = j.Value<string>("url") ?? "";
 
                 string description = j.Value<string>("description") ?? "";
@@ -229,7 +229,7 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     job.PeriodOfEmployment.Description.Add("Contract");
                     job.PeriodOfEmployment.Description.Add("Temporary");
                 }
-                if (!empTypeStr.Contains("contract") && empTypeStr.Contains("temporary"))
+                if (!empTypeStr.Contains("contract") && (empTypeStr.Contains("temporary") || empTypeStr.Contains("seasonal")))
                 {
                     job.PeriodOfEmployment.Description.Add("Temporary");
                 }
@@ -239,6 +239,13 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 if (job.PeriodOfEmployment.Description.Count == 0 && job.HoursOfWork.Description.Count > 0)
                 {
                     job.PeriodOfEmployment.Description.Add("Permanent");
+                }
+
+                // When period info exists but no hours info (e.g. TEMPORARY or SEASONAL only),
+                // default to "Part-time" so the display doesn't show a leading comma.
+                if (job.HoursOfWork.Description.Count == 0 && job.PeriodOfEmployment.Description.Count > 0)
+                {
+                    job.HoursOfWork.Description.Add("Part-time");
                 }
 
                 #endregion
