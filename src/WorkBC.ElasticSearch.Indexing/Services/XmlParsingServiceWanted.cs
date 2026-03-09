@@ -109,7 +109,8 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 city = CleanUpCityName(city);
 
                 // Use company name as source
-                string source = (j["company"] is JObject co ? co.Value<string>("name") : null) ?? "";
+                var co = j["company"] as JObject;
+                string source = co?.Value<string>("name") ?? "";
                 string sourceUrl = j.Value<string>("url") ?? "";
 
                 string description = j.Value<string>("description") ?? "";
