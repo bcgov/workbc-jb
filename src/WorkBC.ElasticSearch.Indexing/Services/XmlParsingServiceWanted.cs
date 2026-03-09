@@ -224,9 +224,21 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 {
                     job.PeriodOfEmployment.Description.Add("Permanent");
                 }
-                if (empTypeStr.Contains("contract") || empTypeStr.Contains("temporary"))
+                if (empTypeStr.Contains("contract"))
+                {
+                    job.PeriodOfEmployment.Description.Add("Contract");
+                    job.PeriodOfEmployment.Description.Add("Temporary");
+                }
+                if (!empTypeStr.Contains("contract") && empTypeStr.Contains("temporary"))
                 {
                     job.PeriodOfEmployment.Description.Add("Temporary");
+                }
+
+                // Innovibe API often sends FULL_TIME without any period keyword.
+                // Default to "Permanent" so the display doesn't show a trailing comma.
+                if (job.PeriodOfEmployment.Description.Count == 0 && job.HoursOfWork.Description.Count > 0)
+                {
+                    job.PeriodOfEmployment.Description.Add("Permanent");
                 }
 
                 #endregion
