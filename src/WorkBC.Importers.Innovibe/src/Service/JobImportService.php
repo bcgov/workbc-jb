@@ -328,21 +328,54 @@ final class JobImportService
     private function map(array $j): array
     {
         $t          = strtolower(implode(' ', $j['employmentType'] ?? []));
-        $city       = $j['jobLocations'][0]['city'] ?? '';
         $datePosted = date('Y-m-d H:i:s', strtotime($j['postedDate'] ?? $j['createdAt']));
 
+        // Location: prefer a British Columbia location from the array
+        $city = '';
+        $locations = $j['jobLocations'] ?? [];
+        if (!empty($locations)) {
+            $loc = null;
+            foreach ($locations as $candidate) {
+                if (strcasecmp($candidate['state'] ?? '', 'British Columbia') === 0) {
+                    $loc = $candidate;
+                    break;
+                }
+            }
+            $loc ??= $locations[0];
+            $city = $loc['city'] ?? '';
+            // Use province as fallback when city is empty (remote jobs)
+            if ($city === '' && !empty($loc['state'])) {
+                $city = $loc['state'];
+            }
+        }
+
+        // Salary formatting: "$78,000 annually", "$32.66 hourly"
         $salaryMin = $j['salaryMin'] ?? null;
         $salaryMax = $j['salaryMax'] ?? null;
         $salary    = $salaryMin ?? $j['salaryValue'] ?? $salaryMax;
 
-        $salaryUnit = $j['salaryUnitText'] ?? '';
-        if ($salaryMin !== null && $salaryMax !== null) {
-            $salarySummary = '$' . number_format((float) $salaryMin) . ' - $' . number_format((float) $salaryMax);
+        $salaryUnit = strtoupper($j['salaryUnitText'] ?? '');
+        $unitLabel  = match ($salaryUnit) {
+            'YEAR'  => 'annually',
+            'HOUR'  => 'hourly',
+            'WEEK'  => 'weekly',
+            'MONTH' => 'monthly',
+            default => $salaryUnit ? strtolower($salaryUnit) : '',
+        };
+
+        // For hourly rates, keep 2 decimal places; otherwise whole numbers
+        $useDecimals = ($salaryUnit === 'HOUR');
+        $fmt = fn($v) => $useDecimals
+            ? '$' . number_format((float) $v, 2)
+            : '$' . number_format((float) $v);
+
+        if ($salaryMin !== null && $salaryMax !== null && $salaryMin != $salaryMax) {
+            $salarySummary = $fmt($salaryMin) . ' - ' . $fmt($salaryMax);
         } else {
-            $salarySummary = '$' . number_format((float) $salary);
+            $salarySummary = $fmt($salary);
         }
-        if ($salaryUnit) {
-            $salarySummary .= ' / ' . strtoupper($salaryUnit);
+        if ($unitLabel) {
+            $salarySummary .= ' ' . $unitLabel;
         }
 
         // NOC 2021: pick the highest-scored match, validate against NocCodes2021
