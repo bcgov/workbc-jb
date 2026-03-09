@@ -399,7 +399,7 @@ final class JobImportService
             'casual'        => (int) str_contains($t, 'casual'),
             'seasonal'      => (int) str_contains($t, 'seasonal'),
             'leadingToFt'   => 0,
-            'src'           => mb_substr($j['source'] ?? $j['sourceDomain'] ?? '', 0, 100),
+            'src'           => mb_substr($j['company']['name'] ?? '', 0, 100),
             'url'           => mb_substr($j['url'] ?? '', 0, 800),
             'positions'     => 1,
             'datePosted'    => $datePosted,

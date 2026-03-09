@@ -108,16 +108,16 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                 city = CleanUpCityName(city);
 
-                // Prefer source name over sourceDomain (URL)
-                string source = j.Value<string>("source") ?? j.Value<string>("sourceDomain") ?? "";
+                // Use company name as source
+                string source = (j["company"] is JObject co ? co.Value<string>("name") : null) ?? "";
                 string sourceUrl = j.Value<string>("url") ?? "";
 
                 string description = j.Value<string>("description") ?? "";
 
-                string employerName = j["company"]?.Value<string>("name") ?? j.Value<string>("companyName") ?? "";
+                string employerName = (co != null ? co.Value<string>("name") : null) ?? j.Value<string>("companyName") ?? "";
 
                 string industry = j.Value<string>("industry") 
-                    ?? j["company"]?.Value<string>("linkedinOrgIndustry") ?? "";
+                    ?? (co != null ? co.Value<string>("linkedinOrgIndustry") : null) ?? "";
                 string function = j.Value<string>("function") ?? j.Value<string>("category") ?? "";
 
                 string title = j.Value<string>("title") ?? "";
