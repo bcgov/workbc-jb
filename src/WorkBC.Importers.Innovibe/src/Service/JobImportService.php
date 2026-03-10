@@ -181,10 +181,9 @@ final class JobImportService
 
     private function expireJobsFromApi(): void
     {
-        $date = $this->api->getBcYesterdayDate();
-        $this->log->info("Fetching expired job IDs for date: {$date}");
+        $this->log->info('Fetching all expired job IDs from Innovibe...');
 
-        $expiredIds = $this->api->fetchExpiredJobIds($date);
+        $expiredIds = $this->api->fetchExpiredJobIds();
 
         if (empty($expiredIds)) {
             $this->log->info('No expired jobs returned by API');

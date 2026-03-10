@@ -91,17 +91,18 @@ final class InnovibeApiClient
 
     /**
      * Fetches expired job IDs from the Innovibe API.
-     * Calls GET /jobs/expired/ids?date=YYYY-MM-DD
+     * Calls GET /jobs/expired/ids (no date parameters).
+     * Returns all expired IDs from the last 3 months, updated every 6 hours by Innovibe's crawl.
      *
      * @return string[] Array of expired job ID strings
      */
-    public function fetchExpiredJobIds(string $date): array
+    public function fetchExpiredJobIds(): array
     {
         $query = [
             'state' => 'British Columbia',
             'includeNocUnmatched' => $this->config->includeNocUnmatched ? 'true' : 'false',
-            'postedFrom' => $date,
-            'postedTo' => $date,
+            // 'postedFrom' => $date,
+            // 'postedTo' => $date,
         ];
         $fullUrl = $this->config->apiBaseUrl . '/jobs/expired/ids?' . http_build_query($query);
         $this->log->info("GET {$fullUrl}");

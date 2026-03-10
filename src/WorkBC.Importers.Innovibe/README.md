@@ -23,14 +23,13 @@ WorkBC.Importers.Innovibe/
 
 ## Import Flow
 
-1. **Fetch** — paginate through the Innovibe API (cursor-based) with date and province filters
+1. **Fetch** — paginate through the Innovibe `/api/v1/jobs` API (cursor-based) with date and province filters
 2. **Filter** — skip jobs without salary data (`salaryMin`, `salaryMax`, `salaryValue` all empty)
 3. **Upsert** — insert new / update changed jobs in `"ImportedJobsWanted"` (duplicate hash check)
 4. **Mark seen** — update `"DateLastSeen"` on returned jobs
-5. **Purge** — move expired jobs to `"ExpiredJobs"`, delete from staging
+5. **Expire** — call `/api/v1/jobs/expired/ids` (no date parameters) to get all expired IDs from the last 3 months (updated by Innovibe every 6 hours). Jobs matching IDs in our DB are moved to `"ExpiredJobs"`, deleted from staging, and set `"IsActive" = FALSE` in `"Jobs"`
 6. **Sync new** — insert new jobs into `"Jobs"` table
 7. **Sync updates** — update changed jobs in `"Jobs"` table
-8. **Deactivate** — set `"IsActive" = FALSE` on expired entries
 
 ## Database (existing — no schema changes)
 
