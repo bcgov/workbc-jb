@@ -108,9 +108,9 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                 city = CleanUpCityName(city);
 
-                // Use company name as source
+                // Use sourceDomain exactly as it comes from the API
                 var co = j["company"] as JObject;
-                string source = co?.Value<string>("name") ?? "";
+                string source = j.Value<string>("sourceDomain") ?? "";
                 string sourceUrl = j.Value<string>("url") ?? "";
 
                 string description = j.Value<string>("description") ?? "";
@@ -215,38 +215,35 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 {
                     job.HoursOfWork.Description.Add("Part-time");
                 }
+                if (empTypeStr.Contains("casual"))
+                {
+                    job.HoursOfWork.Description.Add("Casual");
+                }
+                if (empTypeStr.Contains("on-call") || empTypeStr.Contains("on_call"))
+                {
+                    job.HoursOfWork.Description.Add("On-call");
+                }
 
                 #endregion
 
                 #region Period of Employment
 
                 job.PeriodOfEmployment.Description = new List<string>();
-                if (empTypeStr.Contains("permanent"))
-                {
-                    job.PeriodOfEmployment.Description.Add("Permanent");
-                }
                 if (empTypeStr.Contains("contract"))
                 {
                     job.PeriodOfEmployment.Description.Add("Contract");
-                    job.PeriodOfEmployment.Description.Add("Temporary");
                 }
-                if (!empTypeStr.Contains("contract") && (empTypeStr.Contains("temporary") || empTypeStr.Contains("seasonal")))
+                if (empTypeStr.Contains("seasonal"))
                 {
-                    job.PeriodOfEmployment.Description.Add("Temporary");
+                    job.PeriodOfEmployment.Description.Add("Seasonal");
                 }
-
-                // Innovibe API often sends FULL_TIME without any period keyword.
-                // Default to "Permanent" so the display doesn't show a trailing comma.
-                if (job.PeriodOfEmployment.Description.Count == 0 && job.HoursOfWork.Description.Count > 0)
+                if (empTypeStr.Contains("intern"))
                 {
-                    job.PeriodOfEmployment.Description.Add("Permanent");
+                    job.PeriodOfEmployment.Description.Add("Intern");
                 }
-
-                // When period info exists but no hours info (e.g. TEMPORARY or SEASONAL only),
-                // default to "Part-time" so the display doesn't show a leading comma.
-                if (job.HoursOfWork.Description.Count == 0 && job.PeriodOfEmployment.Description.Count > 0)
+                if (empTypeStr.Contains("student"))
                 {
-                    job.HoursOfWork.Description.Add("Part-time");
+                    job.PeriodOfEmployment.Description.Add("Student");
                 }
 
                 #endregion

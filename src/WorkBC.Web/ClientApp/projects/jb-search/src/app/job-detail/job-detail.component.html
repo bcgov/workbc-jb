@@ -1,8 +1,9 @@
 <app-breadcrumb *ngIf="fromJobSearch" [hideBack]="true"></app-breadcrumb>
 <div class="job-details">
-<div class="container">
-  <h1 *ngIf="!jobLanguage"><strong>JOB POSTING</strong></h1>
-  <h1 *ngIf="jobDetail && jobLanguage" [attr.translate]="jobLanguage ? 'no' : null"><strong>{{textHeaders.jobPosting}}</strong></h1>
+  <div class="container">
+    <h1 *ngIf="!jobLanguage"><strong>JOB POSTING</strong></h1>
+    <h1 *ngIf="jobDetail && jobLanguage" [attr.translate]="jobLanguage ? 'no' : null">
+      <strong>{{textHeaders.jobPosting}}</strong></h1>
     <div class="row" *ngIf="jobDetail">
       <div class="col-lg-8" [attr.translate]="jobLanguage ? 'no' : null">
         <div class="row">
@@ -15,7 +16,8 @@
           <div class="col-lg-4">
             <div class="job-lang">
               <span>ENGLISH</span>
-              <input title="French language" type="checkbox" name="job-language" id="job-language" [(ngModel)]="jobLanguage" (change)="toggleLanguage()" />
+              <input title="French language" type="checkbox" name="job-language" id="job-language"
+                [(ngModel)]="jobLanguage" (change)="toggleLanguage()" />
               <label for="job-language"></label>
               <span>FRANÇAIS</span>
             </div>
@@ -36,57 +38,60 @@
         <!-- Job Details -->
         <div class="row">
           <div class="col-md-8">
-              <div class="company"><strong>{{jobDetail.EmployerName}}</strong></div>
-              <table class="job-details-table job-details-table__details" role="presentation">
-                <!-- Job Location -->
-                <tr class="job-location">
-                  <td><strong>{{textHeaders.jobLocations}}: </strong></td>
-                  <td><span>{{ jobDetail.IsVariousLocation ? "Various locations" : jobDetail.City }}</span></td>
-                </tr>
-                <!-- Salary -->
-                <tr class="job-salary">
-                  <td><strong>{{textHeaders.salary}}: </strong></td>
-                  <td><span>{{ !jobDetail.SalaryDescription ? "N/A" : jobDetail.SalaryDescription }}</span></td>
-                </tr>
-                <tr class="job-type">
-                  <td><strong>{{textHeaders.jobType}}: </strong></td>
-                  <td><span>{{jobDetail.HoursOfWork.Description.join(", ")}}, {{jobDetail.PeriodOfEmployment.Description.join(", ")}}</span></td>
-                </tr>
-                <tr class="work-schedule" *ngIf="jobDetail.EmploymentTerms.Description.length">
-                  <td><strong>{{textHeaders.workSchedule}}: </strong></td>
-                  <td><span>{{jobDetail.EmploymentTerms.Description.join(", ")}}</span></td>
-                </tr>
-                <tr class="workplace-type">
-                  <td><strong>{{textHeaders.workplaceType}}: </strong></td>
-                  <td><span>{{jobDetail.WorkplaceType.Description}}</span></td>
-                </tr>
-                <tr class="start-date">
-                  <td><strong>{{textHeaders.startDate}}: </strong></td>
-                  <td>
-                    <span *ngIf="jobDetail.StartDate && jobDetail.StartDate.indexOf('0001') == -1">
-                      <span aria-hidden="true">{{jobDetail.StartDate | date:'yyyy-MM-dd'}}</span>
-                      <span class="sr-only">{{jobDetail.StartDate | date:'MMMM d, yyyy'}}</span>
-                    </span>
-                    <span *ngIf="!jobDetail.StartDate || jobDetail.StartDate.indexOf('0001') > -1">{{textHeaders.asSoonAsPossible}}</span>
-                  </td>
-                </tr>
-                <tr class="language">
-                  <td><strong>{{textHeaders.language}}: </strong></td>
-                  <td><span>{{jobDetail.WorkLangCd.Description[0]}}</span></td>
-                </tr>
-                <tr class="positions-available">
-                  <td><strong>{{textHeaders.positionsAvailable}}: </strong></td>
-                  <td><span>{{jobDetail.PositionsAvailable}}</span></td>
-                </tr>
-                <tr class="noc-group">
-                  <td><strong>{{textHeaders.nocGroup}}: </strong></td>
-                  <td><a href="/career/{{jobDetail.Noc2021}}">{{jobDetail.NocGroup}}</a></td>
-                </tr>
-              </table>
+            <div class="company"><strong>{{jobDetail.EmployerName}}</strong></div>
+            <table class="job-details-table job-details-table__details" role="presentation">
+              <!-- Job Location -->
+              <tr class="job-location">
+                <td><strong>{{textHeaders.jobLocations}}: </strong></td>
+                <td><span>{{ jobDetail.IsVariousLocation ? "Various locations" : jobDetail.City }}</span></td>
+              </tr>
+              <!-- Salary -->
+              <tr class="job-salary">
+                <td><strong>{{textHeaders.salary}}: </strong></td>
+                <td><span>{{ !jobDetail.SalaryDescription ? "N/A" : jobDetail.SalaryDescription }}</span></td>
+              </tr>
+              <tr class="job-type">
+                <td><strong>{{textHeaders.jobType}}: </strong></td>
+                <td><span>{{[].concat(jobDetail.HoursOfWork?.Description || [],
+                    jobDetail.PeriodOfEmployment?.Description || []).join(", ")}}</span></td>
+              </tr>
+              <tr class="work-schedule" *ngIf="jobDetail.EmploymentTerms.Description.length">
+                <td><strong>{{textHeaders.workSchedule}}: </strong></td>
+                <td><span>{{jobDetail.EmploymentTerms.Description.join(", ")}}</span></td>
+              </tr>
+              <tr class="workplace-type">
+                <td><strong>{{textHeaders.workplaceType}}: </strong></td>
+                <td><span>{{jobDetail.WorkplaceType.Description}}</span></td>
+              </tr>
+              <tr class="start-date">
+                <td><strong>{{textHeaders.startDate}}: </strong></td>
+                <td>
+                  <span *ngIf="jobDetail.StartDate && jobDetail.StartDate.indexOf('0001') == -1">
+                    <span aria-hidden="true">{{jobDetail.StartDate | date:'yyyy-MM-dd'}}</span>
+                    <span class="sr-only">{{jobDetail.StartDate | date:'MMMM d, yyyy'}}</span>
+                  </span>
+                  <span
+                    *ngIf="!jobDetail.StartDate || jobDetail.StartDate.indexOf('0001') > -1">{{textHeaders.asSoonAsPossible}}</span>
+                </td>
+              </tr>
+              <tr class="language">
+                <td><strong>{{textHeaders.language}}: </strong></td>
+                <td><span>{{jobDetail.WorkLangCd.Description[0]}}</span></td>
+              </tr>
+              <tr class="positions-available">
+                <td><strong>{{textHeaders.positionsAvailable}}: </strong></td>
+                <td><span>{{jobDetail.PositionsAvailable}}</span></td>
+              </tr>
+              <tr class="noc-group">
+                <td><strong>{{textHeaders.nocGroup}}: </strong></td>
+                <td><a href="/career/{{jobDetail.Noc2021}}">{{jobDetail.NocGroup}}</a></td>
+              </tr>
+            </table>
           </div>
           <div class="col-md-4">
             <!--  -->
-            <div class="job-expires-in"><strong>{{textHeaders.expiresIn}} {{jobDetail.ExpiresIn}} {{textHeaders.days}}</strong></div>
+            <div class="job-expires-in"><strong>{{textHeaders.expiresIn}} {{jobDetail.ExpiresIn}}
+                {{textHeaders.days}}</strong></div>
             <table class="job-details-table job-details-table__expiry" role="presentation">
               <tr class="expiry-date">
                 <td><strong>{{textHeaders.expires}}:</strong></td>
@@ -120,7 +125,8 @@
               <lib-jb-a-link [jobId]="jobDetail.JobId" [isEnglish]="!jobLanguage"></lib-jb-a-link>
             </div>
             <div class="cta">
-              <a href="{{printRoot}}Print/Job?jobid={{jobDetail.JobId}}&lang={{jobLanguage ? 'fr' : 'en'}}" target="_blank" rel="noopener noreferrer">
+              <a href="{{printRoot}}Print/Job?jobid={{jobDetail.JobId}}&lang={{jobLanguage ? 'fr' : 'en'}}"
+                target="_blank" rel="noopener noreferrer">
                 <span class="icon-wrap blue small">
                   <lib-svg-icon icon="print" width="14px" height="14px"></lib-svg-icon>
                 </span>
@@ -192,14 +198,17 @@
             <!-- How To Apply -->
             <form>
               <br />
-              <input id="how-to-apply-button" class="btn filter-date-btn bg-blue" type="button" value="Show how to apply" onclick='document.getElementById("job-detail-wrap-section").style = "visibility:visible"; document.getElementById("how-to-apply-button").style = "visibility:hidden";' />
+              <input id="how-to-apply-button" class="btn filter-date-btn bg-blue" type="button"
+                value="Show how to apply"
+                onclick='document.getElementById("job-detail-wrap-section").style = "visibility:visible"; document.getElementById("how-to-apply-button").style = "visibility:hidden";' />
               <div id="job-detail-wrap-section" class="job-detail-wrap how-to-apply" style="visibility:hidden">
                 <h3 class="how-to-apply">{{textHeaders.applyNow}}</h3>
                 <!-- Website -->
                 <div class="row" *ngIf="jobDetail.ApplyWebsite">
                   <strong class="col-sm-2">{{textHeaders.online}}: </strong>
                   <div class="col-sm-10">
-                    <a target="_blank" rel="noopener noreferrer" href="{{jobDetail.ApplyWebsite}}">{{jobDetail.ApplyWebsite}}</a>
+                    <a target="_blank" rel="noopener noreferrer"
+                      href="{{jobDetail.ApplyWebsite}}">{{jobDetail.ApplyWebsite}}</a>
                   </div>
                 </div>
                 <!-- Email -->
@@ -216,7 +225,8 @@
                     <a href="tel:{{jobDetail.ApplyPhoneNumber}}">{{jobDetail.ApplyPhoneNumber | formatphone}}</a>
                     <span *ngIf="jobDetail.ApplyPhoneNumberExt">&nbsp;Ext {{jobDetail.ApplyPhoneNumberExt}}</span>
                     <br />
-                    <div *ngIf="jobDetail.ApplyPhoneNumberTimeFrom">Between {{jobDetail.ApplyPhoneNumberTimeFrom}} and {{jobDetail.ApplyPhoneNumberTimeTo}}</div>
+                    <div *ngIf="jobDetail.ApplyPhoneNumberTimeFrom">Between {{jobDetail.ApplyPhoneNumberTimeFrom}} and
+                      {{jobDetail.ApplyPhoneNumberTimeTo}}</div>
                   </div>
                 </div>
                 <!-- Fax -->
