@@ -433,32 +433,29 @@ export class ResultsComponent implements OnInit {
                 ? new Date(result[i].expire)
                 : null;
 
-            let jobTypeAndTerm = result[i].hoursOfWork;
-            jobTypeAndTerm +=
-              result[i].hoursOfWork.length > 0 &&
-              result[i].periodOfEmployment.length > 0
-                ? ', ' + result[i].periodOfEmployment
-                : result[i].periodOfEmployment;
+            let jobTypeAndTerm = [result[i].hoursOfWork, result[i].periodOfEmployment]
+              .filter(s => s && s.length > 0)
+              .join(', ');
 
             //Title
             content +=
               (result[i].isFederalJob
                 ? '<b><a href=\'#/job-details/' +
-                  result[i].jobId +
-                  '\'>' +
-                  result[i].jobTitle +
-                  '</a></b><br />'
+                result[i].jobId +
+                '\'>' +
+                result[i].jobTitle +
+                '</a></b><br />'
                 : '<b class=\'externalJob\' data-jobId=\'' +
-                  result[i].jobId +
-                  '\' data-title=\'' +
-                  result[i].jobTitle +
-                  '\' data-source=\'' +
-                  result[i].jobSource +
-                  '\' data-url=\'' +
-                  result[i].externalUrl +
-                  '\'>' +
-                  result[i].jobTitle +
-                  '</b><br />') +
+                result[i].jobId +
+                '\' data-title=\'' +
+                result[i].jobTitle +
+                '\' data-source=\'' +
+                result[i].jobSource +
+                '\' data-url=\'' +
+                result[i].externalUrl +
+                '\'>' +
+                result[i].jobTitle +
+                '</b><br />') +
               //Company
               '<b>' +
               result[i].company +
@@ -599,11 +596,11 @@ export class ResultsComponent implements OnInit {
       m: x.getMinutes(),
       s: x.getSeconds()
     };
-    y = y.replace(/(M+|d+|h+|m+|s+)/g, function(v) {
+    y = y.replace(/(M+|d+|h+|m+|s+)/g, function (v) {
       return ((v.length > 1 ? '0' : '') + z[v.slice(-1)]).slice(-2);
     });
 
-    return y.replace(/(y+)/g, function(v) {
+    return y.replace(/(y+)/g, function (v) {
       return x
         .getFullYear()
         .toString()

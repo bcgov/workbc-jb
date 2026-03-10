@@ -10,7 +10,7 @@
     Source job = Model.Result[0];
     bool french = Context.Request.Query["lang"] == "fr";
     JobDetailsPageLabels il8n = Model.TextHeaders;
-    IEnumerable<string> jobType = job.HoursOfWork.Description.Union(job.PeriodOfEmployment.Description);
+    IEnumerable<string> jobType = (job.HoursOfWork?.Description ?? Enumerable.Empty<string>()).Union(job.PeriodOfEmployment?.Description ?? Enumerable.Empty<string>()).Where(t => !string.IsNullOrWhiteSpace(t));
     IEnumerable<string> workSchedule = job.EmploymentTerms.Description;
     int newJobPeriodDays = (await SystemSettings.JbSearchSettingsAsync()).Settings.NewJobPeriodDays;
 }
