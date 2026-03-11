@@ -313,47 +313,56 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                 #endregion
 
-                #region Noc code
+                #region Noc code (2021 — Innovibe API provides NOC 2021 codes)
 
                 string nocStr = "";
                 string nocLabel = "";
                 var nocMatches = j["nocMatches"] as JArray;
                 if (nocMatches != null && nocMatches.Count > 0)
                 {
-                    nocStr = nocMatches[0].Value<string>("code") ?? "";
-                    nocLabel = nocMatches[0].Value<string>("title") ?? "";
-                }
-
-                var nocInt = 0;
-                if (!string.IsNullOrEmpty(nocStr))
-                {
-                    int.TryParse(nocStr, out nocInt);
-
-                    if (NocCodes.All(c => c.Id != nocInt))
+                    // Pick the highest-scored NOC match
+                    JToken bestMatch = nocMatches[0];
+                    double bestScore = bestMatch.Value<double?>("score") ?? 0;
+                    foreach (var m in nocMatches)
                     {
-                        nocInt = 0;
+                        double s = m.Value<double?>("score") ?? 0;
+                        if (s > bestScore) { bestMatch = m; bestScore = s; }
                     }
 
-                    job.Noc = nocInt == 0 ? (int?)null : nocInt;
+                    nocStr = bestMatch.Value<string>("code") ?? "";
+                    nocLabel = bestMatch.Value<string>("title") ?? "";
                 }
 
-                if (nocInt > 0)
+                // Innovibe nocMatches codes are NOC 2021 — validate against NocCodes2021
+                int noc2021Int = 0;
+                if (!string.IsNullOrEmpty(nocStr))
                 {
-                    job.NocGroup = GetNocGroup2021(nocInt);
+                    int.TryParse(nocStr, out noc2021Int);
+
+                    // Validate against the NOC 2021 table
+                    if (NocCodes2021.All(c => c.Id != noc2021Int))
+                    {
+                        noc2021Int = 0;
+                    }
+                }
+
+                // Set Noc2021 directly (this is the field used for search filtering)
+                job.Noc2021 = noc2021Int == 0 ? (int?)null : noc2021Int;
+
+                if (noc2021Int > 0)
+                {
+                    job.NocGroup = GetNocGroup2021(noc2021Int);
                     job.NocJobTitle = nocLabel.Replace("\u200B", "");
                 }
 
+                // Legacy Noc (2016) — leave null for JSON/Innovibe jobs; the 2016 table
+                // does not contain 2021 codes and reverse-mapping is not reliable.
+                job.Noc = null;
 
                 if (!string.IsNullOrEmpty(nocLabel))
                 {
                     job.Occupation = nocLabel;
                 }
-
-                #endregion
-
-                #region Noc code 2021
-
-                job.Noc2021 = GetNoc2021from2016value(job.Noc?.ToString());
 
                 #endregion
 
