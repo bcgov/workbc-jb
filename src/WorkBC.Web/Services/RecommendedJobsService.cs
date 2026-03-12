@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -148,8 +148,8 @@ namespace WorkBC.Web.Services
                                              City = j.City,
                                              DatePosted = j.DatePosted,
                                              NocCodeId2021 = j.NocCodeId2021,
-                                             EmployerName = j.EmployerName.ToLower(), // lowercase names for grouping
-                                             Title = j.Title.ToLower(), // lowercase names for grouping
+                                             EmployerName = j.EmployerName == null ? null : j.EmployerName.ToLower(), // lowercase names for grouping
+                                             Title = j.Title == null ? null : j.Title.ToLower(), // lowercase names for grouping
                                              IsActive = j.IsActive
                                          }).Take(Constants.MaxSavedJobs).Distinct().ToListAsync();
 
@@ -169,6 +169,7 @@ namespace WorkBC.Web.Services
 
             // group the saved jobs by Employer
             Dictionary<string, int> employers = savedJobs
+                .Where(j => j.EmployerName != null)
                 .GroupBy(j => j.EmployerName)
                 .Select(g => new {Term = g.Key, Count = g.Count()})
                 .OrderByDescending(a => a.Count)
@@ -176,6 +177,7 @@ namespace WorkBC.Web.Services
 
             // group the saved jobs by title
             Dictionary<string, int> titles = savedJobs
+                .Where(j => j.Title != null)
                 .GroupBy(j => j.Title)
                 .Select(g => new {Term = g.Key, Count = g.Count()})
                 .OrderByDescending(a => a.Count)
