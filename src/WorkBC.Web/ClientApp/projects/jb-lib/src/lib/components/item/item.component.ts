@@ -51,7 +51,7 @@ export class ItemComponent {
     let result = false;
     if (this.item) {
       result = this.inSavedJobsView && !this.item.IsActive;
-      if (!result && this.item.ExpireDate) {
+      if (!result && this.item.IsFederalJob && this.item.ExpireDate) {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
