@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -95,7 +95,7 @@ namespace WorkBC.Web.Services
                         {
                             City = j.City,
                             DatePosted = j.DatePosted,
-                            ExpireDate = j.ExpireDate,
+                            ExpireDate = j.ExpireDate.ToUniversalTime(),
                             EmployerName = j.EmployerName,
                             JobId = j.JobId,
                             Salary = j.Salary,
