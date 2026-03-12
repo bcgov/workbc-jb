@@ -261,8 +261,8 @@ final class JobImportService
             INSERT INTO "Jobs" ("JobId","Title","City","IsActive","FullTime","PartTime","Permanent","Temporary",
                 "OriginalSource","ExternalSourceUrl","DateFirstImported","DateLastImported","LastUpdated","JobSourceId",
                 "PositionsAvailable","DatePosted","Casual","Seasonal","LeadingToFullTime","LocationId","ActualDatePosted",
-                "Salary","SalarySummary","NocCodeId2021")
-            VALUES (?,?,?,TRUE,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?,?,?,?,?,?,?)
+                "Salary","SalarySummary","NocCodeId2021","ExpireDate")
+            VALUES (?,?,?,TRUE,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?,?,?,?,?,?,?,?)
         ');
 
         foreach ($rows as $r) {
@@ -279,6 +279,7 @@ final class JobImportService
                 $m['locationId'], $m['datePosted'],
                 $m['salary'], $m['salarySummary'],
                 $m['nocCode2021'],
+                $m['expireDate'],
             ]);
         }
     }
@@ -304,7 +305,7 @@ final class JobImportService
                 "OriginalSource"=?, "ExternalSourceUrl"=?, "IsActive"=TRUE,
                 "DateLastImported"=?, "LastUpdated"=NOW(),
                 "Salary"=?, "SalarySummary"=?,
-                "NocCodeId2021"=?
+                "NocCodeId2021"=?, "ExpireDate"=?
             WHERE "JobId"=?
         ');
 
@@ -317,6 +318,7 @@ final class JobImportService
                 $r['DateLastImported'],
                 $m['salary'], $m['salarySummary'],
                 $m['nocCode2021'],
+                $m['expireDate'],
                 $r['JobId'],
             ]);
         }
@@ -328,6 +330,7 @@ final class JobImportService
     {
         $t          = strtolower(implode(' ', $j['employmentType'] ?? []));
         $datePosted = date('Y-m-d H:i:s', strtotime($j['postedDate'] ?? $j['createdAt']));
+        $expireDate = date('Y-m-d H:i:s', strtotime($datePosted . ' +90 days'));
 
         // Location: prefer a British Columbia location from the array
         $city = '';
@@ -406,6 +409,7 @@ final class JobImportService
             'salary'        => $salary,
             'salarySummary' => mb_substr($salarySummary, 0, 60),
             'nocCode2021'   => $nocCode2021,
+            'expireDate'    => $expireDate,
         ];
     }
 
