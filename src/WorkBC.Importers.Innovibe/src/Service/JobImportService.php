@@ -524,8 +524,8 @@ final class JobImportService
         }
 
         return [
-            'title'         => mb_substr($j['title'], 0, 300),
-            'city'          => mb_substr($city, 0, 120),
+            'title'         => mb_substr($j['title'] ?? '', 0, 300),
+            'city'          => mb_substr($city ?? '', 0, 120),
             'ft'            => (int) str_contains($t, 'full'),
             'pt'            => (int) str_contains($t, 'part'),
             'perm'          => (int) str_contains($t, 'permanent'),
@@ -539,7 +539,7 @@ final class JobImportService
             'datePosted'    => $datePosted,
             'locationId'    => 0,
             'salary'        => $salary,
-            'salarySummary' => mb_substr($salarySummary, 0, 60),
+            'salarySummary' => mb_substr($salarySummary ?? '', 0, 60),
             'nocCode2021'   => $nocCode2021,
             'expireDate'    => $expireDate,
         ];
