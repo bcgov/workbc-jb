@@ -108,7 +108,7 @@ final class JobImportService
                 continue;
             }
 
-            $apiDate = date('Y-m-d H:i:s', strtotime($job['updatedAt'] ?? $job['createdAt']));
+            $apiDate = date('Y-m-d H:i:s', strtotime($job['updatedAt'] ?? $job['createdAt'] ?? 'now'));
             $json    = json_encode($job, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
             $hashId  = $this->computeHashId($json);
 
@@ -265,6 +265,13 @@ final class JobImportService
             VALUES (?,?,?,TRUE,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?,?,?,?,?,?,?,?)
         ');
 
+        $verStmt = $this->db->prepare('
+            INSERT INTO "JobVersions" ("JobId","DateVersionStart","DatePosted","ActualDatePosted",
+                "DateFirstImported","JobSourceId","IndustryId","NocCodeId","NocCodeId2021",
+                "IsActive","PositionsAvailable","LocationId","IsCurrentVersion","VersionNumber")
+            VALUES (?,?,?,?,?,?,NULL,NULL,?,TRUE,?,?,TRUE,1)
+        ');
+
         foreach ($rows as $r) {
             $m = $this->map(json_decode($r['JobPostEnglish'], true) ?? []);
             $stmt->execute([
@@ -281,6 +288,18 @@ final class JobImportService
                 $m['nocCode2021'],
                 $m['expireDate'],
             ]);
+
+            // Create version 1 in JobVersions (mirrors C# JobsTableSyncService)
+            $versionStart = $this->getVersion1StartDate($m['datePosted'], $r['DateFirstImported']);
+            $verStmt->execute([
+                $r['JobId'],
+                $versionStart,
+                $m['datePosted'], $m['datePosted'],
+                $versionStart,
+                self::JOB_SOURCE,
+                $m['nocCode2021'],
+                $m['positions'], $m['locationId'],
+            ]);
         }
     }
 
@@ -289,7 +308,10 @@ final class JobImportService
     private function updateExistingJobs(): void
     {
         $rows = $this->db->query('
-            SELECT ij."JobId", ij."JobPostEnglish", ij."DateLastImported"
+            SELECT ij."JobId", ij."JobPostEnglish", ij."DateLastImported",
+                   j."NocCodeId2021" AS "OldNoc2021", j."LocationId" AS "OldLocationId",
+                   j."PositionsAvailable" AS "OldPositions", j."DatePosted" AS "OldDatePosted",
+                   j."IsActive" AS "OldIsActive"
             FROM "ImportedJobsWanted" ij
             INNER JOIN "Jobs" j ON j."JobId" = ij."JobId"
             WHERE ij."IsFederalOrWorkBc" = FALSE
@@ -321,6 +343,116 @@ final class JobImportService
                 $m['expireDate'],
                 $r['JobId'],
             ]);
+
+            // Check if key fields changed → increment JobVersion
+            $needsNewVersion = ($r['OldNoc2021'] != $m['nocCode2021'])
+                || ((int)$r['OldLocationId'] !== $m['locationId'])
+                || ((int)$r['OldPositions'] !== $m['positions'])
+                || ($r['OldDatePosted'] !== $m['datePosted'])
+                || !$r['OldIsActive'];
+
+            if ($needsNewVersion) {
+                $this->incrementJobVersion($r['JobId'], $m);
+            }
+        }
+    }
+
+    // ── Job version helpers ─────────────────────────────────────────
+
+    /**
+     * Returns min(datePosted, dateImported), capped at 24h before dateImported.
+     * Mirrors C# JobsTableSyncServiceBase.GetVersion1StartDate().
+     */
+    private function getVersion1StartDate(string $datePosted, string $dateImported): string
+    {
+        $posted   = strtotime($datePosted);
+        $imported = strtotime($dateImported);
+
+        if ($imported <= $posted) {
+            return $dateImported;
+        }
+
+        $cap = $imported - 86400; // 24 hours
+        return $posted < $cap
+            ? date('Y-m-d H:i:s', $cap)
+            : $datePosted;
+    }
+
+    /**
+     * Close the current version and create a new one.
+     * Mirrors C# JobsTableSyncServiceBase.IncrementJobVersion().
+     */
+    private function incrementJobVersion(string $jobId, array $m): void
+    {
+        $now = date('Y-m-d H:i:s');
+
+        // Find the current version
+        $cur = $this->db->prepare('
+            SELECT "Id", "VersionNumber", "DatePosted", "ActualDatePosted",
+                   "DateFirstImported", "JobSourceId", "IndustryId", "NocCodeId"
+            FROM "JobVersions"
+            WHERE "JobId" = ? AND "IsCurrentVersion" = TRUE
+            LIMIT 1
+        ');
+        $cur->execute([$jobId]);
+        $old = $cur->fetch();
+
+        if (!$old) {
+            // Fallback: grab the highest version number
+            $cur2 = $this->db->prepare('
+                SELECT "Id", "VersionNumber", "DatePosted", "ActualDatePosted",
+                       "DateFirstImported", "JobSourceId", "IndustryId", "NocCodeId"
+                FROM "JobVersions"
+                WHERE "JobId" = ?
+                ORDER BY "VersionNumber" DESC
+                LIMIT 1
+            ');
+            $cur2->execute([$jobId]);
+            $old = $cur2->fetch();
+        }
+
+        if ($old) {
+            // Close old version
+            $close = $this->db->prepare('
+                UPDATE "JobVersions" SET "IsCurrentVersion" = FALSE, "DateVersionEnd" = ?
+                WHERE "Id" = ?
+            ');
+            $close->execute([$now, $old['Id']]);
+
+            // Insert new version
+            $ins = $this->db->prepare('
+                INSERT INTO "JobVersions" ("JobId","DateVersionStart","DatePosted","ActualDatePosted",
+                    "DateFirstImported","JobSourceId","IndustryId","NocCodeId","NocCodeId2021",
+                    "IsActive","PositionsAvailable","LocationId","IsCurrentVersion","VersionNumber")
+                VALUES (?,?,?,?,?,?,?,?,?,TRUE,?,?,TRUE,?)
+            ');
+            $ins->execute([
+                $jobId, $now,
+                $m['datePosted'], $m['datePosted'],
+                $old['DateFirstImported'],
+                $old['JobSourceId'],
+                $old['IndustryId'],
+                $old['NocCodeId'],
+                $m['nocCode2021'],
+                $m['positions'], $m['locationId'],
+                (int)$old['VersionNumber'] + 1,
+            ]);
+        } else {
+            // No previous version exists — create version 1
+            $ins = $this->db->prepare('
+                INSERT INTO "JobVersions" ("JobId","DateVersionStart","DatePosted","ActualDatePosted",
+                    "DateFirstImported","JobSourceId","IndustryId","NocCodeId","NocCodeId2021",
+                    "IsActive","PositionsAvailable","LocationId","IsCurrentVersion","VersionNumber")
+                VALUES (?,?,?,?,?,?,NULL,NULL,?,TRUE,?,?,TRUE,1)
+            ');
+            $ins->execute([
+                $jobId, $now,
+                $m['datePosted'], $m['datePosted'],
+                $now,
+                self::JOB_SOURCE,
+                $m['nocCode2021'],
+                $m['positions'], $m['locationId'],
+            ]);
         }
     }
 
@@ -329,7 +461,7 @@ final class JobImportService
     private function map(array $j): array
     {
         $t          = strtolower(implode(' ', $j['employmentType'] ?? []));
-        $datePosted = date('Y-m-d H:i:s', strtotime($j['postedDate'] ?? $j['createdAt']));
+        $datePosted = date('Y-m-d H:i:s', strtotime($j['postedDate'] ?? $j['createdAt'] ?? 'now'));
         $expireDate = date('Y-m-d H:i:s', strtotime($datePosted . ' +90 days'));
 
         // Location: prefer a British Columbia location from the array
