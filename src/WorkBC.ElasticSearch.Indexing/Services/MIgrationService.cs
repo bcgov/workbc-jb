@@ -25,8 +25,6 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                 try
                 {
-                    // Allow up to 10 minutes for large schema migrations (e.g. ALTER COLUMN TYPE)
-                    _dbContext.Database.SetCommandTimeout(600);
                     _dbContext.Database.Migrate();
                     return true;
                 }
