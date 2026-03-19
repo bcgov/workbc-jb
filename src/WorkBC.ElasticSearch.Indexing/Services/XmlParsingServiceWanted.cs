@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -232,6 +232,10 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                 if (empTypeStr.Contains("contract"))
                 {
                     job.PeriodOfEmployment.Description.Add("Contract");
+                }
+                if (empTypeStr.Contains("temporary") || empTypeStr.Contains("freelance"))
+                {
+                    job.PeriodOfEmployment.Description.Add("Temporary");
                 }
                 if (empTypeStr.Contains("seasonal"))
                 {
