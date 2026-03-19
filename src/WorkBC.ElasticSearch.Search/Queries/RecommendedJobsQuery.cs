@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -228,7 +228,7 @@ namespace WorkBC.ElasticSearch.Search.Queries
             var ignore = string.Empty;
             if (_filters.IgnoreJobIdList.Length > 0)
             {
-                ignore = string.Join(',', _filters.IgnoreJobIdList);
+                ignore = string.Join(',', _filters.IgnoreJobIdList.Select(id => "\"" + id + "\""));
             }
 
             json = json.Replace("##IGNOREJOBS##", ignore);
