@@ -529,7 +529,7 @@ final class JobImportService
             'ft'            => (int) str_contains($t, 'full'),
             'pt'            => (int) str_contains($t, 'part'),
             'perm'          => (int) str_contains($t, 'permanent'),
-            'temp'          => (int) (str_contains($t, 'contract') || str_contains($t, 'temporary')),
+            'temp'          => (int) (str_contains($t, 'contract') || str_contains($t, 'freelance') || str_contains($t, 'temporary')),
             'casual'        => (int) str_contains($t, 'casual'),
             'seasonal'      => (int) str_contains($t, 'seasonal'),
             'leadingToFt'   => 0,

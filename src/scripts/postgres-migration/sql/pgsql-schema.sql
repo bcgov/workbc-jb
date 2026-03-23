@@ -303,7 +303,7 @@ ALTER FUNCTION public."tvf_GetJobSeekersForDate"(par_enddateplus1 timestamp with
 -- Name: tvf_GetJobsForDate(timestamp without time zone); Type: FUNCTION; Schema: public; Owner: workbc
 --
 
-CREATE FUNCTION public."tvf_GetJobsForDate"(par_enddateplus1 timestamp without time zone) RETURNS TABLE("JobId" bigint, "JobSourceId" smallint, "LocationId" integer, "NocCodeId2021" integer, "IndustryId" smallint, "DateFirstImported" timestamp without time zone, "PositionsAvailable" smallint)
+CREATE FUNCTION public."tvf_GetJobsForDate"(par_enddateplus1 timestamp without time zone) RETURNS TABLE("JobId" varchar(255), "JobSourceId" smallint, "LocationId" integer, "NocCodeId2021" integer, "IndustryId" smallint, "DateFirstImported" timestamp without time zone, "PositionsAvailable" smallint)
     LANGUAGE plpgsql
     AS $$
 /*
@@ -925,7 +925,7 @@ ALTER TABLE public."DataProtectionKeys" ALTER COLUMN "Id" ADD GENERATED ALWAYS A
 --
 
 CREATE TABLE public."DeletedJobs" (
-    "JobId" bigint NOT NULL,
+    "JobId" varchar(255) NOT NULL,
     "DeletedByAdminUserId" integer NOT NULL,
     "DateDeleted" timestamp(6) without time zone NOT NULL
 );
@@ -938,7 +938,7 @@ ALTER TABLE public."DeletedJobs" OWNER TO workbc;
 --
 
 CREATE TABLE public."ExpiredJobs" (
-    "JobId" bigint NOT NULL,
+    "JobId" varchar(255) NOT NULL,
     "RemovedFromElasticsearch" boolean NOT NULL,
     "DateRemoved" timestamp(6) without time zone NOT NULL
 );
@@ -998,7 +998,7 @@ ALTER TABLE public."ImpersonationLog" OWNER TO workbc;
 --
 
 CREATE TABLE public."ImportedJobsFederal" (
-    "JobId" bigint NOT NULL,
+    "JobId" varchar(255) NOT NULL,
     "ApiDate" timestamp(6) without time zone NOT NULL,
     "DateFirstImported" timestamp(6) without time zone NOT NULL,
     "JobPostEnglish" text,
@@ -1016,7 +1016,7 @@ ALTER TABLE public."ImportedJobsFederal" OWNER TO workbc;
 --
 
 CREATE TABLE public."ImportedJobsWanted" (
-    "JobId" bigint NOT NULL,
+    "JobId" varchar(255) NOT NULL,
     "JobPostEnglish" text,
     "DateFirstImported" timestamp(6) without time zone NOT NULL,
     "ApiDate" timestamp(6) without time zone NOT NULL,
@@ -1083,7 +1083,7 @@ ALTER TABLE public."JobAlerts" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENTIT
 --
 
 CREATE TABLE public."JobIds" (
-    "Id" bigint NOT NULL,
+    "Id" varchar(255) NOT NULL,
     "DateFirstImported" timestamp(6) without time zone NOT NULL,
     "JobSourceId" smallint NOT NULL
 );
@@ -1323,7 +1323,7 @@ ALTER TABLE public."JobStats" OWNER TO workbc;
 
 CREATE TABLE public."JobVersions" (
     "Id" bigint NOT NULL,
-    "JobId" bigint NOT NULL,
+    "JobId" varchar(255) NOT NULL,
     "LocationId" integer NOT NULL,
     "NocCodeId" smallint,
     "IndustryId" smallint,
@@ -1362,7 +1362,7 @@ ALTER TABLE public."JobVersions" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENT
 --
 
 CREATE TABLE public."JobViews" (
-    "JobId" bigint NOT NULL,
+    "JobId" varchar(255) NOT NULL,
     "Views" integer,
     "DateLastViewed" timestamp(6) without time zone NOT NULL
 );
@@ -1375,7 +1375,7 @@ ALTER TABLE public."JobViews" OWNER TO workbc;
 --
 
 CREATE TABLE public."Jobs" (
-    "JobId" bigint NOT NULL,
+    "JobId" varchar(255) NOT NULL,
     "Title" character varying(300),
     "NocCodeId" smallint,
     "PositionsAvailable" smallint NOT NULL,
@@ -1592,7 +1592,7 @@ ALTER TABLE public."SavedIndustryProfiles" ALTER COLUMN "Id" ADD GENERATED ALWAY
 
 CREATE TABLE public."SavedJobs" (
     "Id" integer NOT NULL,
-    "JobId" bigint NOT NULL,
+    "JobId" varchar(255) NOT NULL,
     "AspNetUserId" character varying(450),
     "DateSaved" timestamp(6) without time zone NOT NULL,
     "DateDeleted" timestamp(6) without time zone,
