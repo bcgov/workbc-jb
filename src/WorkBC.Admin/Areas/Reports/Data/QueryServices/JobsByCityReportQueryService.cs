@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -51,14 +51,16 @@ ORDER BY Sum(j.""PositionsAvailable"") DESC;
 
             using (var conn = new NpgsqlConnection(ConnectionString))
             {
-                return (await conn.QueryAsync<JobsByCityResult>(sql,
-                    new
-                    {
-                        StartDate = startDate,
-                        EndDate = endDate,
-                        RegionId = regionId,
-                        JobSourceId = jobSourceId
-                    })).ToList();
+                return (await conn.QueryAsync<JobsByCityResult>(
+                    new CommandDefinition(sql,
+                        new
+                        {
+                            StartDate = startDate,
+                            EndDate = endDate,
+                            RegionId = regionId,
+                            JobSourceId = jobSourceId
+                        },
+                        commandTimeout: 120))).ToList();
             }
         }
     }
