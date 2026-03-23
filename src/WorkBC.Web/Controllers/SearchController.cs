@@ -63,7 +63,11 @@ namespace WorkBC.Web.Controllers
             // If the number of parameters is not as per expected object, 400 Bad reqest error is thrown with the appropriate error message.
             JobSearchFilters filters = new JobSearchFilters();
             var postValString = JsonConvert.SerializeObject(PostValues);
-            JObject jObj = (JObject)JsonConvert.DeserializeObject(postValString);
+            JObject jObj = JsonConvert.DeserializeObject(postValString) as JObject;
+            if (jObj == null)
+            {
+                return BadRequest("Invalid request body");
+            }
             int countPostValues = jObj.Count;
             if (PostValues != null && countPostValues > 0)
             {
