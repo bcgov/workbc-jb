@@ -142,14 +142,16 @@ namespace WorkBC.ElasticSearch.Search.Queries
             // City
             if (!string.IsNullOrEmpty(_filters.City))
             {
-                shouldList.Add(@"{""terms"":{""City.normalize"":[""" + _filters.City + "\"],\"boost\":" + Boost.City +
+                string escapedCity = EscapeJsonString(_filters.City);
+                shouldList.Add(@"{""terms"":{""City.normalize"":[""" + escapedCity + "\"],\"boost\":" + Boost.City +
                                "}}");
                 shouldList.Add("{\"term\":{\"WorkplaceType.Id\":{\"value\":15141,\"boost\": 0}}}");
             }
 
             if (_filters.FilterJobSeekerCity && !string.IsNullOrEmpty(_filters.City))
             {
-                cityFilterList.Add(@"{""terms"":{""City.normalize"":[""" + _filters.City + "\"]}}");
+                string escapedCityFilter = EscapeJsonString(_filters.City);
+                cityFilterList.Add(@"{""terms"":{""City.normalize"":[""" + escapedCityFilter + "\"]}}");
                 cityFilterList.Add("{\"term\":{\"WorkplaceType.Id\":{\"value\":15141}}}");
             }
 
@@ -171,13 +173,13 @@ namespace WorkBC.ElasticSearch.Search.Queries
             foreach (KeyValuePair<string, int> item in _filters.Employers)
             {
                 decimal boost = Boost.Employers + Boost.EmployerCountBonus * Convert.ToDecimal(item.Value);
-                string term = item.Key;
+                string term = EscapeJsonString(item.Key);
                 shouldList.Add(@"{""term"":{""EmployerName.normalize"":{""value"":""" + term + @""",""boost"":" + boost + "}}}");
             }
 
             if (_filters.FilterSavedJobEmployers && _filters.Employers.Count > 0)
             {
-                string list = string.Join(',', _filters.Employers.Select(n => "\"" + n.Key + "\""));
+                string list = string.Join(',', _filters.Employers.Select(n => "\"" + EscapeJsonString(n.Key) + "\""));
                 filterList.Add(@"{""terms"":{""EmployerName.normalize"":[" + list + "]}}");
             }
 
@@ -185,13 +187,13 @@ namespace WorkBC.ElasticSearch.Search.Queries
             foreach (KeyValuePair<string, int> item in _filters.Titles)
             {
                 decimal boost = Boost.Titles + Boost.TitleCountBonus * Convert.ToDecimal(item.Value);
-                string term = item.Key;
+                string term = EscapeJsonString(item.Key);
                 shouldList.Add(@"{""term"":{""Title.normalize"":{""value"":""" + term + @""",""boost"":" + boost + "}}}");
             }
 
             if (_filters.FilterSavedJobTitles && _filters.Titles.Count > 0)
             {
-                string list = string.Join(',', _filters.Titles.Select(n => "\"" + n.Key + "\""));
+                string list = string.Join(',', _filters.Titles.Select(n => "\"" + EscapeJsonString(n.Key) + "\""));
                 filterList.Add(@"{""terms"":{""Title.normalize"":[" + list + "]}}");
             }
 
@@ -228,13 +230,22 @@ namespace WorkBC.ElasticSearch.Search.Queries
             var ignore = string.Empty;
             if (_filters.IgnoreJobIdList.Length > 0)
             {
-                ignore = string.Join(',', _filters.IgnoreJobIdList);
+                ignore = string.Join(',', _filters.IgnoreJobIdList.Select(id => "\"" + EscapeJsonString(id) + "\""));
             }
 
             json = json.Replace("##IGNOREJOBS##", ignore);
 
             // Return query
             return json;
+        }
+
+        /// <summary>
+        ///     Escapes special characters in a string for safe use inside a JSON value.
+        /// </summary>
+        private static string EscapeJsonString(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+            return value.Replace("\\", "\\\\").Replace("\"", "\\\"");
         }
 
         /// <summary>

@@ -388,8 +388,8 @@ namespace WorkBC.Importers.Federal.Services
             handler.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
             var client = new HttpClient(handler);
 
-            // set timeout to 5 seconds
-            client.Timeout = new TimeSpan(0,0,5);
+            // set timeout to 30 seconds
+            client.Timeout = new TimeSpan(0,0,30);
 
             client.DefaultRequestHeaders.Add("Cookie", federalSettings.AuthCookie);
             return client;

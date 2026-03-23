@@ -71,13 +71,15 @@ ORDER BY Sum(j.""PositionsAvailable"") DESC
 
             using (var conn = new NpgsqlConnection(ConnectionString))
             {
-                return (await conn.QueryAsync<JobsByNocCodeResult>(sql,
-                    new
-                    {
-                        StartDate = startDate,
-                        EndDate = endDate,
-                        JobSourceId = jobSourceId
-                    })).ToList();
+                return (await conn.QueryAsync<JobsByNocCodeResult>(
+                    new CommandDefinition(sql,
+                        new
+                        {
+                            StartDate = startDate,
+                            EndDate = endDate,
+                            JobSourceId = jobSourceId
+                        },
+                        commandTimeout: 120))).ToList();
             }
         }
     }

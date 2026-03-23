@@ -60,13 +60,15 @@ ORDER BY ""Vacancies"" DESC
 
             using (var conn = new NpgsqlConnection(ConnectionString))
             {
-                return (await conn.QueryAsync<JobsByIndustryResult>(sql,
-                    new
-                    {
-                        StartDate = startDate,
-                        EndDate = endDate,
-                        RegionId = regionId
-                    })).ToList();
+                return (await conn.QueryAsync<JobsByIndustryResult>(
+                    new CommandDefinition(sql,
+                        new
+                        {
+                            StartDate = startDate,
+                            EndDate = endDate,
+                            RegionId = regionId
+                        },
+                        commandTimeout: 120))).ToList();
             }
         }
     }
