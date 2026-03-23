@@ -327,7 +327,7 @@ final class JobImportService
                 "OriginalSource"=?, "ExternalSourceUrl"=?, "IsActive"=TRUE,
                 "DateLastImported"=?, "LastUpdated"=NOW(),
                 "Salary"=?, "SalarySummary"=?,
-                "NocCodeId2021"=?, "ExpireDate"=?
+                "NocCodeId2021"=?, "ExpireDate"=?, "LocationId"=?
             WHERE "JobId"=?
         ');
 
@@ -340,7 +340,7 @@ final class JobImportService
                 $r['DateLastImported'],
                 $m['salary'], $m['salarySummary'],
                 $m['nocCode2021'],
-                $m['expireDate'],
+                $m['expireDate'], $m['locationId'],
                 $r['JobId'],
             ]);
 
@@ -537,7 +537,7 @@ final class JobImportService
             'url'           => mb_substr($j['url'] ?? '', 0, 800),
             'positions'     => 1,
             'datePosted'    => $datePosted,
-            'locationId'    => 0,
+            'locationId'    => $this->getBestAvailableLocationId($city),
             'salary'        => $salary,
             'salarySummary' => mb_substr($salarySummary ?? '', 0, 60),
             'nocCode2021'   => $nocCode2021,
@@ -559,5 +559,88 @@ final class JobImportService
             $this->log->info(count($this->validNocIds) . ' NOC 2021 codes loaded');
         }
         return isset($this->validNocIds[$id]);
+    }
+
+    // ── Location lookup ─────────────────────────────────────────────
+
+    /**
+     * Cache of Label => LocationId from the Locations table.
+     * Mirrors C# JobsTableSyncServiceBase.LocationIdLookup.
+     */
+    private ?array $locationLookup = null;
+
+    private function loadLocationLookup(): void
+    {
+        if ($this->locationLookup !== null) {
+            return;
+        }
+        $rows = $this->db->query('
+            SELECT "Label", "LocationId"
+            FROM "Locations"
+            WHERE "IsHidden" = FALSE
+              AND ("IsDuplicate" = FALSE OR "FederalCityId" IS NOT NULL)
+        ')->fetchAll();
+
+        $this->locationLookup = [];
+        foreach ($rows as $row) {
+            $this->locationLookup[$row['Label']] = (int) $row['LocationId'];
+        }
+        $this->log->info(count($this->locationLookup) . ' locations loaded for lookup');
+    }
+
+    /**
+     * Resolves a city name to a LocationId using cascading match strategies.
+     * Mirrors C# JobsTableSyncServiceBase.GetBestAvailableLocationId().
+     */
+    private function getBestAvailableLocationId(string $city): int
+    {
+        $this->loadLocationLookup();
+
+        $city = strtolower(trim($city));
+        if ($city === '') {
+            return 0;
+        }
+
+        // 1. Exact match
+        foreach ($this->locationLookup as $label => $locId) {
+            if (strtolower($label) === $city) {
+                return $locId;
+            }
+        }
+
+        // Don't fuzzy-match very short strings
+        if (mb_strlen($city) < 5) {
+            return 0;
+        }
+
+        // 2. City starts with a lookup label
+        foreach ($this->locationLookup as $label => $locId) {
+            if (str_starts_with($city, strtolower($label))) {
+                return $locId;
+            }
+        }
+
+        // 3. Lookup label starts with city
+        foreach ($this->locationLookup as $label => $locId) {
+            if (str_starts_with(strtolower($label), $city)) {
+                return $locId;
+            }
+        }
+
+        // 4. City contains a lookup label
+        foreach ($this->locationLookup as $label => $locId) {
+            if (str_contains($city, strtolower($label))) {
+                return $locId;
+            }
+        }
+
+        // 5. Lookup label contains city
+        foreach ($this->locationLookup as $label => $locId) {
+            if (str_contains(strtolower($label), $city)) {
+                return $locId;
+            }
+        }
+
+        return 0;
     }
 }
