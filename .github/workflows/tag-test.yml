@@ -91,3 +91,15 @@ jobs:
           docker push ${{ env.IMAGE_ID }}/jb-notifications:${GITHUB_REF#refs/tags/}
           docker tag ${{ env.IMAGE_ID }}/jb-notifications:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb-notifications:latest-test
           docker push ${{ env.IMAGE_ID }}/jb-notifications:latest-test
+
+          docker pull ${{ env.IMAGE_ID }}/jb-importers-innovibe:${GITHUB_SHA}
+          docker tag ${{ env.IMAGE_ID }}/jb-importers-innovibe:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb-importers-innovibe:${GITHUB_REF#refs/tags/}
+          docker push ${{ env.IMAGE_ID }}/jb-importers-innovibe:${GITHUB_REF#refs/tags/}
+          docker tag ${{ env.IMAGE_ID }}/jb-importers-innovibe:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb-importers-innovibe:latest-test
+          docker push ${{ env.IMAGE_ID }}/jb-importers-innovibe:latest-test
+
+          docker pull ${{ env.IMAGE_ID }}/jb-cli-innovibe:${GITHUB_SHA}
+          docker tag ${{ env.IMAGE_ID }}/jb-cli-innovibe:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb-cli-innovibe:${GITHUB_REF#refs/tags/}
+          docker push ${{ env.IMAGE_ID }}/jb-cli-innovibe:${GITHUB_REF#refs/tags/}
+          docker tag ${{ env.IMAGE_ID }}/jb-cli-innovibe:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb-cli-innovibe:latest-test
+          docker push ${{ env.IMAGE_ID }}/jb-cli-innovibe:latest-test
