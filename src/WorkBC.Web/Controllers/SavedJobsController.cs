@@ -78,7 +78,7 @@ namespace WorkBC.Web.Controllers
                     return BadRequest(new {message = "Job ids are required"});
                 }
 
-                long[] jobList = jobIds.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(long.Parse).ToArray();
+                string[] jobList = jobIds.Split(",", StringSplitOptions.RemoveEmptyEntries).ToArray();
 
                 await _savedJobsService.SaveJobsAsync(UserId, jobList);
 
@@ -94,7 +94,7 @@ namespace WorkBC.Web.Controllers
         [HttpGet("saved-job-ids")]
         public async Task<IActionResult> GetSavedJobIdsAsync()
         {
-            IList<long> savedJobs = await _savedJobsService.GetSavedJobIdsAsync(UserId);
+            IList<string> savedJobs = await _savedJobsService.GetSavedJobIdsAsync(UserId);
             return Ok(savedJobs);
         }
 

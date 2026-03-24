@@ -48,19 +48,34 @@ export class ItemComponent {
   }
 
   get isExpired(): boolean {
-    let result = false;
-    if (this.item) {
-      result = this.inSavedJobsView && !this.item.IsActive;
-      if (!result && this.item.ExpireDate) {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        const expireDate = new Date(this.item.ExpireDate);
-        expireDate.setHours(23, 59, 59, 0);
-        result = expireDate.getTime() < today.getTime();
-      }
+    if (!this.item) {
+      return false;
     }
-    return result;
+
+    // Check if the expire date is in the past
+    let expireDatePassed = false;
+    if (this.item.ExpireDate) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const expireDate = new Date(this.item.ExpireDate);
+      expireDate.setHours(23, 59, 59, 0);
+      expireDatePassed = expireDate.getTime() < today.getTime();
+    }
+
+    if (this.item.IsFederalJob) {
+      // Federal jobs: expire date from the API is the source of truth
+      return expireDatePassed;
+    }
+
+    // External/wanted jobs: only expired if both IsActive is false AND expire date has passed.
+    // The IsActive flag alone can be temporarily false between import cycles,
+    // so we also check ExpireDate to avoid false positives.
+    if (this.inSavedJobsView) {
+      return !this.item.IsActive && expireDatePassed;
+    }
+
+    return false;
   }
 
   get addOrView(): string {

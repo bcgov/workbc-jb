@@ -1,4 +1,4 @@
-# Getting Started
+#  Getting Started
 
 [![Lifecycle:Maturing](https://img.shields.io/badge/Lifecycle-Maturing-007EC6)](https://github.com/bcgov/workbc-main)
 
@@ -21,7 +21,8 @@ See [Linux_Setup.md](docs/Linux_Setup.md) for instructions related to Linux deve
 
 * [WorkBC.Importers.Federal](src/WorkBC.Importers.Federal) - Imports job XML from https://jobbank.gc.ca/ into the ImportedJobsFederal table. Also parses the XML and stores key metadata in the Jobs table for back-end reporting purposes.
 * [WorkBC.Indexers.Federal](src/WorkBC.Indexers.Federal) - Parses XML in the ImportedJobsFederal table and indexes jobs in Elasticsearch
-* [WorkBC.Importers.Wanted](src/WorkBC.Importers.Wanted) - Imports job XML from the Gartner (a.k.a. "Wanted") API into the ImportedJobsWanted table. Also parses the XML and stores key metadata in the Jobs table for back-end reporting purposes.
+* [WorkBC.Importers.Wanted](src/WorkBC.Importers.Wanted) - *(C#)* Imports job XML from the Gartner (a.k.a. "Wanted") API into the ImportedJobsWanted table. Also parses the XML and stores key metadata in the Jobs table for back-end reporting purposes.
+* [WorkBC.Importers.Wanted.Innovibe](src/WorkBC.Importers.Wanted.Innovibe) - *(PHP)* Replacement importer that fetches jobs from the Innovibe API into ImportedJobsWanted and syncs to the Jobs table. Runs as a Docker container / Kubernetes CronJob.
 * [WorkBC.Indexers.Wanted](src/WorkBC.Indexers.Wanted) - Parses XML in the ImportedJobsWanted table and indexes jobs in Elasticsearch
 * [WorkBC.Notifications.JobAlerts](src/WorkBC.Notifications.JobAlerts) - Sends daily emails for job alerts
 

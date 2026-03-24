@@ -12,7 +12,7 @@ import { SocialSharingComponent } from './social-sharing/social-sharing.componen
 })
 export class JobDetailComponent implements OnInit {
 
-  private jobId: number;
+  private jobId: string;
   public jobDetail: Job;
   public textHeaders: TextHeader;
   public jobLanguage: boolean;
@@ -31,13 +31,13 @@ export class JobDetailComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.jobId = +params['id']; // (+) converts string 'id' to a number
+      this.jobId = params['id'];
 
       this.fromSavedJobs = params['sj'] && params['sj'].toLowerCase() === 'true';
       this.fromRecommendedJobs = params['rj'] && params['rj'].toLowerCase() === 'true';
-      
-      if (this.jobId > 0) {
-        this.getJobDetails('en', false);       
+
+      if (this.jobId) {
+        this.getJobDetails('en', false);
       }
 
     });

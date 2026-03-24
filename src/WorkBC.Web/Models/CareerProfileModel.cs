@@ -9,7 +9,7 @@
 
     public class CareerProfileTopJobsModel
     {
-        public long JobId { get; set; }
+        public string JobId { get; set; }
         public string DatePosted { get; set; }
         public string JobTitle { get; set; }
         public string Employer { get; set; }

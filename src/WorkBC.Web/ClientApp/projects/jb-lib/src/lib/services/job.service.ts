@@ -27,11 +27,11 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class JobService {
-  constructor(private http: HttpClient, private globalService: GlobalService) {}
+  constructor(private http: HttpClient, private globalService: GlobalService) { }
 
-  getSavedJobIds(): Observable<number[]> {
+  getSavedJobIds(): Observable<string[]> {
     const url = `${this.globalService.getApiBaseUrl()}api/savedjobs/saved-job-ids`;
-    const result = this.http.get<number[]>(url);
+    const result = this.http.get<string[]>(url);
     return result;
   }
 

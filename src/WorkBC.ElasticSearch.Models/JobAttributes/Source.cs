@@ -12,8 +12,7 @@ namespace WorkBC.ElasticSearch.Models.JobAttributes
         private string _noc2021;
 
         [JsonProperty("JobId", NullValueHandling = NullValueHandling.Ignore)]
-        [JsonConverter(typeof(StringToLongConverter))]
-        public long JobId { get; set; }
+        public string JobId { get; set; }
 
         [JsonProperty("Title", NullValueHandling = NullValueHandling.Ignore)]
         public string Title { get; set; }

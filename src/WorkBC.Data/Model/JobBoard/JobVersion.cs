@@ -10,7 +10,7 @@ namespace WorkBC.Data.Model.JobBoard
         [Key]
         public long Id { get; set; }
 
-        public long JobId { get; set; }
+        public string JobId { get; set; }
 
         public byte JobSourceId { get; set; }
 

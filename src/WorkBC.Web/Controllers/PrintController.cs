@@ -30,7 +30,7 @@ namespace WorkBC.Web.Controllers
         /// <param name="jobId">Federal Job ID</param>
         /// <param name="language">'en' or 'fr'</param>
         [HttpGet]
-        public async Task<IActionResult> Job([FromQuery(Name="jobid")] long jobId, [FromQuery(Name="lang")] string language = "en")
+        public async Task<IActionResult> Job([FromQuery(Name="jobid")] string jobId, [FromQuery(Name="lang")] string language = "en")
         {
             //create new job service
             JobDetailService js = new JobDetailService(_configuration, null);

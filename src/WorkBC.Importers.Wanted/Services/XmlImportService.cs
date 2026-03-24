@@ -60,7 +60,7 @@ namespace WorkBC.Importers.Wanted.Services
         public async Task ImportXmlData(int totalRecords)
         {
             decimal totalPages = Math.Ceiling(totalRecords / _settings.PageSize);
-            List<long> jobIdsSeen = new List<long>();
+            List<string> jobIdsSeen = new List<string>();
 
             for (var i = 0; i < totalPages; i++)
             {
@@ -145,15 +145,15 @@ namespace WorkBC.Importers.Wanted.Services
         /// <summary>
         ///     Process jobs - save them in the DB
         /// </summary>
-        private async Task<List<long>> ProcessJobs(XmlNodeList jobs)
+        private async Task<List<string>> ProcessJobs(XmlNodeList jobs)
         {
-            var jobIds = new List<long>();
+            var jobIds = new List<string>();
 
             //loop through jobs
             foreach (XmlNode node in jobs)
             {
                 //job id
-                var id = Convert.ToInt64(node.Attributes["id"].InnerText);
+                var id = node.Attributes["id"].InnerText;
 
                 // hash id
                 var hashId = Convert.ToInt64(node.Attributes["hash"].InnerText);
@@ -178,14 +178,14 @@ namespace WorkBC.Importers.Wanted.Services
                         // When a job is found with the same hash, we end up keeping the old JobId and updating the
                         // old record. This is better than creating a new job id because it doesn't inflate the
                         // number of external jobs in the reports.
-                        node.Attributes["id"].InnerText = hashMatch.JobId.ToString();
+                        node.Attributes["id"].InnerText = hashMatch.JobId;
                         wantedJob = hashMatch;
                     }
                 }
 
                 // keep a record of what the "id" was before we changed it
                 var newAttribute = node.OwnerDocument.CreateAttribute("gartnerid");
-                newAttribute.Value = id.ToString();
+                newAttribute.Value = id;
                 node.Attributes.Append(newAttribute);
 
                 if (isDeleted == 0)
@@ -447,7 +447,7 @@ namespace WorkBC.Importers.Wanted.Services
             new MigrationService(_dbContext, _logger).RunDbMigrations();
         }
 
-        private void SetJobsSeen(List<long> jobIds)
+        private void SetJobsSeen(List<string> jobIds)
         {
             if (jobIds.Any())
             {
@@ -458,7 +458,7 @@ namespace WorkBC.Importers.Wanted.Services
                     cn.Open();
 
                     using (var cmd = new NpgsqlCommand(
-                        $"UPDATE \"ImportedJobsWanted\" SET \"DateLastSeen\" = Now() WHERE \"JobId\" IN ({string.Join(',', jobIds)})", cn
+                        $"UPDATE \"ImportedJobsWanted\" SET \"DateLastSeen\" = Now() WHERE \"JobId\" IN ({string.Join(',', jobIds.Select(id => $"'{id}'"))})", cn
                     ))
                     {
                         cmd.ExecuteNonQuery();
