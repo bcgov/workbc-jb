@@ -15,10 +15,11 @@
       <div class="company" *ngIf="item.EmployerName">
         <strong>{{item.EmployerName}}</strong>
       </div>
+      <!-- Comment out Source for External Jobs
       <div *ngIf="!item.IsFederalJob">
         <strong>Source: </strong>{{item.ExternalSource?.Source.length > 0 ? item.ExternalSource.Source[0].Source :
         'N/A'}}
-      </div>
+      </div> -->
       <div class="location" *ngIf="item.City && item.City != 'Unavailable'">
         <strong>Location: </strong>{{item.City}}
       </div>

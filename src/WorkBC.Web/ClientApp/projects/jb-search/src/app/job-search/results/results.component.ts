@@ -460,10 +460,10 @@ export class ResultsComponent implements OnInit {
               '<b>' +
               result[i].company +
               '</b><br /><br />' +
-              //Job source (external job)
-              (!result[i].isFederalJob && result[i].jobSource != ''
-                ? '<b>Source:</b> ' + result[i].jobSource + '<br />'
-                : '') +
+              //Job source (external job) - commented out to hide Source for external jobs
+              // (!result[i].isFederalJob && result[i].jobSource != ''
+              //   ? '<b>Source:</b> ' + result[i].jobSource + '<br />'
+              //   : '') +
               //Location
               (result[i].city != ''
                 ? '<b>Location:</b> ' + result[i].city + '<br />'
