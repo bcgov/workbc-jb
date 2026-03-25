@@ -24,8 +24,7 @@
         <span>{{item.SalarySummary}}</span>
       </div>
       <div class="position-type" *ngIf="item.HoursOfWork.Description">
-        <strong>Job Type: </strong> {{[].concat(item.HoursOfWork?.Description || [],
-        item.PeriodOfEmployment?.Description || []).filter(v => v).join(", ")}}
+        <strong>Job Type: </strong> {{jobTypeSummary}}
       </div>
     </div>
     <div class="col-12 col-lg-2 stats-contain">
