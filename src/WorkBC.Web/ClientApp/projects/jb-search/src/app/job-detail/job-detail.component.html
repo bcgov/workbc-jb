@@ -53,7 +53,7 @@
               <tr class="job-type">
                 <td><strong>{{textHeaders.jobType}}: </strong></td>
                 <td><span>{{[].concat(jobDetail.HoursOfWork?.Description || [],
-                    jobDetail.PeriodOfEmployment?.Description || []).join(", ")}}</span></td>
+                    jobDetail.PeriodOfEmployment?.Description || []).filter(v => v).join(", ")}}</span></td>
               </tr>
               <tr class="work-schedule" *ngIf="jobDetail.EmploymentTerms.Description.length">
                 <td><strong>{{textHeaders.workSchedule}}: </strong></td>
