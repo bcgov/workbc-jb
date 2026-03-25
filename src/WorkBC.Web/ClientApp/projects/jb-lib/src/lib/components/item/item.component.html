@@ -15,11 +15,7 @@
       <div class="company" *ngIf="item.EmployerName">
         <strong>{{item.EmployerName}}</strong>
       </div>
-      <!-- Comment out Source for External Jobs
-      <div *ngIf="!item.IsFederalJob">
-        <strong>Source: </strong>{{item.ExternalSource?.Source.length > 0 ? item.ExternalSource.Source[0].Source :
-        'N/A'}}
-      </div> -->
+
       <div class="location" *ngIf="item.City && item.City != 'Unavailable'">
         <strong>Location: </strong>{{item.City}}
       </div>
@@ -29,7 +25,7 @@
       </div>
       <div class="position-type" *ngIf="item.HoursOfWork.Description">
         <strong>Job Type: </strong> {{[].concat(item.HoursOfWork?.Description || [],
-        item.PeriodOfEmployment?.Description || []).join(", ")}}
+        item.PeriodOfEmployment?.Description || []).filter(v => v).join(", ")}}
       </div>
     </div>
     <div class="col-12 col-lg-2 stats-contain">
