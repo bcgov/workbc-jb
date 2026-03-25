@@ -108,6 +108,11 @@ export class JobDetailComponent implements OnInit {
     return !this.fromSavedJobs && !this.fromRecommendedJobs;
   }
 
+  get jobTypeSummary(): string {
+    return [].concat(this.jobDetail?.HoursOfWork?.Description || [],
+      this.jobDetail?.PeriodOfEmployment?.Description || []).filter(v => v).join(', ');
+  }
+
   share(event) {
     event.preventDefault();
     const modalRef = this.modalService.open(SocialSharingComponent, { container: 'app-root', centered: true });
