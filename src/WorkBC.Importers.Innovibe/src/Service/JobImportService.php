@@ -261,8 +261,8 @@ final class JobImportService
             INSERT INTO "Jobs" ("JobId","Title","City","IsActive","FullTime","PartTime","Permanent","Temporary",
                 "OriginalSource","ExternalSourceUrl","DateFirstImported","DateLastImported","LastUpdated","JobSourceId",
                 "PositionsAvailable","DatePosted","Casual","Seasonal","LeadingToFullTime","LocationId","ActualDatePosted",
-                "Salary","SalarySummary","NocCodeId2021","ExpireDate")
-            VALUES (?,?,?,TRUE,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?,?,?,?,?,?,?,?)
+                "Salary","SalarySummary","NocCodeId2021","ExpireDate","EmployerName")
+            VALUES (?,?,?,TRUE,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?,?,?,?,?,?,?,?,?)
         ');
 
         $verStmt = $this->db->prepare('
@@ -283,10 +283,11 @@ final class JobImportService
                 self::JOB_SOURCE,
                 $m['positions'], $m['datePosted'],
                 $m['casual'], $m['seasonal'], $m['leadingToFt'],
-                $m['locationId'], $m['datePosted'],
+                $m['locationId'], $m['actualDatePosted'],
                 $m['salary'], $m['salarySummary'],
                 $m['nocCode2021'],
                 $m['expireDate'],
+                $m['employerName'],
             ]);
 
             // Create version 1 in JobVersions (mirrors C# JobsTableSyncService)
@@ -294,7 +295,7 @@ final class JobImportService
             $verStmt->execute([
                 $r['JobId'],
                 $versionStart,
-                $m['datePosted'], $m['datePosted'],
+                $m['datePosted'], $m['actualDatePosted'],
                 $versionStart,
                 self::JOB_SOURCE,
                 $m['nocCode2021'],
@@ -324,10 +325,12 @@ final class JobImportService
         $stmt = $this->db->prepare('
             UPDATE "Jobs" SET
                 "Title"=?, "City"=?, "FullTime"=?, "PartTime"=?, "Permanent"=?, "Temporary"=?,
+                "Casual"=?, "Seasonal"=?, "LeadingToFullTime"=?, "PositionsAvailable"=?,
                 "OriginalSource"=?, "ExternalSourceUrl"=?, "IsActive"=TRUE,
                 "DateLastImported"=?, "LastUpdated"=NOW(),
                 "Salary"=?, "SalarySummary"=?,
-                "NocCodeId2021"=?, "ExpireDate"=?, "LocationId"=?
+                "NocCodeId2021"=?, "ExpireDate"=?, "LocationId"=?, "EmployerName"=?,
+                "DatePosted"=?, "ActualDatePosted"=?
             WHERE "JobId"=?
         ');
 
@@ -336,11 +339,14 @@ final class JobImportService
             $stmt->execute([
                 $m['title'], $m['city'],
                 $m['ft'], $m['pt'], $m['perm'], $m['temp'],
+                $m['casual'], $m['seasonal'], $m['leadingToFt'], $m['positions'],
                 $m['src'], $m['url'],
                 $r['DateLastImported'],
                 $m['salary'], $m['salarySummary'],
                 $m['nocCode2021'],
                 $m['expireDate'], $m['locationId'],
+                $m['employerName'],
+                $m['datePosted'], $m['actualDatePosted'],
                 $r['JobId'],
             ]);
 
@@ -428,7 +434,7 @@ final class JobImportService
             ');
             $ins->execute([
                 $jobId, $now,
-                $m['datePosted'], $m['datePosted'],
+                $m['datePosted'], $m['actualDatePosted'],
                 $old['DateFirstImported'],
                 $old['JobSourceId'],
                 $old['IndustryId'],
@@ -447,7 +453,7 @@ final class JobImportService
             ');
             $ins->execute([
                 $jobId, $now,
-                $m['datePosted'], $m['datePosted'],
+                $m['datePosted'], $m['actualDatePosted'],
                 $now,
                 self::JOB_SOURCE,
                 $m['nocCode2021'],
@@ -460,9 +466,10 @@ final class JobImportService
 
     private function map(array $j): array
     {
-        $t          = strtolower(implode(' ', $j['employmentType'] ?? []));
-        $datePosted = date('Y-m-d H:i:s', strtotime($j['postedDate'] ?? $j['createdAt'] ?? 'now'));
-        $expireDate = date('Y-m-d H:i:s', strtotime($datePosted . ' +90 days'));
+        $t                = strtolower(implode(' ', $j['employmentType'] ?? []));
+        $actualDatePosted = date('Y-m-d H:i:s', strtotime($j['postedDate'] ?? $j['createdAt'] ?? 'now'));
+        $datePosted       = date('Y-m-d H:i:s', strtotime($j['updatedAt'] ?? $j['postedDate'] ?? $j['createdAt'] ?? 'now'));
+        $expireDate       = date('Y-m-d H:i:s', strtotime($datePosted . ' +90 days'));
 
         // Location: prefer a British Columbia location from the array
         $city = '';
@@ -523,6 +530,16 @@ final class JobImportService
             }
         }
 
+        // Employer name: extract from company.name, validate has English chars (matches C# regex)
+        $employerName = '';
+        $company = $j['company'] ?? null;
+        if (is_array($company) && !empty($company['name'])) {
+            $rawName = trim($company['name']);
+            if (preg_match('/[a-zA-Z0-9$@!%*?&#^_.+\-]+/', $rawName)) {
+                $employerName = $rawName;
+            }
+        }
+
         return [
             'title'         => mb_substr($j['title'] ?? '', 0, 300),
             'city'          => mb_substr($city ?? '', 0, 120),
@@ -536,12 +553,14 @@ final class JobImportService
             'src'           => mb_substr($j['sourceDomain'] ?? '', 0, 100),
             'url'           => mb_substr($j['url'] ?? '', 0, 800),
             'positions'     => 1,
-            'datePosted'    => $datePosted,
+            'datePosted'       => $datePosted,
+            'actualDatePosted' => $actualDatePosted,
             'locationId'    => $this->getBestAvailableLocationId($city),
             'salary'        => $salary,
             'salarySummary' => mb_substr($salarySummary ?? '', 0, 60),
             'nocCode2021'   => $nocCode2021,
             'expireDate'    => $expireDate,
+            'employerName'  => mb_substr($employerName, 0, 100),
         ];
     }
 

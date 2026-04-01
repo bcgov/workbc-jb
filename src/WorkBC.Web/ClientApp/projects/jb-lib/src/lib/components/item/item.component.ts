@@ -159,6 +159,11 @@ export class ItemComponent {
     return this.isExpired && !this.item.Note;
   }
 
+  get jobTypeSummary(): string {
+    return [].concat(this.item.HoursOfWork?.Description || [],
+      this.item.PeriodOfEmployment?.Description || []).filter(v => v).join(', ');
+  }
+
   deleteJob(event: Event) {
     event.preventDefault();
     //event.stopPropagation();
