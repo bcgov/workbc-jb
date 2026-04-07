@@ -275,33 +275,55 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                 #region Education
 
-
+                // 1. Try legacy "educationLevel" field (old API format)
                 string educationLevel = j.Value<string>("educationLevel") ?? "";
                 if (!string.IsNullOrEmpty(educationLevel))
                 {
-                    switch (educationLevel.ToLower())
+                    job.EduLevel = MapEducationLevelText(educationLevel);
+                }
+
+                // 2. Try "educationRequirementsDetailed" array → categoryName (new PHP API format)
+                //    Example: [{ "name": "High school diploma", "categoryName": "College or apprenticeship" }]
+                if (string.IsNullOrEmpty(job.EduLevel))
+                {
+                    var eduDetailed = j["educationRequirementsDetailed"] as JArray;
+                    if (eduDetailed != null && eduDetailed.Count > 0)
                     {
-                        case "less than high school":
-                        case "no education":
-                            job.EduLevel = "No education";
-                            break;
-                        case "some college":
-                        case "associate's degree":
-                        case "postsecondary":
-                        case "college":
-                        case "apprenticeship":
-                            job.EduLevel = "College or apprenticeship";
-                            break;
-                        case "doctoral":
-                        case "master's degree":
-                        case "bachelor's degree":
-                        case "university":
-                            job.EduLevel = "University";
-                            break;
-                        case "high school":
-                        case "high school diploma":
-                            job.EduLevel = "Secondary school or job-specific training";
-                            break;
+                        // categoryName maps directly to our EduLevel values
+                        string categoryName = eduDetailed[0].Value<string>("categoryName") ?? "";
+                        if (!string.IsNullOrEmpty(categoryName))
+                        {
+                            string mapped = MapEducationCategoryName(categoryName);
+                            if (!string.IsNullOrEmpty(mapped))
+                            {
+                                job.EduLevel = mapped;
+                            }
+                        }
+
+                        // If categoryName didn't match, try the "name" field as text
+                        if (string.IsNullOrEmpty(job.EduLevel))
+                        {
+                            string name = eduDetailed[0].Value<string>("name") ?? "";
+                            if (!string.IsNullOrEmpty(name))
+                            {
+                                job.EduLevel = MapEducationLevelText(name);
+                            }
+                        }
+                    }
+                }
+
+                // 3. Fallback: try "educationRequirements" array (simple string list)
+                //    Example: ["High school diploma"]
+                if (string.IsNullOrEmpty(job.EduLevel))
+                {
+                    var eduReqs = j["educationRequirements"] as JArray;
+                    if (eduReqs != null && eduReqs.Count > 0)
+                    {
+                        string firstReq = eduReqs[0].Value<string>() ?? "";
+                        if (!string.IsNullOrEmpty(firstReq))
+                        {
+                            job.EduLevel = MapEducationLevelText(firstReq);
+                        }
                     }
                 }
 
@@ -763,6 +785,67 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             }
 
             return job;
+        }
+
+        /// <summary>
+        /// Maps free-text education level descriptions to the standard EduLevel values
+        /// used in Elasticsearch for filtering.
+        /// </summary>
+        private static string MapEducationLevelText(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return null;
+
+            switch (text.ToLower().Trim())
+            {
+                case "less than high school":
+                case "no education":
+                    return "No education";
+                case "some college":
+                case "associate's degree":
+                case "postsecondary":
+                case "college":
+                case "apprenticeship":
+                    return "College or apprenticeship";
+                case "doctoral":
+                case "master's degree":
+                case "bachelor's degree":
+                case "university":
+                    return "University";
+                case "high school":
+                case "high school diploma":
+                case "high school diploma or equivalent":
+                    return "Secondary school or job-specific training";
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// Maps the categoryName from educationRequirementsDetailed to the standard EduLevel values.
+        /// The categoryName values from the API (e.g. "University", "College or apprenticeship") 
+        /// often match our EduLevel values directly, but we validate and normalize them.
+        /// </summary>
+        private static string MapEducationCategoryName(string categoryName)
+        {
+            if (string.IsNullOrWhiteSpace(categoryName)) return null;
+
+            switch (categoryName.ToLower().Trim())
+            {
+                case "no education":
+                    return "No education";
+                case "college":
+                case "college or apprenticeship":
+                case "apprenticeship":
+                    return "College or apprenticeship";
+                case "university":
+                    return "University";
+                case "secondary school or job-specific training":
+                case "secondary school":
+                case "high school":
+                    return "Secondary school or job-specific training";
+                default:
+                    return null;
+            }
         }
     }
 }
