@@ -110,6 +110,22 @@ jobs:
       - name: Push Federal Importer docker image
         run: |
           docker push ${{ secrets.AWS_ECR_URI }}/jb-importers-federal:${{ github.sha }}
+
+      # PHP rewrite of the federal importer (WorkBC.Importers.Federal.V2). Runs
+      # alongside the legacy image; cluster can transition gradually.
+      - name: Tag the Federal Importer V2 docker image
+        run: |
+          docker tag src_importers-federal-v2:latest ${{ secrets.AWS_ECR_URI }}/jb-importers-federal-v2:${{ github.sha }}
+      - name: Push Federal Importer V2 docker image
+        run: |
+          docker push ${{ secrets.AWS_ECR_URI }}/jb-importers-federal-v2:${{ github.sha }}
+
+      - name: Tag the Federal Importer V2 CLI docker image
+        run: |
+          docker tag src_importers-federal-v2-cli:latest ${{ secrets.AWS_ECR_URI }}/jb-cli-federal-v2:${{ github.sha }}
+      - name: Push Federal Importer V2 CLI docker image
+        run: |
+          docker push ${{ secrets.AWS_ECR_URI }}/jb-cli-federal-v2:${{ github.sha }}
           
       - name: Tag the Wanted Indexer docker image
         run: |

@@ -64,6 +64,31 @@ services:
             - ASPNETCORE_ENVIRONMENT=Development
         env_file:
             - .env
+    # New PHP rewrite of the federal importer. Runs alongside the legacy C#
+    # `importers-federal` service so the cluster can transition gradually.
+    # When the legacy project is retired, swap the cron-job image and remove
+    # the legacy service.
+    importers-federal-v2:
+        container_name: importers-federal-v2
+        scale: 0
+        build:
+            context: ./WorkBC.Importers.Federal.V2
+            dockerfile: Dockerfile
+        env_file:
+            - .env
+        environment:
+            - DB_HOST=postgres
+            - DB_NAME=jobboard
+    importers-federal-v2-cli:
+        container_name: importers-federal-v2-cli
+        build:
+            context: ./WorkBC.Importers.Federal.V2
+            dockerfile: Dockerfile.cli
+        env_file:
+            - .env
+        environment:
+            - DB_HOST=postgres
+            - DB_NAME=jobboard
     indexers-federal:
         container_name: indexers-federal
         scale: 0
