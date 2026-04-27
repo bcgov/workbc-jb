@@ -335,10 +335,6 @@ resource "aws_ecs_task_definition" "app" {
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_password::"
 			},
 			{
-				name = "WantedSettings__PassKey",
-				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:wanted_pk::"
-			},
-			{
 				name = "AppSettings__GoogleMapsIPApi",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:gm_ip::"
 			},

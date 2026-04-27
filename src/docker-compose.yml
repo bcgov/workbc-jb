@@ -33,16 +33,6 @@ services:
             - ASPNETCORE_ENVIRONMENT=Development
         env_file:
             - .env
-    importers-wanted:
-        container_name: importers-wanted
-        scale: 0
-        build:
-            context: .
-            dockerfile: ./WorkBC.Importers.Wanted/Dockerfile
-        environment:
-            - ASPNETCORE_ENVIRONMENT=Development
-        env_file:
-            - .env
     importers-innovibe:
         container_name: importers-innovibe
         scale: 0

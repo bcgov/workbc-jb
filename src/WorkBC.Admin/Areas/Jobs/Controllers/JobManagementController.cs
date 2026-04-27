@@ -72,7 +72,7 @@ namespace WorkBC.Admin.Areas.Jobs.Controllers
             }
 
             string importer = jobId.JobSourceId == JobSource.Wanted
-                ? "WorkBC.Importers.Wanted"
+                ? "WorkBC.Importers.Innovibe"
                 : "WorkBC.Importers.Federal";
 
             Job job = await _jobBoardContext.Jobs.FirstOrDefaultAsync(j => j.JobId == id);

@@ -75,7 +75,6 @@ jobs:
           IMAGE2: ${{ env.IMAGE_ID }}/jb:${{ github.event.workflow_run.head_branch }}
           IMAGE3: ${{ env.IMAGE_ID }}/jb-admin:${{ github.event.workflow_run.head_branch }}
           IMAGE4: ${{ env.IMAGE_ID }}/jb-cli:${{ github.event.workflow_run.head_branch }}
-          IMAGE5: ${{ env.IMAGE_ID }}/jb-importers-wanted:${{ github.event.workflow_run.head_branch }}
           IMAGE6: ${{ env.IMAGE_ID }}/jb-importers-federal:${{ github.event.workflow_run.head_branch }}
           IMAGE7: ${{ env.IMAGE_ID }}/jb-indexers-wanted:${{ github.event.workflow_run.head_branch }}
           IMAGE8: ${{ env.IMAGE_ID }}/jb-indexers-federal:${{ github.event.workflow_run.head_branch }}
