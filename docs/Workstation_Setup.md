@@ -92,8 +92,6 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
     * WorkBC.Importers.Federal\bin\Debug\net6.0 (Import Federal jobs to the SQL database)
     ```.\WorkBC.Importers.Federal.exe```
       * Note that this first task takes a long time. It also has a max of 20,000 records. When I ran this, I ended up having to run it twice to capture all 25,000 records required.
-    * WorkBC.Importers.Wanted\bin\Debug\net6.0 (Import WantedAPI jobs to the SQL database)
-    ```.\WorkBC.Importers.Wanted.exe```
     * WorkBC.Indexers.Federal\bin\Debug\net6.0 (Index the Federal jobs in ElasticSearch)
     ```.\WorkBC.Indexers.Federal.exe --reindex```
     * WorkBC.Indexers.Wanted\bin\Debug\net6.0 (Index the WantedAPI jobs in ElasticSearch)
@@ -168,18 +166,6 @@ then retry the steps above.
 * Use http://localhost:8081 to access the main web site
 * Use http://localhost:8080 to access the admin site
 * You can use the console in the dotnet-cli container to run ad-hoc scheduled task commands. Some common examples are below.
-
-    Run the Wanted Importer
-    ```
-    cd /app/workbc-importers-wanted
-    dotnet WorkBC.Importers.Wanted.dll
-    ```
-
-    Run the Wanted Importer in bulk mode (get jobs for the past 30 days)
-    ```
-    cd /app/workbc-importers-wanted
-    dotnet WorkBC.Importers.Wanted.dll --bulk
-    ```
 
     Run the Wanted Indexer
     ```

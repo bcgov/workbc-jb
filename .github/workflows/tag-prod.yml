@@ -62,10 +62,6 @@ jobs:
           docker tag ${{ env.IMAGE_ID }}/jb-indexers-federal:latest-test ${{ env.IMAGE_ID }}/jb-indexers-federal:${GITHUB_REF#refs/tags/}
           docker push ${{ env.IMAGE_ID }}/jb-indexers-federal:${GITHUB_REF#refs/tags/}   
           
-          docker pull ${{ env.IMAGE_ID }}/jb-importers-wanted:latest-test
-          docker tag ${{ env.IMAGE_ID }}/jb-importers-wanted:latest-test ${{ env.IMAGE_ID }}/jb-importers-wanted:${GITHUB_REF#refs/tags/}
-          docker push ${{ env.IMAGE_ID }}/jb-importers-wanted:${GITHUB_REF#refs/tags/}
-          
           docker pull ${{ env.IMAGE_ID }}/jb-indexers-wanted:latest-test
           docker tag ${{ env.IMAGE_ID }}/jb-indexers-wanted:latest-test ${{ env.IMAGE_ID }}/jb-indexers-wanted:${GITHUB_REF#refs/tags/}
           docker push ${{ env.IMAGE_ID }}/jb-indexers-wanted:${GITHUB_REF#refs/tags/}
