@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -94,40 +94,56 @@ namespace WorkBC.Web.Controllers
             {
                 return BadRequest("Empty request body");
             }
+            ElasticSearchResponse results;
 
-                //Search object that we will use to search Elastic Search
-                var esq = new JobSearchQuery(_geocodingService, _configuration, filters);
+            // When SearchNjbJobsFirst is enabled and the caller has not pinned a specific
+            // source, return NJB (federal) jobs first and only fall back to external jobs
+            // if no NJB jobs match. SearchJobSource "0" / null / empty all mean "any source".
+            bool runNjbFirst = filters.SearchNjbJobsFirst
+                && (string.IsNullOrEmpty(filters.SearchJobSource) || filters.SearchJobSource == "0");
 
-                //Get search results from Elastic search
-                ElasticSearchResponse results = await esq.GetSearchResults(index: index);
+            if (runNjbFirst)
+            {
+                filters.SearchJobSource = "1"; // NJB / federal
+                var njbQuery = new JobSearchQuery(_geocodingService, _configuration, filters);
+                results = await njbQuery.GetSearchResults(index: index);
 
-                //Build the object that we will return to the client
-                var sr = new SearchResultsModel
+                if ((results?.Hits?.Total?.Value ?? 0) == 0)
                 {
-                    PageNumber = filters.Page,
-                    PageSize = filters.PageSize
-                };
-
-                if (results != null)
-                {
-                    if (results.Hits?.HitsHits != null)
-                    {
-                        sr.Result = results.Hits.HitsHits.Select(hit => hit.Source).ToArray();
-                        sr.Count = results.Hits.Total.Value ?? 0;
-
-                        //Send the jobs to the cache service 
-                        //Get the number of views for each job and get the data back
-                        sr.Result = await _viewCountService.GetJobViews(sr.Result);
-
-                        // set the IsNew bit on new jobs
-                        await SetNewJobs(sr.Result);
-                    }
-                    else
-                    {
-                        sr.Result = Array.Empty<Source>();
-                    }
+                    filters.SearchJobSource = "2"; // external
+                    var externalQuery = new JobSearchQuery(_geocodingService, _configuration, filters);
+                    results = await externalQuery.GetSearchResults(index: index);
                 }
-                return Ok(sr);
+            }
+            else
+            {
+                var esq = new JobSearchQuery(_geocodingService, _configuration, filters);
+                results = await esq.GetSearchResults(index: index);
+            }
+
+            var sr = new SearchResultsModel
+            {
+                PageNumber = filters.Page,
+                PageSize = filters.PageSize
+            };
+
+            if (results != null)
+            {
+                if (results.Hits?.HitsHits != null)
+                {
+                    sr.Result = results.Hits.HitsHits.Select(hit => hit.Source).ToArray();
+                    sr.Count = results.Hits.Total.Value ?? 0;
+
+                    sr.Result = await _viewCountService.GetJobViews(sr.Result);
+
+                    await SetNewJobs(sr.Result);
+                }
+                else
+                {
+                    sr.Result = Array.Empty<Source>();
+                }
+            }
+            return Ok(sr);
         }
 
         /// <summary>
