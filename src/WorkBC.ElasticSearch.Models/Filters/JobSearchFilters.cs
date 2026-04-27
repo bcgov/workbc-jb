@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using WorkBC.ElasticSearch.Models.JobAttributes;
@@ -190,6 +190,14 @@ namespace WorkBC.ElasticSearch.Models.Filters
 
         [DefaultValue(false)]
         public bool SearchExcludePlacementAgencyJobs { get; set; }
+
+        /// <summary>
+        ///     When true, NJB (federal) jobs are returned first. External jobs are only
+        ///     returned when no NJB jobs match the search criteria.
+        /// </summary>
+        [DefaultValue(false)]
+        public bool SearchNjbJobsFirst { get; set; }
+
         public string NocCode { get; set; }
     }
 
