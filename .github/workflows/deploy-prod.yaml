@@ -82,11 +82,10 @@ jobs:
           IMAGE10: ${{ env.IMAGE_ID }}/jb-importers-innovibe:${{ github.event.workflow_run.head_branch }}
           IMAGE11: ${{ env.IMAGE_ID }}/jb-cli-php:${{ github.event.workflow_run.head_branch }}
           IMAGE12: ${{ env.IMAGE_ID }}/jb-importers-federal-v2:${{ github.event.workflow_run.head_branch }}
-          IMAGE13: ${{ env.IMAGE_ID }}/jb-cli-php:${{ github.event.workflow_run.head_branch }}
         run: |
           kubectl delete job jb-migrate -n app --ignore-not-found
           sed "s|__IMAGE__|$IMAGE|g" yaml/migrate.yaml | kubectl apply -f -
           kubectl wait --for=condition=complete job/jb-migrate --timeout=300s -n app
-          kubectl set image deployment/jb web=$IMAGE2 admin=$IMAGE3 cli=$IMAGE4 cli2=$IMAGE11 cli3=$IMAGE13 --namespace=app
+          kubectl set image deployment/jb web=$IMAGE2 admin=$IMAGE3 cli=$IMAGE4 cli2=$IMAGE11 --namespace=app
           kubectl set image cronjob/jb-importer-indexer wanted-importer=$IMAGE10 federal-importer=$IMAGE12 wanted-indexer=$IMAGE7 federal-indexer=$IMAGE8 --namespace=app
           kubectl set image cronjob/jb-notifications notifications=$IMAGE9 --namespace=app
