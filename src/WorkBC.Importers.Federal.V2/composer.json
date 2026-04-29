@@ -1,0 +1,25 @@
+{
+    "name": "workbc/federal-job-importer",
+    "description": "WorkBC Federal Job Importer – jobbank.gc.ca XML feed to PostgreSQL (PHP rewrite of WorkBC.Importers.Federal)",
+    "type": "project",
+    "require": {
+        "php": ">=8.3",
+        "ext-dom": "*",
+        "ext-libxml": "*",
+        "ext-pdo": "*",
+        "ext-pdo_pgsql": "*",
+        "ext-simplexml": "*",
+        "monolog/monolog": "^3.5",
+        "guzzlehttp/guzzle": "^7.9",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "WorkBC\\FederalJobImporter\\": "src/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true
+    }
+}

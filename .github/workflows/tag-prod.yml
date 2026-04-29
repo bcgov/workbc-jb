@@ -57,6 +57,14 @@ jobs:
           docker pull ${{ env.IMAGE_ID }}/jb-importers-federal:latest-test
           docker tag ${{ env.IMAGE_ID }}/jb-importers-federal:latest-test ${{ env.IMAGE_ID }}/jb-importers-federal:${GITHUB_REF#refs/tags/}
           docker push ${{ env.IMAGE_ID }}/jb-importers-federal:${GITHUB_REF#refs/tags/}
+
+          docker pull ${{ env.IMAGE_ID }}/jb-importers-federal-v2:latest-test
+          docker tag ${{ env.IMAGE_ID }}/jb-importers-federal-v2:latest-test ${{ env.IMAGE_ID }}/jb-importers-federal-v2:${GITHUB_REF#refs/tags/}
+          docker push ${{ env.IMAGE_ID }}/jb-importers-federal-v2:${GITHUB_REF#refs/tags/}
+
+          docker pull ${{ env.IMAGE_ID }}/jb-cli-php:latest-test
+          docker tag ${{ env.IMAGE_ID }}/jb-cli-php:latest-test ${{ env.IMAGE_ID }}/jb-cli-php:${GITHUB_REF#refs/tags/}
+          docker push ${{ env.IMAGE_ID }}/jb-cli-php:${GITHUB_REF#refs/tags/}
           
           docker pull ${{ env.IMAGE_ID }}/jb-indexers-federal:latest-test
           docker tag ${{ env.IMAGE_ID }}/jb-indexers-federal:latest-test ${{ env.IMAGE_ID }}/jb-indexers-federal:${GITHUB_REF#refs/tags/}
@@ -74,6 +82,3 @@ jobs:
           docker tag ${{ env.IMAGE_ID }}/jb-importers-innovibe:latest-test ${{ env.IMAGE_ID }}/jb-importers-innovibe:${GITHUB_REF#refs/tags/}
           docker push ${{ env.IMAGE_ID }}/jb-importers-innovibe:${GITHUB_REF#refs/tags/}
 
-          docker pull ${{ env.IMAGE_ID }}/jb-cli-innovibe:latest-test
-          docker tag ${{ env.IMAGE_ID }}/jb-cli-innovibe:latest-test ${{ env.IMAGE_ID }}/jb-cli-innovibe:${GITHUB_REF#refs/tags/}
-          docker push ${{ env.IMAGE_ID }}/jb-cli-innovibe:${GITHUB_REF#refs/tags/}

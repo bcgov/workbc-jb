@@ -114,6 +114,20 @@ jobs:
       - name: Push Federal Importer docker image
         run: |
           docker push ${{ secrets.AWS_ECR_URI }}/jb-importers-federal:${{ github.sha }}
+
+      - name: Tag the Federal Importer V2 docker image
+        run: |
+          docker tag src_importers-federal-v2:latest ${{ secrets.AWS_ECR_URI }}/jb-importers-federal-v2:${{ github.sha }}
+      - name: Push Federal Importer V2 docker image
+        run: |
+          docker push ${{ secrets.AWS_ECR_URI }}/jb-importers-federal-v2:${{ github.sha }}
+
+      - name: Tag the PHP CLI docker image
+        run: |
+          docker tag src_php-cli:latest ${{ secrets.AWS_ECR_URI }}/jb-cli-php:${{ github.sha }}
+      - name: Push PHP CLI docker image
+        run: |
+          docker push ${{ secrets.AWS_ECR_URI }}/jb-cli-php:${{ github.sha }}
           
       - name: Tag the Wanted Indexer docker image
         run: |
@@ -164,9 +178,3 @@ jobs:
         run: |
           docker push ${{ secrets.AWS_ECR_URI }}/jb-importers-innovibe:${{ github.sha }}        
 
-      - name: Tag the Innovibe Importer CLI docker image
-        run: |
-          docker tag src_importers-innovibe-cli:latest ${{ secrets.AWS_ECR_URI }}/jb-cli-innovibe:${{ github.sha }}
-      - name: Push Innovibe Importer CLI docker image
-        run: |
-          docker push ${{ secrets.AWS_ECR_URI }}/jb-cli-innovibe:${{ github.sha }}

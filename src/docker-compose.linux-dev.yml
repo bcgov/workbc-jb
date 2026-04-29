@@ -24,6 +24,14 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+  importers-federal-v2:
+    depends_on:
+      postgres:
+        condition: service_healthy
+  php-cli:
+    depends_on:
+      postgres:
+        condition: service_healthy
   indexers-federal:
     volumes:
       - ./WorkBC.Indexers.Federal/appsettings.linux.json:/app/appsettings.json

@@ -44,16 +44,6 @@ services:
         environment:
             - DB_HOST=postgres
             - DB_NAME=jobboard
-    importers-innovibe-cli:
-        container_name: importers-innovibe-cli
-        build:
-            context: ./WorkBC.Importers.Innovibe
-            dockerfile: Dockerfile.cli
-        env_file:
-            - .env
-        environment:
-            - DB_HOST=postgres
-            - DB_NAME=jobboard
     importers-federal:
         container_name: importers-federal
         scale: 0
@@ -64,6 +54,27 @@ services:
             - ASPNETCORE_ENVIRONMENT=Development
         env_file:
             - .env
+    importers-federal-v2:
+        container_name: importers-federal-v2
+        scale: 0
+        build:
+            context: ./WorkBC.Importers.Federal.V2
+            dockerfile: Dockerfile
+        env_file:
+            - .env
+        environment:
+            - DB_HOST=postgres
+            - DB_NAME=jobboard
+    php-cli:
+        container_name: php-cli
+        build:
+            context: .
+            dockerfile: ./php-cli.Dockerfile
+        env_file:
+            - .env
+        environment:
+            - DB_HOST=postgres
+            - DB_NAME=jobboard
     indexers-federal:
         container_name: indexers-federal
         scale: 0
