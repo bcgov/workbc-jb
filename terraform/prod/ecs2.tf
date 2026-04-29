@@ -12,45 +12,6 @@ resource "aws_ecs_task_definition" "import-job" {
   container_definitions = jsonencode([
 	{
 		essential   = false
-		name        = "wanted-importer"
-		image       = "${var.app_repo}/jb-importers-wanted:${var.app_version}"
-		networkMode = "awsvpc"
-		
-		logConfiguration = {
-			logDriver = "awslogs"
-			options = {
-				awslogs-create-group  = "true"
-				awslogs-group         = "/ecs/workbc-jobboard-wanted-importer"
-				awslogs-region        = var.aws_region
-				awslogs-stream-prefix = "ecs"
-			}
-		}		
-
-		
-		environment = [
-			{
-				name = "ConnectionStrings__DefaultConnection",
-				value = "${local.df_conn}"
-			},
-			#{
-				#name = "ConnectionStrings__EnterpriseConnection",
-				#value = "${local.ent_conn}"
-			#},
-			{
-				name = "AppSettings__IsProduction",
-				value = "true"
-			}
-		]
-		secrets = [
-			
-			{
-				name = "WantedSettings__PassKey",
-				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:wanted_pk::"
-			}
-		]
-	},
-	{
-		essential   = false
 		name        = "wanted-indexer"
 		image       = "${var.app_repo}/jb-indexers-wanted:${var.app_version}"
 		networkMode = "awsvpc"
@@ -92,12 +53,6 @@ resource "aws_ecs_task_definition" "import-job" {
 			{
 				name = "IndexSettings__ElasticPassword",
 				valueFrom = "${data.aws_secretsmanager_secret_version.creds.arn}:es_password::"
-			}
-		]
-		dependsOn = [
-			{
-				containerName = "wanted-importer"
-				condition = "COMPLETE"
 			}
 		]
 	},

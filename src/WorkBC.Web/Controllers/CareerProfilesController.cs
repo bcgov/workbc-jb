@@ -220,10 +220,18 @@ namespace WorkBC.Web.Controllers
                 PageSize = 4,
                 SortOrder = 1, // Posted date newest first
                 SearchNocField = noc.ToString(),
+                SearchJobSource = "1", // NJB/Federal jobs first
             };
 
-            // run the query
+            // First try NJB (federal) jobs only
             Source[] jobs = await RunElasticQuery(filters);
+
+            // Fall back to external jobs if no NJB jobs are available
+            if (!jobs.Any())
+            {
+                filters.SearchJobSource = "2"; // External jobs only
+                jobs = await RunElasticQuery(filters);
+            }
 
             if (!jobs.Any())
             {

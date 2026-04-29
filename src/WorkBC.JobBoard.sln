@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkBC.Indexers.Federal", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkBC.Importers.Federal", "WorkBC.Importers.Federal\WorkBC.Importers.Federal.csproj", "{DD8562A1-BFB7-4863-A05A-776D7E5FF8C6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkBC.Importers.Wanted", "WorkBC.Importers.Wanted\WorkBC.Importers.Wanted.csproj", "{731E2F37-1D9D-4C45-A031-21916CA7BE4D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkBC.Indexers.Wanted", "WorkBC.Indexers.Wanted\WorkBC.Indexers.Wanted.csproj", "{482D492A-D7E6-495F-997C-281C15A19CCB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkBC.ElasticSearch.Models", "WorkBC.ElasticSearch.Models\WorkBC.ElasticSearch.Models.csproj", "{9BD778AA-C23D-4D15-A92F-3E3FA8FC0B61}"
@@ -81,10 +79,6 @@ Global
 		{DD8562A1-BFB7-4863-A05A-776D7E5FF8C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD8562A1-BFB7-4863-A05A-776D7E5FF8C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD8562A1-BFB7-4863-A05A-776D7E5FF8C6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{731E2F37-1D9D-4C45-A031-21916CA7BE4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{731E2F37-1D9D-4C45-A031-21916CA7BE4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{731E2F37-1D9D-4C45-A031-21916CA7BE4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{731E2F37-1D9D-4C45-A031-21916CA7BE4D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{482D492A-D7E6-495F-997C-281C15A19CCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{482D492A-D7E6-495F-997C-281C15A19CCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{482D492A-D7E6-495F-997C-281C15A19CCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
