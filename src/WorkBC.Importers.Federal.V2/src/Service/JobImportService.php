@@ -150,6 +150,11 @@ final class JobImportService
         $toInsert = [];
         $toUpdate = [];
         foreach ($feedById as $id => $updated) {
+            // PHP auto-coerces numeric string array keys to int; cast back to
+            // string so downstream APIs (FederalApiClient::fetchJobXml takes
+            // `string`, PDO param binds as text) receive the value the legacy
+            // C# importer threaded through as System.String.
+            $id = (string) $id;
             if (!isset($existing[$id])) {
                 $toInsert[] = ['id' => $id, 'fileUpdateDate' => $updated];
                 continue;

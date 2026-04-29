@@ -56,9 +56,9 @@ jobs:
           docker tag ${{ env.IMAGE_ID }}/jb-importers-federal-v2:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb-importers-federal-v2:${GITHUB_REF#refs/tags/}
           docker push ${{ env.IMAGE_ID }}/jb-importers-federal-v2:${GITHUB_REF#refs/tags/}
 
-          docker pull ${{ env.IMAGE_ID }}/jb-cli-federal-v2:${GITHUB_SHA}
-          docker tag ${{ env.IMAGE_ID }}/jb-cli-federal-v2:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb-cli-federal-v2:${GITHUB_REF#refs/tags/}
-          docker push ${{ env.IMAGE_ID }}/jb-cli-federal-v2:${GITHUB_REF#refs/tags/}
+          docker pull ${{ env.IMAGE_ID }}/jb-cli-php:${GITHUB_SHA}
+          docker tag ${{ env.IMAGE_ID }}/jb-cli-php:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb-cli-php:${GITHUB_REF#refs/tags/}
+          docker push ${{ env.IMAGE_ID }}/jb-cli-php:${GITHUB_REF#refs/tags/}
           
           docker pull ${{ env.IMAGE_ID }}/jb-indexers-federal:${GITHUB_SHA}
           docker tag ${{ env.IMAGE_ID }}/jb-indexers-federal:${GITHUB_SHA} ${{ env.IMAGE_ID }}/jb-indexers-federal:${GITHUB_REF#refs/tags/}

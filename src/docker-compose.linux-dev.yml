@@ -28,7 +28,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-  importers-federal-v2-cli:
+  php-cli:
     depends_on:
       postgres:
         condition: service_healthy
