@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -11,19 +12,45 @@ namespace WorkBC.Shared.Utilities
 {
     public class ElasticHttpHelper
     {
-        private string _username;
-        private string _password;
+        private static readonly HttpClient _httpClient = CreateHttpClient();
+
+        private static HttpClient CreateHttpClient()
+        {
+            var handler = new HttpClientHandler
+            {
+                Proxy = new WebProxy
+                {
+                    BypassProxyOnLocal = true
+                }
+            };
+            return new HttpClient(handler);
+        }
+
+        private readonly string _username;
+        private readonly string _password;
+        private readonly AuthenticationHeaderValue _authHeader;
 
         public ElasticHttpHelper(string username, string password)
         {
             _username = username;
             _password = password;
+            _authHeader = BuildAuthHeader(username, password);
         }
 
         public ElasticHttpHelper(IConfiguration configuration)
+            : this(configuration["IndexSettings:ElasticUser"],
+                   configuration["IndexSettings:ElasticPassword"])
         {
-            _username = configuration["IndexSettings:ElasticUser"];
-            _password = configuration["IndexSettings:ElasticPassword"];
+        }
+
+        private static AuthenticationHeaderValue BuildAuthHeader(string user, string pwd)
+        {
+            if (string.IsNullOrEmpty(user))
+            {
+                return null;
+            }
+            byte[] raw = Encoding.UTF8.GetBytes($"{user}:{pwd}");
+            return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(raw));
         }
 
         /// <summary>
@@ -32,72 +59,48 @@ namespace WorkBC.Shared.Utilities
         public async Task<string> PostToElasticSearch(string json, string url, string action = "POST")
         {
             string responseFromServer;
-            StringContent jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
 
             try
             {
-                var handler = new HttpClientHandler
+                using var request = new HttpRequestMessage(new HttpMethod(action), url);
+                if (action == "POST" || action == "PUT")
                 {
-                    // ElasticSearch is on localhost:9200.  Dotnet Core will try to use the proxy unless 
-                    // we add this line.  
-                    Proxy = new WebProxy
-                    {
-                        BypassProxyOnLocal = true
-                    }
-                };
-
-                // add credentials for basic authentication
-                if (!string.IsNullOrEmpty(_username))
+                    request.Content = new StringContent(json ?? string.Empty, Encoding.UTF8, "application/json");
+                }
+                else if (action != "DELETE")
                 {
-                    handler.Credentials = new NetworkCredential(_username, _password);
+                    throw new NotImplementedException($"ElasticHttpHelper.PostToElasticSearch() does not support the request method {action}");
                 }
 
-                using (var httpClient = new HttpClient(handler))
+                if (_authHeader != null)
                 {
-                    HttpResponseMessage result;
-                    
+                    request.Headers.Authorization = _authHeader;
+                }
 
-                    if (action == "DELETE")
-                    {
-                        result = await httpClient.DeleteAsync(url);
-                    }
-                    else if (action == "PUT")
-                    {
-                        result = await httpClient.PutAsync(url, jsonContent);
-                    }
-                    else if (action == "POST")
-                    {
-                        result = await httpClient.PostAsync(url, jsonContent);
-                    }
-                    else
-                    {
-                        throw new NotImplementedException($"ElasticHttpHelper.PostToElasticSearch() does not support the request method {action}");
-                    }
+                using HttpResponseMessage result = await _httpClient.SendAsync(request);
 
-                    if (result.IsSuccessStatusCode)
-                    {
-                        //read the response from the server
-                        responseFromServer = result.ReasonPhrase;
-                    }
-                    else if (result.StatusCode == HttpStatusCode.Unauthorized)
-                    {
-                        //unauthorized
-                        Console.Write("[401]");
-                        throw new UnauthorizedAccessException("Unable to connect to ElasticSearch Basic Auth. Please ensure the correct username and password are specified in appsettings.json");
-                    } 
-                    else 
-                    {
-                        //record not found in elastic search
-                        Console.Write("[404]");
-                        responseFromServer = "[404]";
-                    }
+                if (result.IsSuccessStatusCode)
+                {
+                    //read the response from the server
+                    responseFromServer = result.ReasonPhrase;
+                }
+                else if (result.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    //unauthorized
+                    Console.Write("[401]");
+                    throw new UnauthorizedAccessException("Unable to connect to ElasticSearch Basic Auth. Please ensure the correct username and password are specified in appsettings.json");
+                }
+                else
+                {
+                    //record not found in elastic search
+                    Console.Write("[404]");
+                    responseFromServer = "[404]";
                 }
             }
             catch (WebException ex) when (ex.InnerException?.InnerException is SocketException)
             {
                 // rethrow if SocketException
                 throw;
-                // note: The message should be "Only one usage of each socket address (protocol/network address/port) is normally permitted"
             }
             catch (Exception ex)
             {
@@ -119,46 +122,34 @@ namespace WorkBC.Shared.Utilities
 
         public async Task<string> QueryElasticSearch(string json, string url)
         {
-            StringContent jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var handler = new HttpClientHandler
+            using var request = new HttpRequestMessage(HttpMethod.Post, url)
             {
-                // ElasticSearch is on localhost:9200.  Dotnet Core will try to use the proxy unless 
-                // we add this line.  
-                Proxy = new WebProxy
-                {
-                    BypassProxyOnLocal = true
-                }
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
             };
 
-            // add credentials for basic authentication
-            if (!string.IsNullOrEmpty(_username))
+            if (_authHeader != null)
             {
-                handler.Credentials = new NetworkCredential(_username, _password);
+                request.Headers.Authorization = _authHeader;
             }
 
-            using (var httpClient = new HttpClient(handler))
+            using HttpResponseMessage result = await _httpClient.SendAsync(request);
+
+            if (result.StatusCode == HttpStatusCode.Unauthorized)
             {
-                HttpResponseMessage result;
-                
-                result = await httpClient.PostAsync(url, jsonContent);
-
-                if (result.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    var maskedPassword = new Regex("\\S").Replace(_password, "*");
-                    throw new Exception($"Elasticsearch returned an Unauthorized status code\n"
-                       + $"url={url}\n" + $"user={_username}\n" + $"pwd={maskedPassword}");
-                }
-                else if (!result.IsSuccessStatusCode)
-                {
-                    var responseBody = await result.Content.ReadAsStringAsync();
-                    throw new Exception($"Elasticsearch returned a {result.StatusCode} status code\n"
-                        + $"url={url}\n"
-                        + $"response={responseBody}");
-                }
-
-                return await result.Content.ReadAsStringAsync();
+                var maskedPassword = new Regex("\\S").Replace(_password ?? string.Empty, "*");
+                throw new Exception($"Elasticsearch returned an Unauthorized status code\n"
+                   + $"url={url}\n" + $"user={_username}\n" + $"pwd={maskedPassword}");
             }
+
+            if (!result.IsSuccessStatusCode)
+            {
+                var responseBody = await result.Content.ReadAsStringAsync();
+                throw new Exception($"Elasticsearch returned a {result.StatusCode} status code\n"
+                    + $"url={url}\n"
+                    + $"response={responseBody}");
+            }
+
+            return await result.Content.ReadAsStringAsync();
         }
     }
 }
