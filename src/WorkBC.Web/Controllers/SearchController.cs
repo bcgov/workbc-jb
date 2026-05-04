@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WorkBC.Data;
 using WorkBC.Data.Model.JobBoard;
+using WorkBC.ElasticSearch.Models.ElasticAttributes;
 using WorkBC.ElasticSearch.Models.Filters;
 using WorkBC.ElasticSearch.Models.JobAttributes;
 using WorkBC.ElasticSearch.Models.Results;
@@ -99,8 +100,18 @@ namespace WorkBC.Web.Controllers
             // When SearchNjbJobsFirst is enabled and the caller has not pinned a specific
             // source, return NJB (federal) jobs first and only fall back to external jobs
             // if no NJB jobs match. SearchJobSource "0" / null / empty all mean "any source".
-            bool runNjbFirst = filters.SearchNjbJobsFirst
-                && (string.IsNullOrEmpty(filters.SearchJobSource) || filters.SearchJobSource == "0");
+            bool noSourcePinned = string.IsNullOrEmpty(filters.SearchJobSource) || filters.SearchJobSource == "0";
+            bool runNjbFirst = filters.SearchNjbJobsFirst && noSourcePinned;
+
+            // When sorting by Relevance with no source pinned, guarantee at least 40%
+            // federal (NJB) jobs per page by interleaving two relevance-sorted streams.
+            // Why: relevance is pure text-match _score with no recency/source boost, so
+            // federal jobs were drifting to page 19+. Interleaving keeps relevance order
+            // within each source while ensuring federals surface on the first pages.
+            const int relevanceSortOrder = 11;
+            bool runFederalMix = !runNjbFirst
+                && filters.SortOrder == relevanceSortOrder
+                && noSourcePinned;
 
             if (runNjbFirst)
             {
@@ -114,6 +125,10 @@ namespace WorkBC.Web.Controllers
                     var externalQuery = new JobSearchQuery(_geocodingService, _configuration, filters);
                     results = await externalQuery.GetSearchResults(index: index);
                 }
+            }
+            else if (runFederalMix)
+            {
+                results = await GetFederalMixedResults(filters, index);
             }
             else
             {
@@ -353,6 +368,88 @@ namespace WorkBC.Web.Controllers
             }
             return sr.Count;
 
+        }
+
+        /// <summary>
+        ///     Run two relevance queries in parallel (federal-only and external-only) and
+        ///     interleave the results so each page contains at least 40% federal jobs while
+        ///     preserving relevance order within each stream. Falls back to padding from the
+        ///     other side when one source has fewer rows than its allocated slots.
+        /// </summary>
+        private async Task<ElasticSearchResponse> GetFederalMixedResults(JobSearchFilters filters, string index)
+        {
+            const decimal federalShare = 0.4m;
+
+            int pageSize = filters.PageSize > 0 ? filters.PageSize : 20;
+            int pageNumber = filters.Page > 0 ? filters.Page : 1;
+            int federalSlots = (int)Math.Ceiling(pageSize * federalShare);
+            int externalSlots = pageSize - federalSlots;
+
+            var federalQuery = new JobSearchQuery(_geocodingService, _configuration, filters)
+            {
+                SearchJobSource = "1",
+                // Step pages by federalSlots (Skip = (pageNumber-1) * RequestedPageSize) but
+                // over-fetch a full page so we can pad if external runs short.
+                RequestedPageSize = federalSlots,
+                PageSize = pageSize,
+                PageNumber = pageNumber
+            };
+
+            var externalQuery = new JobSearchQuery(_geocodingService, _configuration, filters)
+            {
+                SearchJobSource = "2",
+                RequestedPageSize = externalSlots > 0 ? externalSlots : pageSize,
+                PageSize = pageSize,
+                PageNumber = pageNumber
+            };
+
+            Task<ElasticSearchResponse> fedTask = federalQuery.GetSearchResults(index: index);
+            Task<ElasticSearchResponse> extTask = externalQuery.GetSearchResults(index: index);
+            await Task.WhenAll(fedTask, extTask);
+
+            ElasticSearchResponse fedResults = fedTask.Result;
+            ElasticSearchResponse extResults = extTask.Result;
+
+            List<Hit> fedHits = fedResults?.Hits?.HitsHits ?? new List<Hit>();
+            List<Hit> extHits = extResults?.Hits?.HitsHits ?? new List<Hit>();
+            long fedTotal = fedResults?.Hits?.Total?.Value ?? 0;
+            long extTotal = extResults?.Hits?.Total?.Value ?? 0;
+
+            var merged = new List<Hit>(pageSize);
+            int fi = 0, ei = 0;
+            while (merged.Count < pageSize)
+            {
+                bool federalSlotOpen = merged.Count < federalSlots && fi < fedHits.Count;
+                if (federalSlotOpen)
+                {
+                    merged.Add(fedHits[fi++]);
+                }
+                else if (ei < extHits.Count)
+                {
+                    merged.Add(extHits[ei++]);
+                }
+                else if (fi < fedHits.Count)
+                {
+                    merged.Add(fedHits[fi++]);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            // Reuse whichever response object exists so we don't have to construct
+            // sealed/internal-ctor types (Hits, Total). Mutate its hits + total in place.
+            ElasticSearchResponse merge = fedResults ?? extResults;
+            if (merge?.Hits != null)
+            {
+                merge.Hits.HitsHits = merged;
+                if (merge.Hits.Total != null)
+                {
+                    merge.Hits.Total.Value = fedTotal + extTotal;
+                }
+            }
+            return merge;
         }
     }
 }
