@@ -70,7 +70,6 @@ final class JobImportService
         $del     = $this->db->prepare('SELECT 1 FROM "DeletedJobs" WHERE "JobId" = ? LIMIT 1');
         $hashChk = $this->db->prepare('SELECT 1 FROM "ImportedJobsWanted" WHERE "HashId" = ? LIMIT 1');
         // If a previously-expired job re-appears in the API, drop its stale
-        // ExpiredJobs row so the indexer's PurgeJobs() doesn't delete the ES doc.
         $unexpire = $this->db->prepare('DELETE FROM "ExpiredJobs" WHERE "JobId" = ?');
 
         $upd = $this->db->prepare('
@@ -313,10 +312,6 @@ final class JobImportService
 
     private function updateExistingJobs(): void
     {
-        // Auto-heal clause: also re-map rows whose critical fields look stale
-        // (empty employer / city / unresolved location). This makes the
-        // importer self-correcting after any future map() improvement —
-        // operators no longer need to run --remap by hand.
         $rows = $this->db->query('
             SELECT ij."JobId", ij."JobPostEnglish", ij."DateLastImported",
                    j."NocCodeId2021" AS "OldNoc2021", j."LocationId" AS "OldLocationId",
