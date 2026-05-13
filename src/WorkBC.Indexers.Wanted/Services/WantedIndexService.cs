@@ -175,9 +175,9 @@ namespace WorkBC.Indexers.Wanted.Services
 
                 using (var cmd = new NpgsqlCommand(@"
                     INSERT INTO ""ExpiredJobs"" (""JobId"", ""DateRemoved"", ""RemovedFromElasticsearch"")
-                    SELECT unnest(@ids), NOW(), TRUE
+                    SELECT unnest(@ids), NOW(), FALSE
                     ON CONFLICT (""JobId"") DO UPDATE
-                    SET ""DateRemoved"" = NOW(), ""RemovedFromElasticsearch"" = TRUE", cn))
+                    SET ""DateRemoved"" = NOW(), ""RemovedFromElasticsearch"" = FALSE", cn))
                 {
                     cmd.Parameters.AddWithValue("ids", _rejectedIds.ToArray());
                     await cmd.ExecuteNonQueryAsync();
