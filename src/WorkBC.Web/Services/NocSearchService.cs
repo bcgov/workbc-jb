@@ -26,12 +26,13 @@ namespace WorkBC.Web.Services
 
         public async Task<IEnumerable<NocCodeModel>> SearchNocCodes(string startsWith)
         {
+            var term = (startsWith ?? string.Empty).ToLower();
             return (await _jobBoardContext.NocCodes2021.AsNoTracking()
                     .Where(x =>
-                        MEF.Functions.Like(x.Code, startsWith + "%") ||
-                        MEF.Functions.Like(x.Title, startsWith + "%") ||
-                        startsWith.Length > 1 &&
-                        MEF.Functions.Like(x.Title, "% " + startsWith + "%"))
+                        MEF.Functions.Like(x.Code.ToLower(), term + "%") ||
+                        MEF.Functions.Like(x.Title.ToLower(), term + "%") ||
+                        term.Length > 1 &&
+                        MEF.Functions.Like(x.Title.ToLower(), "% " + term + "%"))
                     .ToListAsync())
                 .OrderByDescending(x =>
                     x.Title.StartsWith(startsWith, StringComparison.CurrentCultureIgnoreCase) ||
