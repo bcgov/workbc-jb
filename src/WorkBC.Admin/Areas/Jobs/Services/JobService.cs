@@ -321,11 +321,46 @@ namespace WorkBC.Admin.Areas.Jobs.Services
                     case "federal":
                         return _jobBoardContext.Jobs.Where(job => job.IsActive && job.ExpireDate > DateTime.Now && job.JobSourceId == JobSource.Federal);
                     case "external":
-                        return _jobBoardContext.Jobs.Where(job => job.IsActive && job.ExpireDate > DateTime.Now && job.JobSourceId == JobSource.Wanted);
+                        return VisibleWantedJobs();
                 }
             }
 
-            return _jobBoardContext.Jobs.Where(job => job.IsActive && job.ExpireDate > DateTime.Now);
+            return _jobBoardContext.Jobs.Where(job =>
+                job.IsActive && job.ExpireDate > DateTime.Now
+                && (
+                    job.JobSourceId == JobSource.Federal
+                    || (
+                        job.JobSourceId == JobSource.Wanted
+                        && job.LocationId != 0
+                        && job.NocCodeId2021 != null
+                        && job.City != null && job.City != ""
+                        && job.Title != null && job.Title != ""
+                        && job.EmployerName != null && job.EmployerName != ""
+                        && !_jobBoardContext.ExpiredJobs.Any(e => e.JobId == job.JobId)
+                        && !_jobBoardContext.DeletedJobs.Any(d => d.JobId == job.JobId)
+                        && _jobBoardContext.ImportedJobsWanted.Any(w => w.JobId == job.JobId && !w.IsFederalOrWorkBc)
+                    )
+                )
+            );
+        }
+
+        // Aligns the admin "External" (Wanted/Innovibe) count with what's actually
+        // visible in ES: drops rows the indexer or UI region facet would silently hide.
+        private IQueryable<Job> VisibleWantedJobs()
+        {
+            return _jobBoardContext.Jobs.Where(job =>
+                job.JobSourceId == JobSource.Wanted
+                && job.IsActive
+                && job.ExpireDate > DateTime.Now
+                && job.LocationId != 0
+                && job.NocCodeId2021 != null
+                && job.City != null && job.City != ""
+                && job.Title != null && job.Title != ""
+                && job.EmployerName != null && job.EmployerName != ""
+                && !_jobBoardContext.ExpiredJobs.Any(e => e.JobId == job.JobId)
+                && !_jobBoardContext.DeletedJobs.Any(d => d.JobId == job.JobId)
+                && _jobBoardContext.ImportedJobsWanted.Any(w => w.JobId == job.JobId && !w.IsFederalOrWorkBc)
+            );
         }
 
         private async Task<string> DeleteFromElastic(string id, string index)
