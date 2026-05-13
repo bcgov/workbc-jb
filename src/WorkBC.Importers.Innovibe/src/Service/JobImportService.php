@@ -68,6 +68,7 @@ final class JobImportService
 
         $chk     = $this->db->prepare('SELECT "ApiDate" FROM "ImportedJobsWanted" WHERE "JobId" = ?');
         $del     = $this->db->prepare('SELECT 1 FROM "DeletedJobs" WHERE "JobId" = ? LIMIT 1');
+        $expChk  = $this->db->prepare('SELECT 1 FROM "ExpiredJobs" WHERE "JobId" = ? LIMIT 1');
         $hashChk = $this->db->prepare('SELECT 1 FROM "ImportedJobsWanted" WHERE "HashId" = ? LIMIT 1');
         // If a previously-expired job re-appears in the API, drop its stale
         $unexpire = $this->db->prepare('DELETE FROM "ExpiredJobs" WHERE "JobId" = ?');
@@ -119,6 +120,14 @@ final class JobImportService
             if ($del->fetchColumn()) {
                 $this->skipped++;
                 $progress .= 'S';
+                continue;
+            }
+
+            // Skip jobs already marked expired — keeps SQL-side cleanup state sticky
+            $expChk->execute([$id]);
+            if ($expChk->fetchColumn()) {
+                $this->skipped++;
+                $progress .= 'X';
                 continue;
             }
 
