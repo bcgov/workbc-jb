@@ -191,7 +191,7 @@ namespace WorkBC.Indexers.Wanted.Services
                     cmd.Parameters.AddWithValue("ids", _rejectedIds.ToArray());
                     await cmd.ExecuteNonQueryAsync();
                 }
-            }
+
                 _rejectedIds.Clear();
             }
             catch (Exception ex)
