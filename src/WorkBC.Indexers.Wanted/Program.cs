@@ -68,16 +68,6 @@ namespace WorkBC.Indexers.Wanted
                 {
                     logger.Error(ex.ToString());
                 }
-
-                try
-                {
-                    logger.Information("Deactivating orphaned Wanted jobs");
-                    await service.DeactivateOrphanedJobs();
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex.ToString());
-                }
             }
 
             logger.Information("INDEXER FINISHED");

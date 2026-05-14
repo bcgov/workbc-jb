@@ -201,36 +201,6 @@ namespace WorkBC.Indexers.Wanted.Services
         }
 
         /// <summary>
-        ///     Deactivate Jobs rows whose ImportedJobsWanted staging counterpart has vanished
-        ///     Mirrors JobsTableSyncServiceBase.DeactivateJobs(JobSource.Wanted), which was
-        ///     defined but never invoked for the Wanted source.
-        /// </summary>
-        public async Task DeactivateOrphanedJobs()
-        {
-            try
-            {
-                using var cn = new NpgsqlConnection(_connectionSettings.DefaultConnection);
-                await cn.OpenAsync();
-
-                using var cmd = new NpgsqlCommand(@"
-                    UPDATE ""Jobs""
-                    SET ""IsActive"" = FALSE, ""LastUpdated"" = NOW()
-                    WHERE ""JobSourceId"" = 2
-                      AND ""IsActive"" = TRUE
-                      AND NOT EXISTS (
-                          SELECT 1 FROM ""ImportedJobsWanted"" ij
-                          WHERE ij.""JobId"" = ""Jobs"".""JobId""
-                      )", cn);
-                int rows = await cmd.ExecuteNonQueryAsync();
-                _logger.Information($"DeactivateOrphanedJobs: {rows} orphaned Wanted jobs deactivated");
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("ERROR: Could not deactivate orphaned Wanted jobs. Reason: " + ex.Message);
-            }
-        }
-
-        /// <summary>
         ///     Delete a job from the Elastic search index
         /// </summary>
         /// <returns>Response from Elastic Search</returns>
