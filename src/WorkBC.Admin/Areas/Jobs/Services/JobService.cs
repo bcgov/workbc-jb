@@ -325,23 +325,9 @@ namespace WorkBC.Admin.Areas.Jobs.Services
                 }
             }
 
-            return _jobBoardContext.Jobs.Where(job =>
-                job.IsActive && job.ExpireDate > DateTime.Now
-                && (
-                    job.JobSourceId == JobSource.Federal
-                    || (
-                        job.JobSourceId == JobSource.Wanted
-                        && job.LocationId != 0
-                        && job.NocCodeId2021 != null
-                        && job.City != null && job.City != ""
-                        && job.Title != null && job.Title != ""
-                        && job.EmployerName != null && job.EmployerName != ""
-                        && !_jobBoardContext.ExpiredJobs.Any(e => e.JobId == job.JobId)
-                        && !_jobBoardContext.DeletedJobs.Any(d => d.JobId == job.JobId)
-                        && _jobBoardContext.ImportedJobsWanted.Any(w => w.JobId == job.JobId && !w.IsFederalOrWorkBc)
-                    )
-                )
-            );
+            var federal = _jobBoardContext.Jobs.Where(job =>
+                job.IsActive && job.ExpireDate > DateTime.Now && job.JobSourceId == JobSource.Federal);
+            return federal.Concat(VisibleWantedJobs());
         }
 
         // Aligns the admin "External" (Wanted/Innovibe) count with what's actually

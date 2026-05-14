@@ -35,8 +35,8 @@ namespace WorkBC.Web.Services
                         MEF.Functions.Like(x.Title.ToLower(), "% " + term + "%"))
                     .ToListAsync())
                 .OrderByDescending(x =>
-                    x.Title.StartsWith(startsWith, StringComparison.CurrentCultureIgnoreCase) ||
-                    x.Code.StartsWith(startsWith, StringComparison.CurrentCultureIgnoreCase))
+                    x.Title.StartsWith(term, StringComparison.CurrentCultureIgnoreCase) ||
+                    x.Code.StartsWith(term, StringComparison.CurrentCultureIgnoreCase))
                 .ThenBy(x => $"{x.Code} {x.Title}")
                 .Take(50)
                 .Select(x => new NocCodeModel

@@ -192,12 +192,12 @@ namespace WorkBC.Indexers.Wanted.Services
                     await cmd.ExecuteNonQueryAsync();
                 }
             }
+                _rejectedIds.Clear();
+            }
             catch (Exception ex)
             {
                 _logger.Error("ERROR: Could not write rejected jobs to ExpiredJobs/Jobs. Reason: " + ex.Message);
             }
-
-            _rejectedIds.Clear();
         }
 
         /// <summary>
