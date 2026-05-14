@@ -27,6 +27,7 @@ namespace WorkBC.Indexers.Wanted.Services
         private readonly IndexSettings _indexSettings;
         private readonly ILogger _logger;
         private readonly List<string> _lstIds = new List<string>();
+        private readonly List<string> _rejectedIds = new List<string>();
         private readonly XmlParsingServiceWanted _xmlService;
         private readonly CommandLineOptions _options;
         private readonly IndexCheckerService _indexChecker;
@@ -85,6 +86,28 @@ namespace WorkBC.Indexers.Wanted.Services
 
                     if (esJob.JobId != null) // jobs from feds have null JobId
                     {
+                        // Data-quality gate: rows missing fields the UI search relies on are
+                        // not publishable. Park them in ExpiredJobs + flip Jobs.IsActive=FALSE
+                        // so admin counts stop tracking them.
+                        if (!IsPublishable(esJob))
+                        {
+                            _rejectedIds.Add(esJob.JobId);
+                            _lstIds.Add(esJob.JobId);
+                            Console.Write("R-");
+
+                            if (_rejectedIds.Count >= 100)
+                            {
+                                await FlushRejected();
+                                Console.Write("[REJ_100]");
+                            }
+                            if (_lstIds.Count > 100)
+                            {
+                                UpdateIds();
+                                Console.Write("DB_UPDATED_100-");
+                            }
+                            continue;
+                        }
+
                         //process model to JSON object
                         string json = JsonConvert.SerializeObject(esJob, new JsonSerializerSettings
                         {
@@ -126,7 +149,54 @@ namespace WorkBC.Indexers.Wanted.Services
 
                 //Update left over Ids that is less than the threshold (100)
                 UpdateIds();
+                await FlushRejected();
                 Console.WriteLine();
+            }
+        }
+
+        private static bool IsPublishable(ElasticSearchJob job)
+        {
+            if (string.IsNullOrWhiteSpace(job.Title)) return false;
+            if (string.IsNullOrWhiteSpace(job.EmployerName)) return false;
+            if (job.Noc2021 == null || job.Noc2021 == 0) return false;
+            if (job.City == null || job.City.Length == 0
+                || string.IsNullOrWhiteSpace(job.City[0])) return false;
+            return true;
+        }
+
+        private async Task FlushRejected()
+        {
+            if (_rejectedIds.Count == 0) return;
+
+            try
+            {
+                using var cn = new NpgsqlConnection(_connectionSettings.DefaultConnection);
+                await cn.OpenAsync();
+
+                using (var cmd = new NpgsqlCommand(@"
+                    INSERT INTO ""ExpiredJobs"" (""JobId"", ""DateRemoved"", ""RemovedFromElasticsearch"")
+                    SELECT unnest(@ids), NOW(), FALSE
+                    ON CONFLICT (""JobId"") DO UPDATE
+                    SET ""DateRemoved"" = NOW(), ""RemovedFromElasticsearch"" = FALSE", cn))
+                {
+                    cmd.Parameters.AddWithValue("ids", _rejectedIds.ToArray());
+                    await cmd.ExecuteNonQueryAsync();
+                }
+
+                using (var cmd = new NpgsqlCommand(@"
+                    UPDATE ""Jobs""
+                    SET ""IsActive"" = FALSE, ""LastUpdated"" = NOW()
+                    WHERE ""JobId"" = ANY(@ids) AND ""IsActive"" = TRUE", cn))
+                {
+                    cmd.Parameters.AddWithValue("ids", _rejectedIds.ToArray());
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+                _rejectedIds.Clear();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("ERROR: Could not write rejected jobs to ExpiredJobs/Jobs. Reason: " + ex.Message);
             }
         }
 
