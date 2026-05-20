@@ -29,6 +29,7 @@ if (!$config->apiKey || $config->apiKey === 'YOUR_KEY') {
 }
 
 $outputPath = $argv[1] ?? __DIR__ . '/../innovibe-report.csv';
+$expiryDays = (int) (getenv('JOB_EXPIRY_DAYS') ?: 30);
 
 $api = new InnovibeApiClient($config, $logger);
 
@@ -41,6 +42,8 @@ if ($fp === false) {
 fputcsv($fp, ['JobID', 'Job Title', 'Job Type', 'Location', 'URL', 'NOC Code', 'Education']);
 
 $count = 0;
+$skipped = 0;
+$now = time();
 
 foreach ($api->fetchAllJobs($config->pageSize) as $job) {
     $id = (string) ($job['id'] ?? '');
@@ -48,33 +51,77 @@ foreach ($api->fetchAllJobs($config->pageSize) as $job) {
         continue;
     }
 
-    $title = $job['title'] ?? '';
+    // Same filters the importer + indexer apply before a job reaches the UI
 
-    $jobType = implode(', ', $job['employmentType'] ?? []);
+    if (empty($job['salaryMin']) && empty($job['salaryMax']) && empty($job['salaryValue'])) {
+        $skipped++;
+        continue;
+    }
 
+    $title = trim($job['title'] ?? '');
+    if ($title === '') {
+        $skipped++;
+        continue;
+    }
+
+    // Expiry: COALESCE(dateValidThrough, updatedAt + expiryDays)
+    $validThrough = !empty($job['dateValidThrough']) ? strtotime((string) $job['dateValidThrough']) : false;
+    if ($validThrough !== false) {
+        $expireTs = $validThrough;
+    } else {
+        $updatedAt = strtotime($job['updatedAt'] ?? $job['postedDate'] ?? $job['createdAt'] ?? 'now');
+        $expireTs = $updatedAt + ($expiryDays * 86400);
+    }
+    if ($expireTs < $now) {
+        $skipped++;
+        continue;
+    }
+
+    // Must have at least one NOC match
+    $nocMatches = $job['nocMatches'] ?? [];
+    if (empty($nocMatches)) {
+        $skipped++;
+        continue;
+    }
+    usort($nocMatches, fn($a, $b) => ($b['score'] ?? 0) <=> ($a['score'] ?? 0));
+    $nocCode = (string) ($nocMatches[0]['code'] ?? '');
+
+    // Must have a BC location with a city
     $city = '';
     $locations = $job['jobLocations'] ?? [];
     if (!empty($locations)) {
-        $loc = null;
         foreach ($locations as $candidate) {
-            if (strcasecmp($candidate['state'] ?? '', 'British Columbia') === 0) {
-                $loc = $candidate;
+            if (strcasecmp($candidate['state'] ?? '', 'British Columbia') === 0 && !empty($candidate['city'])) {
+                $city = trim($candidate['city'] . ', ' . ($candidate['state'] ?? ''), ', ');
                 break;
             }
         }
-        $loc ??= $locations[0];
-        $city = trim(($loc['city'] ?? '') . ', ' . ($loc['state'] ?? ''), ', ');
+        if ($city === '') {
+            $loc = $locations[0];
+            $city = trim(($loc['city'] ?? '') . ', ' . ($loc['state'] ?? ''), ', ');
+        }
+    }
+    if ($city === '') {
+        $skipped++;
+        continue;
     }
 
+    // Must have an employer name with English characters
+    $employerName = '';
+    $company = $job['company'] ?? null;
+    if (is_array($company) && !empty($company['name'])) {
+        $rawName = trim($company['name']);
+        if (preg_match('/[a-zA-Z0-9]/', $rawName)) {
+            $employerName = $rawName;
+        }
+    }
+    if ($employerName === '') {
+        $skipped++;
+        continue;
+    }
+
+    $jobType = implode(', ', $job['employmentType'] ?? []);
     $url = $job['url'] ?? '';
-
-    $nocCode = '';
-    $nocMatches = $job['nocMatches'] ?? [];
-    if (!empty($nocMatches)) {
-        usort($nocMatches, fn($a, $b) => ($b['score'] ?? 0) <=> ($a['score'] ?? 0));
-        $nocCode = (string) ($nocMatches[0]['code'] ?? '');
-    }
-
     $education = resolveEducation($job);
 
     fputcsv($fp, [$id, $title, $jobType, $city, $url, $nocCode, $education]);
@@ -82,7 +129,7 @@ foreach ($api->fetchAllJobs($config->pageSize) as $job) {
 }
 
 fclose($fp);
-$logger->info("Report complete: {$count} jobs written to {$outputPath}");
+$logger->info("Report complete: {$count} jobs written, {$skipped} skipped → {$outputPath}");
 
 function resolveEducation(array $job): string
 {

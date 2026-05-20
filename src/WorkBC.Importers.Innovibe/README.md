@@ -93,7 +93,16 @@ php src/import.php --bulk   # bulk
 
 ## CSV Data Report
 
-`report.php` fetches all active jobs from the Innovibe API and writes a CSV for data verification. No database access is required — it reads directly from the API.
+`report.php` fetches jobs from the Innovibe API and applies the same filters as the UI/indexer pipeline, so the CSV count matches the public job board. No database access required.
+
+**Filters applied** (mirrors importer + indexer):
+- Non-expired only (`includeExpired=false`, plus client-side `dateValidThrough` or `updatedAt + 30 days` check)
+- British Columbia only
+- Must have salary data
+- Must have at least one NOC match
+- Must have a location with a city
+- Must have an employer name
+- Must have a title
 
 **Columns:** JobID, Job Title, Job Type, Location, URL, NOC Code, Education
 
