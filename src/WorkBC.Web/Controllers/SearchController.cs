@@ -101,7 +101,16 @@ namespace WorkBC.Web.Controllers
             // source, return NJB (federal) jobs first and only fall back to external jobs
             // if no NJB jobs match. SearchJobSource "0" / null / empty all mean "any source".
             bool noSourcePinned = string.IsNullOrEmpty(filters.SearchJobSource) || filters.SearchJobSource == "0";
-            bool runNjbFirst = filters.SearchNjbJobsFirst && noSourcePinned;
+
+            // Profile-page "Recent Jobs" sidebars (Career Profiles, Career Trek video pages, etc.)
+            // so the AC holds even when the caller (e.g. Kentico) didn't set the flag.
+            bool hasNocFilter = !string.IsNullOrEmpty(filters.SearchNocField)
+                || !string.IsNullOrEmpty(filters.NocCode);
+            bool looksLikeProfileSidebar = hasNocFilter
+                && filters.PageSize > 0
+                && filters.PageSize <= 10;
+
+            bool runNjbFirst = (filters.SearchNjbJobsFirst || looksLikeProfileSidebar) && noSourcePinned;
 
             // When sorting by Relevance with no source pinned, guarantee at least 40%
             // federal (NJB) jobs per page by interleaving two relevance-sorted streams.
@@ -403,12 +412,10 @@ namespace WorkBC.Web.Controllers
                 PageNumber = pageNumber
             };
 
-            Task<ElasticSearchResponse> fedTask = federalQuery.GetSearchResults(index: index);
-            Task<ElasticSearchResponse> extTask = externalQuery.GetSearchResults(index: index);
-            await Task.WhenAll(fedTask, extTask);
-
-            ElasticSearchResponse fedResults = fedTask.Result;
-            ElasticSearchResponse extResults = extTask.Result;
+            // Run sequentially — both queries call _geocodingService.GetLocation()
+            // which uses DbContext, and DbContext is not thread-safe.
+            ElasticSearchResponse fedResults = await federalQuery.GetSearchResults(index: index);
+            ElasticSearchResponse extResults = await externalQuery.GetSearchResults(index: index);
 
             List<Hit> fedHits = fedResults?.Hits?.HitsHits ?? new List<Hit>();
             List<Hit> extHits = extResults?.Hits?.HitsHits ?? new List<Hit>();

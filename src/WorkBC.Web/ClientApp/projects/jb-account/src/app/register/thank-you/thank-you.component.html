@@ -9,7 +9,7 @@
 
   <div class="form-group">
     <div class="container">
-      <a class="btn resend-register-link-btn bg-blue" (click)="resendEmail()">
+      <a class="btn resend-register-link-btn bg-blue" tabindex="0" role="button" (click)="resendEmail()" (keydown.enter)="resendEmail()" (keydown.space)="resendEmail()">
         Resend activation email
         <lib-svg-icon icon="chev-white" width="25px" height="25px" class="pull-right"></lib-svg-icon>
       </a>

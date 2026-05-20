@@ -12,7 +12,8 @@ WorkBC.Importers.Innovibe/
 │   ├── Api/InnovibeApiClient.php       # Cursor-paginated API client
 │   ├── Config/AppConfig.php            # Env-var configuration
 │   ├── Service/JobImportService.php    # Import / upsert / purge logic
-│   └── import.php                      # CLI entry point
+│   ├── import.php                      # CLI entry point
+│   └── report.php                      # CSV report generator
 ├── Dockerfile                          # Multi-stage Alpine build
 ├── .dockerignore
 ├── .env.example                        # Template — copy to .env
@@ -88,4 +89,33 @@ cp .env.example .env
 # Fill in .env
 php src/import.php          # daily
 php src/import.php --bulk   # bulk
+```
+
+## CSV Data Report
+
+`report.php` fetches jobs from the Innovibe API and applies the same filters as the UI/indexer pipeline, so the CSV count matches the public job board. No database access required.
+
+**Filters applied** (mirrors importer + indexer):
+- Non-expired only (`includeExpired=false`, plus client-side `dateValidThrough` or `updatedAt + 30 days` check)
+- British Columbia only
+- Must have salary data
+- Must have at least one NOC match
+- Must have a location with a city
+- Must have an employer name
+- Must have a title
+
+**Columns:** JobID, Job Title, Job Type, Location, URL, NOC Code, Education
+
+```bash
+# Default output: innovibe-report.csv in the project root
+php src/report.php
+
+# Custom output path
+php src/report.php /tmp/innovibe-jobs.csv
+```
+
+Docker:
+
+```bash
+docker run --rm --env-file .env -v "$(pwd):/out" workbc/importers-innovibe:latest php src/report.php /out/innovibe-report.csv
 ```
