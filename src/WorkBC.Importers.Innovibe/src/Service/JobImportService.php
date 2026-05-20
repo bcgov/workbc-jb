@@ -69,6 +69,8 @@ final class JobImportService
         $chk     = $this->db->prepare('SELECT "ApiDate" FROM "ImportedJobsWanted" WHERE "JobId" = ?');
         $del     = $this->db->prepare('SELECT 1 FROM "DeletedJobs" WHERE "JobId" = ? LIMIT 1');
         $hashChk = $this->db->prepare('SELECT 1 FROM "ImportedJobsWanted" WHERE "HashId" = ? LIMIT 1');
+        // If a previously-expired job re-appears in the API, drop its stale
+        $unexpire = $this->db->prepare('DELETE FROM "ExpiredJobs" WHERE "JobId" = ?');
 
         $upd = $this->db->prepare('
             UPDATE "ImportedJobsWanted" SET
@@ -140,6 +142,7 @@ final class JobImportService
             if ($row) {
                 if (($row['ApiDate'] ?? '') !== $apiDate) {
                     $upd->execute([$json, $apiDate, $hashId, $id]);
+                    $unexpire->execute([$id]);
                     $this->updated++;
                     $progress .= 'U';
                 } else {
@@ -152,6 +155,7 @@ final class JobImportService
                     $jidIns->execute([$id, self::JOB_SOURCE]);
                 }
                 $ins->execute([$id, $json, $apiDate, $hashId]);
+                $unexpire->execute([$id]);
                 $this->inserted++;
                 $progress .= 'I';
             }
@@ -317,7 +321,13 @@ final class JobImportService
             INNER JOIN "Jobs" j ON j."JobId" = ij."JobId"
             WHERE ij."IsFederalOrWorkBc" = FALSE
               AND NOT EXISTS (SELECT 1 FROM "DeletedJobs" d WHERE d."JobId" = ij."JobId")
-              AND (j."DateLastImported" <> ij."DateLastImported" OR j."IsActive" = FALSE)
+              AND (
+                   j."DateLastImported" <> ij."DateLastImported"
+                OR j."IsActive" = FALSE
+                OR j."EmployerName" IS NULL OR j."EmployerName" = \'\'
+                OR j."City"         IS NULL OR j."City"         = \'\'
+                OR j."LocationId" = 0
+              )
         ')->fetchAll();
 
         $this->log->info(count($rows) . ' jobs found to update');

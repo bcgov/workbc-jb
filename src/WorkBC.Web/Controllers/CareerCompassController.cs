@@ -46,13 +46,13 @@ namespace WorkBC.Web.Controllers
                 return BadRequest("Region not found");
             }
 
-            // Create a search filter to get the newest 50 jobs for a specific Region 
+            // Create a search filter to get the newest 50 jobs for a specific Region
             var filters = new JobSearchFilters
             {
                 Page = 1,
                 PageSize = 50,
                 SortOrder = 1, // Posted date newest first
-                SearchJobSource = "1", // Federal jobs only
+                SearchJobSource = "1", // NJB/Federal jobs first
                 SearchLocations = new List<LocationField>
                 {
                     new LocationField
@@ -64,8 +64,15 @@ namespace WorkBC.Web.Controllers
                 }
             };
 
-            // run the query
+            // First try NJB (federal) jobs only
             Source[] jobs = await RunElasticQuery(filters);
+
+            // Fall back to external jobs if no NJB jobs are available
+            if (!jobs.Any())
+            {
+                filters.SearchJobSource = "2"; // External jobs only
+                jobs = await RunElasticQuery(filters);
+            }
 
             if (!jobs.Any())
             {

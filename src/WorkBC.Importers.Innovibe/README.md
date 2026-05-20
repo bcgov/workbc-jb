@@ -224,3 +224,31 @@ Elasticsearch reflects the new staging rows — that's a separate
 | `Expired-jobs API call failed: 401` | Same as the listing endpoint — check `API_KEY`. The importer continues through the SQL stages even if expiry fails, so partial recovery is automatic. |
 | Bulk run runs out of memory | `--bulk` returns the entire current catalog. The image's `php.ini` sets `memory_limit = 512M` which has been enough so far; bump via `php -d memory_limit=1G src/import.php --bulk` for larger one-off runs. |
 | Jobs reappear immediately after expiring | The Innovibe expiry feed has a 6-hour refresh window; if the publisher un-expires a job (rare), the next run will reinsert it. Expected behavior. |
+## CSV Data Report
+
+`report.php` fetches jobs from the Innovibe API and applies the same filters as the UI/indexer pipeline, so the CSV count matches the public job board. No database access required.
+
+**Filters applied** (mirrors importer + indexer):
+- Non-expired only (`includeExpired=false`, plus client-side `dateValidThrough` or `updatedAt + 30 days` check)
+- British Columbia only
+- Must have salary data
+- Must have at least one NOC match
+- Must have a location with a city
+- Must have an employer name
+- Must have a title
+
+**Columns:** JobID, Job Title, Job Type, Location, URL, NOC Code, Education
+
+```bash
+# Default output: innovibe-report.csv in the project root
+php src/report.php
+
+# Custom output path
+php src/report.php /tmp/innovibe-jobs.csv
+```
+
+Docker:
+
+```bash
+docker run --rm --env-file .env -v "$(pwd):/out" workbc/importers-innovibe:latest php src/report.php /out/innovibe-report.csv
+```
