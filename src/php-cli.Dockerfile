@@ -28,7 +28,7 @@ RUN apk add --no-cache bash postgresql-client postgresql-libs libxml2 tzdata \
 COPY --from=federal-app  /app /app/workbc-importers-federal-v2
 COPY --from=innovibe-app /app /app/workbc-importers-innovibe
 
-COPY WorkBC.Importers.Federal.V2/php.ini /usr/local/etc/php/conf.d/zz-workbc.ini
+COPY WorkBC.Importers.Federal.V2/php.ini /usr/local/etc/php/conf.d/php.ini
 
 RUN cat > /root/.bashrc <<'EOF'
 cat <<'B'

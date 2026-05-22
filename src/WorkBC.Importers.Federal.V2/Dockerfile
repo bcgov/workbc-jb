@@ -24,5 +24,6 @@ RUN apk add --no-cache postgresql-libs libxml2 tzdata \
 WORKDIR /app
 COPY --from=build /app/vendor vendor/
 COPY --from=build /app/src src/
+COPY php.ini /usr/local/etc/php/conf.d/php.ini
 
 ENTRYPOINT ["php", "src/import.php"]

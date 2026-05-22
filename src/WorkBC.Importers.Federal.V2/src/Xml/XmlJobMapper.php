@@ -81,6 +81,7 @@ final class XmlJobMapper
     /** @var array<string, true>|null  lower-case city names that appear in DuplicateCities */
     private ?array $duplicateCityNames = null;
     private ?float $minimumWage = null;
+    private \PDOStatement $geocodingStmt;
 
     /**
      * Mirrors WorkBC.ElasticSearch.Indexing.XmlParsingHelpers.XmlManualOverRides.
@@ -254,8 +255,6 @@ final class XmlJobMapper
         $row = $this->geocodingStmt->fetch();
         return $row === false ? null : $row;
     }
-
-    private \PDOStatement $geocodingStmt;
 
     /**
      * Mirrors the C# `XmlParsingServiceFederal` postal-code-prefix → province

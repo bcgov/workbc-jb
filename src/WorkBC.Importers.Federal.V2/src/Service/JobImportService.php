@@ -251,7 +251,8 @@ final class JobImportService
                     $existingDate = $now;
                 }
 
-                if ($displayUntil === null || strtotime($displayUntil) === false || strtotime($displayUntil) <= time()) {
+                $ts = $displayUntil !== null ? strtotime($displayUntil) : false;
+                if ($ts === false || $ts <= time()) {
                     $this->progress('X');
                     $this->alreadyExpired++;
                     continue;
@@ -481,6 +482,7 @@ final class JobImportService
             if ($mapped === null) {
                 $skippedUnmapped++;
                 $this->progress('N');
+                $this->log->debug("Job {$row['JobId']} could not be mapped from XML — skipping");
                 continue;
             }
 
@@ -502,13 +504,13 @@ final class JobImportService
                     $mapped['expireDate'],
                     $row['DateFirstImported'],
                     $row['DateLastImported'],
-                    $mapped['fullTime'] ? 'true' : 'false',
-                    $mapped['partTime'] ? 'true' : 'false',
-                    $mapped['leadingToFullTime'] ? 'true' : 'false',
-                    $mapped['permanent'] ? 'true' : 'false',
-                    $mapped['temporary'] ? 'true' : 'false',
-                    $mapped['casual'] ? 'true' : 'false',
-                    $mapped['seasonal'] ? 'true' : 'false',
+                    $mapped['fullTime'],
+                    $mapped['partTime'],
+                    $mapped['leadingToFullTime'],
+                    $mapped['permanent'],
+                    $mapped['temporary'],
+                    $mapped['casual'],
+                    $mapped['seasonal'],
                     self::JOB_SOURCE_FEDERAL,
                     'Federal Job Bank',
                     '',
@@ -593,6 +595,7 @@ final class JobImportService
         foreach ($rows as $row) {
             $mapped = $this->mapper->map((string) $row['JobPostEnglish']);
             if ($mapped === null) {
+                $this->log->debug("Job {$row['JobId']} could not be mapped from XML — skipping update");
                 continue;
             }
 
@@ -616,13 +619,13 @@ final class JobImportService
                     $mapped['expireDate'],
                     $lastUpdated,
                     $row['DateLastImported'],
-                    $mapped['fullTime'] ? 'true' : 'false',
-                    $mapped['partTime'] ? 'true' : 'false',
-                    $mapped['leadingToFullTime'] ? 'true' : 'false',
-                    $mapped['permanent'] ? 'true' : 'false',
-                    $mapped['temporary'] ? 'true' : 'false',
-                    $mapped['casual'] ? 'true' : 'false',
-                    $mapped['seasonal'] ? 'true' : 'false',
+                    $mapped['fullTime'],
+                    $mapped['partTime'],
+                    $mapped['leadingToFullTime'],
+                    $mapped['permanent'],
+                    $mapped['temporary'],
+                    $mapped['casual'],
+                    $mapped['seasonal'],
                     $mapped['locationId'],
                     $row['JobId'],
                 ]);
