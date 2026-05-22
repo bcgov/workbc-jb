@@ -637,31 +637,33 @@ final class XmlJobMapper
     }
 
     /**
-     * @return array{0:bool,1:bool,2:bool} fullTime, partTime, leadingToFullTime
+     * @return array{0:string,1:string,2:string} fullTime, partTime, leadingToFullTime
+     * Returns 't'/'f' strings because PDO casts PHP false to "" which Postgres rejects.
      */
     private function resolveWorkPeriod(string $code): array
     {
         $code = strtoupper(trim($code));
         return match ($code) {
-            'F'     => [true, false, false],
-            'P'     => [false, true, false],
-            'L'     => [false, false, true],
-            default => [false, false, false],
+            'F'     => ['t', 'f', 'f'],
+            'P'     => ['f', 't', 'f'],
+            'L'     => ['f', 'f', 't'],
+            default => ['f', 'f', 'f'],
         };
     }
 
     /**
-     * @return array{0:bool,1:bool,2:bool,3:bool} permanent, temporary, casual, seasonal
+     * @return array{0:string,1:string,2:string,3:string} permanent, temporary, casual, seasonal
+     * Returns 't'/'f' strings because PDO casts PHP false to "" which Postgres rejects.
      */
     private function resolveWorkTerm(string $code): array
     {
         $code = strtoupper(trim($code));
         return match ($code) {
-            'P'     => [true, false, false, false],
-            'T'     => [false, true, false, false],
-            'C'     => [false, false, true, false],
-            'S'     => [false, false, false, true],
-            default => [false, false, false, false],
+            'P'     => ['t', 'f', 'f', 'f'],
+            'T'     => ['f', 't', 'f', 'f'],
+            'C'     => ['f', 'f', 't', 'f'],
+            'S'     => ['f', 'f', 'f', 't'],
+            default => ['f', 'f', 'f', 'f'],
         };
     }
 
