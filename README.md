@@ -28,7 +28,25 @@ See [Linux_Setup.md](docs/Linux_Setup.md) for instructions related to Linux deve
 
 ### PHP CLI Container
 
-The [php-cli.Dockerfile](src/php-cli.Dockerfile) builds a combined shell container with both the Federal V2 and Innovibe PHP importers. It provides an interactive bash session for running either importer manually or connecting to Postgres. ECR image: `jb-cli-innovibe`.
+The [php-cli.Dockerfile](src/php-cli.Dockerfile) builds a combined shell container with **both** the Federal V2 and Innovibe PHP importers. ECR image: `jb-cli-innovibe` (name is historical — the container includes both importers).
+
+Available commands inside the container:
+
+```bash
+# Federal V2 (jobbank.gc.ca)
+cd /app/workbc-importers-federal-v2
+php src/import.php                  # daily diff import
+php src/import.php --reimport       # re-sync staging → Jobs only
+php src/import.php --maxjobs=50     # bounded test run
+
+# Innovibe
+cd /app/workbc-importers-innovibe
+php src/import.php                  # yesterday + today
+php src/import.php --bulk           # full re-import
+
+# Postgres
+psql "host=$DB_HOST port=$DB_PORT user=$DB_USER dbname=$DB_NAME"
+```
 
 ## Other Projects
 
