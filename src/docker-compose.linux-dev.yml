@@ -18,12 +18,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-  importers-federal:
-    volumes:
-      - ./WorkBC.Importers.Federal/appsettings.linux.json:/app/appsettings.json
-    depends_on:
-      postgres:
-        condition: service_healthy
   importers-federal-v2:
     depends_on:
       postgres:
@@ -62,7 +56,6 @@ services:
         condition: service_healthy
   dotnet-cli:
     volumes:
-      - ./WorkBC.Importers.Federal/appsettings.linux.json:/app/workbc-importers-federal/appsettings.json
       - ./WorkBC.Indexers.Wanted/appsettings.linux.json:/app/workbc-indexers-wanted/appsettings.json
       - ./WorkBC.Indexers.Federal/appsettings.linux.json:/app/workbc-indexers-federal/appsettings.json
       - ./WorkBC.Notifications.JobAlerts/appsettings.linux.json:/app/workbc-notifications-jobalerts/appsettings.json
