@@ -48,6 +48,13 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
             try
             {
+                // Guard against null or empty XML
+                if (string.IsNullOrWhiteSpace(federalXml))
+                {
+                    Console.Write("[Empty XML]-");
+                    return null;
+                }
+
                 //read XML to XmlDocument
                 var jobXml = new XmlDocument();
 
