@@ -170,4 +170,3 @@ jobs:
       - name: Push Innovibe Importer docker image
         run: |
           docker push ${{ secrets.AWS_ECR_URI }}/jb-importers-innovibe:${{ github.sha }}        
-
