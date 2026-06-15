@@ -816,7 +816,7 @@ export class FilterService extends BaseService {
     this.update(mainFilters);
   }
 
-  removeAllTags() {
+  removeAllTags(silent = false) {
     //retrieve all current filters and remove all tags
     const mainFilters = this.currentFilter;
 
@@ -857,7 +857,12 @@ export class FilterService extends BaseService {
     //reset pagination
     mainFilters.pagination.currentPage = 1;
 
-    this.update(mainFilters);
+    // When called as part of restoring a bookmarkable URL, suppress this emission
+    // so we don't fire an extra (unfiltered) search before the filters are
+    // re-applied. setBookmarkableUrl() emits once via setFilters() afterwards.
+    if (!silent) {
+      this.update(mainFilters);
+    }
   }
 
   getScrollElement(): HTMLElement {
@@ -1370,13 +1375,17 @@ export class FilterService extends BaseService {
   }
 
   setBookmarkableUrl(params: Params, inJobAlert = false, path = ''): void {
-    //always clear the state before we set the bookmarks else the state will overwrite it
-    this.removeAllTags();
+    const hasParams =
+      params && !(Object.keys(params).length === 0 && params.constructor === Object);
+
+    //always clear the state before we set the bookmarks else the state will overwrite it.
+    //when params are present we suppress this emission (silent) so we don't fire an extra
+    //unfiltered search before the filters are re-applied - setFilters() emits the single
+    //search below once the full filter state has been restored.
+    this.removeAllTags(hasParams);
 
     if (params) {
-      if (
-        !(Object.keys(params).length === 0 && params.constructor === Object)
-      ) {
+      if (hasParams) {
         //loop through key/values
         for (const key in params) {
           //read value

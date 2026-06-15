@@ -4,6 +4,8 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
+import { switchMap } from 'rxjs/operators';
+
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { JobAlertComponent } from './job-alert/job-alert.component';
 import { MarkerClusterer, SuperClusterAlgorithm, Cluster, ClusterStats, Renderer } from '@googlemaps/markerclusterer';
@@ -174,40 +176,57 @@ export class ResultsComponent implements OnInit {
       this.filterService.setBookmarkableUrl(params);
     });
 
-    this.filterService.mainFilterModels$.subscribe(filter => {
-      this.loading = true;
+    // Use switchMap so that when the filter model changes again (e.g. during
+    // bookmarkable-URL restore on page load, which emits an empty model and then
+    // the fully-restored one), any in-flight search is cancelled and only the
+    // latest one updates the results. Without this, a plain nested subscribe
+    // leaves two uncancelled requests racing, and a slow unfiltered response can
+    // land after the filtered one - showing all jobs while the filter tags
+    // remain displayed.
+    this.filterService.mainFilterModels$.pipe(
+      switchMap(filter => {
+        this.loading = true;
 
-      //set local variable (for use later in maps)
-      this.mainFilterModel = filter;
+        //set local variable (for use later in maps)
+        this.mainFilterModel = filter;
 
-      //pass the filter to the results service
-      this.dataService.getResults(filter).subscribe(results => {
-
-        this.results = this.getJobs(results.result);
-
-        //total results
-        this.resultsCount = results.count;
-
-        // if the pagination is messed up then go back to page 1
-        if (this.results.length === 0 && results.count !== 0) {
-          this.mainFilterModel.pagination.currentPage = 1;
-          this.filterService.setFilters();
+        //refresh Google Maps results
+        if (this.showMap) {
+          //only refresh google map results if the map is currently showing,
+          //else this is not necessary as this will happen automatically when the map gets opened.
+          this.renderMap(true);
         }
 
-        //paging
-        this.paginationElement.setResultCount(this.resultsCount);
+        //pass the filter to the results service
+        return this.dataService.getResults(filter);
+      })
+    ).subscribe(results => {
 
-        this.urlParams = this.filterService.getUrlParams(this.location.path());
+      this.results = this.getJobs(results.result);
 
-        this.loading = false;
-      });
+      //total results
+      this.resultsCount = results.count;
 
-      //refresh Google Maps results
-      if (this.showMap) {
-        //only refresh google map results if the map is currently showing,
-        //else this is not necessary as this will happen automatically when the map gets opened.
-        this.renderMap(true);
+      // If the requested page is now out of range for the returned count, the
+      // page slice on screen no longer agrees with the count (e.g. a filter was
+      // applied while on page 2: the count drops but a stale/over-range page
+      // would otherwise keep showing rows beyond the new total). Clamp to the
+      // last valid page and re-fetch so the listed jobs always match the count.
+      const pageSize = +this.mainFilterModel.pagination.resultsPerPage || 20;
+      const currentPage = +this.mainFilterModel.pagination.currentPage || 1;
+      const lastValidPage = results.count > 0 ? Math.ceil(results.count / pageSize) : 1;
+      if (currentPage > lastValidPage) {
+        this.mainFilterModel.pagination.currentPage = lastValidPage;
+        this.filterService.setFilters();
+        return;
       }
+
+      //paging
+      this.paginationElement.setResultCount(this.resultsCount);
+
+      this.urlParams = this.filterService.getUrlParams(this.location.path());
+
+      this.loading = false;
     });
   }
 
