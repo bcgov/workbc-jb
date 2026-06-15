@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -163,7 +163,7 @@ namespace WorkBC.ElasticSearch.Search.Queries
             switch (DateSearchType)
             {
                 case DateType.DATE_RANGE:
-                    jsonDateFilter = "{ \"range\": { \"DatePosted\": { \"gte\": \"" + StartDate + "\", \"lte\": \"" + EndDate + "\", \"time_zone\": \"America/Vancouver\" } } }";
+                    jsonDateFilter = "{ \"range\": { \"DatePosted\": { \"gte\": \"" + StartDate + "\", \"lte\": \"" + EndDate + "\" } } }";
                     filterGroups.Add(jsonDateFilter);
                     break;
                 case DateType.PAST_THREE_DAYS:
