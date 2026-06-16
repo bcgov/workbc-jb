@@ -252,17 +252,12 @@
 
   // Draw the keyboard-focus indicator on the visible .checkbox-icons overlay.
   // The real <input> is hidden behind the SVG icons (svgIcon.component.scss),
-  // and the old `-webkit-focus-ring-color` value was dropped by Firefox,
-  // leaving identify/terms checkboxes with no visible focus there. A solid
-  // 2px brand-blue outline (#234075 ~9:1 on the white form) meets WCAG 1.4.11
-  // (3:1) and renders in every browser.
+  // and the old `-webkit-focus-ring-color` value was dropped by Firefox
   input[type=checkbox]:focus + .checkbox-icons,
   input[type=checkbox]:focus-visible + .checkbox-icons {
     outline: 2px solid #234075;
     outline-offset: 2px;
     border-radius: 2px;
-    // Overlay sits at z-index:-1 (svgIcon.component.scss); lift it while focused
-    // so the outline can't be clipped behind sibling content.
     z-index: 0;
   }
 }
