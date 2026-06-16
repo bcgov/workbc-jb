@@ -4,6 +4,8 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
+import { switchMap } from 'rxjs/operators';
+
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { JobAlertComponent } from './job-alert/job-alert.component';
 import { MarkerClusterer, SuperClusterAlgorithm, Cluster, ClusterStats, Renderer } from '@googlemaps/markerclusterer';
@@ -174,40 +176,48 @@ export class ResultsComponent implements OnInit {
       this.filterService.setBookmarkableUrl(params);
     });
 
-    this.filterService.mainFilterModels$.subscribe(filter => {
-      this.loading = true;
+    // switchMap cancels any in-flight search when the filter model changes again,
+    // so a slow superseded response can't override the latest results.
+    this.filterService.mainFilterModels$.pipe(
+      switchMap(filter => {
+        this.loading = true;
 
-      //set local variable (for use later in maps)
-      this.mainFilterModel = filter;
+        //set local variable (for use later in maps)
+        this.mainFilterModel = filter;
 
-      //pass the filter to the results service
-      this.dataService.getResults(filter).subscribe(results => {
-
-        this.results = this.getJobs(results.result);
-
-        //total results
-        this.resultsCount = results.count;
-
-        // if the pagination is messed up then go back to page 1
-        if (this.results.length === 0 && results.count !== 0) {
-          this.mainFilterModel.pagination.currentPage = 1;
-          this.filterService.setFilters();
+        //refresh Google Maps results
+        if (this.showMap) {
+          //only refresh google map results if the map is currently showing,
+          //else this is not necessary as this will happen automatically when the map gets opened.
+          this.renderMap(true);
         }
 
-        //paging
-        this.paginationElement.setResultCount(this.resultsCount);
+        //pass the filter to the results service
+        return this.dataService.getResults(filter);
+      })
+    ).subscribe(results => {
 
-        this.urlParams = this.filterService.getUrlParams(this.location.path());
+      this.results = this.getJobs(results.result);
 
-        this.loading = false;
-      });
+      //total results
+      this.resultsCount = results.count;
 
-      //refresh Google Maps results
-      if (this.showMap) {
-        //only refresh google map results if the map is currently showing,
-        //else this is not necessary as this will happen automatically when the map gets opened.
-        this.renderMap(true);
+      // Clamp an out-of-range page to the last valid one so listed jobs match the count.
+      const pageSize = +this.mainFilterModel.pagination.resultsPerPage || 20;
+      const currentPage = +this.mainFilterModel.pagination.currentPage || 1;
+      const lastValidPage = results.count > 0 ? Math.ceil(results.count / pageSize) : 1;
+      if (currentPage > lastValidPage) {
+        this.mainFilterModel.pagination.currentPage = lastValidPage;
+        this.filterService.setFilters();
+        return;
       }
+
+      //paging
+      this.paginationElement.setResultCount(this.resultsCount);
+
+      this.urlParams = this.filterService.getUrlParams(this.location.path());
+
+      this.loading = false;
     });
   }
 
