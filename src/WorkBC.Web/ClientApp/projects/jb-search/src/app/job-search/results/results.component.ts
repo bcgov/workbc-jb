@@ -176,13 +176,8 @@ export class ResultsComponent implements OnInit {
       this.filterService.setBookmarkableUrl(params);
     });
 
-    // Use switchMap so that when the filter model changes again (e.g. during
-    // bookmarkable-URL restore on page load, which emits an empty model and then
-    // the fully-restored one), any in-flight search is cancelled and only the
-    // latest one updates the results. Without this, a plain nested subscribe
-    // leaves two uncancelled requests racing, and a slow unfiltered response can
-    // land after the filtered one - showing all jobs while the filter tags
-    // remain displayed.
+    // switchMap cancels any in-flight search when the filter model changes again,
+    // so a slow superseded response can't override the latest results.
     this.filterService.mainFilterModels$.pipe(
       switchMap(filter => {
         this.loading = true;
@@ -207,11 +202,7 @@ export class ResultsComponent implements OnInit {
       //total results
       this.resultsCount = results.count;
 
-      // If the requested page is now out of range for the returned count, the
-      // page slice on screen no longer agrees with the count (e.g. a filter was
-      // applied while on page 2: the count drops but a stale/over-range page
-      // would otherwise keep showing rows beyond the new total). Clamp to the
-      // last valid page and re-fetch so the listed jobs always match the count.
+      // Clamp an out-of-range page to the last valid one so listed jobs match the count.
       const pageSize = +this.mainFilterModel.pagination.resultsPerPage || 20;
       const currentPage = +this.mainFilterModel.pagination.currentPage || 1;
       const lastValidPage = results.count > 0 ? Math.ceil(results.count / pageSize) : 1;

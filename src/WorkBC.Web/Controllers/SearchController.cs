@@ -380,16 +380,10 @@ namespace WorkBC.Web.Controllers
         }
 
         /// <summary>
-        ///     Run two relevance queries (federal-only and external-only) and interleave the
-        ///     results so each page contains at least 40% federal jobs while preserving relevance
-        ///     order within each stream.
-        ///
-        ///     Paging strategy: the interleave order is a deterministic function of the two
-        ///     relevance-sorted streams, so we fetch enough rows from each source to cover
-        ///     everything consumed up to AND including the requested page, rebuild the global
-        ///     interleave from row 0, then slice out the requested page. This keeps page
-        ///     boundaries consistent (no duplicates, no skipped rows) and naturally fills a full
-        ///     page from a single source when the other is empty (all-federal / all-external).
+        ///     Interleave federal-only and external-only relevance results so each page holds at
+        ///     least 40% federal jobs. Both streams are fetched from row 0 through the requested
+        ///     page, interleaved deterministically, then the page is sliced out — so pages never
+        ///     duplicate or skip rows, and one source fills a full page when the other is empty.
         /// </summary>
         private async Task<ElasticSearchResponse> GetFederalMixedResults(JobSearchFilters filters, string index)
         {
@@ -397,10 +391,6 @@ namespace WorkBC.Web.Controllers
 
             int pageSize = filters.PageSize > 0 ? filters.PageSize : 20;
             int pageNumber = filters.Page > 0 ? filters.Page : 1;
-
-            // Rows we must materialise to be able to slice the requested page. Fetch from row 0
-            // for both sources (Skip stays 0) and cap each fetch at the cumulative page end so
-            // either source alone can fill every page if the other is empty.
             int rowsThroughPage = pageSize * pageNumber;
 
             var federalQuery = new JobSearchQuery(_geocodingService, _configuration, filters)
@@ -419,8 +409,7 @@ namespace WorkBC.Web.Controllers
                 PageNumber = 1
             };
 
-            // Run sequentially — both queries call _geocodingService.GetLocation()
-            // which uses DbContext, and DbContext is not thread-safe.
+            // Sequential: both queries use the non-thread-safe DbContext via GetLocation().
             ElasticSearchResponse fedResults = await federalQuery.GetSearchResults(index: index);
             ElasticSearchResponse extResults = await externalQuery.GetSearchResults(index: index);
 
@@ -429,9 +418,6 @@ namespace WorkBC.Web.Controllers
             long fedTotal = fedResults?.Hits?.Total?.Value ?? 0;
             long extTotal = extResults?.Hits?.Total?.Value ?? 0;
 
-            // Build the global interleave from row 0 using a per-page slot allocation
-            // (federalShare of each page reserved for federal, padded from the other source
-            // when a stream runs short). Deterministic given the two ordered streams.
             int federalSlotsPerPage = (int)Math.Ceiling(pageSize * federalShare);
             var interleaved = new List<Hit>(fedHits.Count + extHits.Count);
             int fi = 0, ei = 0;
@@ -457,14 +443,12 @@ namespace WorkBC.Web.Controllers
                 }
             }
 
-            // Slice out the requested page.
             int skip = (pageNumber - 1) * pageSize;
             List<Hit> pageHits = skip < interleaved.Count
                 ? interleaved.GetRange(skip, Math.Min(pageSize, interleaved.Count - skip))
                 : new List<Hit>();
 
-            // Reuse whichever response object exists so we don't have to construct
-            // sealed/internal-ctor types (Hits, Total). Mutate its hits + total in place.
+            // Reuse an existing response to avoid constructing the sealed Hits/Total types.
             ElasticSearchResponse merge = fedResults ?? extResults;
             if (merge?.Hits != null)
             {
