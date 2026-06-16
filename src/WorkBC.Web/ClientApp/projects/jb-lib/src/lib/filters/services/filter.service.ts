@@ -857,9 +857,8 @@ export class FilterService extends BaseService {
     //reset pagination
     mainFilters.pagination.currentPage = 1;
 
-    // When called as part of restoring a bookmarkable URL, suppress this emission
-    // so we don't fire an extra (unfiltered) search before the filters are
-    // re-applied. setBookmarkableUrl() emits once via setFilters() afterwards.
+    // silent skips this emission during URL restore so we don't fire an extra
+    // unfiltered search before the filters are re-applied.
     if (!silent) {
       this.update(mainFilters);
     }
@@ -1378,10 +1377,8 @@ export class FilterService extends BaseService {
     const hasParams =
       params && !(Object.keys(params).length === 0 && params.constructor === Object);
 
-    //always clear the state before we set the bookmarks else the state will overwrite it.
-    //when params are present we suppress this emission (silent) so we don't fire an extra
-    //unfiltered search before the filters are re-applied - setFilters() emits the single
-    //search below once the full filter state has been restored.
+    //always clear the state before we set the bookmarks else the state will overwrite it
+    //(silent when params exist so setFilters() below fires the single restored search).
     this.removeAllTags(hasParams);
 
     if (params) {
