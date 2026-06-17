@@ -534,6 +534,14 @@ final class JobImportService
             $code = $nocMatches[0]['code'] ?? null;
             if ($code !== null) {
                 $candidate = (int) $code;
+                // NOC-387: consolidate the granular "Legislative and senior managers"
+                // unit groups 00011-00015 into 00018 (Senior managers - public and
+                // private sector) before validating. WorkBC standardizes on the
+                // consolidated 00018; the official 00011-00015 codes are not in
+                // NocCodes2021. Mirrors XmlParsingServiceFederal.cs (specialNocs).
+                if (in_array($candidate, [11, 12, 13, 14, 15], true)) {
+                    $candidate = 18;
+                }
                 if ($this->isValidNoc2021($candidate)) {
                     $nocCode2021 = $candidate;
                 }
