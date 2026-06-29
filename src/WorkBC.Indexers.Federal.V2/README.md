@@ -13,7 +13,7 @@ is `WorkBC.Importers.Federal.V2`. This project is a PHP rewrite of the legacy
 the federal indexing path.
 
 The Elasticsearch document shape is **functionally equivalent** to the .NET
-indexer: PascalCase field names exactly as defined by `resources/jobs_index.json`,
+indexer: PascalCase field names exactly as defined by `resources/jobs_index.json.template`,
 with null-valued fields omitted (mirrors Newtonsoft `NullValueHandling.Ignore`).
 
 ## Where it runs in production
@@ -44,10 +44,12 @@ WorkBC.Indexers.Federal.V2/
 │   ├── Service/FederalIndexService.php    # Orchestrator: index loop, clear-flag, purge, debug.
 │   ├── Service/IndexMaintenanceService.php# --reindex (drop+create+flag), --reopen.
 │   └── index.php                          # CLI entry point.
-├── resources/
-│   ├── jobs_index.json                    # ES index mapping (the output contract). ##SYNONYM## placeholder.
-│   ├── synonym_file.json                  # Production synonyms.
-│   └── synonym_predefined.json            # Inline synonyms (test).
+├── resources/                             # NOT valid JSON on their own — templates with a
+│   │                                      # ##SYNONYM## placeholder substituted at runtime
+│   │                                      # (the .template suffix keeps JSON validators quiet).
+│   ├── jobs_index.json.template           # ES index mapping (the output contract).
+│   ├── synonym_file.json.template         # Production synonyms (synonyms_path).
+│   └── synonym_predefined.json.template   # Inline synonyms (test).
 ├── Dockerfile                             # Multi-stage Alpine build (PHP 8.3 + pdo_pgsql + dom + simplexml).
 │                                          # Runs ENTRYPOINT ["php", "src/index.php"].
 ├── .env.example                           # Template — copy to .env.
@@ -127,7 +129,7 @@ This indexer does **not** create or alter tables.
 | Flag | Purpose |
 |---|---|
 | *(none)* | Index pending jobs, then purge. The daily cron path. |
-| `-r` / `--reindex` | Drop + recreate `jobs_en`/`jobs_fr` from `jobs_index.json`, flag all staging rows, then index (no purge). |
+| `-r` / `--reindex` | Drop + recreate `jobs_en`/`jobs_fr` from `jobs_index.json.template`, flag all staging rows, then index (no purge). |
 | `-o` / `--reopen` | Close + reopen both indexes to reload the synonym file. |
 | `-n` / `--noreindex` | Run maintenance only; skip the indexing loop (and purge). |
 | `-d` / `--debug` | Print the active-in-ES vs active-in-`Jobs` JobId diff and exit. |

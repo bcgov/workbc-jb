@@ -31,7 +31,7 @@ final class IndexMaintenanceService
     }
 
     /**
-     * Drop both indexes, recreate them from jobs_index.json, and flag every
+     * Drop both indexes, recreate them from jobs_index.json.template, and flag every
      * staging row (Wanted + Federal) for re-indexing.
      */
     public function reCreateIndex(): void

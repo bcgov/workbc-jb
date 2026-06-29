@@ -102,16 +102,22 @@ final class ElasticClient
     // ── Index maintenance ──────────────────────────────────────────
 
     /**
-     * Recreate an index from resources/jobs_index.json, substituting the
-     * ##SYNONYM## placeholder with the contents of synonym_file.json
-     * (production) or synonym_predefined.json (unit-test style).
+     * Recreate an index from resources/jobs_index.json.template, substituting
+     * the ##SYNONYM## placeholder with the contents of
+     * synonym_file.json.template (production) or
+     * synonym_predefined.json.template (unit-test style).
+     *
+     * These resources carry a ".template" suffix because they are NOT valid
+     * JSON on their own — the ##SYNONYM## placeholder (and the bare-entry
+     * synonym fragments) only become valid once substituted here. The suffix
+     * keeps JSON validators / IDEs from flagging them.
      */
     public function createIndex(string $index, bool $useSynonymFile = true): bool
     {
-        $structure = $this->readResource('jobs_index.json');
+        $structure = $this->readResource('jobs_index.json.template');
         $synonyms = $useSynonymFile
-            ? $this->readResource('synonym_file.json')
-            : $this->readResource('synonym_predefined.json');
+            ? $this->readResource('synonym_file.json.template')
+            : $this->readResource('synonym_predefined.json.template');
         $structure = str_replace('##SYNONYM##', $synonyms, $structure);
 
         try {
