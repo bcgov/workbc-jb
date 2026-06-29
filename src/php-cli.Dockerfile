@@ -26,6 +26,16 @@ RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-di
 COPY WorkBC.Indexers.Federal.V2/src/ src/
 COPY WorkBC.Indexers.Federal.V2/resources/ resources/
 
+FROM php:8.3-cli-alpine AS innovibe-indexer-app
+RUN apk add --no-cache postgresql-dev libxml2-dev autoconf gcc g++ make unzip \
+    && docker-php-ext-install pdo_pgsql dom simplexml
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+WORKDIR /app
+COPY WorkBC.Indexers.Innovibe.V2/composer.json ./
+RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-dist
+COPY WorkBC.Indexers.Innovibe.V2/src/ src/
+COPY WorkBC.Indexers.Innovibe.V2/resources/ resources/
+
 FROM php:8.3-cli-alpine
 RUN apk add --no-cache bash postgresql-client postgresql-libs libxml2 tzdata \
     && apk add --no-cache --virtual .bd postgresql-dev libxml2-dev autoconf gcc g++ make \
@@ -38,6 +48,7 @@ RUN apk add --no-cache bash postgresql-client postgresql-libs libxml2 tzdata \
 COPY --from=federal-app          /app /app/workbc-importers-federal-v2
 COPY --from=innovibe-app         /app /app/workbc-importers-innovibe
 COPY --from=federal-indexer-app  /app /app/workbc-indexers-federal-v2
+COPY --from=innovibe-indexer-app /app /app/workbc-indexers-innovibe-v2
 
 COPY WorkBC.Importers.Federal.V2/php.ini /usr/local/etc/php/conf.d/php.ini
 
@@ -45,7 +56,7 @@ RUN cat > /root/.bashrc <<'EOF'
 cat <<'B'
 ─────────────────────────────────────────────────────────────────────
   WorkBC PHP CLI  ·  PHP 8.3
-  Federal V2 + Innovibe importers + Federal indexer in one shell.
+  Federal V2 + Innovibe importers + Federal & Innovibe indexers in one shell.
 ─────────────────────────────────────────────────────────────────────
 
   Federal V2 importer:
@@ -64,6 +75,12 @@ cat <<'B'
     php src/index.php                   # index pending jobs + purge
     php src/index.php -r                # recreate indexes + reindex all
     php src/index.php -o                # close/reopen to reload synonyms
+    php src/index.php -d                # diff ES vs Jobs (debug)
+
+  Innovibe indexer (staging → Elasticsearch):
+    cd /app/workbc-indexers-innovibe-v2
+    php src/index.php                   # index pending jobs + purge
+    php src/index.php -r                # recreate indexes + reindex all
     php src/index.php -d                # diff ES vs Jobs (debug)
 
   After manually running an import you usually need to re-index.

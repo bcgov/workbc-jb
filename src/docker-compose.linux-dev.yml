@@ -40,6 +40,12 @@ services:
         condition: service_healthy
       elasticsearch:
         condition: service_healthy
+  indexers-innovibe-v2:
+    depends_on:
+      postgres:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
   indexers-wanted:
     volumes:
       - ./WorkBC.Indexers.Wanted/appsettings.linux.json:/app/appsettings.json
