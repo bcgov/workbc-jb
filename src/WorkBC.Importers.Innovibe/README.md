@@ -88,6 +88,17 @@ duplicate-hash check on `JobPostEnglish` makes re-runs safe.
 The console output uses single-character markers per job (`I`/`U`/`S`/`H`/`E`)
 for compact log lines.
 
+### NOC 2021 code handling
+
+The highest-scored `nocMatches[].code` is taken, then **validated against the
+`"NocCodes2021"` table**; codes not present become `NULL` (the `NocCodeId2021`
+FK is nullable). Before validation, NOC-387 consolidation applies: the granular
+"Legislative and senior managers" unit groups **00011–00015 are remapped to
+00018** (*Senior managers - public and private sector*), because WorkBC
+standardizes on the consolidated 00018 and the individual 00011–00015 codes are
+intentionally absent from `"NocCodes2021"`. This mirrors `specialNocs` in
+`WorkBC.ElasticSearch.Indexing/Services/XmlParsingServiceFederal.cs`.
+
 ## Database (existing schema — no migrations owned here)
 
 | Table | Purpose |
