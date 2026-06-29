@@ -50,7 +50,7 @@ namespace EFMigrationRunner
                         "Once you have corrected the data issue, you can run the migrations manually with the following command:");
 
                     logger.Information(
-                        @"E:\Scheduled Tasks\WorkBC.Indexers.Federal\WorkBC.Indexers.Federal.exe --migrate");
+                        "dotnet EFMigrationRunner.dll   (run from the dotnet-cli container at /app/efmigrationrunner)");
 
                     logger.Information(
                         "If you are on a government server, then your IDIR account must be a member of the db_owner role on the JobBoard database to run the migrations manually using this method.");

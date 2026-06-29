@@ -26,14 +26,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-  indexers-federal:
-    volumes:
-      - ./WorkBC.Indexers.Federal/appsettings.linux.json:/app/appsettings.json
-    depends_on:
-      postgres:
-        condition: service_healthy
-      elasticsearch:
-        condition: service_healthy
   indexers-federal-v2:
     depends_on:
       postgres:
@@ -41,14 +33,6 @@ services:
       elasticsearch:
         condition: service_healthy
   indexers-innovibe-v2:
-    depends_on:
-      postgres:
-        condition: service_healthy
-      elasticsearch:
-        condition: service_healthy
-  indexers-wanted:
-    volumes:
-      - ./WorkBC.Indexers.Wanted/appsettings.linux.json:/app/appsettings.json
     depends_on:
       postgres:
         condition: service_healthy
@@ -68,8 +52,6 @@ services:
         condition: service_healthy
   dotnet-cli:
     volumes:
-      - ./WorkBC.Indexers.Wanted/appsettings.linux.json:/app/workbc-indexers-wanted/appsettings.json
-      - ./WorkBC.Indexers.Federal/appsettings.linux.json:/app/workbc-indexers-federal/appsettings.json
       - ./WorkBC.Notifications.JobAlerts/appsettings.linux.json:/app/workbc-notifications-jobalerts/appsettings.json
       - ./EFMigrationRunner/appsettings.linux.json:/app/efmigrationrunner/appsettings.json
     depends_on:

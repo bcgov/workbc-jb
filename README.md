@@ -21,28 +21,40 @@ See [Linux_Setup.md](docs/Linux_Setup.md) for instructions related to Linux deve
 
 * [WorkBC.Importers.Federal](src/WorkBC.Importers.Federal) - *(Legacy .NET)* Imports job XML from https://jobbank.gc.ca/ into the ImportedJobsFederal table. Replaced by Federal V2.
 * [WorkBC.Importers.Federal.V2](src/WorkBC.Importers.Federal.V2) - *(PHP)* Replacement federal importer. Pulls job XML from jobbank.gc.ca, writes to ImportedJobsFederal and Jobs tables. Supports `--reimport` and `--maxjobs` flags. ECR image: `jb-importers-federal`.
-* [WorkBC.Indexers.Federal](src/WorkBC.Indexers.Federal) - Parses XML in the ImportedJobsFederal table and indexes jobs in Elasticsearch
+* [WorkBC.Indexers.Federal.V2](src/WorkBC.Indexers.Federal.V2) - *(PHP)* Reads the ImportedJobsFederal table and indexes jobs in Elasticsearch (`jobs_en` / `jobs_fr`). Supports `-r`/`-o`/`-n`/`-d`. ECR image: `jb-indexers-federal`.
 * [WorkBC.Importers.Innovibe](src/WorkBC.Importers.Innovibe) - *(PHP)* Imports jobs from the Innovibe API into the ImportedJobsWanted table and syncs to the Jobs table. Runs as a Docker container / Kubernetes CronJob. ECR image: `jb-importers-innovibe`.
-* [WorkBC.Indexers.Wanted](src/WorkBC.Indexers.Wanted) - Parses XML in the ImportedJobsWanted table and indexes jobs in Elasticsearch
+* [WorkBC.Indexers.Innovibe.V2](src/WorkBC.Indexers.Innovibe.V2) - *(PHP)* Reads the ImportedJobsWanted table (Innovibe JSON) and indexes jobs in Elasticsearch (`jobs_en`). Supports `-r`/`-o`/`-n`/`-d`. ECR image: `jb-indexers-wanted`.
 * [WorkBC.Notifications.JobAlerts](src/WorkBC.Notifications.JobAlerts) - Sends daily emails for job alerts
 
 ### PHP CLI Container
 
-The [php-cli.Dockerfile](src/php-cli.Dockerfile) builds a combined shell container with **both** the Federal V2 and Innovibe PHP importers. ECR image: `jb-cli-innovibe` (name is historical — the container includes both importers).
+The [php-cli.Dockerfile](src/php-cli.Dockerfile) builds a combined shell container with the Federal V2 and Innovibe PHP **importers** *and* the Federal and Innovibe PHP **indexers**. ECR image: `jb-cli-innovibe` (name is historical — the container includes all four).
 
 Available commands inside the container:
 
 ```bash
-# Federal V2 (jobbank.gc.ca)
+# Federal V2 importer (jobbank.gc.ca)
 cd /app/workbc-importers-federal-v2
 php src/import.php                  # daily diff import
 php src/import.php --reimport       # re-sync staging → Jobs only
 php src/import.php --maxjobs=50     # bounded test run
 
-# Innovibe
+# Innovibe importer
 cd /app/workbc-importers-innovibe
 php src/import.php                  # yesterday + today
 php src/import.php --bulk           # full re-import
+
+# Federal indexer (ImportedJobsFederal → Elasticsearch)
+cd /app/workbc-indexers-federal-v2
+php src/index.php                   # index pending jobs + purge
+php src/index.php -r                # recreate indexes + reindex all
+php src/index.php -d                # diff ES vs Jobs (debug)
+
+# Innovibe indexer (ImportedJobsWanted → Elasticsearch)
+cd /app/workbc-indexers-innovibe-v2
+php src/index.php                   # index pending jobs + purge
+php src/index.php -r                # recreate indexes + reindex all
+php src/index.php -d                # diff ES vs Jobs (debug)
 
 # Postgres
 psql "host=$DB_HOST port=$DB_PORT user=$DB_USER dbname=$DB_NAME"
