@@ -1,6 +1,6 @@
 # WorkBC.Indexers.Federal.V2
 
-PHP 8.3 indexer that reads federal job postings from the `"ImportedJobsFederal"`
+PHP 8.3 indeexer that reads federal job postings from the `"ImportedJobsFederal"`
 staging table and writes the corresponding documents into Elasticsearch
 (`jobs_en` / `jobs_fr`). Packaged as a Docker image and scheduled via a
 Kubernetes CronJob.
