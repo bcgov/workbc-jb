@@ -65,14 +65,6 @@ services:
         environment:
             - DB_HOST=postgres
             - DB_NAME=jobboard
-    indexers-federal:
-        container_name: indexers-federal
-        scale: 0
-        build:
-            context: .
-            dockerfile: ./WorkBC.Indexers.Federal/Dockerfile
-        env_file:
-            - .env
     indexers-federal-v2:
         container_name: indexers-federal-v2
         scale: 0
@@ -97,16 +89,6 @@ services:
             - DB_HOST=postgres
             - DB_NAME=jobboard
             - ELASTIC_URL=http://elasticsearch:9200
-    indexers-wanted:
-        container_name: indexers-wanted
-        scale: 0
-        build:
-            context: .
-            dockerfile: ./WorkBC.Indexers.Wanted/Dockerfile
-        environment:
-            - ASPNETCORE_ENVIRONMENT=Development
-        env_file:
-            - .env
     notifications-job-alerts:
         container_name: notifications-job-alerts
         scale: 0

@@ -20,13 +20,13 @@ gunzip -k -c scripts/jobboard-full.sql.gz | docker-compose-jb exec -T postgres p
 docker-compose-jb up
 ```
 - Allow for ~30 minutes to repopulate the full database, including jobs import, until the Docker logs settle.
-- Run the full indexing job manually:
+- Run the full indexing job manually (the indexers are now PHP, in the `php-cli` container):
 ```bash
-docker-compose-jb exec dotnet-cli bash
-cd /app/workbc-indexers-wanted
-dotnet WorkBC.Indexers.Wanted.dll -r
-cd /app/workbc-indexers-federal
-dotnet WorkBC.Indexers.Federal.dll # without -r to avoid resetting the index
+docker-compose-jb exec php-cli bash
+cd /app/workbc-indexers-innovibe-v2
+php src/index.php -r
+cd /app/workbc-indexers-federal-v2
+php src/index.php # without -r to avoid resetting the index
 ```
 
 ## Development
