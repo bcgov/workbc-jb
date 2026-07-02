@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { LoggingService } from '../../services/logging.service';
 import { ToastrService } from 'ngx-toastr';
@@ -9,8 +9,11 @@ import { SystemSettingsService } from '../../../../../jb-lib/src/public-api';
   templateUrl: './thank-you.component.html',
   styleUrls: ['./thank-you.component.scss'],
 })
-export class ThankYouComponent {
+export class ThankYouComponent implements OnInit, AfterViewInit {
   @Input() email: string;
+
+  @ViewChild('thankYouContainer')
+  private thankYouContainer: ElementRef<HTMLElement>;
 
   constructor(
     private userService: UserService,
@@ -21,7 +24,11 @@ export class ThankYouComponent {
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
-  }   
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => this.thankYouContainer?.nativeElement.focus());
+  }
 
   get confirmationTitle(): string {
     return this.settings.jbAccount.registration.confirmationTitle;
