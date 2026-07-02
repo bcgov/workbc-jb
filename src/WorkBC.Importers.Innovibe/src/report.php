@@ -29,7 +29,9 @@ if (!$config->apiKey || $config->apiKey === 'YOUR_KEY') {
 }
 
 $outputPath = $argv[1] ?? __DIR__ . '/../innovibe-report.csv';
-$expiryDays = (int) (getenv('JOB_EXPIRY_DAYS') ?: 30);
+// Default 90 days to match the importer and indexer (General.DefaultWantedJobExpiryDays),
+// so the report's "still live" cutoff agrees with Jobs.ExpireDate / the ES ExpireDate.
+$expiryDays = (int) (getenv('JOB_EXPIRY_DAYS') ?: 90);
 
 $api = new InnovibeApiClient($config, $logger);
 

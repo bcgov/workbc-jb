@@ -106,13 +106,19 @@ final class GeocodingService
     private function saveLocation(array $row): void
     {
         if ($this->insertStmt === null) {
-            // ON CONFLICT guards against a race with the importer / another
-            // indexer run (the "Name" column has a unique partial index).
+            // Insert only if this Name isn't already cached. We use
+            // INSERT ... SELECT ... WHERE NOT EXISTS rather than ON CONFLICT
+            // because the production "GeocodedLocationCache" table does not
+            // carry a unique constraint on "Name" (ON CONFLICT requires one and
+            // fails with SQLSTATE 42P10). This form is safe whether or not the
+            // constraint exists and still dedupes by Name.
             $this->insertStmt = $this->db->prepare(
                 'INSERT INTO "GeocodedLocationCache"
                     ("DateGeocoded","Name","Latitude","Longitude","City","FrenchCity","Province","IsPermanent")
-                 VALUES (NOW(), ?, ?, ?, ?, ?, ?, FALSE)
-                 ON CONFLICT ("Name") DO NOTHING'
+                 SELECT NOW(), ?, ?, ?, ?, ?, ?, FALSE
+                 WHERE NOT EXISTS (
+                     SELECT 1 FROM "GeocodedLocationCache" WHERE "Name" = ?
+                 )'
             );
         }
 
@@ -124,6 +130,7 @@ final class GeocodingService
                 $this->truncate($row['City'], 80),
                 $this->truncate($row['FrenchCity'], 80),
                 $this->truncate($row['Province'], 2),
+                $row['Name'],
             ]);
         } catch (\Throwable $e) {
             $this->log->warning("Failed to cache geocode for '{$row['Name']}': {$e->getMessage()}");
