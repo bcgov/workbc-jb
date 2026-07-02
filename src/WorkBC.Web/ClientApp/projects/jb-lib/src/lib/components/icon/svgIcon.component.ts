@@ -4,7 +4,7 @@ import { GlobalService } from '../../services/global.service';
 @Component({
   selector: 'lib-svg-icon',
   styleUrls: ['./svgIcon.component.scss'],
-  template: '<img src="{{globalService.getApiBaseUrl()}}assets/icons/{{icon}}.svg" attr.alt={{altText}} class="icon" attr.width={{width}} attr.height={{height}} [style.max-height]="height">'
+  template: '<img src="{{globalService.getApiBaseUrl()}}assets/icons/{{icon}}.svg" attr.alt={{altText}} [attr.aria-hidden]="decorative ? \'true\' : null" class="icon" attr.width={{width}} attr.height={{height}} [style.max-height]="height">'
 })
 export class SvgIconComponent {
 
@@ -18,6 +18,10 @@ export class SvgIconComponent {
 
   get altText(): string {
     return this.alt ? this.alt : '';
+  }
+
+  get decorative(): boolean {
+    return !this.alt;
   }
 
 }
