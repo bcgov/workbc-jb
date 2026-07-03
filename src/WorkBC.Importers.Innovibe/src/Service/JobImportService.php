@@ -17,10 +17,23 @@ final class JobImportService
 {
     private const JOB_SOURCE = 2;
 
+    // Salary sanity bounds and the minimum-wage fallback, mirroring the Federal
+    // importer (WorkBC.Importers.Federal.V2 XmlJobMapper) so both sources apply
+    // the same rules. A job is rejected when its hourly-equivalent wage is below
+    // 90% of the admin-configured minimum wage (shared.settings.minimumWage).
+    private const WEEKLY_WORK_HOURS     = 40.0;
+    private const WEEKS_PER_YEAR        = 52;
+    private const MAX_HOURLY_RATE       = 2500.0;
+    private const MAX_YEARLY_SALARY     = 5000000.0;
+    private const MINIMUM_WAGE_FALLBACK = 17.40;
+
     private int $fetched  = 0;
     private int $inserted = 0;
     private int $updated  = 0;
     private int $skipped  = 0;
+
+    /** Cached admin minimum wage (shared.settings.minimumWage), lazily loaded. */
+    private ?float $minimumWage = null;
 
     public function __construct(
         private readonly PDO              $db,
@@ -33,7 +46,7 @@ final class JobImportService
     {
         $this->log->info('IMPORTER STARTED');
         $this->log->info('Importing JSON data');
-        $this->log->info('I = Inserted  U = Updated  S = Skipped  H = Duplicate hash');
+        $this->log->info('I = Inserted  U = Updated  S = Skipped  H = Duplicate hash  W = Below minimum wage');
 
         $seen = $this->importFromApi();
         $this->markSeen($seen);
@@ -55,6 +68,60 @@ final class JobImportService
     private function computeHashId(string $json): int
     {
         return crc32($json);
+    }
+
+    /**
+     * Reads the admin-configured minimum wage (shared.settings.minimumWage) once
+     * and caches it. Falls back to a constant if the setting is missing/blank.
+     * Mirrors XmlJobMapper::getMinimumWage() in the Federal importer.
+     */
+    private function getMinimumWage(): float
+    {
+        if ($this->minimumWage === null) {
+            try {
+                $stmt = $this->db->prepare('SELECT "Value" FROM "SystemSettings" WHERE "Name" = ? LIMIT 1');
+                $stmt->execute(['shared.settings.minimumWage']);
+                $value = $stmt->fetchColumn();
+                if ($value !== false && $value !== null && (string) $value !== '') {
+                    $this->minimumWage = (float) $value;
+                }
+            } catch (\Throwable) {
+                // Table may be absent in older schemas — fall through to default.
+            }
+            if ($this->minimumWage === null) {
+                $this->minimumWage = self::MINIMUM_WAGE_FALLBACK;
+            }
+        }
+        return $this->minimumWage;
+    }
+
+    /**
+     * Returns false when the job's wage is below the minimum-wage threshold.
+     *
+     * The value is normalised to an hourly rate using salaryUnitText (HOUR /
+     * WEEK / MONTH / YEAR) and compared against 90% of the admin minimum wage —
+     * matching the 0.9 * minWage hourly rule the Federal importer applies. The
+     * lowest advertised figure (salaryMin, else salaryValue, else salaryMax) is
+     * used so a range is judged by its floor. Jobs with no usable/positive
+     * figure are left to the caller's existing no-salary handling (returns true).
+     */
+    private function passesMinimumWage(array $job): bool
+    {
+        $salary = $job['salaryMin'] ?? $job['salaryValue'] ?? $job['salaryMax'] ?? null;
+        if ($salary === null || !is_numeric($salary) || (float) $salary <= 0) {
+            return true;
+        }
+
+        $hourly = match (strtoupper((string) ($job['salaryUnitText'] ?? ''))) {
+            'HOUR'  => (float) $salary,
+            'WEEK'  => (float) $salary / self::WEEKLY_WORK_HOURS,
+            'MONTH' => (float) $salary * 12 / (self::WEEKLY_WORK_HOURS * self::WEEKS_PER_YEAR),
+            'YEAR'  => (float) $salary / (self::WEEKLY_WORK_HOURS * self::WEEKS_PER_YEAR),
+            default => (float) $salary / (self::WEEKLY_WORK_HOURS * self::WEEKS_PER_YEAR),
+        };
+
+        // Reject wages under 90% of minimum, or implausibly high outliers.
+        return $hourly >= 0.9 * $this->getMinimumWage() && $hourly < self::MAX_HOURLY_RATE;
     }
 
     // ── 1. API → "ImportedJobsWanted" ──────────────────────────────
@@ -107,6 +174,13 @@ final class JobImportService
             if (empty($job['salaryMin']) && empty($job['salaryMax']) && empty($job['salaryValue'])) {
                 $this->skipped++;
                 $progress .= 'S';
+                continue;
+            }
+
+            // Skip jobs paying below the minimum-wage threshold (parity with Federal).
+            if (!$this->passesMinimumWage($job)) {
+                $this->skipped++;
+                $progress .= 'W';
                 continue;
             }
 
