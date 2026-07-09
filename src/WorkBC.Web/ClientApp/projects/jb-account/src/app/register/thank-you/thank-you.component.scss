@@ -4,8 +4,12 @@
     background: #ffffff;
     padding-bottom: 20px;
 
+    // The container receives programmatic focus after registration
+    // (tabindex="-1"); the outline must be visible so sighted users —
+    // and QA watching NVDA — can see focus land on the new content.
     &:focus {
-      outline: none;
+      outline: 2px solid #234075;
+      outline-offset: -2px;
     }
 
     @media(min-width: 940px) {
