@@ -201,6 +201,7 @@ final class InnovibeDocumentMapper
         if ($salary !== null && $salary >= 0.01) {
             $multiplier = match ($salaryUnit) {
                 'HOUR' => 2080.0,
+                'DAY' => 260.0,
                 'WEEK' => 52.0,
                 'MONTH' => 12.0,
                 default => 1.0,
