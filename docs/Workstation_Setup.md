@@ -92,10 +92,13 @@ _(Program Files > Microsoft SQL Server > YOUR_SERVER_VERSION_FOLDER > MSSQL > Ba
     * WorkBC.Importers.Federal\bin\Debug\net6.0 (Import Federal jobs to the SQL database)
     ```.\WorkBC.Importers.Federal.exe```
       * Note that this first task takes a long time. It also has a max of 20,000 records. When I ran this, I ended up having to run it twice to capture all 25,000 records required.
-    * WorkBC.Indexers.Federal\bin\Debug\net6.0 (Index the Federal jobs in ElasticSearch)
-    ```.\WorkBC.Indexers.Federal.exe --reindex```
-    * WorkBC.Indexers.Wanted\bin\Debug\net6.0 (Index the WantedAPI jobs in ElasticSearch)
-    ```.\WorkBC.Indexers.Wanted.exe```
+    * The indexers are now PHP (run them from `WorkBC.Indexers.Federal.V2` / `WorkBC.Indexers.Innovibe.V2`, or via the `php-cli` Docker container):
+    ```
+    # Index the Federal jobs in ElasticSearch
+    cd src/WorkBC.Indexers.Federal.V2 && php src/index.php --reindex
+    # Index the Innovibe (Wanted) jobs in ElasticSearch
+    cd src/WorkBC.Indexers.Innovibe.V2 && php src/index.php
+    ```
 
 ### 4. Running the job board web project (WorkBC.Web)
 
@@ -165,43 +168,44 @@ then retry the steps above.
     ```
 * Use http://localhost:8081 to access the main web site
 * Use http://localhost:8080 to access the admin site
-* You can use the console in the dotnet-cli container to run ad-hoc scheduled task commands. Some common examples are below.
+* The importers and indexers are PHP — run them in the `php-cli` container.
+  SQL migrations stay on the `dotnet-cli` container. Some common examples:
 
-    Run the Wanted Indexer
+    Run the Innovibe (Wanted) Indexer (`docker-compose-jb exec php-cli bash`)
     ```
-    cd /app/workbc-indexers-wanted
-    dotnet WorkBC.Indexers.Wanted.dll
+    cd /app/workbc-indexers-innovibe-v2
+    php src/index.php
     ```
 
-    Run the Wanted Indexer and re-create the indexes
+    Run the Innovibe Indexer and re-create the indexes
     ```
-    cd /app/workbc-indexers-wanted
-    dotnet WorkBC.Indexers.Wanted.dll -r
+    cd /app/workbc-indexers-innovibe-v2
+    php src/index.php -r
     ```
 
     Run the Federal Importer
     ```
-    cd /app/workbc-importers-federal
-    dotnet WorkBC.Importers.Federal.dll
+    cd /app/workbc-importers-federal-v2
+    php src/import.php
     ```
 
     Run the Federal Indexer
     ```
-    cd /app/workbc-indexers-federal
-    dotnet WorkBC.Indexers.Federal.dll
+    cd /app/workbc-indexers-federal-v2
+    php src/index.php
     ```
 
     Run the Federal Indexer and re-create the indexes
     ```
-    cd /app/workbc-indexers-federal
-    dotnet WorkBC.Indexers.Federal.dll -r
+    cd /app/workbc-indexers-federal-v2
+    php src/index.php -r
     ```
 
-    Run SQL migrations
+    Run SQL migrations (`docker-compose-jb exec dotnet-cli bash`)
     ```
     cd /app/efmigrationrunner
     dotnet EFMigrationRunner.dll
     ```
 
 * Linux commands are case sensitive.
-* You can use `--help` to see more options e.g. `dotnet WorkBC.Indexers.Federal.dll --help`
+* You can use `-d` to see the ES-vs-Jobs diff, e.g. `php src/index.php -d`

@@ -122,17 +122,17 @@ jobs:
         run: |
           docker push ${{ secrets.AWS_ECR_URI }}/jb-cli-innovibe:${{ github.sha }}
           
-      - name: Tag the Wanted Indexer docker image
+      - name: Tag the Innovibe Indexer V2 (PHP) docker image
         run: |
-          docker tag src_indexers-wanted:latest ${{ secrets.AWS_ECR_URI }}/jb-indexers-wanted:${{ github.sha }}
-      - name: Push the Wanted Indexer docker image
+          docker tag src_indexers-innovibe-v2:latest ${{ secrets.AWS_ECR_URI }}/jb-indexers-wanted:${{ github.sha }}
+      - name: Push the Innovibe Indexer V2 (PHP) docker image
         run: |
           docker push ${{ secrets.AWS_ECR_URI }}/jb-indexers-wanted:${{ github.sha }}
           
-      - name: Tag the Federal indexer docker image
+      - name: Tag the Federal indexer V2 (PHP) docker image
         run: |
-          docker tag src_indexers-federal:latest ${{ secrets.AWS_ECR_URI }}/jb-indexers-federal:${{ github.sha }}
-      - name: Push the Federal indexer docker image
+          docker tag src_indexers-federal-v2:latest ${{ secrets.AWS_ECR_URI }}/jb-indexers-federal:${{ github.sha }}
+      - name: Push the Federal indexer V2 (PHP) docker image
         run: |
           docker push ${{ secrets.AWS_ECR_URI }}/jb-indexers-federal:${{ github.sha }}
           

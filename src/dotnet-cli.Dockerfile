@@ -32,8 +32,8 @@ RUN psql --version && aws --version
 RUN cp /usr/share/zoneinfo/America/Vancouver /etc/localtime && \
     echo "America/Vancouver" > /etc/timezone
 
-COPY --from=src_indexers-wanted /app /app/workbc-indexers-wanted
-COPY --from=src_indexers-federal /app /app/workbc-indexers-federal
+# Federal & Innovibe indexers are now PHP — they live in the php-cli (cli2) image,
+# not here. This .NET operator shell keeps only the remaining .NET tools.
 COPY --from=src_notifications-job-alerts /app /app/workbc-notifications-jobalerts
 COPY --from=src_migration-runner /app /app/efmigrationrunner
 
