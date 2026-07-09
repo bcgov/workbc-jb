@@ -22,10 +22,12 @@ final class JobImportService
     // the same rules. A job is rejected when its hourly-equivalent wage is below
     // 90% of the admin-configured minimum wage (shared.settings.minimumWage).
     private const WEEKLY_WORK_HOURS     = 40.0;
+    private const DAILY_WORK_HOURS      = 8.0;
     private const WEEKS_PER_YEAR        = 52;
     private const MAX_HOURLY_RATE       = 2500.0;
     private const MAX_YEARLY_SALARY     = 5000000.0;
-    private const MINIMUM_WAGE_FALLBACK = 17.40;
+    // B.C. general minimum wage effective June 1, 2026.
+    private const MINIMUM_WAGE_FALLBACK = 18.25;
 
     private int $fetched  = 0;
     private int $inserted = 0;
@@ -99,7 +101,7 @@ final class JobImportService
      * Returns false when the job's wage is below the minimum-wage threshold.
      *
      * The value is normalised to an hourly rate using salaryUnitText (HOUR /
-     * WEEK / MONTH / YEAR) and compared against 90% of the admin minimum wage —
+     * DAY / WEEK / MONTH / YEAR) and compared against 90% of the admin minimum wage —
      * matching the 0.9 * minWage hourly rule the Federal importer applies. The
      * lowest advertised figure (salaryMin, else salaryValue, else salaryMax) is
      * used so a range is judged by its floor. Jobs with no usable/positive
@@ -114,6 +116,7 @@ final class JobImportService
 
         $hourly = match (strtoupper((string) ($job['salaryUnitText'] ?? ''))) {
             'HOUR'  => (float) $salary,
+            'DAY'   => (float) $salary / self::DAILY_WORK_HOURS,
             'WEEK'  => (float) $salary / self::WEEKLY_WORK_HOURS,
             'MONTH' => (float) $salary * 12 / (self::WEEKLY_WORK_HOURS * self::WEEKS_PER_YEAR),
             'YEAR'  => (float) $salary / (self::WEEKLY_WORK_HOURS * self::WEEKS_PER_YEAR),
@@ -582,6 +585,7 @@ final class JobImportService
         $salaryUnit = strtoupper($j['salaryUnitText'] ?? '');
         $annualMultiplier = match ($salaryUnit) {
             'HOUR'  => 2080,   // 40 hrs/week × 52 weeks
+            'DAY'   => 260,    // 5 days/week × 52 weeks
             'WEEK'  => 52,
             'MONTH' => 12,
             default => 1,      // YEAR or unknown

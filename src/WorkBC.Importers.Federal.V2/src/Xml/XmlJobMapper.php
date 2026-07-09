@@ -56,7 +56,8 @@ final class XmlJobMapper
     private const MAX_HOURLY_RATE = 2500.0;
     private const MAX_WEEKLY_SALARY = 100000.0;
     private const MAX_YEARLY_SALARY = 5000000.0;
-    private const MINIMUM_WAGE_FALLBACK = 17.40;
+    // B.C. general minimum wage effective June 1, 2026.
+    private const MINIMUM_WAGE_FALLBACK = 18.25;
 
     /** Matches WorkBC.Shared.Constants.General.DefaultWantedJobExpiryDays. */
     private const DEFAULT_EXPIRY_DAYS = 90;
