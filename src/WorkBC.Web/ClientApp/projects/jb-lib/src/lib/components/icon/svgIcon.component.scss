@@ -44,6 +44,14 @@
 
 ::ng-deep input[type="checkbox"] {
   position: absolute;
+  // The Drupal host theme (workbc-main _job_board.scss) hides these native
+  // inputs inside app-root with `appearance:none; opacity:0; width:0`, which
+  // leaves voice control (UIA) no hit box to target. Keep a box matching the
+  // 16px .checkbox-icons artwork; !important out-ranks the theme's
+  // higher-specificity `app-root input[type=checkbox]` rule.
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
 
   & + .checkbox-icons, & + app-jb-checkbox .checkbox-icons {
     display: inline;
@@ -51,6 +59,11 @@
     /*top: 2px;*/
     z-index: -1;
     color: #234075;
+    // Decorative overlay only — it must never swallow the mouseup of a click
+    // aimed at the input: the :focus z-index bump (e.g. job-seeker register
+    // outline) raises it above the input mid-click, which retargets the click
+    // to the parent div and cancels the checkbox toggle.
+    pointer-events: none !important;
 
     lib-svg-icon:first-child {
       display: inline-flex;
