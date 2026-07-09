@@ -1,9 +1,3 @@
-// The container receives programmatic focus after registration
-// (tabindex="-1"); the outline must be visible so sighted users —
-// and QA watching NVDA — can see focus land on the new content.
-// Bootstrap's reboot ships `app-root [tabindex="-1"]:focus:not(:focus-visible)
-// { outline: 0 !important }` (specificity 0,3,1), which silently suppressed
-// the outline: this selector is (0,3,2) with !important so it out-ranks it.
 ::ng-deep app-root app-thank-you .thank-you[tabindex="-1"]:focus {
   outline: 2px solid #234075 !important;
   outline-offset: -2px;
