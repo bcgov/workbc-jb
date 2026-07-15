@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { LoggingService } from '../../services/logging.service';
 import { ToastrService } from 'ngx-toastr';
@@ -9,7 +9,7 @@ import { SystemSettingsService } from '../../../../../jb-lib/src/public-api';
   templateUrl: './thank-you.component.html',
   styleUrls: ['./thank-you.component.scss'],
 })
-export class ThankYouComponent implements OnInit, AfterViewInit {
+export class ThankYouComponent implements AfterViewInit {
   @Input() email: string;
 
   @ViewChild('thankYouHeading')
@@ -22,16 +22,23 @@ export class ThankYouComponent implements OnInit, AfterViewInit {
     private toastr: ToastrService
   ) {}
 
-  ngOnInit(): void {
-    window.scrollTo(0, 0);
-  }
-
   ngAfterViewInit(): void {
     // Focus the heading, not the container: NVDA's browse cursor follows
     // focus to a tabindex="-1" heading (announcing its text), but not to a
     // live-region div — which left Tab jumping from the old buffer position
     // into the footer.
-    setTimeout(() => this.thankYouHeading?.nativeElement.focus());
+    //
+    // Scroll explicitly instead of via focus() or window.scrollTo(0, 0):
+    // the Drupal theme sets html { scroll-behavior: smooth }, so a
+    // scroll-to-top races the focus-triggered scroll and can win, leaving
+    // the heading below the fold.
+    setTimeout(() => {
+      const heading = this.thankYouHeading?.nativeElement;
+      if (heading) {
+        heading.focus({ preventScroll: true });
+        heading.scrollIntoView({ block: 'center' });
+      }
+    });
   }
 
   get confirmationTitle(): string {
