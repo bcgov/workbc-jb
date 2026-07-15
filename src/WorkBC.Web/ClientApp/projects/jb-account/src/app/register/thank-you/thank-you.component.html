@@ -1,8 +1,8 @@
-<div class="thank-you" #thankYouContainer tabindex="-1" role="status" aria-live="polite">
+<div class="thank-you">
   <div class="container">
-    <p class="sub-header">
+    <h2 class="sub-header" #thankYouHeading tabindex="-1">
       {{confirmationTitle}}
-    </p>
+    </h2>
     <div [innerHTML]="confirmationBody">
     </div>
   </div>

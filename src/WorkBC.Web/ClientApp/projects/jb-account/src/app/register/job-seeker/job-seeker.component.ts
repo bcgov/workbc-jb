@@ -35,6 +35,7 @@ export class JobSeekerComponent extends BaseJobSeekerComponent
   registerForm: FormGroup;
   isNotRobot = false;
   saved = false;
+  private saving = false;
 
   private renderedWidget: unknown;
 
@@ -262,7 +263,15 @@ export class JobSeekerComponent extends BaseJobSeekerComponent
       )
     );
 
-    //this.loading = true;
+    if (this.saving) {
+      return;
+    }
+    this.saving = true;
+
+    // Don't reset the captcha (which disables the still-focused submit
+    // button) while the request is in flight: screen readers announce the
+    // focused button going disabled ("Register button unavailable") and the
+    // browser drops focus to <body>, so the thank-you focus never lands.
     this.userService
       .register(user)
       .pipe(first())
@@ -273,12 +282,12 @@ export class JobSeekerComponent extends BaseJobSeekerComponent
           this.registered.emit(user.email);
         },
         error => {
+          this.saving = false;
           this.error = error;
           this.scrollIntoView(this.registerForm, this.vm);
+          this.resetGrecaptcha();
         }
       );
-
-    this.resetGrecaptcha();
   }
 
   showTermsOfUse(event: Event): void {
