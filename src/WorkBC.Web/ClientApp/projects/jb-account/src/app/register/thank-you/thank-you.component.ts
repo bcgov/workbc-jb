@@ -12,8 +12,8 @@ import { SystemSettingsService } from '../../../../../jb-lib/src/public-api';
 export class ThankYouComponent implements OnInit, AfterViewInit {
   @Input() email: string;
 
-  @ViewChild('thankYouContainer')
-  private thankYouContainer: ElementRef<HTMLElement>;
+  @ViewChild('thankYouHeading')
+  private thankYouHeading: ElementRef<HTMLElement>;
 
   constructor(
     private userService: UserService,
@@ -27,7 +27,11 @@ export class ThankYouComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => this.thankYouContainer?.nativeElement.focus());
+    // Focus the heading, not the container: NVDA's browse cursor follows
+    // focus to a tabindex="-1" heading (announcing its text), but not to a
+    // live-region div — which left Tab jumping from the old buffer position
+    // into the footer.
+    setTimeout(() => this.thankYouHeading?.nativeElement.focus());
   }
 
   get confirmationTitle(): string {

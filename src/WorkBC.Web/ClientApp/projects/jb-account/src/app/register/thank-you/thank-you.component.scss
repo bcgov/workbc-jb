@@ -1,6 +1,6 @@
-::ng-deep app-root app-thank-you .thank-you[tabindex="-1"]:focus {
+::ng-deep app-root app-thank-you .thank-you .sub-header[tabindex="-1"]:focus {
   outline: 2px solid #234075 !important;
-  outline-offset: -2px;
+  outline-offset: 2px;
 }
 
 ::ng-deep app-thank-you {
@@ -25,6 +25,7 @@
     .sub-header {
       font-size: 1.5rem;
       font-weight: 400;
+      margin: 0 0 1rem;
     }
   }
 
