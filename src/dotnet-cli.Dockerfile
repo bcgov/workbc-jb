@@ -32,9 +32,9 @@ RUN psql --version && aws --version
 RUN cp /usr/share/zoneinfo/America/Vancouver /etc/localtime && \
     echo "America/Vancouver" > /etc/timezone
 
-# Federal & Innovibe indexers are now PHP — they live in the php-cli (cli2) image,
-# not here. This .NET operator shell keeps only the remaining .NET tools.
-COPY --from=src_notifications-job-alerts /app /app/workbc-notifications-jobalerts
+# Federal & Innovibe indexers and the job-alert notifier are now PHP — they
+# live in the php-cli (cli2) image, not here. This .NET operator shell keeps
+# only the remaining .NET tools.
 COPY --from=src_migration-runner /app /app/efmigrationrunner
 
 # keep the container running indefinitely by using this entrypoint

@@ -141,7 +141,7 @@ jobs:
 
       - name: Tag the Notification docker image
         run: |
-          docker tag src_notifications-job-alerts:latest ${{ secrets.AWS_ECR_URI }}/jb-notifications:${{ github.sha }}
+          docker tag src_notifications-jobalerts-v2:latest ${{ secrets.AWS_ECR_URI }}/jb-notifications:${{ github.sha }}
       - name: Push Notification docker image
         run: |
           docker push ${{ secrets.AWS_ECR_URI }}/jb-notifications:${{ github.sha }}

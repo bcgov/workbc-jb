@@ -24,11 +24,11 @@ See [Linux_Setup.md](docs/Linux_Setup.md) for instructions related to Linux deve
 * [WorkBC.Indexers.Federal.V2](src/WorkBC.Indexers.Federal.V2) - *(PHP)* Reads the ImportedJobsFederal table and indexes jobs in Elasticsearch (`jobs_en` / `jobs_fr`). Supports `-r`/`-o`/`-n`/`-d`. ECR image: `jb-indexers-federal`.
 * [WorkBC.Importers.Innovibe](src/WorkBC.Importers.Innovibe) - *(PHP)* Imports jobs from the Innovibe API into the ImportedJobsWanted table and syncs to the Jobs table. Runs as a Docker container / Kubernetes CronJob. ECR image: `jb-importers-innovibe`.
 * [WorkBC.Indexers.Innovibe.V2](src/WorkBC.Indexers.Innovibe.V2) - *(PHP)* Reads the ImportedJobsWanted table (Innovibe JSON) and indexes jobs in Elasticsearch (`jobs_en`). Supports `-r`/`-o`/`-n`/`-d`. ECR image: `jb-indexers-wanted`.
-* [WorkBC.Notifications.JobAlerts](src/WorkBC.Notifications.JobAlerts) - Sends daily emails for job alerts
+* [WorkBC.Notifications.JobAlerts.V2](src/WorkBC.Notifications.JobAlerts.V2) - *(PHP)* Sends the job alert emails (matches saved alerts against Elasticsearch, emails via SES/SMTP/SendGrid). ECR image: `jb-notifications`.
 
 ### PHP CLI Container
 
-The [php-cli.Dockerfile](src/php-cli.Dockerfile) builds a combined shell container with the Federal V2 and Innovibe PHP **importers** *and* the Federal and Innovibe PHP **indexers**. ECR image: `jb-cli-innovibe` (name is historical — the container includes all four).
+The [php-cli.Dockerfile](src/php-cli.Dockerfile) builds a combined shell container with the Federal V2 and Innovibe PHP **importers**, the Federal and Innovibe PHP **indexers** *and* the **job alert notifier**. ECR image: `jb-cli-innovibe` (name is historical — the container includes all five).
 
 Available commands inside the container:
 
