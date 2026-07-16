@@ -1,0 +1,14 @@
+{
+  "baker": "baker",
+  "baker, cook": "baker|cook",
+  "program manager, cook, baker helper": "(program manager)|cook|(baker helper)",
+  "heavy \"duty mechanic\" or welder": "(heavy \"duty mechanic\")|welder",
+  "dog AND cat": "dog cat",
+  "dog and cat, bird": "(dog cat)|bird",
+  "\"exact phrase only\"": "\"exact phrase only\"",
+  "a | b | c": "a|b|c",
+  "  spaces   everywhere  ,, double,,commas ,": "(spaces everywhere)|double|commas",
+  "C# developer (senior) ~remote | \"full stack\" café": "(C developer senior remote)|(\"full stack\" café)",
+  "truck driver class 1, class 3 driver, courier": "(truck driver class 1)|(class 3 driver)|courier",
+  "early childhood educator \"infant toddler\"": "early childhood educator \"infant toddler\""
+}
