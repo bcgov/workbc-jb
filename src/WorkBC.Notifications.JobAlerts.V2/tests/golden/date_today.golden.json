@@ -1,0 +1,40 @@
+{
+  "track_total_hits": true,
+  "size": 0,
+  "from": 0,
+  "sort":[{"DatePosted":"ASC"},{"DatePosted":"desc"},{"JobId.keyword":"asc"}],
+  "_source": [
+    "City",
+    "EmployerName",
+    "JobId",
+    "SalarySummary",
+    "Title",
+    "ExternalSource",
+    "HoursOfWork",
+    "PeriodOfEmployment",
+    "IsFederalJob",
+    "DatePosted",
+    "ExpireDate",
+    "LastUpdated",
+    "Location",
+    "WorkplaceType"
+  ],
+  "query": {
+    "bool": {
+      "must": [
+        { "bool": { "should" : [ { "range": { "DatePosted": { "gte": "now/d", "lt": "now+1d/d", "time_zone": "America/Vancouver" } } } ] } },{ "bool": { "should" : [ { "simple_query_string": { "query": "nurse", "fields": ["EmployerName^4","JobId^10","Title^5","AllSkills^1","JobDescription^1","City^2"], "default_operator": "AND", "quote_field_suffix": ".exact" } } ] } }
+      ],
+      "must_not": [
+        
+      ],
+      "filter": {
+        "range": {
+          "ExpireDate": {
+            "gte": "now/d",
+            "time_zone": "America/Vancouver"
+          }
+        }
+      }
+    }
+  }
+}

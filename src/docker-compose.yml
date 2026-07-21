@@ -89,16 +89,18 @@ services:
             - DB_HOST=postgres
             - DB_NAME=jobboard
             - ELASTIC_URL=http://elasticsearch:9200
-    notifications-job-alerts:
-        container_name: notifications-job-alerts
+    notifications-jobalerts-v2:
+        container_name: notifications-jobalerts-v2
         scale: 0
         build:
-            context: .
-            dockerfile: ./WorkBC.Notifications.JobAlerts/Dockerfile
-        environment:
-            - ASPNETCORE_ENVIRONMENT=Development
+            context: ./WorkBC.Notifications.JobAlerts.V2
+            dockerfile: Dockerfile
         env_file:
             - .env
+        environment:
+            - DB_HOST=postgres
+            - DB_NAME=jobboard
+            - ELASTIC_URL=http://elasticsearch:9200
     migration-runner:
         container_name: migration-runner
         scale: 0

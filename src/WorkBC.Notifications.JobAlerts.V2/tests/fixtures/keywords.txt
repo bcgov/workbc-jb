@@ -1,0 +1,12 @@
+baker
+baker, cook
+program manager, cook, baker helper
+heavy "duty mechanic" or welder
+dog AND cat
+dog and cat, bird
+"exact phrase only"
+a | b | c
+  spaces   everywhere  ,, double,,commas ,
+C# developer (senior) ~remote | "full stack" café
+truck driver class 1, class 3 driver, courier
+early childhood educator "infant toddler"

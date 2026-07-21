@@ -60,7 +60,7 @@ elasticdump --input=http://localhost:9200/jobs_fr --output=$ | gzip > scripts/jo
 
 ## Troubleshooting
 - If you encounter errors running `docker-compose-jb build`, such as:
-> `ERROR [src_dotnet-cli internal] load metadata for docker.io/library/src_notifications-job-alerts:latest`
+> `ERROR [src_dotnet-cli internal] load metadata for docker.io/library/src_migration-runner:latest`
 
 You can try building each service individually to avoid race conditions:
 ```bash
