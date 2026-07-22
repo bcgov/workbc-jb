@@ -67,3 +67,37 @@ Fields the current search actually queries/sorts on — cross-check against `con
 `Lang` records the document language. Object (non-nested) wrappers: `EmploymentTerms`,
 `HoursOfWork`, `PeriodOfEmployment`, `WorkLangCd`, `WorkplaceType`, `SalaryConditions` — each a
 `{ Description }` (WorkplaceType also has `Id`).
+
+## Real document shapes (from sample docs)
+
+The bare mapping hides two things the generator and query layer must get right: several fields are
+**multi-valued arrays**, and **federal vs. external jobs populate different fields**. (Derived from
+two real `_source` samples — not committed; they contain a real employer email/name.)
+
+### Multi-valued / array fields
+Even where the mapping shows a scalar or object, these arrive as **arrays**:
+- `City`, `Region`, `Location` (array of `{Lat, Lon}` — values are **strings**),
+  `LocationGeo` (array of `"lat,lon"` **strings**, e.g. `["49.305743,-122.804786"]`).
+- Every `*.Description`: `WorkLangCd`, `HoursOfWork`, `PeriodOfEmployment`, `EmploymentTerms`,
+  `SalaryConditions` — arrays of strings, often empty `[]` (or the wrapper is `{}`).
+- `SkillCategories[].Skills` — array of strings; `ExternalSource.Source` — array of `{Url, Source}`.
+
+### Federal vs external field presence
+| Field | Federal (`IsFederalJob: true`) | External (`false`, e.g. Innovibe) |
+|---|---|---|
+| `JobDescription` | absent | present (full text, `\n` breaks) — rendered on-site (SRCH-7b) |
+| `ExternalSource` | absent | `{ Source: [{ Url, Source }] }` (apply link + host) |
+| `SkillCategories` | rich (Education, Tasks, Personal suitability, "Support for …") | usually `[]` |
+| `Apply*`, `WorkLangCd`, `WageClass`, `EduLevel`, `SalaryDescription`, `Program*` | present | absent |
+| `Industry`, `Occupation`, `Function` | absent | present |
+| `WorkplaceType` | `{ Id, Description }` | absent in sample |
+| `Noc` (long, 2016) | present + `Noc2021` | **only** `Noc2021` |
+
+### Value quirks to reproduce
+- **`Province` is inconsistent:** `"BC"` (federal) vs `"British Columbia"` (external).
+- **Dates:** federal carries an offset (`2026-04-14T21:40:00+00:00`), external doesn't (`2026-06-09T13:58:07`).
+- **`Salary` is annualized** even when quoted hourly (`$24.50/hr → 50960`); `SalarySort.{Ascending,Descending}` mirror it (unknown salary → the `-99999999` sentinel).
+- **`NocGroup`** embeds the code: `"Home support workers … (44101)"`.
+- Federal **equity `Is*` flags mirror "Support for …" `SkillCategories`** (category IDs 104197–104203).
+- `EmployerTypeId`: `0` = normal, `1` = placement agency (the exclude filter).
+- `Skills` values carry real-data quirks (leading spaces, fragments like `" or equivalent experience"`).
