@@ -110,34 +110,59 @@ Consumed server-to-server by the Drupal `workbc_jobboard` module. Base URL = Dru
 - **Request body:** a `JobSearchFilters` JSON object (§1). Drupal typically sends a subset:
   `Page`, `SortOrder`, `PageSize`, `SearchNocField` (career pages) / `SearchLocations`
   (region/city pages) / `SearchIndustry` (industry pages).
-- **Response** (`SearchResultsModel`):
+- **Response** (`SearchResultsModel`): wrapper is camelCased (`count` / `result` / `pageNumber` /
+  `pageSize`, plus a `textHeaders` UI-label object Drupal ignores). Each `result[]` item is the
+  **API response projection**, not the raw index doc — it mirrors
+  `workbc-jb/.../WorkBC.ElasticSearch.Models/JobAttributes/Source.cs`. (The raw index fields/analyzers
+  used to *build the query* live in `docs/opensearch/` — that's a different layer.)
   ```json
   {
     "count": 1234,
     "result": [
       {
-        "JobId": "49661016",
-        "Title": "administrative assistant, medical",
-        "EmployerName": "Dr. Kamaljit Sekhon Inc.",
-        "City": "Surrey",
-        "SalarySummary": "$25.00 hourly",
-        "DatePosted": "2026-03-29T03:16:13",
-        "ExpireDate": "2026-06-27T00:00:00",
-        "IsFederalJob": true,
+        "JobId": "cmnze80pj264pr8t2pr0mfujk",
+        "Title": "Senior Analyst, Sales & Trading",
+        "EmployerName": "Hiive",
+        "DatePosted": "2026-06-09T13:58:07",
+        "ExpireDate": "2026-09-07T13:58:07",
+        "City": "Vancouver",
+        "Province": "British Columbia",
+        "Region": ["Mainland / Southwest"],
+        "Location": [ { "Lat": "49.28", "Lon": "-123.12" } ],
+        "Noc2021": "62100",
+        "NocGroup": "Technical sales specialists - wholesale trade (62100)",
+        "Salary": 110000.0,
+        "SalarySummary": "$110,000 - $190,000 annually",
+        "IsFederalJob": false,
         "HoursOfWork": { "Description": ["Full-time"] },
-        "PeriodOfEmployment": { "Description": ["Permanent"] },
-        "WorkplaceType": { "Id": 0 },
-        "Location": [ { "Lat": "49.1", "Lon": "-122.8" } ],
-        "ExternalSource": { "Source": [ { "Url": "https://…", "Source": "Federal Job Bank" } ] }
+        "WorkplaceType": { "Id": 0, "Description": "On-site only" },
+        "Views": 42,
+        "IsNew": false,
+        "ApplyWebsite": "https://jobs.ashbyhq.com/…",
+        "ExternalSource": { "Source": [ { "Url": "https://…", "Source": "jobs.ashbyhq.com" } ] }
       }
     ],
     "pageNumber": 1,
     "pageSize": 3
   }
   ```
-  > **Casing is mixed and must be preserved:** top-level keys `count` / `result` / `pageNumber` /
-  > `pageSize`; **job-item keys are PascalCase** (`JobId`, `Title`, `EmployerName`, `City`,
-  > `DatePosted`, `ExternalSource.Source[].Url`). Drupal reads exactly these.
+  **Response-layer rules (differ from the raw index — cross-check `docs/opensearch/README.md`):**
+  - **`NullValueHandling.Ignore`** — empty/null fields are **omitted** from each item, so federal and
+    external items carry *different key sets* (federal → `WorkLangCd`/`WageClass`/`SkillCategories`/
+    `Apply*`; external → `JobDescription` is fetched separately, `ExternalSource`/`ApplyWebsite`).
+  - **`City` is a CSV *string*** (`ListToCsvConverter` joins the index's `City` **array**) — not an array.
+  - **`Region` and `Location` stay arrays**; `Location[]` = `{ Lat, Lon }` (strings).
+  - **`Noc2021` is a zero-padded 5-char *string*** (e.g. `"00010"`), not the index's float; the
+    response has **no `Noc`** (2016) field.
+  - `*.Description` objects (`WorkLangCd`, `HoursOfWork`, `PeriodOfEmployment`, `EmploymentTerms`,
+    `SalaryConditions`) = `{ "Description": string[] }`; `WorkplaceType` = `{ Id, Description }`.
+  - **Decoration fields not in the index:** `Views` (from DB `JobViews`), `IsNew`; `Score`/`Reason`
+    only for Recommended Jobs.
+  - Result items are a **subset** of index fields — filter-only fields (`EduLevel`, `Industry`,
+    `Occupation`, `NocJobTitle`, `NaicsId`, `LocationGeo`, `AllSkills`) are **queried but not
+    returned** here.
+  > **Casing is mixed and must be preserved:** top-level `count`/`result`/`pageNumber`/`pageSize`
+  > (camelCase); **job-item keys PascalCase** (`JobId`, `Title`, `City`, `ExternalSource.Source[].Url`).
 - **Behavior contract:** unknown request fields → **400**; **profile-sidebar heuristic** — NOC
   filter + `PageSize ≤ 10` + no source pinned ⇒ **federal-first** (NJB results first, external
   fallback). Drupal's "Recent Jobs" widgets depend on both.
