@@ -23,6 +23,13 @@
                         <a href="/" class="nav-link">Home</a>
                     </li>
                     <li>
+                        <a href="{{ route('jobs.index') }}"
+                           class="nav-link"
+                           @if (request()->routeIs('jobs.index')) aria-current="page" @endif>
+                            Find jobs
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('ui-kit') }}"
                            class="nav-link"
                            @if (request()->routeIs('ui-kit')) aria-current="page" @endif>
