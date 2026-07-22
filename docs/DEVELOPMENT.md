@@ -116,6 +116,26 @@ type your_dump.sql  | docker compose exec -T pgsql psql -U sail -d laravel
   only manages Laravel's *own* `migrations` table — never the PascalCase business tables or
   `__EFMigrationsHistory` (`data-model.md §0`).
 
+#### No dump? Apply the schema + dev seed (for feature work without real data)
+
+The **existing schema DDL** ships in the sibling repo, so you can stand up all 46 tables (empty)
+and seed just what a story needs — no real dump required. Re-run after `docker compose down -v`.
+
+```bash
+# 1) the OWNER TO workbc lines need the role to exist
+docker exec jobboard-laravel-pgsql-1 psql -U sail -d laravel -c "CREATE ROLE workbc;"
+# 2) apply the existing schema (leading DROPs on an empty DB error harmlessly)
+docker exec -i jobboard-laravel-pgsql-1 psql -U sail -d laravel -v ON_ERROR_STOP=0 -q \
+  < ../workbc-jb/src/scripts/postgres-migration/sql/pgsql-schema.sql
+# 3) dev seeds (add per story). GeocodedLocationCache for SRCH-2 radius search:
+docker exec -i jobboard-laravel-pgsql-1 psql -U sail -d laravel \
+  < database/dev/geocoded-location-cache.seed.sql
+```
+
+Applying the vendor schema this way is still "map, don't create" — it's the *existing* schema
+(same as restoring a dump), not app-owned migrations. The app connects as the `sail` superuser, so
+it reads the `workbc`-owned tables fine.
+
 ### OpenSearch (the derived read model)
 
 Local OpenSearch starts **empty**. For most feature work you don't need real data — generate a
