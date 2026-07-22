@@ -118,7 +118,18 @@ type your_dump.sql  | docker compose exec -T pgsql psql -U sail -d laravel
 
 ### OpenSearch (the derived read model)
 
-Local OpenSearch starts **empty**. Populate `jobs_en` / `jobs_fr` from a copy:
+Local OpenSearch starts **empty**. For most feature work you don't need real data — generate a
+realistic fake set that matches the real mapping/shapes (`docs/opensearch/`):
+
+```powershell
+docker compose exec laravel.test php artisan dev:index-jobs --fresh --count=500
+```
+
+`--fresh` (re)creates `jobs_en`/`jobs_fr` from `docs/opensearch/jobs-index.json`; docs mirror the
+federal vs. external shapes (arrays, nested `ExternalSource`/`SkillCategories`, geo points, a spread
+of active/expired). Dev-only — it refuses to run in `production`.
+
+To load a **copy of real data** instead, populate `jobs_en` / `jobs_fr` from:
 
 - **Snapshot restore** of a TEST index, **or**
 - **Reindex/replay** using the existing PHP indexer pointed at your local cluster (run that
