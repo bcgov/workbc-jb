@@ -43,6 +43,148 @@
         </div>
     </form>
 
+    {{-- Location facet (SRCH-2). Accessible combobox: Alpine owns the open/active
+         view state; Livewire owns the suggestion data, validation and committed
+         locations. --}}
+    <div
+        class="grid gap-4 rounded-lg border border-slate-200 bg-white p-4 sm:grid-cols-[1fr_auto] sm:items-start"
+        x-data="{
+            open: false,
+            activeIndex: -1,
+            get options() { return Array.from(this.$refs.listbox ? this.$refs.listbox.querySelectorAll('[role=option]') : []); },
+            hasOptions() { return this.options.length > 0; },
+            activeId() { return this.activeIndex >= 0 ? 'location-option-' + this.activeIndex : null; },
+            openIfOptions() { this.open = this.hasOptions(); },
+            next() { this.open = true; const n = this.options.length; if (!n) return; this.activeIndex = (this.activeIndex + 1) % n; },
+            prev() { this.open = true; const n = this.options.length; if (!n) return; this.activeIndex = (this.activeIndex - 1 + n) % n; },
+            selectIndex(i) { const el = this.options[i]; if (!el) return; $wire.selectSuggestion(el.dataset.value); this.reset(); },
+            onEnter() {
+                if (this.activeIndex >= 0 && this.options[this.activeIndex]) { this.selectIndex(this.activeIndex); return; }
+                const val = this.$refs.input.value.trim();
+                if (val === '') return;
+                $wire.set('locationInput', val).then(() => $wire.addLocation());
+                this.reset();
+            },
+            onBlur() {
+                this.close();
+                const val = this.$refs.input.value.trim();
+                if (val === '') return;
+                // Validate typed-but-unselected text when leaving the field.
+                $wire.set('locationInput', val).then(() => $wire.addLocation());
+            },
+            close() { this.open = false; this.activeIndex = -1; },
+            reset() { this.open = false; this.activeIndex = -1; },
+        }"
+        x-on:keydown.escape="close()"
+        x-on:click.outside="close()"
+    >
+        <div>
+            <label for="location-input" class="block text-sm font-medium text-slate-900">City or postal code</label>
+            <p id="location-hint" class="mt-1 text-sm text-slate-600">Type a city and choose a suggestion, or enter a postal code, then add it.</p>
+
+            <div class="relative mt-1">
+                <input
+                    id="location-input"
+                    x-ref="input"
+                    type="text"
+                    autocomplete="off"
+                    role="combobox"
+                    aria-controls="location-listbox"
+                    aria-autocomplete="list"
+                    aria-expanded="false"
+                    x-bind:aria-expanded="(open && hasOptions()).toString()"
+                    x-bind:aria-activedescendant="activeId()"
+                    aria-describedby="location-hint @if ($locationError) location-error @endif"
+                    wire:model.live.debounce.300ms="locationInput"
+                    x-on:focus="openIfOptions()"
+                    x-on:input="open = true"
+                    x-on:blur="onBlur()"
+                    x-on:keydown.arrow-down.prevent="next()"
+                    x-on:keydown.arrow-up.prevent="prev()"
+                    x-on:keydown.enter.prevent="onEnter()"
+                    class="block w-full rounded-md border border-slate-400 px-3 py-2 text-slate-900 shadow-sm placeholder:text-slate-500 focus-visible:border-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900"
+                    placeholder="e.g. Victoria or V8W 1P6"
+                />
+
+                <ul
+                    id="location-listbox"
+                    x-ref="listbox"
+                    role="listbox"
+                    aria-label="City suggestions"
+                    x-show="open && hasOptions()"
+                    x-cloak
+                    class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border border-slate-300 bg-white py-1 shadow-lg"
+                >
+                    @foreach ($suggestions as $i => $city)
+                        <li
+                            id="location-option-{{ $i }}"
+                            role="option"
+                            data-value="{{ $city }}"
+                            aria-selected="false"
+                            x-bind:aria-selected="(activeIndex === {{ $i }}).toString()"
+                            x-bind:class="activeIndex === {{ $i }} ? 'bg-blue-50 text-blue-900' : 'text-slate-900'"
+                            x-on:mousedown.prevent="selectIndex({{ $i }})"
+                            x-on:mouseenter="activeIndex = {{ $i }}"
+                            class="cursor-pointer px-3 py-2 text-sm"
+                        >
+                            {{ $city }}
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+
+            {{-- Validation errors are announced assertively. --}}
+            <p id="location-error" role="alert" aria-live="assertive" class="mt-1 min-h-5 text-sm font-medium text-red-800">
+                @if ($locationError)
+                    <span class="inline-flex items-center gap-1">
+                        <svg class="size-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9 9a1 1 0 012 0v4a1 1 0 11-2 0V9zm1-4a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" />
+                        </svg>
+                        <span>{{ $locationError }}</span>
+                    </span>
+                @endif
+            </p>
+
+            <div class="mt-2">
+                <x-button type="button" variant="secondary" wire:click="addLocation">Add location</x-button>
+            </div>
+
+            {{-- Committed locations. --}}
+            @if (! empty($locations))
+                <ul aria-label="Selected locations" class="mt-3 flex flex-wrap gap-2">
+                    @foreach ($locations as $i => $loc)
+                        @php
+                            $label = $loc['City'] ?? $loc['Region'] ?? (isset($loc['Postal']) ? \App\Search\Filters\LocationField::fromArray($loc)->getPostal() : 'Location');
+                        @endphp
+                        <li class="inline-flex items-center gap-1 rounded-full bg-blue-50 py-1 pl-3 pr-1 text-sm text-blue-900">
+                            <span>{{ $label }}</span>
+                            <button
+                                type="button"
+                                wire:click="removeLocation({{ $i }})"
+                                aria-label="Remove location {{ $label }}"
+                                class="inline-flex size-5 items-center justify-center rounded-full hover:bg-blue-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900"
+                            >
+                                <svg class="size-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                                </svg>
+                            </button>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </div>
+
+        <div>
+            <label for="distance" class="block text-sm font-medium text-slate-900">Distance</label>
+            <select id="distance" wire:model.live="distance"
+                    class="mt-1 block w-full rounded-md border border-slate-400 px-3 py-2 text-slate-900 shadow-sm focus-visible:border-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900 sm:w-44">
+                @foreach ($distanceOptions as $value => $label)
+                    <option value="{{ $value }}">{{ $label }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+
     @if ($unavailable)
         <x-alert type="error" title="Search is temporarily unavailable">
             We could not reach the job index. Please try again in a few moments.

@@ -2,6 +2,7 @@
 
 namespace App\Services\Search;
 
+use App\Search\Contracts\Geocoder;
 use App\Search\Filters\JobSearchFilters;
 use App\Search\Queries\JobSearchQuery;
 use App\Search\Results\SearchResult;
@@ -16,17 +17,22 @@ use OpenSearch\Client;
  * (copilot-instructions §6). The Livewire component and any controller call
  * this service; the query body itself is built by the FND-7
  * {@see JobSearchQuery} as a structured array (never string-concatenated).
+ * Radius searches resolve coordinates through the injected {@see Geocoder}
+ * adapter.
  */
 final class JobSearchService
 {
-    public function __construct(private Client $client) {}
+    public function __construct(
+        private Client $client,
+        private Geocoder $geocoder,
+    ) {}
 
     /**
      * Run the filters against OpenSearch and project the hits to the §2.1 DTO.
      */
     public function search(JobSearchFilters $filters): SearchResult
     {
-        $body = (new JobSearchQuery($filters))->build();
+        $body = (new JobSearchQuery($filters, $this->geocoder))->build();
 
         $response = $this->client->search([
             'index' => $this->index(),

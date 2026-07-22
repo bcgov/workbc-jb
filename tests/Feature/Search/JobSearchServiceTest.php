@@ -6,12 +6,18 @@ use App\Search\Filters\JobSearchFilters;
 use App\Services\Search\JobSearchService;
 use Mockery;
 use OpenSearch\Client;
+use Tests\Fakes\FakeGeocoder;
 use Tests\TestCase;
 
 class JobSearchServiceTest extends TestCase
 {
     /** @var array<string, mixed> */
     private array $captured = [];
+
+    private function service(int $total = 2): JobSearchService
+    {
+        return new JobSearchService($this->fakeClient($total), new FakeGeocoder());
+    }
 
     private function fakeClient(int $total = 2): Client
     {
@@ -36,7 +42,7 @@ class JobSearchServiceTest extends TestCase
 
     public function test_it_queries_the_english_index_by_default(): void
     {
-        $service = new JobSearchService($this->fakeClient());
+        $service = $this->service();
 
         $service->search(JobSearchFilters::fromArray(['PageSize' => 20]));
 
@@ -45,7 +51,7 @@ class JobSearchServiceTest extends TestCase
 
     public function test_it_sends_the_structured_query_body_with_the_base_expiry_filter(): void
     {
-        $service = new JobSearchService($this->fakeClient());
+        $service = $this->service();
 
         $service->search(JobSearchFilters::fromArray(['PageSize' => 20]));
 
@@ -57,7 +63,7 @@ class JobSearchServiceTest extends TestCase
 
     public function test_it_projects_hits_to_the_search_result_dto(): void
     {
-        $service = new JobSearchService($this->fakeClient(total: 42));
+        $service = $this->service(total: 42);
 
         $result = $service->search(JobSearchFilters::fromArray(['Page' => 3, 'PageSize' => 20]));
 

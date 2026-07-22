@@ -28,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
 
             return $builder->build();
         });
+
+        // Geocoding goes through the Geocoder adapter (constraint #4), never inline.
+        // The concrete adapter resolves cache-first from GeocodedLocationCache.
+        $this->app->bind(\App\Search\Contracts\Geocoder::class, \App\Services\Integration\CachedGeocoder::class);
     }
 
     /**
