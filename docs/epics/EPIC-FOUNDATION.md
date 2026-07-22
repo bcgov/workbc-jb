@@ -15,11 +15,11 @@ FND-7 depends on FND-1 (+ `contracts.md`).
 ---
 
 ## FND-1 — Project scaffold & infrastructure connections
-**Description:** Create the Laravel 11 / PHP 8.3 app with Blade + Livewire + Filament 3, wired to
+**Description:** Create the Laravel 12 / PHP 8.3 app with Blade + Livewire + Filament 4, wired to
 the **existing** PostgreSQL, Redis, and OpenSearch — no schema creation.
 
 **Acceptance criteria**
-- [ ] Laravel 11, PHP 8.3; Livewire + Filament 3 installed; **no Inertia/React** packages.
+- [ ] Laravel 12, PHP 8.3; Livewire + Filament 4 installed; **no Inertia/React** packages.
 - [ ] `config/app.php` timezone = **`America/Vancouver`**; a test fails if it changes (Rule F).
 - [ ] PostgreSQL connection points at the existing database; `php artisan migrate:status` runs
       against Laravel's **own** `migrations` table (does not touch `__EFMigrationsHistory` or any

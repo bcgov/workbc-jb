@@ -6,11 +6,11 @@ an enforced constraint below, **STOP and add an ADR** under `docs/adr/` instead 
 around it. Treat ambiguity as "stop and ask," not "interpret."
 
 ## Stack (no alternatives without an ADR)
-- Backend: **Laravel 11, PHP 8.3**
+- Backend: **Laravel 12, PHP 8.3**
 - Frontend: **Blade + Livewire (+ Alpine, bundled)** — server-rendered, no SPA. See ADR-002.
   - **Alpine** for view state (toggles, dropdowns, modals). **Livewire** for data-backed
     reactivity (search filters, alert builder, forms). Alpine for view, Livewire for data.
-- Admin: **Filament 3**
+- Admin: **Filament 4**
 - **PostgreSQL 15** · **Redis 7** (cache/queue/session) · **OpenSearch** · **AWS EKS** via GitHub Actions
 
 ## Architecture in one line

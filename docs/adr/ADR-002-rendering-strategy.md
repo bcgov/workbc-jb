@@ -20,7 +20,7 @@ We will build a **server-rendered** application — **no SPA, no Inertia/React**
   **path-based and crawlable** (no hash routing).
 - **Authenticated job-seeker area** (dashboard, saved jobs, alerts, recommended jobs, profiles,
   settings): **Blade + Livewire** for interactivity (behind login; SEO not required).
-- **Admin:** **Filament 3**.
+- **Admin:** **Filament 4**.
 - **Alpine.js** (bundled with Livewire) for view state; **Livewire** for data-backed reactivity.
 
 ## Consequences

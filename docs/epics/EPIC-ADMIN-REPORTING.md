@@ -5,7 +5,7 @@ management, job/posting browsing, admin-account management, and system settings 
 reporting suite (core reports ported from Dapper) **and** the new chart/dashboard visualizations.
 Charts are additive; the core admin + reporting must be preserved first.
 
-**Applies to every story:** **Filament 3**; Keycloak OIDC auth (FND-6); role-based policies from
+**Applies to every story:** **Filament 4**; Keycloak OIDC auth (FND-6); role-based policies from
 `AdminUsers.AdminLevel`; existing DB — map, don't create; reports **call the existing stored
 procedures** (scheduled by pg_cron — ADR-004), never reimplement them; WCAG 2.1 AA (**including
 charts**); no PII in logs (FOIPPA); DoD + self-check.

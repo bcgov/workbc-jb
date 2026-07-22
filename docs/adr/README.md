@@ -18,6 +18,7 @@ and coding agents — don't unknowingly undo a deliberate choice.
 | [ADR-002](ADR-002-rendering-strategy.md) | Server-rendered Blade + Livewire; no SPA | Accepted |
 | [ADR-003](ADR-003-authentication.md) | Session auth (seekers) + Keycloak OIDC (admin); email-only reset | Accepted |
 | [ADR-004](ADR-004-scheduling.md) | Scheduling — retain pg_cron for DB-resident work | Accepted |
+| [ADR-005](ADR-005-laravel-12-filament-4.md) | Adopt Laravel 12 + Filament 4 (Laravel 11 security-EOL) | Accepted |
 
 ## Template
 

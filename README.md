@@ -1,12 +1,16 @@
 # WorkBC Job Board — Laravel Rewrite
 
 The **app/web layer** for the WorkBC Job Board: public job search + detail, the job-seeker account,
-the Filament admin, reporting, and the Drupal-facing JSON API — built on **Laravel 11 / PHP 8.3**
-with **Blade + Livewire + Filament 3** (server-rendered, no SPA).
+the Filament admin, reporting, and the Drupal-facing JSON API — built on **Laravel 12 / PHP 8.3**
+with **Blade + Livewire + Filament 4** (server-rendered, no SPA).
 
-> This repo currently contains the **planning package** (agent guardrails, architecture, decisions,
-> epics, and a Jira import). The Laravel application itself is scaffolded in **FND-1** (see the
-> Foundation epic).
+> This repo contains the **planning package** (agent guardrails, architecture, decisions, epics,
+> Jira import) **and** the **FND-1 application scaffold** — Laravel 12 + Livewire + Filament 4 on
+> Sail (PostgreSQL 15 · Redis · OpenSearch 2.11). To run it locally, see **[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)**.
+>
+> Quick start: `docker compose up -d --build`, populate the volumes + build assets per
+> DEVELOPMENT.md §3, then the app is at <http://localhost:8000> (admin at `/admin`). Feature work
+> (models, auth, search, admin) builds on this per the Foundation epic.
 
 ## Non-negotiable scope & constraints
 
@@ -35,7 +39,7 @@ with **Blade + Livewire + Filament 3** (server-rendered, no SPA).
 
 ## Stack
 
-Laravel 11 · PHP 8.3 · Blade + Livewire (+ Alpine, bundled) · Filament 3 · PostgreSQL 15 ·
+Laravel 12 · PHP 8.3 · Blade + Livewire (+ Alpine, bundled) · Filament 4 · PostgreSQL 15 ·
 Redis 7 (cache/queue/session) · OpenSearch · AWS EKS via GitHub Actions.
 
 ## Getting started
