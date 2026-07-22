@@ -1,0 +1,54 @@
+name: Accessibility
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  pa11y:
+    name: pa11y (WCAG 2.1 AA)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, dom, curl, pdo_sqlite
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Install and build front-end
+        run: |
+          npm ci
+          npm run build
+
+      - name: Serve the app
+        run: php artisan serve --host=127.0.0.1 --port=8000 &
+
+      - name: Wait for the app to respond
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sSf http://127.0.0.1:8000/ui > /dev/null; then
+              echo "App is up." && exit 0
+            fi
+            sleep 1
+          done
+          echo "App did not start in time." && exit 1
+
+      - name: Run accessibility checks
+        run: npm run test:a11y

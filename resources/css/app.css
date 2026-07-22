@@ -9,3 +9,38 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+@layer base {
+    /* Guard against layout overflow so the body never scrolls sideways (FND-4 AC). */
+    html,
+    body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    /* Visible focus indicator for keyboard users on any interactive element (WCAG 2.4.7). */
+    :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+        outline: 2px solid #1e3a8a;
+        outline-offset: 2px;
+    }
+
+    /* Alpine: hide x-cloak elements until Alpine initialises. */
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+@layer components {
+    /* Skip link: hidden until focused, then pinned top-left (WCAG 2.4.1). */
+    .skip-link {
+        @apply sr-only;
+    }
+
+    .skip-link:focus {
+        @apply not-sr-only fixed left-4 top-4 z-50 rounded-md bg-blue-800 px-4 py-2 font-semibold text-white outline-2 outline-offset-2 outline-blue-900;
+    }
+
+    .nav-link {
+        @apply rounded px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-900 aria-[current=page]:bg-blue-50 aria-[current=page]:text-blue-800;
+    }
+}
