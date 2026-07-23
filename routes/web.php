@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\JobDetailController;
 use App\Http\Controllers\LegacyAlertRedirectController;
+use App\Http\Controllers\Web\SitemapController;
 use App\Livewire\JobSearch;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Route;
@@ -9,6 +10,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// SRCH-8: job sitemap (SEO). ~35 k active jobs × 2 languages > 50 k URL limit,
+// so a sitemap index points to two language shards. Shards are cached in Redis
+// (default 4 h TTL via SITEMAP_CACHE_TTL env). Both routes must sit above the
+// catch-all /jobs/{job} route to avoid the segment constraint swallowing them.
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.index');
+Route::get('/sitemap-{language}.xml', [SitemapController::class, 'shard'])
+    ->where('language', 'en|fr')
+    ->name('sitemap.shard');
 
 // Public, server-rendered job search (SRCH-1). Reachable anonymously — no auth
 // middleware. Full-page Livewire component: results render into the initial HTML.
