@@ -514,6 +514,23 @@
                 Clear filters<span class="sr-only"> ({{ $activeFilterCount }} active)</span>
             </button>
         @endif
+
+        {{-- SRCH-6: copy a shareable link that reconstructs the current filters. --}}
+        <div x-data="{ copied: false }" class="inline-flex items-center gap-2">
+            <button type="button"
+                    x-on:click="
+                        navigator.clipboard?.writeText(@js($shareUrl)).then(() => {
+                            copied = true;
+                            setTimeout(() => copied = false, 2000);
+                        })
+                    "
+                    class="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-blue-800 underline hover:text-blue-900 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                Copy search link
+            </button>
+            <span role="status" aria-live="polite" class="text-sm text-green-700" x-cloak x-show="copied">
+                Link copied
+            </span>
+        </div>
     </div>
 
     @if ($unavailable)

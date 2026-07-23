@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LegacyAlertRedirectController;
 use App\Livewire\JobSearch;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Route;
@@ -11,6 +12,10 @@ Route::get('/', function () {
 // Public, server-rendered job search (SRCH-1). Reachable anonymously — no auth
 // middleware. Full-page Livewire component: results render into the initial HTML.
 Route::get('/jobs', JobSearch::class)->name('jobs.index');
+
+// SRCH-6 redirect shim: forwards legacy alert-email deep-links
+// (/job-search#/…;key=value matrix params) to the canonical /jobs?… URL.
+Route::get('/job-search', LegacyAlertRedirectController::class)->name('jobs.alert-redirect');
 
 // Placeholder path-based job-detail route so search results can link to a real,
 // crawlable URL. The SEO detail page itself is built in SRCH-7.
