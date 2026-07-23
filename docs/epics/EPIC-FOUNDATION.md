@@ -74,13 +74,18 @@ sitemap regeneration, view-count flush). Feed import/index jobs are **out of sco
 
 **Acceptance criteria**
 - [ ] Base Blade layout (header/footer/nav), responsive, no horizontal body scroll.
+- [ ] **Chrome-less "embed" layout mode** (per `ADR-006`): a layout variant with **no WorkBC
+      header/footer** for serving the search inside the Drupal iframe, selectable per-request (e.g.
+      `?embed=1` or a route/middleware). The full layout is retained for local dev / direct access.
+      Embed mode also emits the `postMessage` content-height bridge so the parent frame can auto-size.
 - [ ] Internal Blade component library: button, form field (with associated `<label>`), alert,
       pagination — each meeting WCAG 2.1 AA (keyboard, contrast, focus, ARIA where needed).
 - [ ] Livewire installed and demonstrated with one trivial reactive component; Alpine used for a
       trivial view-state toggle (documents the "Alpine for view / Livewire for data" rule).
 - [ ] An automated a11y check (axe or pa11y) runs in CI against the base layout.
 
-**Docs:** copilot-instructions (Frontend, Accessibility); `ADR-002`. **Depends on:** FND-1.
+**Docs:** copilot-instructions (Frontend, Accessibility); `ADR-002`, `ADR-006` (embed mode).
+**Depends on:** FND-1.
 
 ---
 

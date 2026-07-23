@@ -113,14 +113,18 @@ filter `ExpireDate >= now`, America/Vancouver) → OpenSearch → result DTOs �
 
 **5.5 Reporting (scheduled):** populate `JobStats`/`JobSeekerStats`; report queries read those.
 
-## 6. Rendering & SEO (ADR-002)
+## 6. Rendering & integration (ADR-002, ADR-006)
 
 Everything is **server-rendered** — there is no SPA.
-- **Public (search results, job detail):** **Blade**, SEO-critical. Job-detail pages emit
-  `schema.org/JobPosting` structured data; a `sitemap.xml` lists job URLs. Job URLs are
-  path-based and crawlable (no hash routing).
+- **Public search + job detail:** **Blade + Livewire**, delivered **chrome-less** (no WorkBC
+  header/footer) to be **embedded in the Drupal page via an `<iframe>`** — Drupal owns the page and
+  chrome (ADR-006). Pages are path-based (no hash routing). **SEO is not a driver** (the current site
+  isn't crawlable and indexing isn't required); the `schema.org/JobPosting` structured data and
+  `sitemap.xml` are **retained but not primary** — they keep a future "flip to crawlable direct
+  access" option open. Shareable-search and email-alert links open the app **directly** (the browser
+  URL inside a frame doesn't reflect search state).
 - **Authenticated job-seeker area** (dashboard, saved jobs, alerts, recommended, profiles,
-  settings): **Blade + Livewire** for interactivity (behind login; SEO not required).
+  settings): **Blade + Livewire** for interactivity (behind login).
 - **Admin:** **Filament**.
 - **Alpine** for view state, **Livewire** for data-backed reactivity.
 
