@@ -574,8 +574,8 @@
             @php $j = $job->toArray(); @endphp
             <article class="rounded-lg border border-slate-200 bg-white p-4 focus-within:ring-2 focus-within:ring-blue-700">
                 <h2 class="text-lg font-semibold">
-                    {{-- Path-based, crawlable detail URL (placeholder route until SRCH-7). --}}
-                    <a href="{{ route('jobs.show', ['jobId' => $j['JobId']]) }}" wire:navigate
+                    {{-- Path-based, crawlable detail URL (SRCH-7): {slug}-{JobId}. --}}
+                    <a href="{{ route('jobs.show', ['job' => \App\Support\JobSlug::path($j['JobId'], $j['Title'] ?? null)]) }}" wire:navigate
                        class="text-blue-800 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-900">
                         {{ $j['Title'] ?? 'Untitled position' }}
                     </a>

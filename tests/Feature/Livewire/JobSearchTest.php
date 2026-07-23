@@ -126,6 +126,6 @@ class JobSearchTest extends TestCase
     public function test_result_links_use_the_path_based_detail_route(): void
     {
         Livewire::test(JobSearch::class)
-            ->assertSeeHtml('href="'.route('jobs.show', ['jobId' => '100']).'"');
+            ->assertSeeHtml('href="'.route('jobs.show', ['job' => \App\Support\JobSlug::path('100', 'Software Engineer')]).'"');
     }
 }

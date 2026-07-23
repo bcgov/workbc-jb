@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light">
     <title>{{ $title ?? 'WorkBC Job Board' }}</title>
+    @isset($description)
+        <meta name="description" content="{{ $description }}">
+    @endisset
+    {{-- Per-page SEO head (canonical, hreflang, JSON-LD) injected by the view. --}}
+    {{ $head ?? '' }}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="flex min-h-full flex-col bg-slate-50 text-slate-900 antialiased">
