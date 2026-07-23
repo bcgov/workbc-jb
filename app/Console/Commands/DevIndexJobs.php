@@ -84,6 +84,12 @@ class DevIndexJobs extends Command
         'College or apprenticeship', 'University',
     ];
 
+    /** Real SalaryConditions.Description values (JobSearch::salaryConditionOptions). */
+    private array $salaryConditionValues = [
+        'Bonus', 'Commission', 'Dental plan', 'Health care plan', 'Pension plan benefits',
+        'RRSP benefits', 'Gratuities', 'Group insurance benefits', 'Life insurance benefits', 'Disability benefits',
+    ];
+
     private int $lastNoc2016 = 0;
 
     private \Faker\Generator $faker;
@@ -210,10 +216,37 @@ class DevIndexJobs extends Command
             'IsVariousLocation' => false,
             'WorkHours' => (float) mt_rand(20, 40),
             'HoursOfWork' => ['Description' => [mt_rand(0, 1) ? 'Full-time' : 'Part-time']],
-            'Salary' => (float) $salary,
-            'SalarySort' => ['Ascending' => (float) $salary, 'Descending' => (float) $salary],
-            'SalarySummary' => '$'.number_format($salary).' annually',
+            ...$this->salaryFields((float) $salary),
         ];
+    }
+
+    /** ~8% unknown salary (N/A + sort sentinel, matching SetSalarySort); else annualized. */
+    private function salaryFields(float $salary): array
+    {
+        if (mt_rand(1, 100) <= 8) {
+            return [
+                'SalarySummary' => 'N/A',
+                'SalarySort' => ['Ascending' => 99999999.0, 'Descending' => -99999999.0],
+            ];
+        }
+
+        return [
+            'Salary' => $salary,
+            'SalarySummary' => '$'.number_format($salary).' annually',
+            'SalarySort' => ['Ascending' => $salary, 'Descending' => $salary],
+        ];
+    }
+
+    /** 0–3 real SalaryConditions.Description benefit terms. */
+    private function randomSalaryConditions(): array
+    {
+        $n = mt_rand(0, 3);
+        if ($n === 0) {
+            return [];
+        }
+        $keys = (array) array_rand($this->salaryConditionValues, min($n, count($this->salaryConditionValues)));
+
+        return array_map(fn (int $k): string => $this->salaryConditionValues[$k], $keys);
     }
 
     private function federalJob(): array
@@ -241,10 +274,10 @@ class DevIndexJobs extends Command
             'PostalCode' => $this->bcPostalCode(),
             'Province' => 'BC',
             'EduLevel' => $this->eduLevels[array_rand($this->eduLevels)],
-            'SalaryDescription' => '$'.number_format($job['Salary'] / 2080, 2).' hourly for '.((int) $job['WorkHours']).' hours per week',
+            'SalaryDescription' => isset($job['Salary']) ? '$'.number_format($job['Salary'] / 2080, 2).' hourly for '.((int) $job['WorkHours']).' hours per week' : '',
             'PeriodOfEmployment' => ['Description' => [['Permanent', 'Temporary', 'Seasonal', 'Casual'][array_rand([0, 1, 2, 3])]]],
             'EmploymentTerms' => ['Description' => [['Flexible hours', 'Day', 'Evening', 'Weekend'][array_rand([0, 1, 2, 3])]]],
-            'SalaryConditions' => ['Description' => []],
+            'SalaryConditions' => ['Description' => $this->randomSalaryConditions()],
             'WorkplaceType' => $wpt,
             'NaicsId' => $this->industries[array_rand($this->industries)][1],
             'ProgramName' => '',
