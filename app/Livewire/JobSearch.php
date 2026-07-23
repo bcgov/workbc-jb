@@ -2,9 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Search\Filters\DateField;
 use App\Search\Filters\JobSearchFilters;
+use App\Search\Filters\LocationField;
 use App\Search\Results\SearchResult;
 use App\Search\Support\SalaryRangeHelper;
+use App\Search\Url\FilterUrlSerializer;
 use App\Services\Search\JobSearchService;
 use App\Services\Search\LocationService;
 use Livewire\Attributes\Layout;
@@ -162,6 +165,109 @@ final class JobSearch extends Component
         'equityGroups', 'postingLanguage', 'nocCode', 'jobSource',
         'excludePlacementAgency',
     ];
+
+    /**
+     * SRCH-6 — hydrate the facet state from a shareable/deep-linked URL.
+     *
+     * Keyword, scope, sort and page are bound to the query string by Livewire
+     * (#[Url]); every other facet is reconstructed here from the canonical
+     * parameters via {@see FilterUrlSerializer}, so loading a shared link (or an
+     * old alert deep-link forwarded by the redirect shim) restores the exact
+     * filters. Runs once on the initial GET.
+     */
+    public function mount(): void
+    {
+        $filters = app(FilterUrlSerializer::class)->fromQuery(request()->query());
+        $this->hydrateFacets($filters);
+    }
+
+    /**
+     * Map a reconstructed {@see JobSearchFilters} back onto the facet UI state
+     * (the inverse of {@see toFilters()} for everything except the #[Url]-bound
+     * keyword/scope/sort/page, which Livewire already restores).
+     */
+    private function hydrateFacets(JobSearchFilters $f): void
+    {
+        // Location facet.
+        $this->locations = array_map(function (LocationField $loc): array {
+            if ($loc->City !== null && $loc->City !== '') {
+                return ['City' => $loc->City];
+            }
+            if ($loc->Region !== null && $loc->Region !== '') {
+                return ['Region' => $loc->Region];
+            }
+
+            return ['Postal' => (string) $loc->getPostal()];
+        }, $f->SearchLocations);
+        // Only adopt a radius that maps to a real option; otherwise keep "exact".
+        if (array_key_exists($f->SearchLocationDistance, self::distanceOptions())) {
+            $this->distance = $f->SearchLocationDistance;
+        }
+
+        // Job-type facets (flags → the four checkbox groups).
+        $this->hours = $this->selectedFlags($f, self::jobTypeHoursOptions(), 'SearchJobType');
+        $this->period = $this->selectedFlags($f, self::jobTypePeriodOptions(), 'SearchJobType');
+        $this->terms = $this->selectedFlags($f, self::jobTypeTermsOptions(), 'SearchJobType');
+        $this->workplace = $this->selectedFlags($f, self::workplaceOptions(), 'SearchJobType');
+
+        // Industry / education.
+        $this->industries = $f->SearchIndustry;
+        $this->educationLevels = $f->SearchJobEducationLevel;
+
+        // Date facet.
+        $this->dateSelection = $f->SearchDateSelection;
+        $this->startDate = $f->StartDate !== null ? $this->dateFieldToInput($f->StartDate) : '';
+        $this->endDate = $f->EndDate !== null ? $this->dateFieldToInput($f->EndDate) : '';
+
+        // Salary facet.
+        $this->salaryType = $f->SalaryType;
+        $this->salaryBrackets = array_values(array_filter(
+            array_map('strval', range(1, 5)),
+            fn (string $n): bool => $f->{"SalaryBracket{$n}"},
+        ));
+        $this->salaryCustom = $f->SalaryBracket6;
+        $this->salaryMin = $f->SalaryMin ?? '';
+        $this->salaryMax = $f->SalaryMax ?? '';
+        $this->salaryUnknown = $f->SearchSalaryUnknown;
+        $this->salaryConditions = $f->SearchSalaryConditions;
+
+        // "More" facet.
+        $this->equityGroups = $this->selectedFlags($f, self::equityOptions(), 'SearchIs');
+        $this->postingLanguage = $f->SearchIsPostingsInEnglishAndFrench ? '2' : '1';
+        $this->nocCode = $f->NocCode ?? '';
+        $this->jobSource = $f->SearchJobSource;
+        $this->excludePlacementAgency = $f->SearchExcludePlacementAgencyJobs;
+    }
+
+    /**
+     * The option keys whose "{$prefix}{Key}" boolean flag is set on the filters.
+     *
+     * @param  array<string, string>  $options
+     * @return string[]
+     */
+    private function selectedFlags(JobSearchFilters $f, array $options, string $prefix): array
+    {
+        return array_values(array_filter(
+            array_keys($options),
+            fn (string $key): bool => (bool) $f->{"{$prefix}{$key}"},
+        ));
+    }
+
+    /** DateField → the native date input's YYYY-MM-DD string. */
+    private function dateFieldToInput(DateField $d): string
+    {
+        return sprintf('%04d-%02d-%02d', $d->Year, $d->Month, $d->Day);
+    }
+
+    /**
+     * The canonical, shareable URL for the current filter state (SRCH-6). Kept
+     * current on every render so a "copy link" affordance always reflects the
+     * live facets, including those not bound to the query string by #[Url].
+     */
+    public function shareUrl(): string
+    {
+        return url(app(FilterUrlSerializer::class)->toUrl($this->toFilters()));
+    }
 
     /** Submit the keyword/scope form: re-run from page 1. */
     public function applySearch(): void
@@ -332,6 +438,7 @@ final class JobSearch extends Component
         return view('livewire.job-search', [
             'result' => $result,
             'unavailable' => $unavailable,
+            'shareUrl' => $this->shareUrl(),
             'sortOptions' => self::sortOptions(),
             'distanceOptions' => self::distanceOptions(),
             'jobTypeHoursOptions' => self::jobTypeHoursOptions(),
