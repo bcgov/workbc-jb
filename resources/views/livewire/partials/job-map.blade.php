@@ -14,7 +14,11 @@
 
 @assets
 <script>
-    document.addEventListener('alpine:init', () => {
+    // Register on alpine:init, but also immediately if Alpine has already started:
+    // this script can load AFTER alpine:init has fired (the map partial is only
+    // rendered when the Map view is toggled in), which otherwise leaves jobMap
+    // undefined ("jobMap is not defined").
+    (window.Alpine ? (fn) => fn() : (fn) => document.addEventListener('alpine:init', fn))(() => {
         Alpine.data('jobMap', (config) => ({
             status: 'loading', // loading | ready | empty | error
             pins: [],
