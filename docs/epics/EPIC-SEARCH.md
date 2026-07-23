@@ -200,6 +200,80 @@ redirects into indexable pages (major SEO gain) and unifies external/federal beh
 
 ---
 
+## UI parity & WorkBC brand (embed direction — ADR-006)
+
+The following stories bring the search UI to **"familiar but improved"** parity with the old Angular
+board and give it the WorkBC look, now that the app embeds into the Drupal page (`ADR-006`). See the
+old-vs-new comparison and the token spec in `docs/design/brand-alignment.md`. **BRAND-1** (WorkBC
+visual identity — BC Sans + Tailwind token layer + re-skin of the FND-4 components and search/detail
+views) is specified in that doc; the three stories below close the *layout* gaps.
+
+> Note: the old board's **"Create Job Alerts"** action in the results header returns with the
+> **ACCOUNT** epic (alerts live behind auth). Not in scope here.
+
+---
+
+## SRCH-11 — Active-filter chips strip
+**Description:** A removable "active filters" strip below the filter bar (parity with the old
+`lib-search-criteries`), so applied filters are visible and individually removable — not only shown as
+count badges on the dropdown buttons.
+
+**Acceptance criteria**
+- [ ] Renders one chip per active filter **value** across all facets (locations, job-type sub-values,
+      industries, education, date, salary brackets/custom/unknown/conditions, "more" values), each with
+      a human-readable label.
+- [ ] Each chip has an accessible remove control (`aria-label="Remove filter {label}"`) that removes
+      **just that value** and re-runs the search; the existing **Clear filters** stays.
+- [ ] Committed **location** chips are unified into (or visually consistent with) this strip.
+- [ ] a11y: the strip is a labelled group; removals are announced (polite live region); keyboard-operable.
+
+**Docs:** `brand-alignment.md`. **Depends on:** SRCH-3, SRCH-4, SRCH-5, SRCH-6.
+
+---
+
+## SRCH-12 — BC economic-region map selector (location filter)
+**Description:** An interactive SVG map of BC's economic regions in the location area: click a region
+to add/remove it as a **Region** location; hover highlights it and shows a name tooltip; selected
+regions stay highlighted. **Backend already supports this** — `JobSearchQuery` filters Region
+locations via `term Region.keyword`, and `LocationField`/`FilterUrlSerializer` already round-trip
+`r:` region tokens — so this is a **UI-only** addition.
+
+**Acceptance criteria**
+- [ ] Inline SVG of BC's regions, each region a selectable path. **Reuse the SVG geometry** from the
+      old app (`ClientApp/projects/jb-lib/src/lib/filters/location/location.component.html` `#region-map`).
+- [ ] Clicking a region toggles a `{ Region: '<name>' }` location through the **existing**
+      `addLocation`/`removeLocation` flow; the map's `active` highlight stays in sync with the
+      committed Region locations (both directions).
+- [ ] Region path IDs (e.g. `NorthCoastNechako`, `Cariboo`, `Northeast`, `Kootenay`,
+      `ThompsonOkanagan`, `MainlandSouthwest`, `VancouverIslandCoast`) map to the **exact
+      `Region.keyword` values in the index** — source the mapping from the old component's `regionNames`
+      + `selectLocation(..., isRegion)`; **verify against real indexed data** before shipping.
+- [ ] a11y: the typed city/postal input remains the primary accessible path; the map regions are
+      **focusable and activatable by keyboard** (Enter/Space), each with an accessible name — the map is
+      an enhancement, never the only way to pick a region.
+- [ ] Alpine owns hover/active **view** state; Livewire owns the committed Region locations (**data**).
+
+**Docs:** `brand-alignment.md`; old `location.component.{html,ts}`. **Depends on:** SRCH-2.
+
+---
+
+## SRCH-13 — Consolidated search band + headline (layout parity)
+**Description:** Merge the keyword and location inputs into one cohesive **search band** (closer to the
+old header layout) instead of two separate cards, and align the headline wording. Layout only — no
+search-behaviour change.
+
+**Acceptance criteria**
+- [ ] Keyword + "Search by" + primary **Search** action and the location input read as **one search
+      band**, responsive with no horizontal body scroll.
+- [ ] Headline aligned with the old board's intent; in **embed mode** the app must not duplicate the
+      H1/hero that Drupal renders on the host page — demote/suppress the in-frame H1 accordingly
+      (`ADR-006`, FND-4 embed layout).
+- [ ] No behavioural change to search; existing tests stay green.
+
+**Docs:** `brand-alignment.md`, `ADR-006`. **Depends on:** SRCH-1, SRCH-2.
+
+---
+
 ## Definition of Done (epic)
 - [ ] Public search reproduces current behaviour across all facets, sort, and the map (diff-tested where possible).
 - [ ] Job pages are **server-rendered and crawlable** with `JobPosting` structured data + sitemap —
