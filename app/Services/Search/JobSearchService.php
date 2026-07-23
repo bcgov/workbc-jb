@@ -72,6 +72,66 @@ final class JobSearchService
     }
 
     /**
+     * SRCH-10 — `POST /api/Search/JobSearch` entry point. Runs the SAME filters
+     * through {@see search()}, except for the contracts.md §2.1 profile-sidebar
+     * heuristic: a NOC filter + `PageSize <= 10` + no source pinned returns
+     * National Job Bank (federal) jobs first, falling back entirely to external
+     * jobs when no federal jobs match. Mirrors the legacy WorkBC.Web
+     * SearchController.JobSearch `runNjbFirst` branch exactly (an all-or-nothing
+     * source switch, not a per-page mix).
+     */
+    public function searchForApi(JobSearchFilters $filters): SearchResult
+    {
+        if ($this->prefersFederalFirst($filters)) {
+            return $this->searchFederalFirst($filters);
+        }
+
+        return $this->search($filters);
+    }
+
+    /**
+     * Total active jobs (contracts.md §2.2 `gettotaljobs`) — the same base
+     * query as an unfiltered {@see search()}, but with PageSize 0 so no hit
+     * documents are fetched, only the `track_total_hits` count.
+     */
+    public function activeJobCount(): int
+    {
+        $filters = new JobSearchFilters;
+        $filters->PageSize = 0;
+
+        return $this->search($filters)->count;
+    }
+
+    private function prefersFederalFirst(JobSearchFilters $filters): bool
+    {
+        $noSourcePinned = $filters->SearchJobSource === '' || $filters->SearchJobSource === '0';
+        if (! $noSourcePinned) {
+            return false;
+        }
+
+        $hasNocFilter = ($filters->SearchNocField ?? '') !== '' || ($filters->NocCode ?? '') !== '';
+        $looksLikeProfileSidebar = $hasNocFilter && $filters->PageSize > 0 && $filters->PageSize <= 10;
+
+        return $filters->SearchNjbJobsFirst || $looksLikeProfileSidebar;
+    }
+
+    private function searchFederalFirst(JobSearchFilters $filters): SearchResult
+    {
+        $federal = clone $filters;
+        $federal->SearchJobSource = '1';
+        $result = $this->search($federal);
+
+        if ($result->count > 0) {
+            return $result;
+        }
+
+        $external = clone $filters;
+        $external->SearchJobSource = '2';
+
+        return $this->search($external);
+    }
+
+    /**
      * The index to query for the active locale (contracts: en/fr are the two
      * derived indexes). Defaults to the English index.
      */
