@@ -71,8 +71,42 @@ final class JobSearch extends Component
     /** @var string[] city-name autocomplete suggestions */
     public array $suggestions = [];
 
+    // --- Standard filter facets (SRCH-3) -----------------------------------
+
+    /** @var string[] selected hours keys (FullTime|PartTime|LeadingToFullTime) */
+    public array $hours = [];
+
+    /** @var string[] selected employment-period keys (Permanent|Temporary|Casual|Seasonal) */
+    public array $period = [];
+
+    /** @var string[] selected employment-terms keys (Day…Weekend) */
+    public array $terms = [];
+
+    /** @var string[] selected workplace keys (OnSite|Hybrid|Travelling|Virtual) */
+    public array $workplace = [];
+
+    /** @var array<int, int|string> selected NAICS industry ids */
+    public array $industries = [];
+
+    /** @var string[] selected education levels (EduLevel.keyword values) */
+    public array $educationLevels = [];
+
+    /** Date facet: 0 any | 1 today | 2 past-3-days | 3 custom range. */
+    public string $dateSelection = '0';
+
+    /** Custom-range bounds as YYYY-MM-DD (from native date inputs); '' = unset. */
+    public string $startDate = '';
+
+    public string $endDate = '';
+
     /** @var string[] */
     private const SEARCH_IN = ['all', 'title', 'employer', 'jobId'];
+
+    /** Facet properties whose change should return to the first page of results. */
+    private const FACET_PROPERTIES = [
+        'hours', 'period', 'terms', 'workplace', 'industries',
+        'educationLevels', 'dateSelection', 'startDate', 'endDate',
+    ];
 
     /** Submit the keyword/scope form: re-run from page 1. */
     public function applySearch(): void
@@ -89,6 +123,36 @@ final class JobSearch extends Component
     /** Changing the radius restarts paging. */
     public function updatedDistance(): void
     {
+        $this->page = 1;
+    }
+
+    /**
+     * Generic Livewire hook: any standard-facet change (SRCH-3) returns to the
+     * first page. Scoped to FACET_PROPERTIES so it never fights the keyword,
+     * sort, distance or location hooks.
+     */
+    public function updated(string $name): void
+    {
+        if (in_array(strtok($name, '.'), self::FACET_PROPERTIES, true)) {
+            $this->page = 1;
+        }
+    }
+
+    /** Clear every filter facet (referenced by the empty-state hint). */
+    public function clearFilters(): void
+    {
+        $this->hours = [];
+        $this->period = [];
+        $this->terms = [];
+        $this->workplace = [];
+        $this->industries = [];
+        $this->educationLevels = [];
+        $this->dateSelection = '0';
+        $this->startDate = '';
+        $this->endDate = '';
+        $this->locations = [];
+        $this->distance = -1;
+        $this->resetLocationInput();
         $this->page = 1;
     }
 
@@ -203,6 +267,13 @@ final class JobSearch extends Component
             'unavailable' => $unavailable,
             'sortOptions' => self::sortOptions(),
             'distanceOptions' => self::distanceOptions(),
+            'jobTypeHoursOptions' => self::jobTypeHoursOptions(),
+            'jobTypePeriodOptions' => self::jobTypePeriodOptions(),
+            'jobTypeTermsOptions' => self::jobTypeTermsOptions(),
+            'workplaceOptions' => self::workplaceOptions(),
+            'industryOptions' => self::industryOptions(),
+            'educationOptions' => self::educationOptions(),
+            'dateOptions' => self::dateOptions(),
         ]);
     }
 
@@ -214,7 +285,7 @@ final class JobSearch extends Component
         $searchIn = in_array($this->searchIn, self::SEARCH_IN, true) ? $this->searchIn : 'all';
         $sort = ($this->sort >= 1 && $this->sort <= 11) ? $this->sort : 1;
 
-        return JobSearchFilters::fromArray([
+        $payload = [
             'Keyword' => $this->keyword !== '' ? $this->keyword : null,
             'SearchInField' => $searchIn,
             'SortOrder' => $sort,
@@ -222,7 +293,101 @@ final class JobSearch extends Component
             'PageSize' => $this->pageSize,
             'SearchLocations' => array_values($this->locations),
             'SearchLocationDistance' => $this->distance,
-        ]);
+            'SearchIndustry' => $this->selectedIndustries(),
+            'SearchJobEducationLevel' => $this->selectedEducationLevels(),
+        ];
+
+        // Job-type facets: each selected key toggles its SearchJobType{Key} flag.
+        // Whitelisted against the known option keys so a tampered request can't
+        // inject an unknown field (JobSearchFilters rejects those with a 400).
+        foreach ($this->selectedJobTypeKeys() as $key) {
+            $payload["SearchJobType{$key}"] = true;
+        }
+
+        return JobSearchFilters::fromArray($payload + $this->dateFilterPayload());
+    }
+
+    /**
+     * Selected job-type keys (hours + period + terms + workplace), whitelisted.
+     *
+     * @return string[]
+     */
+    private function selectedJobTypeKeys(): array
+    {
+        $allowed = array_merge(
+            array_keys(self::jobTypeHoursOptions()),
+            array_keys(self::jobTypePeriodOptions()),
+            array_keys(self::jobTypeTermsOptions()),
+            array_keys(self::workplaceOptions()),
+        );
+        $selected = array_merge($this->hours, $this->period, $this->terms, $this->workplace);
+
+        return array_values(array_intersect($selected, $allowed));
+    }
+
+    /**
+     * Selected NAICS ids, cast to int and whitelisted against the known list.
+     *
+     * @return int[]
+     */
+    private function selectedIndustries(): array
+    {
+        $allowed = array_keys(self::industryOptions());
+
+        return array_values(array_filter(
+            array_map('intval', $this->industries),
+            static fn (int $id): bool => in_array($id, $allowed, true),
+        ));
+    }
+
+    /**
+     * Selected education levels, whitelisted against the known EduLevel values.
+     *
+     * @return string[]
+     */
+    private function selectedEducationLevels(): array
+    {
+        return array_values(array_intersect($this->educationLevels, self::educationOptions()));
+    }
+
+    /**
+     * Date facet → filter payload. Only a valid range contributes Start/End.
+     *
+     * @return array<string, mixed>
+     */
+    private function dateFilterPayload(): array
+    {
+        $selection = in_array($this->dateSelection, ['0', '1', '2', '3'], true) ? $this->dateSelection : '0';
+
+        if ($selection !== '3') {
+            return ['SearchDateSelection' => $selection];
+        }
+
+        $payload = ['SearchDateSelection' => '3'];
+        if (($start = $this->parseDate($this->startDate)) !== null) {
+            $payload['StartDate'] = $start;
+        }
+        if (($end = $this->parseDate($this->endDate)) !== null) {
+            // The query pushes EndDate to end-of-day (23:59:59.999), so callers
+            // only supply the calendar date.
+            $payload['EndDate'] = $end;
+        }
+
+        return $payload;
+    }
+
+    /**
+     * Parse a YYYY-MM-DD string into a DateField-shaped array, or null.
+     *
+     * @return array<string, int>|null
+     */
+    private function parseDate(string $value): ?array
+    {
+        if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', trim($value), $m) !== 1) {
+            return null;
+        }
+
+        return ['Year' => (int) $m[1], 'Month' => (int) $m[2], 'Day' => (int) $m[3]];
     }
 
     /**
@@ -239,6 +404,132 @@ final class JobSearch extends Component
             25 => 'Within 25 km',
             50 => 'Within 50 km',
             100 => 'Within 100 km',
+        ];
+    }
+
+    /**
+     * Job-type hours options: key → SearchJobType{key} flag → HoursOfWork term.
+     *
+     * @return array<string, string>
+     */
+    public static function jobTypeHoursOptions(): array
+    {
+        return [
+            'FullTime' => 'Full-time',
+            'PartTime' => 'Part-time',
+            'LeadingToFullTime' => 'Part-time leading to full-time',
+        ];
+    }
+
+    /**
+     * Employment-period options.
+     *
+     * @return array<string, string>
+     */
+    public static function jobTypePeriodOptions(): array
+    {
+        return [
+            'Permanent' => 'Permanent',
+            'Temporary' => 'Temporary',
+            'Casual' => 'Casual',
+            'Seasonal' => 'Seasonal',
+        ];
+    }
+
+    /**
+     * Employment-terms (shift) options.
+     *
+     * @return array<string, string>
+     */
+    public static function jobTypeTermsOptions(): array
+    {
+        return [
+            'Day' => 'Day',
+            'Early' => 'Early morning',
+            'Evening' => 'Evening',
+            'Flexible' => 'Flexible hours',
+            'Morning' => 'Morning',
+            'Night' => 'Night',
+            'OnCall' => 'On call',
+            'Overtime' => 'Overtime',
+            'Shift' => 'Shift',
+            'Tbd' => 'To be determined',
+            'Weekend' => 'Weekend',
+        ];
+    }
+
+    /**
+     * Workplace-type options.
+     *
+     * @return array<string, string>
+     */
+    public static function workplaceOptions(): array
+    {
+        return [
+            'OnSite' => 'On-site',
+            'Hybrid' => 'Hybrid',
+            'Travelling' => 'Travelling',
+            'Virtual' => 'Virtual',
+        ];
+    }
+
+    /**
+     * Education-level options (value = EduLevel.keyword term, contracts §1).
+     *
+     * @return string[]
+     */
+    public static function educationOptions(): array
+    {
+        return [
+            'University',
+            'College or apprenticeship',
+            'Secondary school or job-specific training',
+            'No education',
+        ];
+    }
+
+    /**
+     * Industry options: NAICS id → sector name (edm_naics.json, enabled sectors,
+     * excluding "All Industries" id 0 and the disabled id 7).
+     *
+     * @return array<int, string>
+     */
+    public static function industryOptions(): array
+    {
+        return [
+            1 => 'Accommodation and Food Services',
+            2 => 'Agriculture and Fishing',
+            3 => 'Business, Building and Other Support Services',
+            4 => 'Construction',
+            5 => 'Educational Services',
+            6 => 'Finance, Insurance and Real Estate',
+            8 => 'Forestry and Logging with Support Activities',
+            9 => 'Health Care and Social Assistance',
+            10 => 'Information, Culture and Recreation',
+            11 => 'Manufacturing',
+            12 => 'Utilities',
+            13 => 'Mining and Oil and Gas Extraction',
+            14 => 'Repair, Personal and Non-Profit Services',
+            15 => 'Professional, Scientific, and Technical Services',
+            16 => 'Public Administration',
+            17 => 'Transportation and Warehousing',
+            18 => 'Wholesale Trade',
+            19 => 'Retail Trade',
+        ];
+    }
+
+    /**
+     * Date-selection options (SearchDateSelection enum, contracts §1).
+     *
+     * @return array<string, string>
+     */
+    public static function dateOptions(): array
+    {
+        return [
+            '0' => 'Any time',
+            '1' => 'Today',
+            '2' => 'Past 3 days',
+            '3' => 'Custom range',
         ];
     }
 

@@ -169,7 +169,13 @@ final class JobSearchQuery
                     $endValue = '9999-12-31';
                 }
 
-                return [['range' => ['DatePosted' => ['gte' => $start, 'lte' => $endValue]]]];
+                return [['range' => ['DatePosted' => [
+                    'gte' => $start,
+                    'lte' => $endValue,
+                    // SRCH-3 / constraint #7: interpret the picked calendar dates in
+                    // BC local time (the C# range omitted this, unlike today/past-3d).
+                    'time_zone' => self::TIME_ZONE,
+                ]]]];
 
             default:
                 return [];

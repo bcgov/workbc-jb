@@ -185,6 +185,193 @@
         </div>
     </div>
 
+    {{-- Standard filter facets (SRCH-3). Each dropdown is an accessible disclosure:
+         Alpine owns the open/close view state; Livewire owns the checkbox/radio
+         selections (the data) and applies them. AND across facets, OR within. --}}
+    @php
+        $jobTypeCount = count($hours) + count($period) + count($terms) + count($workplace);
+        $activeFilterCount = $jobTypeCount + count($industries) + count($educationLevels)
+            + ($dateSelection !== '0' ? 1 : 0) + count($locations);
+    @endphp
+    <div class="flex flex-wrap items-center gap-3" role="group" aria-label="Filter results">
+        {{-- Job type --}}
+        <div x-data="{ open: false }" x-on:keydown.escape="open = false" x-on:click.outside="open = false" class="relative">
+            <button
+                type="button"
+                x-on:click="open = ! open"
+                aria-controls="facet-jobtype"
+                aria-expanded="false"
+                x-bind:aria-expanded="open.toString()"
+                class="inline-flex items-center gap-1.5 rounded-md border border-slate-400 bg-white px-3 py-2 text-sm font-medium text-slate-900 shadow-sm hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900"
+            >
+                <span>Job type</span>
+                @if ($jobTypeCount > 0)
+                    <span class="inline-flex min-w-5 items-center justify-center rounded-full bg-blue-700 px-1.5 text-xs font-semibold text-white">{{ $jobTypeCount }}<span class="sr-only"> selected</span></span>
+                @endif
+                <svg class="size-4 text-slate-500" x-bind:class="open ? 'rotate-180' : ''" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 011.06 0L10 11.94l3.72-3.72a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.22 9.28a.75.75 0 010-1.06z" clip-rule="evenodd" />
+                </svg>
+            </button>
+            <div id="facet-jobtype" x-show="open" x-cloak role="group" aria-label="Job type"
+                 class="absolute z-20 mt-1 max-h-96 w-72 space-y-4 overflow-auto rounded-md border border-slate-300 bg-white p-4 shadow-lg">
+                <fieldset>
+                    <legend class="text-xs font-semibold uppercase tracking-wide text-slate-500">Hours</legend>
+                    @foreach ($jobTypeHoursOptions as $key => $label)
+                        <label class="flex items-center gap-2 py-1 text-sm text-slate-900">
+                            <input type="checkbox" value="{{ $key }}" wire:model.live="hours"
+                                   class="size-4 rounded border-slate-400 text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                            <span>{{ $label }}</span>
+                        </label>
+                    @endforeach
+                </fieldset>
+                <fieldset>
+                    <legend class="text-xs font-semibold uppercase tracking-wide text-slate-500">Employment period</legend>
+                    @foreach ($jobTypePeriodOptions as $key => $label)
+                        <label class="flex items-center gap-2 py-1 text-sm text-slate-900">
+                            <input type="checkbox" value="{{ $key }}" wire:model.live="period"
+                                   class="size-4 rounded border-slate-400 text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                            <span>{{ $label }}</span>
+                        </label>
+                    @endforeach
+                </fieldset>
+                <fieldset>
+                    <legend class="text-xs font-semibold uppercase tracking-wide text-slate-500">Shift</legend>
+                    @foreach ($jobTypeTermsOptions as $key => $label)
+                        <label class="flex items-center gap-2 py-1 text-sm text-slate-900">
+                            <input type="checkbox" value="{{ $key }}" wire:model.live="terms"
+                                   class="size-4 rounded border-slate-400 text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                            <span>{{ $label }}</span>
+                        </label>
+                    @endforeach
+                </fieldset>
+                <fieldset>
+                    <legend class="text-xs font-semibold uppercase tracking-wide text-slate-500">Workplace</legend>
+                    @foreach ($workplaceOptions as $key => $label)
+                        <label class="flex items-center gap-2 py-1 text-sm text-slate-900">
+                            <input type="checkbox" value="{{ $key }}" wire:model.live="workplace"
+                                   class="size-4 rounded border-slate-400 text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                            <span>{{ $label }}</span>
+                        </label>
+                    @endforeach
+                </fieldset>
+            </div>
+        </div>
+
+        {{-- Industry --}}
+        <div x-data="{ open: false }" x-on:keydown.escape="open = false" x-on:click.outside="open = false" class="relative">
+            <button
+                type="button"
+                x-on:click="open = ! open"
+                aria-controls="facet-industry"
+                aria-expanded="false"
+                x-bind:aria-expanded="open.toString()"
+                class="inline-flex items-center gap-1.5 rounded-md border border-slate-400 bg-white px-3 py-2 text-sm font-medium text-slate-900 shadow-sm hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900"
+            >
+                <span>Industry</span>
+                @if (count($industries) > 0)
+                    <span class="inline-flex min-w-5 items-center justify-center rounded-full bg-blue-700 px-1.5 text-xs font-semibold text-white">{{ count($industries) }}<span class="sr-only"> selected</span></span>
+                @endif
+                <svg class="size-4 text-slate-500" x-bind:class="open ? 'rotate-180' : ''" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 011.06 0L10 11.94l3.72-3.72a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.22 9.28a.75.75 0 010-1.06z" clip-rule="evenodd" />
+                </svg>
+            </button>
+            <div id="facet-industry" x-show="open" x-cloak role="group" aria-label="Industry"
+                 class="absolute z-20 mt-1 max-h-96 w-80 overflow-auto rounded-md border border-slate-300 bg-white p-4 shadow-lg">
+                @foreach ($industryOptions as $id => $label)
+                    <label class="flex items-center gap-2 py-1 text-sm text-slate-900">
+                        <input type="checkbox" value="{{ $id }}" wire:model.live="industries"
+                               class="size-4 rounded border-slate-400 text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                        <span>{{ $label }}</span>
+                    </label>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- Education --}}
+        <div x-data="{ open: false }" x-on:keydown.escape="open = false" x-on:click.outside="open = false" class="relative">
+            <button
+                type="button"
+                x-on:click="open = ! open"
+                aria-controls="facet-education"
+                aria-expanded="false"
+                x-bind:aria-expanded="open.toString()"
+                class="inline-flex items-center gap-1.5 rounded-md border border-slate-400 bg-white px-3 py-2 text-sm font-medium text-slate-900 shadow-sm hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900"
+            >
+                <span>Education</span>
+                @if (count($educationLevels) > 0)
+                    <span class="inline-flex min-w-5 items-center justify-center rounded-full bg-blue-700 px-1.5 text-xs font-semibold text-white">{{ count($educationLevels) }}<span class="sr-only"> selected</span></span>
+                @endif
+                <svg class="size-4 text-slate-500" x-bind:class="open ? 'rotate-180' : ''" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 011.06 0L10 11.94l3.72-3.72a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.22 9.28a.75.75 0 010-1.06z" clip-rule="evenodd" />
+                </svg>
+            </button>
+            <div id="facet-education" x-show="open" x-cloak role="group" aria-label="Education"
+                 class="absolute z-20 mt-1 w-72 overflow-auto rounded-md border border-slate-300 bg-white p-4 shadow-lg">
+                @foreach ($educationOptions as $level)
+                    <label class="flex items-center gap-2 py-1 text-sm text-slate-900">
+                        <input type="checkbox" value="{{ $level }}" wire:model.live="educationLevels"
+                               class="size-4 rounded border-slate-400 text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                        <span>{{ $level }}</span>
+                    </label>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- Date posted --}}
+        <div x-data="{ open: false }" x-on:keydown.escape="open = false" x-on:click.outside="open = false" class="relative">
+            <button
+                type="button"
+                x-on:click="open = ! open"
+                aria-controls="facet-date"
+                aria-expanded="false"
+                x-bind:aria-expanded="open.toString()"
+                class="inline-flex items-center gap-1.5 rounded-md border border-slate-400 bg-white px-3 py-2 text-sm font-medium text-slate-900 shadow-sm hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900"
+            >
+                <span>Date posted</span>
+                @if ($dateSelection !== '0')
+                    <span class="inline-flex items-center justify-center rounded-full bg-blue-700 px-2 text-xs font-semibold text-white">{{ $dateOptions[$dateSelection] ?? '' }}</span>
+                @endif
+                <svg class="size-4 text-slate-500" x-bind:class="open ? 'rotate-180' : ''" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 011.06 0L10 11.94l3.72-3.72a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.22 9.28a.75.75 0 010-1.06z" clip-rule="evenodd" />
+                </svg>
+            </button>
+            <div id="facet-date" x-show="open" x-cloak class="absolute z-20 mt-1 w-72 rounded-md border border-slate-300 bg-white p-4 shadow-lg">
+                <fieldset>
+                    <legend class="text-xs font-semibold uppercase tracking-wide text-slate-500">Date posted</legend>
+                    @foreach ($dateOptions as $value => $label)
+                        <label class="flex items-center gap-2 py-1 text-sm text-slate-900">
+                            <input type="radio" name="dateSelection" value="{{ $value }}" wire:model.live="dateSelection"
+                                   class="size-4 border-slate-400 text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                            <span>{{ $label }}</span>
+                        </label>
+                    @endforeach
+                </fieldset>
+                @if ($dateSelection === '3')
+                    <div class="mt-3 space-y-2 border-t border-slate-200 pt-3">
+                        <div>
+                            <label for="date-start" class="block text-sm font-medium text-slate-900">From</label>
+                            <input id="date-start" type="date" wire:model.live="startDate"
+                                   class="mt-1 block w-full rounded-md border border-slate-400 px-3 py-2 text-slate-900 shadow-sm focus-visible:border-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                        </div>
+                        <div>
+                            <label for="date-end" class="block text-sm font-medium text-slate-900">To</label>
+                            <input id="date-end" type="date" wire:model.live="endDate"
+                                   class="mt-1 block w-full rounded-md border border-slate-400 px-3 py-2 text-slate-900 shadow-sm focus-visible:border-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                        </div>
+                    </div>
+                @endif
+            </div>
+        </div>
+
+        {{-- Clear all filters (referenced by the empty-state hint). --}}
+        @if ($activeFilterCount > 0)
+            <button type="button" wire:click="clearFilters"
+                    class="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-blue-800 underline hover:text-blue-900 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                Clear filters<span class="sr-only"> ({{ $activeFilterCount }} active)</span>
+            </button>
+        @endif
+    </div>
+
     @if ($unavailable)
         <x-alert type="error" title="Search is temporarily unavailable">
             We could not reach the job index. Please try again in a few moments.
