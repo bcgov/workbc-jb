@@ -190,8 +190,10 @@
          selections (the data) and applies them. AND across facets, OR within. --}}
     @php
         $jobTypeCount = count($hours) + count($period) + count($terms) + count($workplace);
+        $salaryCount = count($salaryBrackets) + ($salaryCustom ? 1 : 0)
+            + ($salaryUnknown ? 1 : 0) + count($salaryConditions);
         $activeFilterCount = $jobTypeCount + count($industries) + count($educationLevels)
-            + ($dateSelection !== '0' ? 1 : 0) + count($locations);
+            + ($dateSelection !== '0' ? 1 : 0) + $salaryCount + count($locations);
     @endphp
     <div class="flex flex-wrap items-center gap-3" role="group" aria-label="Filter results">
         {{-- Job type --}}
@@ -360,6 +362,82 @@
                         </div>
                     </div>
                 @endif
+            </div>
+        </div>
+
+        {{-- Salary --}}
+        <div x-data="{ open: false }" x-on:keydown.escape="open = false" x-on:click.outside="open = false" class="relative">
+            <button
+                type="button"
+                x-on:click="open = ! open"
+                aria-controls="facet-salary"
+                aria-expanded="false"
+                x-bind:aria-expanded="open.toString()"
+                class="inline-flex items-center gap-1.5 rounded-md border border-slate-400 bg-white px-3 py-2 text-sm font-medium text-slate-900 shadow-sm hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900"
+            >
+                <span>Salary</span>
+                @if ($salaryCount > 0)
+                    <span class="inline-flex min-w-5 items-center justify-center rounded-full bg-blue-700 px-1.5 text-xs font-semibold text-white">{{ $salaryCount }}<span class="sr-only"> selected</span></span>
+                @endif
+                <svg class="size-4 text-slate-500" x-bind:class="open ? 'rotate-180' : ''" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 011.06 0L10 11.94l3.72-3.72a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.22 9.28a.75.75 0 010-1.06z" clip-rule="evenodd" />
+                </svg>
+            </button>
+            <div id="facet-salary" x-show="open" x-cloak role="group" aria-label="Salary"
+                 class="absolute z-20 mt-1 max-h-96 w-80 space-y-4 overflow-auto rounded-md border border-slate-300 bg-white p-4 shadow-lg">
+                <div>
+                    <label for="salary-type" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Pay type</label>
+                    <select id="salary-type" wire:model.live="salaryType"
+                            class="mt-1 block w-full rounded-md border border-slate-400 px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                        @foreach ($salaryTypeOptions as $value => $label)
+                            <option value="{{ $value }}">{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <fieldset>
+                    <legend class="text-xs font-semibold uppercase tracking-wide text-slate-500">Amount</legend>
+                    @foreach ($salaryBracketLabels as $bracket => $label)
+                        <label class="flex items-center gap-2 py-1 text-sm text-slate-900">
+                            <input type="checkbox" value="{{ $bracket }}" wire:model.live="salaryBrackets"
+                                   class="size-4 rounded border-slate-400 text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                            <span>{{ $label }}</span>
+                        </label>
+                    @endforeach
+                    <label class="flex items-center gap-2 py-1 text-sm text-slate-900">
+                        <input type="checkbox" wire:model.live="salaryCustom"
+                               class="size-4 rounded border-slate-400 text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                        <span>Custom range</span>
+                    </label>
+                    @if ($salaryCustom)
+                        <div class="mt-2 grid grid-cols-2 gap-2 border-t border-slate-200 pt-2">
+                            <div>
+                                <label for="salary-min" class="block text-sm font-medium text-slate-900">Min</label>
+                                <input id="salary-min" type="number" min="0" inputmode="decimal" wire:model.live="salaryMin"
+                                       class="mt-1 block w-full rounded-md border border-slate-400 px-3 py-2 text-slate-900 shadow-sm focus-visible:border-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                            </div>
+                            <div>
+                                <label for="salary-max" class="block text-sm font-medium text-slate-900">Max</label>
+                                <input id="salary-max" type="number" min="0" inputmode="decimal" wire:model.live="salaryMax"
+                                       class="mt-1 block w-full rounded-md border border-slate-400 px-3 py-2 text-slate-900 shadow-sm focus-visible:border-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                            </div>
+                        </div>
+                    @endif
+                    <label class="mt-2 flex items-center gap-2 border-t border-slate-200 py-1 pt-2 text-sm text-slate-900">
+                        <input type="checkbox" wire:model.live="salaryUnknown"
+                               class="size-4 rounded border-slate-400 text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                        <span>Include jobs with no salary listed</span>
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend class="text-xs font-semibold uppercase tracking-wide text-slate-500">Benefits</legend>
+                    @foreach ($salaryConditionOptions as $condition)
+                        <label class="flex items-center gap-2 py-1 text-sm text-slate-900">
+                            <input type="checkbox" value="{{ $condition }}" wire:model.live="salaryConditions"
+                                   class="size-4 rounded border-slate-400 text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                            <span>{{ $condition }}</span>
+                        </label>
+                    @endforeach
+                </fieldset>
             </div>
         </div>
 

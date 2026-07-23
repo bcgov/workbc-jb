@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Search\Filters\JobSearchFilters;
 use App\Search\Results\SearchResult;
+use App\Search\Support\SalaryRangeHelper;
 use App\Services\Search\JobSearchService;
 use App\Services\Search\LocationService;
 use Livewire\Attributes\Layout;
@@ -24,6 +25,12 @@ use Livewire\Component;
  * radius search resolving coordinates through the Geocoder adapter. The
  * combobox's open/active view state lives in Alpine; this component owns the
  * suggestion data, validation and committed locations.
+ *
+ * SRCH-4 adds the salary facet: a SalaryType unit selector, the fixed brackets
+ * 1–5 and a custom range (bracket 6), an "unknown salary" toggle and the
+ * benefit conditions. The component only maps state to filters — the
+ * annualization/range maths live in {@see SalaryRangeHelper} and the query
+ * groups in the shared JobSearchQuery (Rule B: the app only reads Salary).
  *
  * No business logic here (copilot-instructions §6): the component maps its bound
  * state to a {@see JobSearchFilters} value object and delegates to
@@ -99,6 +106,28 @@ final class JobSearch extends Component
 
     public string $endDate = '';
 
+    // --- Salary facet (SRCH-4) ---------------------------------------------
+
+    /** SalaryType unit for the bracket labels + custom annualization (0 hourly … 4 annually). */
+    public int $salaryType = 0;
+
+    /** @var string[] selected fixed brackets ('1'…'5'); combined OR with the query's Salary ranges */
+    public array $salaryBrackets = [];
+
+    /** Custom range (bracket 6) toggle; reveals the min/max inputs. */
+    public bool $salaryCustom = false;
+
+    /** Custom range bounds in the selected SalaryType's units; '' = unset. */
+    public string $salaryMin = '';
+
+    public string $salaryMax = '';
+
+    /** Include postings with no disclosed salary (SalarySort sentinel). */
+    public bool $salaryUnknown = false;
+
+    /** @var string[] selected benefit conditions (SalaryConditions.Description terms) */
+    public array $salaryConditions = [];
+
     /** @var string[] */
     private const SEARCH_IN = ['all', 'title', 'employer', 'jobId'];
 
@@ -106,6 +135,8 @@ final class JobSearch extends Component
     private const FACET_PROPERTIES = [
         'hours', 'period', 'terms', 'workplace', 'industries',
         'educationLevels', 'dateSelection', 'startDate', 'endDate',
+        'salaryType', 'salaryBrackets', 'salaryCustom', 'salaryMin',
+        'salaryMax', 'salaryUnknown', 'salaryConditions',
     ];
 
     /** Submit the keyword/scope form: re-run from page 1. */
@@ -150,6 +181,13 @@ final class JobSearch extends Component
         $this->dateSelection = '0';
         $this->startDate = '';
         $this->endDate = '';
+        $this->salaryType = 0;
+        $this->salaryBrackets = [];
+        $this->salaryCustom = false;
+        $this->salaryMin = '';
+        $this->salaryMax = '';
+        $this->salaryUnknown = false;
+        $this->salaryConditions = [];
         $this->locations = [];
         $this->distance = -1;
         $this->resetLocationInput();
@@ -274,6 +312,9 @@ final class JobSearch extends Component
             'industryOptions' => self::industryOptions(),
             'educationOptions' => self::educationOptions(),
             'dateOptions' => self::dateOptions(),
+            'salaryTypeOptions' => self::salaryTypeOptions(),
+            'salaryBracketLabels' => $this->salaryBracketLabels(),
+            'salaryConditionOptions' => self::salaryConditionOptions(),
         ]);
     }
 
@@ -304,7 +345,9 @@ final class JobSearch extends Component
             $payload["SearchJobType{$key}"] = true;
         }
 
-        return JobSearchFilters::fromArray($payload + $this->dateFilterPayload());
+        return JobSearchFilters::fromArray(
+            $payload + $this->dateFilterPayload() + $this->salaryPayload()
+        );
     }
 
     /**
@@ -388,6 +431,93 @@ final class JobSearch extends Component
         }
 
         return ['Year' => (int) $m[1], 'Month' => (int) $m[2], 'Day' => (int) $m[3]];
+    }
+
+    /**
+     * Salary facet → filter payload. SalaryType is always sent (it drives the
+     * bracket/custom annualization in the shared query); brackets, custom range,
+     * unknown and conditions are added only when selected. All client values are
+     * whitelisted so a tampered request can't inject an unknown field.
+     *
+     * @return array<string, mixed>
+     */
+    private function salaryPayload(): array
+    {
+        $payload = ['SalaryType' => $this->selectedSalaryType()];
+
+        foreach ($this->selectedSalaryBrackets() as $bracket) {
+            $payload["SalaryBracket{$bracket}"] = true;
+        }
+
+        if ($this->salaryCustom) {
+            $payload['SalaryBracket6'] = true;
+            if ($this->salaryMin !== '') {
+                $payload['SalaryMin'] = $this->salaryMin;
+            }
+            if ($this->salaryMax !== '') {
+                $payload['SalaryMax'] = $this->salaryMax;
+            }
+        }
+
+        if ($this->salaryUnknown) {
+            $payload['SearchSalaryUnknown'] = true;
+        }
+
+        $conditions = $this->selectedSalaryConditions();
+        if ($conditions !== []) {
+            $payload['SearchSalaryConditions'] = $conditions;
+        }
+
+        return $payload;
+    }
+
+    /** SalaryType, validated against the known units (defaults to 0 = hourly). */
+    private function selectedSalaryType(): int
+    {
+        return array_key_exists($this->salaryType, self::salaryTypeOptions()) ? $this->salaryType : 0;
+    }
+
+    /**
+     * Selected fixed brackets, cast to int and whitelisted to 1–5.
+     *
+     * @return int[]
+     */
+    private function selectedSalaryBrackets(): array
+    {
+        return array_values(array_filter(
+            array_map('intval', $this->salaryBrackets),
+            static fn (int $bracket): bool => $bracket >= 1 && $bracket <= 5,
+        ));
+    }
+
+    /**
+     * Selected benefit conditions, whitelisted against the known term list.
+     *
+     * @return string[]
+     */
+    private function selectedSalaryConditions(): array
+    {
+        return array_values(array_intersect($this->salaryConditions, self::salaryConditionOptions()));
+    }
+
+    /**
+     * Labels for the fixed brackets (1–5), derived from the selected SalaryType's
+     * boundaries so hourly/weekly/…/annually each read in their own units.
+     *
+     * @return array<int, string>
+     */
+    public function salaryBracketLabels(): array
+    {
+        [$b1, $b2, $b3, $b4] = SalaryRangeHelper::bracketBounds($this->selectedSalaryType());
+        $money = static fn (float $n): string => '$' . number_format($n);
+
+        return [
+            1 => 'Under ' . $money($b1),
+            2 => $money($b1) . ' – ' . $money($b2),
+            3 => $money($b2) . ' – ' . $money($b3),
+            4 => $money($b3) . ' – ' . $money($b4),
+            5 => $money($b4) . ' or more',
+        ];
     }
 
     /**
@@ -530,6 +660,50 @@ final class JobSearch extends Component
             '1' => 'Today',
             '2' => 'Past 3 days',
             '3' => 'Custom range',
+        ];
+    }
+
+    /**
+     * SalaryType units (contracts §1): int → label. Also the whitelist.
+     *
+     * @return array<int, string>
+     */
+    public static function salaryTypeOptions(): array
+    {
+        return [
+            0 => 'Hourly',
+            1 => 'Weekly',
+            2 => 'Bi-weekly',
+            3 => 'Monthly',
+            4 => 'Annually',
+        ];
+    }
+
+    /**
+     * Benefit conditions (SalaryConditions.Description terms, contracts §1).
+     * Values match the indexed keyword terms exactly.
+     *
+     * @return string[]
+     */
+    public static function salaryConditionOptions(): array
+    {
+        return [
+            'As per collective agreement',
+            'Bonus',
+            'Commission',
+            'Dental plan',
+            'Disability benefits',
+            'Gratuities',
+            'Group insurance benefits',
+            'Life insurance benefits',
+            'Health care plan',
+            'Mileage paid',
+            'Pension plan benefits',
+            'Piece work',
+            'RESP benefits',
+            'RRSP benefits',
+            'Vision care benefits',
+            'Other benefits',
         ];
     }
 
