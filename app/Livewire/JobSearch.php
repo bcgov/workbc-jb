@@ -10,6 +10,7 @@ use App\Search\Support\SalaryRangeHelper;
 use App\Search\Url\FilterUrlSerializer;
 use App\Services\Search\JobSearchService;
 use App\Services\Search\LocationService;
+use App\Support\JobSlug;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
@@ -64,6 +65,15 @@ final class JobSearch extends Component
     public int $page = 1;
 
     public int $pageSize = 20;
+
+    /**
+     * Results presentation (SRCH-9): 'list' (default) or 'map'. Bound to the URL
+     * so a map view is shareable, and — crucially for a11y — the list stays a
+     * full, always-available equivalent (the map is never the only way to reach
+     * results).
+     */
+    #[Url(as: 'view', except: 'list')]
+    public string $view = 'list';
 
     // --- Location facet (SRCH-2) -------------------------------------------
 
@@ -422,8 +432,24 @@ final class JobSearch extends Component
         $this->page = max(1, $page);
     }
 
+    /** Switch to the accessible list view (SRCH-9). */
+    public function showListView(): void
+    {
+        $this->view = 'list';
+    }
+
+    /** Switch to the map view (SRCH-9); pins are built from the same filters. */
+    public function showMapView(): void
+    {
+        $this->view = 'map';
+    }
+
     public function render()
     {
+        // Normalize the URL-bound view so a tampered value can't select anything
+        // other than the two supported presentations.
+        $this->view = $this->view === 'map' ? 'map' : 'list';
+
         try {
             $result = app(JobSearchService::class)->search($this->toFilters());
             $unavailable = false;
@@ -435,10 +461,23 @@ final class JobSearch extends Component
             $unavailable = true;
         }
 
+        // Only run the (heavier, up-to-5000-hit) map query when the map is shown.
+        $mapPins = [];
+        if ($this->view === 'map' && ! $unavailable) {
+            try {
+                $mapPins = $this->buildMapPins();
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        }
+
         return view('livewire.job-search', [
             'result' => $result,
             'unavailable' => $unavailable,
             'shareUrl' => $this->shareUrl(),
+            'view' => $this->view,
+            'mapPins' => $mapPins,
+            'mapApiKey' => (string) config('services.google_maps.js_key', ''),
             'sortOptions' => self::sortOptions(),
             'distanceOptions' => self::distanceOptions(),
             'jobTypeHoursOptions' => self::jobTypeHoursOptions(),
@@ -455,6 +494,31 @@ final class JobSearch extends Component
             'jobSourceOptions' => self::jobSourceOptions(),
             'postingLanguageOptions' => self::postingLanguageOptions(),
         ]);
+    }
+
+    /**
+     * Build the map pins for the current filters, each enriched with the
+     * path-based detail URL used by its info window (SRCH-7/SRCH-9). The
+     * pin-selection maths live in {@see JobSearchService::mapPins()}; this only
+     * shapes the result for the browser component.
+     *
+     * @return array<int, array{id: string, lat: float, lng: float, title: string, url: string}>
+     */
+    private function buildMapPins(): array
+    {
+        $pins = app(JobSearchService::class)->mapPins($this->toFilters());
+
+        return array_map(static function (array $pin): array {
+            $title = $pin['Title'] ?? '';
+
+            return [
+                'id' => (string) $pin['JobId'],
+                'lat' => (float) $pin['Latitude'],
+                'lng' => (float) $pin['Longitude'],
+                'title' => $title,
+                'url' => route('jobs.show', ['job' => JobSlug::path((string) $pin['JobId'], $title !== '' ? $title : null)]),
+            ];
+        }, $pins);
     }
 
     /**

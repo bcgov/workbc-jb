@@ -6,6 +6,7 @@ use App\Search\Contracts\Geocoder;
 use App\Search\Filters\JobSearchFilters;
 use App\Search\Queries\JobSearchQuery;
 use App\Search\Results\SearchResult;
+use App\Search\Support\MapPins;
 use OpenSearch\Client;
 
 /**
@@ -42,6 +43,32 @@ final class JobSearchService
         $pageNumber = $filters->Page <= 0 ? 1 : $filters->Page;
 
         return SearchResult::fromOpenSearchResponse($response, $pageNumber, $filters->PageSize);
+    }
+
+    /**
+     * Run the SAME filters through the map query path (SRCH-9) and reduce the
+     * hits to Google Maps pins. The map query returns only the pin fields for up
+     * to {@see JobSearchQuery::MAP_PIN_CAP} geo-located jobs; {@see MapPins}
+     * applies the current pin-selection behaviour (most-frequent city/region,
+     * multi-location handling, 5000 cap).
+     *
+     * @return array<int, array{JobId: string, Latitude: string, Longitude: string, Title: string}>
+     */
+    public function mapPins(JobSearchFilters $filters): array
+    {
+        $body = (new JobSearchQuery($filters, $this->geocoder))->buildMapQuery();
+
+        $response = $this->client->search([
+            'index' => $this->index(),
+            'body' => $body,
+        ]);
+
+        $sources = array_map(
+            static fn (array $hit): array => $hit['_source'] ?? [],
+            $response['hits']['hits'] ?? [],
+        );
+
+        return MapPins::fromSources($sources);
     }
 
     /**

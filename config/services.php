@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    'google_maps' => [
+        // Browser Maps JavaScript API key (HTTP-referrer restricted) — the SRCH-9 map
+        // (.NET GoogleMapsReferrerApi). Exposed in the page, so restrict it by referrer.
+        'js_key' => env('GOOGLE_MAPS_JS_KEY'),
+        // Server Geocoding API key (IP restricted) — the geocoder's Google fallback
+        // (.NET GoogleMapsIPApi). Server-side only; keep secret.
+        'geocoding_key' => env('GOOGLE_MAPS_GEOCODING_KEY'),
+    ],
+
 ];
