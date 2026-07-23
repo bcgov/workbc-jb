@@ -550,17 +550,53 @@
             @endif
         </p>
 
-        <div class="flex items-center gap-2">
-            <label for="sort" class="text-sm font-medium text-slate-900">Sort by</label>
-            <select id="sort" wire:model.live="sort"
-                    class="rounded-md border border-slate-400 px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
-                @foreach ($sortOptions as $value => $label)
-                    <option value="{{ $value }}">{{ $label }}</option>
-                @endforeach
-            </select>
+        <div class="flex flex-wrap items-center gap-4">
+            {{-- SRCH-9: switch between the list and map presentations of the SAME
+                 results. Data-backed (the map needs server-built pins), so Livewire
+                 owns it. The list is the default and always one activation away, so
+                 the map is never the only way to reach results (a11y). --}}
+            <div role="group" aria-label="Result view" class="inline-flex overflow-hidden rounded-md border border-slate-400">
+                <button type="button" wire:click="showListView"
+                        aria-pressed="{{ $view === 'list' ? 'true' : 'false' }}"
+                        @class([
+                            'inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900',
+                            'bg-blue-700 text-white' => $view === 'list',
+                            'bg-white text-slate-900 hover:bg-slate-50' => $view !== 'list',
+                        ])>
+                    <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M3 4.75A.75.75 0 013.75 4h12.5a.75.75 0 010 1.5H3.75A.75.75 0 013 4.75zm0 5A.75.75 0 013.75 9h12.5a.75.75 0 010 1.5H3.75A.75.75 0 013 9.75zm0 5a.75.75 0 01.75-.75h12.5a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75z" clip-rule="evenodd" />
+                    </svg>
+                    List
+                </button>
+                <button type="button" wire:click="showMapView"
+                        aria-pressed="{{ $view === 'map' ? 'true' : 'false' }}"
+                        @class([
+                            'inline-flex items-center gap-1.5 border-l border-slate-400 px-3 py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900',
+                            'bg-blue-700 text-white' => $view === 'map',
+                            'bg-white text-slate-900 hover:bg-slate-50' => $view !== 'map',
+                        ])>
+                    <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M8.157 2.176a1.5 1.5 0 00-1.147 0l-4.084 1.69A1.5 1.5 0 002 5.244v9.483c0 1.075 1.086 1.81 2.083 1.408l3.51-1.451.766.317a1.5 1.5 0 001.147 0l4.084-1.69A1.5 1.5 0 0018 11.816V2.333c0-1.075-1.086-1.81-2.083-1.408L12.407 2.16 8.157 2.176zM7.5 3.5l5 2v11l-5-2v-11z" clip-rule="evenodd" />
+                    </svg>
+                    Map
+                </button>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <label for="sort" class="text-sm font-medium text-slate-900">Sort by</label>
+                <select id="sort" wire:model.live="sort"
+                        class="rounded-md border border-slate-400 px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                    @foreach ($sortOptions as $value => $label)
+                        <option value="{{ $value }}">{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
         </div>
     </div>
 
+    @if ($view === 'map')
+        @include('livewire.partials.job-map', ['mapPins' => $mapPins, 'mapApiKey' => $mapApiKey, 'count' => $result->count])
+    @else
     {{-- Results: an ARIA live region; aria-busy flips while Livewire is loading. --}}
     <div
         role="region"
@@ -658,5 +694,6 @@
                 </li>
             </ul>
         </nav>
+    @endif
     @endif
 </div>

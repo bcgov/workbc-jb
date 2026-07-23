@@ -42,6 +42,23 @@ final class JobSearchQuery
 
     private const LOCATION_DISTANCE_EXACT = -1;
 
+    /**
+     * Max pins the map query returns (SRCH-9). Mirrors the C#
+     * Resources/jobsearch_googlemap.json "size": 5000. Jobs with multiple
+     * locations can still expand to more than this once pinned; MapPins applies
+     * the same 5000 cap after expansion.
+     */
+    public const MAP_PIN_CAP = 5000;
+
+    /**
+     * The only fields the map query returns — the pin-selection logic needs
+     * Location/City/Region/JobId (mirrors jobsearch_googlemap.json), and Title
+     * is added for the SRCH-9 info-window content.
+     *
+     * @var string[]
+     */
+    private const MAP_SOURCE_FIELDS = ['Location', 'JobId', 'City', 'Region', 'Title'];
+
     public function __construct(
         private JobSearchFilters $filters,
         private ?Geocoder $geocoder = null,
@@ -58,6 +75,81 @@ final class JobSearchQuery
         $pageNumber = $this->filters->Page <= 0 ? 1 : $this->filters->Page;
         $skip = ($pageNumber - 1) * $pageSize;
 
+        [$groups, $mustNot, $geoPoint] = $this->queryClauses();
+
+        return [
+            'track_total_hits' => true,
+            'size' => $pageSize,
+            'from' => $skip,
+            'sort' => $this->sort($geoPoint),
+            '_source' => $this->sourceFields(),
+            'query' => [
+                'bool' => [
+                    'must' => $groups,
+                    'must_not' => $mustNot,
+                    'filter' => [
+                        'range' => [
+                            'ExpireDate' => [
+                                'gte' => 'now/d',
+                                'time_zone' => self::TIME_ZONE,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Build the OpenSearch body for the SRCH-9 map view — the SAME filters as
+     * {@see build()} (a faithful port of Resources/jobsearch_googlemap.json), but
+     * returning only the pin fields, capped at {@see MAP_PIN_CAP} hits, and
+     * additionally requiring an indexed LocationGeo so only geo-located jobs are
+     * plotted. Read-model only (Rule B): it reads the derived index, never writes
+     * it. Pin selection itself happens in {@see \App\Search\Support\MapPins}.
+     *
+     * @return array<string, mixed>
+     */
+    public function buildMapQuery(): array
+    {
+        [$groups, $mustNot, $geoPoint] = $this->queryClauses();
+
+        return [
+            'size' => self::MAP_PIN_CAP,
+            '_source' => self::MAP_SOURCE_FIELDS,
+            'sort' => $this->sort($geoPoint),
+            'query' => [
+                'bool' => [
+                    'must' => $groups,
+                    'must_not' => $mustNot,
+                    // Active jobs only, and only those the indexer geo-located
+                    // (LocationGeo present) — a pin needs coordinates to plot.
+                    'filter' => [
+                        'bool' => [
+                            'must' => [
+                                ['range' => ['ExpireDate' => [
+                                    'gte' => 'now/d',
+                                    'time_zone' => self::TIME_ZONE,
+                                ]]],
+                                ['exists' => ['field' => 'LocationGeo']],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * The shared query clauses — the faceted filters plus the placement-agency
+     * exclusion — used by both the paged results {@see build()} and the map
+     * {@see buildMapQuery()} so the two views always search identically.
+     *
+     * @return array{0: array<int, array<string, mixed>>, 1: array<int, array<string, mixed>>, 2: GeoPoint|null}
+     *         [ must groups, must_not clauses, resolved geo point for sort ]
+     */
+    private function queryClauses(): array
+    {
         /** @var array<int, array<string, mixed>> $groups each becomes a bool/should clause */
         $groups = [];
         $geoPoint = null;
@@ -89,27 +181,7 @@ final class JobSearchQuery
             $mustNot[] = ['term' => ['EmployerTypeId' => 1]];
         }
 
-        return [
-            'track_total_hits' => true,
-            'size' => $pageSize,
-            'from' => $skip,
-            'sort' => $this->sort($geoPoint),
-            '_source' => $this->sourceFields(),
-            'query' => [
-                'bool' => [
-                    'must' => $groups,
-                    'must_not' => $mustNot,
-                    'filter' => [
-                        'range' => [
-                            'ExpireDate' => [
-                                'gte' => 'now/d',
-                                'time_zone' => self::TIME_ZONE,
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
+        return [$groups, $mustNot, $geoPoint];
     }
 
     /**
