@@ -64,8 +64,17 @@ class DevIndexJobs extends Command
         ['Educational Services', 61], ['Manufacturing', 31], ['Transportation and Warehousing', 48],
     ];
 
+    /** [Source name, URL base]. The government sources feed the job-source facet (SearchJobSource 3/4/5). */
     private array $externalHosts = [
-        'jobs.ashbyhq.com', 'indeed.com', 'ca.linkedin.com', 'workopolis.com', 'glassdoor.ca',
+        ['jobs.ashbyhq.com', 'https://jobs.ashbyhq.com'],
+        ['indeed.com', 'https://indeed.com'],
+        ['ca.linkedin.com', 'https://ca.linkedin.com'],
+        ['workopolis.com', 'https://workopolis.com'],
+        ['glassdoor.ca', 'https://glassdoor.ca'],
+        ['Public Service of Canada', 'https://emploisfp-psjobs.cfp-psc.gc.ca'], // 3 = federal government
+        ['CivicInfoBC', 'https://www.civicinfo.bc.ca'],                          // 4 = municipal
+        ['CivicJobs.ca', 'https://www.civicjobs.ca'],                            // 4 = municipal
+        ['BC Public Service', 'https://bcpublicservice.hua.hrsmart.com'],        // 5 = BC provincial
     ];
 
     // WorkplaceTypeId enum (Shared/Constants/WorkplaceType.cs): OnSite=0, Hybrid=100000, Travelling=100001, Virtual=15141
@@ -297,8 +306,8 @@ class DevIndexJobs extends Command
     {
         $job = $this->baseJob();
         [$industry, $naics] = $this->industries[array_rand($this->industries)];
-        $host = $this->externalHosts[array_rand($this->externalHosts)];
-        $url = "https://{$host}/".$this->faker->uuid();
+        [$sourceName, $urlBase] = $this->externalHosts[array_rand($this->externalHosts)];
+        $url = "{$urlBase}/".$this->faker->uuid();
 
         $noEquity = array_fill_keys([
             'IsAboriginal', 'IsApprentice', 'IsStudent', 'IsNewcomer', 'IsVeteran',
@@ -318,7 +327,7 @@ class DevIndexJobs extends Command
             'SkillCategories' => [],
             'PeriodOfEmployment' => ['Description' => []],
             'EmploymentTerms' => (object) [],
-            'ExternalSource' => ['Source' => [['Url' => $url, 'Source' => $host]]],
+            'ExternalSource' => ['Source' => [['Url' => $url, 'Source' => $sourceName]]],
             'ApplyWebsite' => $url,
             'ApplyEmailAddress' => '', 'ApplyPhoneNumber' => '',
         ];
