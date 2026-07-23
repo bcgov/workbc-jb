@@ -2,7 +2,7 @@
 
 namespace App\Search\Seo;
 
-use Illuminate\Support\Str;
+use App\Support\JobDescriptionSanitizer;
 
 /**
  * Builds a schema.org/JobPosting structured-data graph for a job-detail page
@@ -80,7 +80,10 @@ final class JobPostingSchema
     private static function description(array $job): string
     {
         if (! empty($job['JobDescription'])) {
-            return trim(strip_tags((string) $job['JobDescription']));
+            $text = JobDescriptionSanitizer::toPlainText((string) $job['JobDescription']);
+            if ($text !== '') {
+                return $text;
+            }
         }
 
         $parts = array_filter([
