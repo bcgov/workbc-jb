@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Search\Seo\JobPostingSchema;
 use App\Services\Search\JobDetailService;
+use App\Support\JobDescriptionSanitizer;
 use App\Support\JobSlug;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -57,8 +58,42 @@ final class JobDetailController extends Controller
             'alternateFrUrl' => $this->jobUrl($canonicalSegment, 'fr'),
             'metaTitle' => $this->metaTitle($data),
             'metaDescription' => $this->metaDescription($data),
+            'descriptionText' => JobDescriptionSanitizer::toPlainText($data['JobDescription'] ?? null),
+            'apply' => $this->apply($data),
             'jsonLd' => JobPostingSchema::build($data, $canonicalUrl),
         ]);
+    }
+
+    /**
+     * The single "how to apply" call-to-action. External (Innovibe) jobs link
+     * to the original posting via `ExternalSource.Source[].Url` with a "via
+     * {source}" attribution; federal jobs use `ApplyWebsite`. Returns null when
+     * no apply destination is known.
+     *
+     * @param  array<string, mixed>  $job
+     * @return array{isExternal: bool, url: string, sourceName: ?string}|null
+     */
+    private function apply(array $job): ?array
+    {
+        $isFederal = ($job['IsFederalJob'] ?? false) === true;
+        $external = $job['ExternalSource']['Source'][0] ?? null;
+        $externalUrl = is_array($external) ? ($external['Url'] ?? null) : null;
+        $sourceName = is_array($external) ? ($external['Source'] ?? null) : null;
+        $applyWebsite = $job['ApplyWebsite'] ?? null;
+
+        if (! $isFederal && ($externalUrl || $applyWebsite)) {
+            return [
+                'isExternal' => true,
+                'url' => (string) ($externalUrl ?: $applyWebsite),
+                'sourceName' => $sourceName !== null ? (string) $sourceName : null,
+            ];
+        }
+
+        if ($applyWebsite) {
+            return ['isExternal' => false, 'url' => (string) $applyWebsite, 'sourceName' => null];
+        }
+
+        return null;
     }
 
     private function jobUrl(string $segment, string $lang): string

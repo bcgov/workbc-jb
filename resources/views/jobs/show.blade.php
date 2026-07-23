@@ -14,8 +14,6 @@
     $noc = $job['Noc2021'] ?? null;
     $nocGroup = $job['NocGroup'] ?? null;
     $workplace = $job['WorkplaceType']['Description'] ?? null;
-    $description = $job['JobDescription'] ?? null;
-    $applyWebsite = $job['ApplyWebsite'] ?? null;
     $views = $job['Views'] ?? null;
 
     $expired = $expireDate ? Carbon::parse($expireDate)->isPast() : false;
@@ -129,22 +127,35 @@
                 </dl>
             </section>
 
-            @if ($description)
+            @if ($descriptionText !== '')
                 <section aria-labelledby="job-description-heading" class="border-t border-slate-200 py-4">
                     <h2 id="job-description-heading" class="text-lg font-semibold text-slate-900">Job description</h2>
+                    @if ($apply && $apply['isExternal'] && $apply['sourceName'])
+                        <p class="mt-1 text-sm text-slate-500">via {{ $apply['sourceName'] }}</p>
+                    @endif
                     <div class="prose prose-slate mt-2 max-w-none">
-                        {!! nl2br(e($description)) !!}
+                        {!! nl2br(e($descriptionText)) !!}
                     </div>
                 </section>
             @endif
 
-            @if ($applyWebsite)
+            @if ($apply)
                 <section aria-labelledby="job-apply-heading" class="border-t border-slate-200 py-4">
                     <h2 id="job-apply-heading" class="text-lg font-semibold text-slate-900">How to apply</h2>
+                    @if ($apply['isExternal'] && $apply['sourceName'])
+                        <p class="mt-1 text-sm text-slate-600">Posted via {{ $apply['sourceName'] }}.</p>
+                    @endif
+                    @if ($apply['isExternal'] && $expired)
+                        <p class="mt-1 text-sm text-slate-500">This posting has expired — the original listing may no longer be available.</p>
+                    @endif
                     <p class="mt-2">
-                        <a href="{{ $applyWebsite }}" rel="nofollow noopener" target="_blank"
+                        <a href="{{ $apply['url'] }}" rel="nofollow noopener" target="_blank"
                            class="inline-flex items-center rounded bg-blue-800 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-900">
-                            Apply now
+                            @if ($apply['isExternal'])
+                                {{ $apply['sourceName'] ? 'Apply on '.$apply['sourceName'] : 'View original posting' }}
+                            @else
+                                Apply now
+                            @endif
                             <span class="sr-only"> (opens in a new tab)</span>
                         </a>
                     </p>

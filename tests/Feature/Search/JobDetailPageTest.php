@@ -99,6 +99,26 @@ class JobDetailPageTest extends TestCase
         return '/jobs/'.JobSlug::path($jobId, $title);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
+    private function externalJob(array $overrides = []): array
+    {
+        return array_merge([
+            'JobId' => 'ext777',
+            'Title' => 'Barista',
+            'EmployerName' => 'Cafe Aroma',
+            'City' => ['Vancouver'],
+            'Province' => 'British Columbia',
+            'DatePosted' => '2026-06-01T00:00:00',
+            'ExpireDate' => '2099-01-01T00:00:00',
+            'IsFederalJob' => false,
+            'JobDescription' => "<p>Great <b>coffee</b> job.</p><ul><li>Make espresso</li><li>Smile</li></ul><script>alert('xss')</script>",
+            'ExternalSource' => ['Source' => [['Url' => 'https://innovibe.example/jobs/777', 'Source' => 'Innovibe']]],
+            'ApplyWebsite' => 'https://apply.example/777',
+        ], $overrides);
+    }
+
     public function test_it_renders_the_job_in_raw_server_html(): void
     {
         $this->bindClient($this->federalJob());
@@ -207,5 +227,78 @@ class JobDetailPageTest extends TestCase
 
         // The redirect must not have counted a view.
         $this->assertNull(JobView::find('fed001'));
+    }
+
+    // --- SRCH-7b: external (Innovibe) job rendering ---
+
+    public function test_an_external_job_renders_its_description_facts_and_apply_button(): void
+    {
+        $this->bindClient($this->externalJob());
+
+        $response = $this->get($this->detailPath('ext777', 'Barista'));
+
+        $response->assertOk();
+        // Facts.
+        $response->assertSee('Barista');
+        $response->assertSee('Cafe Aroma');
+        $response->assertSee('Vancouver');
+        // Sanitized description content (rendered on our page, not a redirect).
+        $response->assertSee('Great coffee job.');
+        $response->assertSee('Make espresso');
+        // "via {source}" attribution + apply-to-source button linking to the original URL.
+        $response->assertSee('Posted via Innovibe.');
+        $response->assertSee('Apply on Innovibe');
+        $response->assertSee('href="https://innovibe.example/jobs/777"', false);
+    }
+
+    public function test_an_external_description_is_sanitized_against_xss(): void
+    {
+        $this->bindClient($this->externalJob());
+
+        $response = $this->get($this->detailPath('ext777', 'Barista'));
+
+        $response->assertOk();
+        // No raw markup from the source description survives into the document.
+        $response->assertDontSee('<script>alert', false);
+        $response->assertDontSee('<b>coffee</b>', false);
+        $response->assertDontSee('<p>Great', false);
+    }
+
+    public function test_an_external_job_is_self_canonical(): void
+    {
+        $this->bindClient($this->externalJob());
+
+        $response = $this->get($this->detailPath('ext777', 'Barista'));
+
+        $response->assertOk();
+        $canonical = route('jobs.show', ['job' => JobSlug::path('ext777', 'Barista')]);
+        $response->assertSee('<link rel="canonical" href="'.$canonical.'"', false);
+    }
+
+    public function test_an_expired_external_job_renders_with_a_dead_link_note(): void
+    {
+        $this->bindClient($this->externalJob(['ExpireDate' => '2000-01-01T00:00:00']));
+
+        $response = $this->get($this->detailPath('ext777', 'Barista'));
+
+        $response->assertOk();
+        $response->assertSee('Great coffee job.');
+        $response->assertSee('may no longer be available');
+    }
+
+    public function test_an_external_job_emits_jobposting_json_ld_with_the_description(): void
+    {
+        $this->bindClient($this->externalJob());
+
+        $response = $this->get($this->detailPath('ext777', 'Barista'));
+        $response->assertOk();
+
+        preg_match('/<script type="application\/ld\+json">(.*?)<\/script>/s', $response->getContent(), $m);
+        $data = json_decode(trim($m[1] ?? ''), true);
+
+        $this->assertIsArray($data);
+        $this->assertSame('JobPosting', $data['@type']);
+        $this->assertStringContainsString('Great coffee job.', $data['description']);
+        $this->assertStringNotContainsString('<script>', $data['description']);
     }
 }
