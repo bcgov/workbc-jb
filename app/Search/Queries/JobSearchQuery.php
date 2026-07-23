@@ -427,6 +427,10 @@ final class JobSearchQuery
                     if ($resolved !== null) {
                         $geoPoint = $resolved;
                         $units[] = [$this->geoDistance($distance, $resolved)];
+                    } else {
+                        // unresolvable city → 1km radius in the middle of the Pacific (no matches),
+                        // matching the postal branch and current behaviour — never silently drop the filter
+                        $units[] = [$this->geoDistance(1, new GeoPoint(0, 180))];
                     }
                 }
             }
