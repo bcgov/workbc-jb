@@ -189,6 +189,11 @@ class DevIndexJobs extends Command
     private function baseJob(): array
     {
         [$city, $lat, $lon, $region] = $this->cities[array_rand($this->cities)];
+        // Jitter ~±2km so same-city jobs sit at distinct points on the map (real jobs
+        // are at different addresses) instead of stacking on the city centroid. Kept
+        // small so they stay within the 5km smallest radius option of the centroid.
+        $lat = round($lat + mt_rand(-180, 180) / 10000, 6);
+        $lon = round($lon + mt_rand(-180, 180) / 10000, 6);
         [$noc2021, $noc2016, $title] = $this->nocs[array_rand($this->nocs)];
         $this->lastNoc2016 = $noc2016;
 
