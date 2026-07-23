@@ -32,6 +32,11 @@ use Livewire\Component;
  * annualization/range maths live in {@see SalaryRangeHelper} and the query
  * groups in the shared JobSearchQuery (Rule B: the app only reads Salary).
  *
+ * SRCH-5 adds the "More" facet: equity groups (→ the index's Is* terms),
+ * posting language (English / English + French → federal jobs), a NOC 2021
+ * code (→ Noc2021 term), the job source enum and the placement-agency
+ * exclusion. As with the other facets it only maps state to the shared query.
+ *
  * No business logic here (copilot-instructions §6): the component maps its bound
  * state to a {@see JobSearchFilters} value object and delegates to
  * {@see JobSearchService}. Alpine handles pure view state elsewhere; this
@@ -128,6 +133,23 @@ final class JobSearch extends Component
     /** @var string[] selected benefit conditions (SalaryConditions.Description terms) */
     public array $salaryConditions = [];
 
+    // --- More filters facet (SRCH-5) ---------------------------------------
+
+    /** @var string[] selected equity groups (suffix of the SearchIs* flag) */
+    public array $equityGroups = [];
+
+    /** Job posting language: '1' English (default) | '2' English and French. */
+    public string $postingLanguage = '1';
+
+    /** Raw NOC entry (a 5-digit code or "NOC 12345 …"): NocCode context + Noc2021 term. */
+    public string $nocCode = '';
+
+    /** SearchJobSource enum (contracts §1): '0' any…'5' provincial. */
+    public string $jobSource = '0';
+
+    /** Exclude placement-agency employers (EmployerTypeId 1). */
+    public bool $excludePlacementAgency = false;
+
     /** @var string[] */
     private const SEARCH_IN = ['all', 'title', 'employer', 'jobId'];
 
@@ -137,6 +159,8 @@ final class JobSearch extends Component
         'educationLevels', 'dateSelection', 'startDate', 'endDate',
         'salaryType', 'salaryBrackets', 'salaryCustom', 'salaryMin',
         'salaryMax', 'salaryUnknown', 'salaryConditions',
+        'equityGroups', 'postingLanguage', 'nocCode', 'jobSource',
+        'excludePlacementAgency',
     ];
 
     /** Submit the keyword/scope form: re-run from page 1. */
@@ -188,6 +212,11 @@ final class JobSearch extends Component
         $this->salaryMax = '';
         $this->salaryUnknown = false;
         $this->salaryConditions = [];
+        $this->equityGroups = [];
+        $this->postingLanguage = '1';
+        $this->nocCode = '';
+        $this->jobSource = '0';
+        $this->excludePlacementAgency = false;
         $this->locations = [];
         $this->distance = -1;
         $this->resetLocationInput();
@@ -315,6 +344,9 @@ final class JobSearch extends Component
             'salaryTypeOptions' => self::salaryTypeOptions(),
             'salaryBracketLabels' => $this->salaryBracketLabels(),
             'salaryConditionOptions' => self::salaryConditionOptions(),
+            'equityOptions' => self::equityOptions(),
+            'jobSourceOptions' => self::jobSourceOptions(),
+            'postingLanguageOptions' => self::postingLanguageOptions(),
         ]);
     }
 
@@ -346,7 +378,7 @@ final class JobSearch extends Component
         }
 
         return JobSearchFilters::fromArray(
-            $payload + $this->dateFilterPayload() + $this->salaryPayload()
+            $payload + $this->dateFilterPayload() + $this->salaryPayload() + $this->morePayload()
         );
     }
 
@@ -518,6 +550,73 @@ final class JobSearch extends Component
             4 => $money($b3) . ' – ' . $money($b4),
             5 => $money($b4) . ' or more',
         ];
+    }
+
+    /**
+     * "More" facet (SRCH-5) → filter payload. Equity groups map to the index's
+     * Is* boolean terms, posting language E+F flags the federal jobs, NOC maps
+     * to the Noc2021 term, job source to the SearchJobSource enum, and the
+     * placement-agency exclusion to a must_not. All client values are
+     * whitelisted so a tampered request can't inject an unknown field.
+     *
+     * @return array<string, mixed>
+     */
+    private function morePayload(): array
+    {
+        $payload = [];
+
+        // Equity groups: each selected suffix toggles its SearchIs{Suffix} flag.
+        foreach ($this->selectedEquityKeys() as $key) {
+            $payload["SearchIs{$key}"] = true;
+        }
+
+        // Posting language: '2' = English + French, which are the federal jobs.
+        if ($this->postingLanguage === '2') {
+            $payload['SearchIsPostingsInEnglish'] = false;
+            $payload['SearchIsPostingsInEnglishAndFrench'] = true;
+        }
+
+        // Job source enum ('0'/any contributes no filter).
+        if (array_key_exists($this->jobSource, self::jobSourceOptions()) && $this->jobSource !== '0') {
+            $payload['SearchJobSource'] = $this->jobSource;
+        }
+
+        if ($this->excludePlacementAgency) {
+            $payload['SearchExcludePlacementAgencyJobs'] = true;
+        }
+
+        return $payload + $this->nocPayload();
+    }
+
+    /**
+     * Selected equity-group suffixes, whitelisted against the known list.
+     *
+     * @return string[]
+     */
+    private function selectedEquityKeys(): array
+    {
+        return array_values(array_intersect($this->equityGroups, array_keys(self::equityOptions())));
+    }
+
+    /**
+     * NOC entry → payload. NocCode keeps the raw text (contract context); a
+     * 5-digit code within it becomes SearchNocField (the Noc2021 term).
+     *
+     * @return array<string, string>
+     */
+    private function nocPayload(): array
+    {
+        $raw = trim($this->nocCode);
+        if ($raw === '') {
+            return [];
+        }
+
+        $payload = ['NocCode' => $raw];
+        if (preg_match('/\d{5}/', $raw, $m) === 1) {
+            $payload['SearchNocField'] = $m[0];
+        }
+
+        return $payload;
     }
 
     /**
@@ -704,6 +803,58 @@ final class JobSearch extends Component
             'RRSP benefits',
             'Vision care benefits',
             'Other benefits',
+        ];
+    }
+
+    /**
+     * Equity groups (the "More" facet): key = SearchIs* flag suffix → label.
+     * Also the whitelist for {@see selectedEquityKeys()}.
+     *
+     * @return array<string, string>
+     */
+    public static function equityOptions(): array
+    {
+        return [
+            'Apprentice' => 'Apprentice',
+            'Indigenous' => 'Indigenous person',
+            'MatureWorkers' => 'Mature worker',
+            'Newcomers' => 'Newcomer to B.C.',
+            'PeopleWithDisabilities' => 'Person with a disability',
+            'Students' => 'Student',
+            'Veterans' => 'Veteran of the Canadian Armed Forces',
+            'VisibleMinority' => 'Visible minority',
+            'Youth' => 'Youth',
+        ];
+    }
+
+    /**
+     * SearchJobSource enum (contracts §1) → labels, in the C# dropdown order.
+     * Also the whitelist for the job-source select.
+     *
+     * @return array<string, string>
+     */
+    public static function jobSourceOptions(): array
+    {
+        return [
+            '0' => 'All sources',
+            '1' => 'WorkBC',
+            '5' => 'Provincial government',
+            '4' => 'Municipal government',
+            '3' => 'Federal government',
+            '2' => 'External (other job boards)',
+        ];
+    }
+
+    /**
+     * Job posting language options (contracts §1).
+     *
+     * @return array<string, string>
+     */
+    public static function postingLanguageOptions(): array
+    {
+        return [
+            '1' => 'English',
+            '2' => 'English and French',
         ];
     }
 

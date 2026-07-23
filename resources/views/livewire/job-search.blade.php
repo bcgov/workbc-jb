@@ -192,8 +192,11 @@
         $jobTypeCount = count($hours) + count($period) + count($terms) + count($workplace);
         $salaryCount = count($salaryBrackets) + ($salaryCustom ? 1 : 0)
             + ($salaryUnknown ? 1 : 0) + count($salaryConditions);
+        $moreCount = count($equityGroups) + ($postingLanguage !== '1' ? 1 : 0)
+            + (trim($nocCode) !== '' ? 1 : 0) + ($jobSource !== '0' ? 1 : 0)
+            + ($excludePlacementAgency ? 1 : 0);
         $activeFilterCount = $jobTypeCount + count($industries) + count($educationLevels)
-            + ($dateSelection !== '0' ? 1 : 0) + $salaryCount + count($locations);
+            + ($dateSelection !== '0' ? 1 : 0) + $salaryCount + $moreCount + count($locations);
     @endphp
     <div class="flex flex-wrap items-center gap-3" role="group" aria-label="Filter results">
         {{-- Job type --}}
@@ -435,6 +438,69 @@
                             <input type="checkbox" value="{{ $condition }}" wire:model.live="salaryConditions"
                                    class="size-4 rounded border-slate-400 text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
                             <span>{{ $condition }}</span>
+                        </label>
+                    @endforeach
+                </fieldset>
+            </div>
+        </div>
+
+        {{-- More filters (SRCH-5) --}}
+        <div x-data="{ open: false }" x-on:keydown.escape="open = false" x-on:click.outside="open = false" class="relative">
+            <button
+                type="button"
+                x-on:click="open = ! open"
+                aria-controls="facet-more"
+                aria-expanded="false"
+                x-bind:aria-expanded="open.toString()"
+                class="inline-flex items-center gap-1.5 rounded-md border border-slate-400 bg-white px-3 py-2 text-sm font-medium text-slate-900 shadow-sm hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900"
+            >
+                <span>More filters</span>
+                @if ($moreCount > 0)
+                    <span class="inline-flex min-w-5 items-center justify-center rounded-full bg-blue-700 px-1.5 text-xs font-semibold text-white">{{ $moreCount }}<span class="sr-only"> selected</span></span>
+                @endif
+                <svg class="size-4 text-slate-500" x-bind:class="open ? 'rotate-180' : ''" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 011.06 0L10 11.94l3.72-3.72a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.22 9.28a.75.75 0 010-1.06z" clip-rule="evenodd" />
+                </svg>
+            </button>
+            <div id="facet-more" x-show="open" x-cloak role="group" aria-label="More filters"
+                 class="absolute z-20 mt-1 max-h-96 w-80 space-y-4 overflow-auto rounded-md border border-slate-300 bg-white p-4 shadow-lg">
+                <fieldset>
+                    <legend class="text-xs font-semibold uppercase tracking-wide text-slate-500">Employment groups</legend>
+                    @foreach ($equityOptions as $key => $label)
+                        <label class="flex items-center gap-2 py-1 text-sm text-slate-900">
+                            <input type="checkbox" value="{{ $key }}" wire:model.live="equityGroups"
+                                   class="size-4 rounded border-slate-400 text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                            <span>{{ $label }}</span>
+                        </label>
+                    @endforeach
+                </fieldset>
+                <div>
+                    <label for="more-noc" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">NOC 2021 code</label>
+                    <input id="more-noc" type="text" inputmode="numeric" autocomplete="off" placeholder="5-digit NOC code"
+                           wire:model.live.debounce.400ms="nocCode"
+                           class="mt-1 block w-full rounded-md border border-slate-400 px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                </div>
+                <div>
+                    <label for="more-source" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Job source</label>
+                    <select id="more-source" wire:model.live="jobSource"
+                            class="mt-1 block w-full rounded-md border border-slate-400 px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                        @foreach ($jobSourceOptions as $value => $label)
+                            <option value="{{ $value }}">{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <label class="flex items-center gap-2 py-1 text-sm text-slate-900">
+                    <input type="checkbox" wire:model.live="excludePlacementAgency"
+                           class="size-4 rounded border-slate-400 text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                    <span>Exclude placement agency jobs</span>
+                </label>
+                <fieldset>
+                    <legend class="text-xs font-semibold uppercase tracking-wide text-slate-500">Job posting language</legend>
+                    @foreach ($postingLanguageOptions as $value => $label)
+                        <label class="flex items-center gap-2 py-1 text-sm text-slate-900">
+                            <input type="radio" name="postingLanguage" value="{{ $value }}" wire:model.live="postingLanguage"
+                                   class="size-4 border-slate-400 text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                            <span>{{ $label }}</span>
                         </label>
                     @endforeach
                 </fieldset>
