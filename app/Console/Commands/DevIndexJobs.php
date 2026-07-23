@@ -68,16 +68,20 @@ class DevIndexJobs extends Command
         'jobs.ashbyhq.com', 'indeed.com', 'ca.linkedin.com', 'workopolis.com', 'glassdoor.ca',
     ];
 
+    // WorkplaceTypeId enum (Shared/Constants/WorkplaceType.cs): OnSite=0, Hybrid=100000, Travelling=100001, Virtual=15141
     private array $workplaceTypes = [
         ['Id' => 0, 'Description' => 'On-site only'],
         ['Id' => 0, 'Description' => 'On-site only'],
-        ['Id' => 15139, 'Description' => 'Hybrid'],
+        ['Id' => 100000, 'Description' => 'Hybrid'],
+        ['Id' => 100001, 'Description' => 'Travelling'],
         ['Id' => 15141, 'Description' => 'Virtual'],
     ];
 
+    // Real EduLevel values written by the indexer (XmlParsingServiceFederal.cs:675-691) —
+    // must match exactly, since the education facet terms on EduLevel.keyword with these strings.
     private array $eduLevels = [
-        'No minimum education', 'Secondary school or job-specific training',
-        'College or vocational education', 'University education',
+        'No education', 'Secondary school or job-specific training',
+        'College or apprenticeship', 'University',
     ];
 
     private int $lastNoc2016 = 0;
