@@ -5,9 +5,84 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+/* WorkBC brand font — BC Sans, the BC Gov standard typeface (OFL-licensed).
+   Files vendored in resources/fonts/BCSans/ from the workbc Drupal theme.
+   See docs/design/brand-alignment.md and ADR-006 (the search embeds in the
+   Drupal page, so we own — and must ship — the brand font ourselves). */
+@font-face {
+    font-family: 'BCSans';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/BCSans/BCSans-Regular.woff2') format('woff2'),
+         url('../fonts/BCSans/BCSans-Regular.woff') format('woff');
+}
+@font-face {
+    font-family: 'BCSans';
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/BCSans/BCSans-Italic.woff2') format('woff2'),
+         url('../fonts/BCSans/BCSans-Italic.woff') format('woff');
+}
+@font-face {
+    font-family: 'BCSans';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../fonts/BCSans/BCSans-Bold.woff2') format('woff2'),
+         url('../fonts/BCSans/BCSans-Bold.woff') format('woff');
+}
+@font-face {
+    font-family: 'BCSans';
+    font-style: italic;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../fonts/BCSans/BCSans-BoldItalic.woff2') format('woff2'),
+         url('../fonts/BCSans/BCSans-BoldItalic.woff') format('woff');
+}
+
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    /* Type — WorkBC uses BC Sans (developer.gov.bc.ca/Typography). */
+    --font-sans: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
+
+    /* --- WorkBC named brand tokens (from the workbc theme _variables_workbc.scss).
+       Usable directly as bg-workbc-blue, text-workbc-navy, border-workbc-blue, … --- */
+    --color-workbc-navy: #002857; /* dark primary — hover, focus */
+    --color-workbc-blue: #2e6ab0; /* secondary — links, buttons, borders (≈5.5:1 on white) */
+    --color-workbc-cyan: #029cdd; /* tertiary accent */
+    --color-workbc-ink: #333333; /* body text */
+    --color-workbc-muted: #666666;
+    --color-workbc-grey: #9d9d9d;
+    --color-workbc-mist: #f2f2f2; /* light surface / button hover fill */
+    --color-workbc-gold: #e7bf3e; /* highlight trim */
+    --color-workbc-alert: #791d5f;
+    --color-workbc-steel: #accad7; /* search panel accents */
+    --color-workbc-steel-dark: #8eadbb;
+
+    --shadow-workbc: 0 0 15px 0 #00000026;
+    --shadow-workbc-bottom: 0 5px 10px -5px #00000026;
+
+    /* --- Re-skin: remap the default Tailwind shades the app already uses onto the
+       WorkBC palette, so existing blue-* / slate-* utilities render on-brand without
+       editing every Blade file. Contrast checked for AA where the shade carries text.
+       See docs/design/brand-alignment.md. --- */
+    --color-blue-50: #eaf1f8;
+    --color-blue-500: #2e6ab0;
+    --color-blue-700: #2e6ab0; /* buttons, badges, accents */
+    --color-blue-800: #2e6ab0; /* links */
+    --color-blue-900: #002857; /* focus outlines, hover */
+
+    --color-slate-50: #f7f7f7; /* page background */
+    --color-slate-100: #efefef; /* hover surfaces */
+    --color-slate-200: #e1e1e1; /* card borders, dividers */
+    --color-slate-300: #cfcfcf; /* dropdown borders */
+    --color-slate-400: #9d9d9d; /* input borders, disabled */
+    --color-slate-500: #6e6e6e; /* icons, hints, placeholders (≈5:1 on white) */
+    --color-slate-600: #595959; /* secondary text */
+    --color-slate-700: #474747; /* body text, labels */
+    --color-slate-800: #333333;
+    --color-slate-900: #2d2d2d; /* headings */
 }
 
 @layer base {
@@ -20,7 +95,7 @@
 
     /* Visible focus indicator for keyboard users on any interactive element (WCAG 2.4.7). */
     :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-        outline: 2px solid #1e3a8a;
+        outline: 2px solid var(--color-workbc-navy);
         outline-offset: 2px;
     }
 
@@ -37,10 +112,10 @@
     }
 
     .skip-link:focus {
-        @apply not-sr-only fixed left-4 top-4 z-50 rounded-md bg-blue-800 px-4 py-2 font-semibold text-white outline-2 outline-offset-2 outline-blue-900;
+        @apply not-sr-only fixed left-4 top-4 z-50 rounded-md bg-workbc-blue px-4 py-2 font-semibold text-white outline-2 outline-offset-2 outline-workbc-navy;
     }
 
     .nav-link {
-        @apply rounded px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-900 aria-[current=page]:bg-blue-50 aria-[current=page]:text-blue-800;
+        @apply rounded px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-workbc-navy aria-[current=page]:bg-blue-50 aria-[current=page]:text-workbc-blue;
     }
 }
