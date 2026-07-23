@@ -74,4 +74,23 @@ final class SalaryRangeHelper
     {
         return self::MULTIPLIERS[$salaryType] ?? 1;
     }
+
+    /**
+     * The four fixed-bracket boundaries (lower bounds of brackets 2–5) in the
+     * SalaryType's own units. Display data for the bracket labels — the single
+     * source for the boundary numbers, so the UI can't drift from the ranges.
+     *
+     * @return array{0: float, 1: float, 2: float, 3: float}
+     */
+    public static function bracketBounds(int $salaryType): array
+    {
+        $type = array_key_exists($salaryType, self::RANGES) ? $salaryType : self::ANNUALLY;
+
+        return [
+            self::RANGES[$type][1][0],
+            self::RANGES[$type][2][0],
+            self::RANGES[$type][3][0],
+            self::RANGES[$type][4][0],
+        ];
+    }
 }
