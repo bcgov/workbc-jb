@@ -50,6 +50,29 @@ epics need first.
 - [ ] **Golden-read tests:** for each model, assert reads against known real rows (counts, casts,
       one relationship traversal) — proves the mapping before any writes.
 
+**Build notes (schema verified against the restored real DB, 2026-07-24):**
+- `data-model.md §1–3` PKs/types were **cross-checked against the real database and are accurate —
+  trust them.** Quick ref: **string** PKs → `Jobs.JobId`, `AspNetUsers.Id`, `SystemSettings.Name`
+  (`$incrementing=false; $keyType='string'`); **smallint** PKs → `JobSources.Id`, `Industries.Id`,
+  `NocCodes.Id`; **int** PKs → `AdminUsers.Id`, `SavedJobs.Id`, `JobAlerts.Id`, `Locations.LocationId`,
+  `Regions.Id`, `NocCodes2021.Id`, `JobSeekerFlags.Id`.
+- Soft-delete pair (`IsDeleted`+`DateDeleted`) confirmed on `SavedJobs`, `JobAlerts`,
+  `SavedCareerProfiles`, `SavedIndustryProfiles` → shared custom trait (not Laravel `SoftDeletes`).
+- Composite PKs confirmed → query-builder only: `JobStats`(WeeklyPeriodId,RegionId,JobSourceId),
+  `JobSeekerStats`(WeeklyPeriodId,LabelKey,RegionId), `ReportPersistenceControl`(WeeklyPeriodId,TableName).
+- `Regions` holds **special rows with ids ≤ 0** ("Multiple Locations" −5, "Virtual Jobs" −4,
+  "Outside BC…" −1, "Location Not Available" 0) alongside the 7 economic regions (ids 2–8) — do not
+  assume region ids are all positive.
+- `Industries.Id` is the real NAICS scheme (`1, 21–46`), **not** the legacy 1–19 (see the
+  industry-taxonomy fix in the search epic).
+
+**Golden-read tests — keep them portable:** the suite runs on **SQLite in-memory**, not the prod dump,
+so do **not** assert exact production row counts (brittle + non-portable). Prove each mapping with a
+small controlled fixture — create the table + a couple of known rows (pattern:
+`tests/Concerns/InteractsWithLocationsTable.php`), then assert the `$table`/PK resolve, the casts
+convert (bool / datetime / `decimal:2`), and one relationship traverses. Reserve full-DB spot-checks
+for manual `tinker` against the local `jobboard` DB.
+
 **Docs:** `data-model.md §1–3, §6`; `glossary.md`. **Depends on:** FND-1.
 
 ---
