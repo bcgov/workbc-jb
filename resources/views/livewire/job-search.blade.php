@@ -164,29 +164,8 @@
                 <x-button type="button" variant="secondary" wire:click="addLocation">Add location</x-button>
             </div>
 
-            {{-- Committed locations. --}}
-            @if (! empty($locations))
-                <ul aria-label="Selected locations" class="mt-3 flex flex-wrap gap-2">
-                    @foreach ($locations as $i => $loc)
-                        @php
-                            $label = $loc['City'] ?? $loc['Region'] ?? (isset($loc['Postal']) ? \App\Search\Filters\LocationField::fromArray($loc)->getPostal() : 'Location');
-                        @endphp
-                        <li class="inline-flex items-center gap-1 rounded-full bg-blue-50 py-1 pl-3 pr-1 text-sm text-blue-900">
-                            <span>{{ $label }}</span>
-                            <button
-                                type="button"
-                                wire:click="removeLocation({{ $i }})"
-                                aria-label="Remove location {{ $label }}"
-                                class="inline-flex size-5 items-center justify-center rounded-full hover:bg-blue-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900"
-                            >
-                                <svg class="size-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-                                </svg>
-                            </button>
-                        </li>
-                    @endforeach
-                </ul>
-            @endif
+            {{-- Committed locations now render in the unified active-filter strip
+                 below the filter bar (SRCH-11), alongside every other applied filter. --}}
         </div>
 
         <div>
@@ -548,6 +527,32 @@
             </span>
         </div>
     </div>
+
+    {{-- SRCH-11: active filters as removable chips (parity with the old
+         lib-search-criteries). One chip per applied value across every facet —
+         locations included — each removing just that value. The result-count live
+         region below announces the new total after a removal. "Clear filters"
+         (in the filter bar above) still clears everything at once. --}}
+    @if (! empty($activeFilters))
+        <div role="group" aria-label="Active filters" class="flex flex-wrap items-center gap-2">
+            <span class="text-sm font-medium text-slate-700">Filters:</span>
+            @foreach ($activeFilters as $chip)
+                <span class="inline-flex items-center gap-1 rounded-full bg-blue-50 py-1 pl-3 pr-1 text-sm text-blue-900">
+                    <span>{{ $chip['label'] }}</span>
+                    <button
+                        type="button"
+                        wire:click="removeFilter('{{ $chip['type'] }}', '{{ $chip['value'] }}')"
+                        aria-label="Remove filter {{ $chip['label'] }}"
+                        class="inline-flex size-5 items-center justify-center rounded-full hover:bg-blue-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-workbc-navy"
+                    >
+                        <svg class="size-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                        </svg>
+                    </button>
+                </span>
+            @endforeach
+        </div>
+    @endif
 
     @if ($unavailable)
         <x-alert type="error" title="Search is temporarily unavailable">
