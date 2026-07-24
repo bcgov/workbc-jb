@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\JobSeekerPasswordResetController;
 use App\Http\Controllers\Auth\JobSeekerRegistrationController;
 use App\Http\Controllers\Auth\JobSeekerSessionController;
 use App\Http\Controllers\Web\SitemapController;
+use App\Livewire\JobSeekerDashboard;
 use App\Livewire\JobSearch;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +21,13 @@ Route::post('/auth/job-seeker/register', [JobSeekerRegistrationController::class
 Route::get('/auth/job-seeker/verify/{userId}/{guid}', [JobSeekerRegistrationController::class, 'verify'])->name('job-seeker.verify');
 Route::post('/auth/job-seeker/forgot-password', [JobSeekerPasswordResetController::class, 'request'])->name('job-seeker.forgot-password');
 Route::post('/auth/job-seeker/reset-password', [JobSeekerPasswordResetController::class, 'reset'])->name('job-seeker.reset-password');
+
+// Placeholder login page route name for auth middleware guest redirects.
+Route::view('/login', 'welcome')->name('login');
+
+Route::middleware('auth:web')->group(function (): void {
+    Route::get('/account', JobSeekerDashboard::class)->name('account.dashboard');
+});
 
 // SRCH-8: job sitemap (SEO). ~35 k active jobs × 2 languages > 50 k URL limit,
 // so a sitemap index points to two language shards. Shards are cached in Redis
