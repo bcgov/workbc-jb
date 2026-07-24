@@ -178,9 +178,25 @@
             </select>
         </div>
 
-        {{-- SRCH-12: region map spans both columns of the location row. --}}
-        <div class="sm:col-span-2">
-            @include('livewire.partials.region-map', ['selectedRegions' => $selectedRegions])
+        {{-- SRCH-12: region map, collapsed by default to keep the search band tidy
+             (the old board tucked it inside the Location dropdown too). Auto-expands
+             when a region is already selected (e.g. a shared link). Alpine owns the
+             disclosure (view state); the map still renders in the DOM either way. --}}
+        <div class="sm:col-span-2" x-data="{ show: {{ empty($selectedRegions) ? 'false' : 'true' }} }">
+            <button type="button" x-on:click="show = ! show"
+                    x-bind:aria-expanded="show.toString()" aria-controls="region-map-panel"
+                    class="inline-flex items-center gap-1.5 rounded-md px-1 py-1 text-sm font-medium text-blue-800 hover:text-workbc-navy focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-workbc-navy">
+                <svg class="size-4 transition-transform" x-bind:class="show ? 'rotate-90' : ''" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                </svg>
+                <span>Choose a region on a map</span>
+                @if (! empty($selectedRegions))
+                    <span class="inline-flex min-w-5 items-center justify-center rounded-full bg-blue-700 px-1.5 text-xs font-semibold text-white">{{ count($selectedRegions) }}<span class="sr-only"> region(s) selected</span></span>
+                @endif
+            </button>
+            <div id="region-map-panel" x-show="show" x-cloak>
+                @include('livewire.partials.region-map', ['selectedRegions' => $selectedRegions])
+            </div>
         </div>
     </div>
     </div>{{-- end search band --}}

@@ -16,9 +16,11 @@
 --}}
 @php $regions = config('bc_regions', []); @endphp
 
-<div x-data="{ hovered: '' }" class="mt-4">
-    <p id="region-map-label" class="text-sm font-medium text-slate-900">Or choose a region of B.C.</p>
-    <p id="region-map-hint" class="mt-1 text-sm text-slate-600">
+<div x-data="{ hovered: '' }" class="mt-2">
+    {{-- The disclosure button above is the visible label; keep an sr-only name so
+         the SVG group is still announced. --}}
+    <p id="region-map-label" class="sr-only">Regions of British Columbia</p>
+    <p id="region-map-hint" class="text-sm text-slate-600">
         Select one or more regions on the map. Selected regions are highlighted; activate a region again to remove it.
     </p>
 
