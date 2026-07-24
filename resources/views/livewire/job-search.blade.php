@@ -8,14 +8,25 @@
         $windowEnd = min($lastPage, $current + 2);
     @endphp
 
-    <div>
-        <h1 class="text-3xl font-bold">Find jobs</h1>
-        <p class="mt-1 text-slate-700">Search current job postings across British Columbia.</p>
-    </div>
+    {{-- SRCH-13 / ADR-006: in embed mode the Drupal host page renders the H1/hero,
+         so keep a heading for assistive tech but drop the visual title to avoid
+         duplication; standalone shows the full headline. --}}
+    @if ($embed)
+        <h1 class="sr-only">Search jobs in British Columbia</h1>
+    @else
+        <div>
+            <h1 class="text-3xl font-bold text-slate-900">Search jobs in B.C.</h1>
+            <p class="mt-1 text-slate-700">Find current job postings across British Columbia.</p>
+        </div>
+    @endif
 
+    {{-- SRCH-13: keyword + location presented as one cohesive search band. The
+         keyword form (submit) and the location combobox (adds chips live) each
+         keep their own behaviour; this wrapper just unifies them visually. --}}
+    <div class="overflow-visible rounded-lg border border-slate-200 bg-white shadow-workbc">
     {{-- Keyword + scope: submitted together (data → Livewire). --}}
     <form wire:submit="applySearch" role="search" aria-label="Job search"
-          class="grid gap-4 rounded-lg border border-slate-200 bg-white p-4 sm:grid-cols-[1fr_auto_auto] sm:items-end">
+          class="grid gap-4 p-4 sm:grid-cols-[1fr_auto_auto] sm:items-end">
         <x-form-field
             name="keyword"
             type="search"
@@ -46,8 +57,9 @@
     {{-- Location facet (SRCH-2). Accessible combobox: Alpine owns the open/active
          view state; Livewire owns the suggestion data, validation and committed
          locations. --}}
+    {{-- Location + distance: the second row of the same search band (divider only). --}}
     <div
-        class="grid gap-4 rounded-lg border border-slate-200 bg-white p-4 sm:grid-cols-[1fr_auto] sm:items-start"
+        class="grid gap-4 border-t border-slate-200 p-4 sm:grid-cols-[1fr_auto] sm:items-start"
         x-data="{
             open: false,
             activeIndex: -1,
@@ -184,6 +196,7 @@
             </select>
         </div>
     </div>
+    </div>{{-- end search band --}}
 
     {{-- Standard filter facets (SRCH-3). Each dropdown is an accessible disclosure:
          Alpine owns the open/close view state; Livewire owns the checkbox/radio
