@@ -67,6 +67,15 @@ final class JobSearch extends Component
     public int $pageSize = 20;
 
     /**
+     * SRCH-13 / ADR-006 — embed mode. When the search renders inside the Drupal
+     * iframe (`?embed=1`) the host page already renders the H1/hero, so the
+     * visible page title is suppressed (an sr-only heading is kept for AT). Read
+     * once from the initial GET; deliberately NOT #[Url], so it never leaks into
+     * shareable/alert links, and it persists in the component snapshot thereafter.
+     */
+    public bool $embed = false;
+
+    /**
      * Results presentation (SRCH-9): 'list' (default) or 'map'. Bound to the URL
      * so a map view is shareable, and — crucially for a11y — the list stays a
      * full, always-available equivalent (the map is never the only way to reach
@@ -187,6 +196,7 @@ final class JobSearch extends Component
      */
     public function mount(): void
     {
+        $this->embed = request()->boolean('embed');
         $filters = app(FilterUrlSerializer::class)->fromQuery(request()->query());
         $this->hydrateFacets($filters);
     }
