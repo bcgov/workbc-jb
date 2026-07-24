@@ -45,7 +45,7 @@
         <h2 class="text-xl font-semibold text-slate-900">Go to</h2>
         <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <li>
-                <a href="/account/saved-jobs" class="nav-link block rounded-md border border-slate-200 bg-white px-4 py-3 font-medium">
+                <a href="{{ route('account.saved-jobs') }}" wire:navigate class="nav-link block rounded-md border border-slate-200 bg-white px-4 py-3 font-medium">
                     Saved jobs
                 </a>
             </li>

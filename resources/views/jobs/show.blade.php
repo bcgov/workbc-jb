@@ -61,6 +61,7 @@
                 @endif
 
                 <div class="mt-4 flex flex-wrap gap-2">
+                    <livewire:saved-job-toggle :job-id="(string) ($job['JobId'] ?? '')" :key="'detail-save-'.$job['JobId']" />
                     <button type="button" onclick="window.print()"
                             class="rounded border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-800 hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-900">
                         Print

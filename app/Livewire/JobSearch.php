@@ -8,9 +8,11 @@ use App\Search\Filters\LocationField;
 use App\Search\Results\SearchResult;
 use App\Search\Support\SalaryRangeHelper;
 use App\Search\Url\FilterUrlSerializer;
+use App\Services\JobSeeker\SavedJobService;
 use App\Services\Search\JobSearchService;
 use App\Services\Search\LocationService;
 use App\Support\JobSlug;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
@@ -83,6 +85,11 @@ final class JobSearch extends Component
      */
     #[Url(as: 'view', except: 'list')]
     public string $view = 'list';
+
+    /** @var array<string, true> */
+    public array $savedJobIds = [];
+
+    public string $savedJobStatus = '';
 
     // --- Location facet (SRCH-2) -------------------------------------------
 
@@ -702,6 +709,30 @@ final class JobSearch extends Component
         $this->view = 'map';
     }
 
+    public function toggleSavedJob(SavedJobService $savedJobService, string $jobId): void
+    {
+        /** @var \App\Models\JobSeeker|null $jobSeeker */
+        $jobSeeker = Auth::guard('web')->user();
+
+        if ($jobSeeker === null || $jobId === '') {
+            return;
+        }
+
+        if (isset($this->savedJobIds[$jobId])) {
+            $unsaved = $savedJobService->unsave($jobSeeker, $jobId);
+            if ($unsaved) {
+                unset($this->savedJobIds[$jobId]);
+                $this->savedJobStatus = 'Job removed from saved jobs.';
+            }
+
+            return;
+        }
+
+        $savedJobService->save($jobSeeker, $jobId);
+        $this->savedJobIds[$jobId] = true;
+        $this->savedJobStatus = 'Job saved.';
+    }
+
     public function render()
     {
         // Normalize the URL-bound view so a tampered value can't select anything
@@ -729,9 +760,24 @@ final class JobSearch extends Component
             }
         }
 
+        /** @var \App\Models\JobSeeker|null $jobSeeker */
+        $jobSeeker = Auth::guard('web')->user();
+        if ($jobSeeker !== null) {
+            $visibleJobIds = array_values(array_filter(array_map(
+                static fn ($searchResult): string => (string) (($searchResult->toArray()['JobId'] ?? '')),
+                $result->results,
+            )));
+
+            $this->savedJobIds = app(SavedJobService::class)->savedJobIdMapForVisible($jobSeeker, $visibleJobIds);
+        } else {
+            $this->savedJobIds = [];
+        }
+
         return view('livewire.job-search', [
             'result' => $result,
             'unavailable' => $unavailable,
+            'isAuthenticatedJobSeeker' => $jobSeeker !== null,
+            'savedJobIds' => $this->savedJobIds,
             'activeFilters' => $this->activeFilters(),
             'selectedRegions' => $this->selectedRegionNames(),
             'shareUrl' => $this->shareUrl(),

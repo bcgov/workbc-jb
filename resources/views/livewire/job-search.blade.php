@@ -640,6 +640,7 @@
         @include('livewire.partials.job-map', ['mapPins' => $mapPins, 'mapApiKey' => $mapApiKey, 'count' => $result->count])
     @else
     {{-- Results: an ARIA live region; aria-busy flips while Livewire is loading. --}}
+    <p class="sr-only" role="status" aria-live="polite" aria-atomic="true">{{ $savedJobStatus }}</p>
     <div
         role="region"
         aria-label="Search results"
@@ -671,6 +672,25 @@
                         Posted <time datetime="{{ $j['DatePosted'] }}">{{ \Illuminate\Support\Carbon::parse($j['DatePosted'])->timezone('America/Vancouver')->format('M j, Y') }}</time>
                     </p>
                 @endif
+
+                <div class="mt-3">
+                    @if ($isAuthenticatedJobSeeker)
+                        @php $isSaved = isset($savedJobIds[$j['JobId']]); @endphp
+                        <button type="button"
+                                wire:click="toggleSavedJob('{{ $j['JobId'] }}')"
+                                aria-pressed="{{ $isSaved ? 'true' : 'false' }}"
+                                data-testid="save-job-toggle-{{ $j['JobId'] }}"
+                                aria-label="{{ $isSaved ? 'Unsave this job' : 'Save this job' }}"
+                                class="inline-flex items-center rounded border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-800 hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-900">
+                            {{ $isSaved ? 'Saved' : 'Save job' }}
+                        </button>
+                    @else
+                        <a href="{{ route('login') }}"
+                           class="text-sm font-medium text-blue-800 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-900">
+                            Sign in to save
+                        </a>
+                    @endif
+                </div>
             </article>
         @empty
             @unless ($unavailable)

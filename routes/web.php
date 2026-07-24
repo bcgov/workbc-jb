@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\JobSeekerSessionController;
 use App\Http\Controllers\Web\SitemapController;
 use App\Livewire\JobSeekerDashboard;
 use App\Livewire\JobSearch;
+use App\Livewire\SavedJobsPage;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,7 @@ Route::view('/login', 'welcome')->name('login');
 
 Route::middleware('auth:web')->group(function (): void {
     Route::get('/account', JobSeekerDashboard::class)->name('account.dashboard');
+    Route::get('/account/saved-jobs', SavedJobsPage::class)->name('account.saved-jobs');
 });
 
 // Local-only preview helpers live in a gitignored file so they can never be
