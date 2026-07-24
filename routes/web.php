@@ -29,6 +29,13 @@ Route::middleware('auth:web')->group(function (): void {
     Route::get('/account', JobSeekerDashboard::class)->name('account.dashboard');
 });
 
+// Local-only preview helpers live in a gitignored file so they can never be
+// committed (routes/dev-preview.php). Harmless if this loader is ever committed:
+// it only runs in local and no-ops if the file is absent.
+if (app()->environment('local') && file_exists(base_path('routes/dev-preview.php'))) {
+    require base_path('routes/dev-preview.php');
+}
+
 // SRCH-8: job sitemap (SEO). ~35 k active jobs × 2 languages > 50 k URL limit,
 // so a sitemap index points to two language shards. Shards are cached in Redis
 // (default 4 h TTL via SITEMAP_CACHE_TTL env). Both routes must sit above the
