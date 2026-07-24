@@ -8,6 +8,9 @@ use App\Search\Filters\LocationField;
 use App\Search\Results\SearchResult;
 use App\Search\Support\SalaryRangeHelper;
 use App\Search\Url\FilterUrlSerializer;
+use App\Models\Enums\AlertFrequency;
+use App\Models\JobAlert;
+use App\Services\JobSeeker\JobAlertsService;
 use App\Services\JobSeeker\SavedJobService;
 use App\Services\Search\JobSearchService;
 use App\Services\Search\LocationService;
@@ -85,6 +88,18 @@ final class JobSearch extends Component
      */
     #[Url(as: 'view', except: 'list')]
     public string $view = 'list';
+
+    public bool $alertMode = false;
+
+    public ?int $alertId = null;
+
+    public string $alertTitle = '';
+
+    public int $alertFrequency = AlertFrequency::Daily->value;
+
+    public int $alertMatchCount = 0;
+
+    public string $alertStatus = '';
 
     /** @var array<string, true> */
     public array $savedJobIds = [];
@@ -201,11 +216,33 @@ final class JobSearch extends Component
      * old alert deep-link forwarded by the redirect shim) restores the exact
      * filters. Runs once on the initial GET.
      */
-    public function mount(): void
+    public function mount(?int $alertId = null, bool $alertMode = false): void
     {
+        // Alert create/edit reuse this component. The full-page GET reaches those
+        // via named routes; the $alertMode arg keeps the component directly testable.
+        $this->alertMode = $alertMode || request()->routeIs('account.alerts.create', 'account.alerts.edit');
+        $this->alertId = $alertId;
         $this->embed = request()->boolean('embed');
-        $filters = app(FilterUrlSerializer::class)->fromQuery(request()->query());
-        $this->hydrateFacets($filters);
+
+        if ($this->alertMode && $this->alertId !== null) {
+            /** @var JobSeeker $jobSeeker */
+            $jobSeeker = Auth::guard('web')->user();
+            $alert = app(JobAlertsService::class)->findFor($jobSeeker, $this->alertId);
+
+            abort_if($alert === null, 404);
+
+            $this->alertTitle = (string) $alert->Title;
+            $this->alertFrequency = (int) $alert->AlertFrequency->value;
+
+            if ($alert->JobSearchFilters !== null) {
+                $this->hydrateFacets($alert->JobSearchFilters);
+            }
+
+            $this->alertStatus = 'Editing saved alert.';
+        } else {
+            $filters = app(FilterUrlSerializer::class)->fromQuery(request()->query());
+            $this->hydrateFacets($filters);
+        }
     }
 
     /**
@@ -709,6 +746,46 @@ final class JobSearch extends Component
         $this->view = 'map';
     }
 
+    public function saveAlert(JobAlertsService $alertsService): void
+    {
+        /** @var JobSeeker $jobSeeker */
+        $jobSeeker = Auth::guard('web')->user();
+
+        $this->validate([
+            'alertTitle' => ['required', 'string', 'max:255'],
+            'alertFrequency' => ['required', 'integer', 'in:1,2,3,4'],
+        ]);
+
+        $alert = $alertsService->save(
+            $jobSeeker,
+            $this->alertId,
+            $this->alertTitle,
+            AlertFrequency::from($this->alertFrequency),
+            $this->toFilters(),
+        );
+
+        $this->alertId = (int) $alert->Id;
+        $this->alertStatus = $this->alertId !== null && $this->alertId !== 0
+            ? 'Alert saved.'
+            : 'Alert created.';
+    }
+
+    public function deleteAlert(JobAlertsService $alertsService): void
+    {
+        if ($this->alertId === null) {
+            return;
+        }
+
+        /** @var JobSeeker $jobSeeker */
+        $jobSeeker = Auth::guard('web')->user();
+
+        if ($alertsService->delete($jobSeeker, $this->alertId)) {
+            $this->alertStatus = 'Alert deleted.';
+            $this->alertId = null;
+            $this->alertTitle = '';
+        }
+    }
+
     public function toggleSavedJob(SavedJobService $savedJobService, string $jobId): void
     {
         /** @var \App\Models\JobSeeker|null $jobSeeker */
@@ -738,6 +815,48 @@ final class JobSearch extends Component
         // Normalize the URL-bound view so a tampered value can't select anything
         // other than the two supported presentations.
         $this->view = $this->view === 'map' ? 'map' : 'list';
+
+        if ($this->alertMode) {
+            $previewFilters = $this->toFilters();
+            $previewFilters->PageSize = 0;
+
+            try {
+                $result = app(JobSearchService::class)->search($previewFilters);
+                $this->alertMatchCount = $result->count;
+            } catch (\Throwable $e) {
+                report($e);
+                $result = new SearchResult(0, [], 1, 0);
+                $this->alertMatchCount = 0;
+            }
+
+            return view('livewire.job-search', [
+                'result' => $result,
+                'unavailable' => false,
+                'isAuthenticatedJobSeeker' => Auth::guard('web')->check(),
+                'savedJobIds' => [],
+                'activeFilters' => $this->activeFilters(),
+                'selectedRegions' => $this->selectedRegionNames(),
+                'shareUrl' => $this->shareUrl(),
+                'view' => $this->view,
+                'mapPins' => [],
+                'mapApiKey' => (string) config('services.google_maps.js_key', ''),
+                'sortOptions' => self::sortOptions(),
+                'distanceOptions' => self::distanceOptions(),
+                'jobTypeHoursOptions' => self::jobTypeHoursOptions(),
+                'jobTypePeriodOptions' => self::jobTypePeriodOptions(),
+                'jobTypeTermsOptions' => self::jobTypeTermsOptions(),
+                'workplaceOptions' => self::workplaceOptions(),
+                'industryOptions' => self::industryOptions(),
+                'educationOptions' => self::educationOptions(),
+                'dateOptions' => self::dateOptions(),
+                'salaryTypeOptions' => self::salaryTypeOptions(),
+                'salaryBracketLabels' => $this->salaryBracketLabels(),
+                'salaryConditionOptions' => self::salaryConditionOptions(),
+                'equityOptions' => self::equityOptions(),
+                'jobSourceOptions' => self::jobSourceOptions(),
+                'postingLanguageOptions' => self::postingLanguageOptions(),
+            ]);
+        }
 
         try {
             $result = app(JobSearchService::class)->search($this->toFilters());
