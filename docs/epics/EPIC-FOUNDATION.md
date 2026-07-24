@@ -117,17 +117,42 @@ sitemap regeneration, view-count flush). Feed import/index jobs are **out of sco
 password verifier that rehashes to bcrypt on login. Email-only reset.
 
 **Acceptance criteria**
-- [ ] `JobSeeker` implements `Authenticatable` (`getAuthPassword()` → `PasswordHash`).
-- [ ] Custom hasher/user-provider verifies Identity **v2/v3 PBKDF2** hashes; on success, rehashes
-      to **bcrypt/argon2** and updates `PasswordHash`. Test vectors from the live stack.
-- [ ] Anything unrecognized (incl. legacy MD5 marker) → treated as "force reset"; **MD5 hashing is
-      not implemented**.
+- [ ] `JobSeeker` implements `Authenticatable` (`getAuthPassword()` → `PasswordHash`) — **done in
+      FND-2**; here wire the session guard + a custom user-provider/hasher.
+- [ ] The verifier accepts the **three** stored formats and, on **any** success, rehashes to
+      **bcrypt/argon2** and overwrites `PasswordHash` (+ regenerate `SecurityStamp`):
+      - **v3** (`0x01`, base64 `AQAAAA…`) → PBKDF2-HMAC-SHA256, params read from the blob;
+      - **v2** (`0x00`) → PBKDF2-HMAC-SHA1, 1000 iters, 16-byte salt, 32-byte subkey;
+      - **MD5-marker** (`0xF0`, base64 `8AAAAA…`) → **verify per ADR-007** (flip byte 0 to `0x01`, then
+        verify the v3 blob against `md5_hex(password)`). MD5 is **verification-only**, never used to
+        create a hash.
+- [ ] Truly unrecognized format (not `0x00`/`0x01`/`0xF0`, or an undecodable blob) → **force-reset** path.
 - [ ] Registration + **email verification** (`VerificationGuid`) flow; **email-only** password reset
       (`password_reset_tokens`); **no** security-question flow.
-- [ ] `NormalizedEmail`/`NormalizedUserName` maintained on writes.
-- [ ] Feature tests: login (v3 hash → success + rehash), unrecognized hash → reset path, register→verify, reset.
+- [ ] `NormalizedEmail`/`NormalizedUserName` maintained on writes (Identity uses `ToUpperInvariant()`).
+- [ ] Feature tests: **v3** login → success + bcrypt rehash; **`0xF0`** login → success + rehash;
+      unrecognized hash → reset path; register→verify; reset.
 
-**Docs:** `ADR-003`; `data-model.md` (AspNetUsers). **Depends on:** FND-1, FND-2.
+**Build brief (verified against the real DB + .NET source, 2026-07-24):**
+- Auth columns confirmed present on `AspNetUsers`: `PasswordHash`(text), `SecurityStamp`,
+  `NormalizedEmail`, `NormalizedUserName`, `EmailConfirmed`, `LockoutEnabled`, `LockoutEnd`,
+  `AccessFailedCount`, `VerificationGuid`(uuid), `UserName`, `Email`.
+- Real hash split (345,985 rows, **no nulls**): v3 `AQAAAA…` = 131,947 (38%); MD5-marker `8AAAAA…`
+  = 214,038 (**62%**). The `0xF0` path is the **majority** — get it right and tested (this is why
+  ADR-007 verifies rather than force-resets it).
+- **Port** `../workbc-jb/src/WorkBC.Web/Helpers/Md5PasswordHasher.cs` for the `0xF0` case:
+  base64-decode; if `bytes[0]==0xF0`, set it to `0x01`, re-encode, and verify the standard v3 blob
+  against `md5_hex(password)` where `md5_hex = strtolower(bin2hex(hash('md5', $password, true)))`.
+- Identity blob layout (big-endian): v3 = `[0x01][prf u32][iter u32][saltLen u32][salt][subkey]`
+  (prf 0=SHA1,1=SHA256,2=SHA512); v2 = `[0x00][16-byte salt][32-byte subkey]`. Use `hash_pbkdf2()`
+  + constant-time `hash_equals()`.
+- **Test vectors:** the scrambled dump has **no plaintexts** — do NOT try to reverse real hashes.
+  Generate `{password → hash}` pairs (the reference `Md5PasswordHasher` can emit a `0xF0` and a v3
+  hash for a known password; dotnet 6 is installed), commit them as fixtures, and assert the PHP
+  verifier accepts the right password and rejects a wrong one for each format.
+
+**Docs:** `ADR-003`, **`ADR-007`** (verify MD5-wrapped hashes); `data-model.md` (AspNetUsers).
+**Depends on:** FND-1, FND-2.
 
 ---
 
