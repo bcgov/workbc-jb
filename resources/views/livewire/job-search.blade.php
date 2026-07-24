@@ -32,7 +32,7 @@
             type="search"
             label="Keywords"
             wire:model="keyword"
-            hint="Spaces mean AND, commas or pipes mean OR, and &quot;quotes&quot; match an exact phrase." />
+            hint='Spaces mean AND, commas or pipes mean OR, and "quotes" match an exact phrase.' />
 
         <x-form-field name="searchIn" label="Search by">
             <x-slot:control>
