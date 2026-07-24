@@ -620,6 +620,46 @@ final class JobSearch extends Component
     }
 
     /**
+     * SRCH-12 — toggle a BC economic region as a committed location (from the
+     * region map). Whitelisted against the known region names; unknown values are
+     * ignored. Regions map to the index's Region.keyword term via the existing
+     * location pipeline (no new backend support needed).
+     */
+    public function toggleRegion(string $name): void
+    {
+        if (! in_array($name, self::regionOptions(), true)) {
+            return;
+        }
+
+        foreach ($this->locations as $i => $loc) {
+            if (($loc['Region'] ?? null) === $name) {
+                $this->removeLocation($i);
+
+                return;
+            }
+        }
+
+        $this->commitLocation(['Region' => $name]);
+    }
+
+    /**
+     * Committed region-location names — drives the region map's active highlight.
+     *
+     * @return string[]
+     */
+    private function selectedRegionNames(): array
+    {
+        $names = [];
+        foreach ($this->locations as $loc) {
+            if (! empty($loc['Region'])) {
+                $names[] = $loc['Region'];
+            }
+        }
+
+        return $names;
+    }
+
+    /**
      * @param  array<string, string>  $location
      */
     private function commitLocation(array $location): void
@@ -693,6 +733,7 @@ final class JobSearch extends Component
             'result' => $result,
             'unavailable' => $unavailable,
             'activeFilters' => $this->activeFilters(),
+            'selectedRegions' => $this->selectedRegionNames(),
             'shareUrl' => $this->shareUrl(),
             'view' => $this->view,
             'mapPins' => $mapPins,
@@ -1023,6 +1064,26 @@ final class JobSearch extends Component
             25 => 'Within 25 km',
             50 => 'Within 50 km',
             100 => 'Within 100 km',
+        ];
+    }
+
+    /**
+     * BC economic-region names — the exact Region.keyword values in the index and
+     * the whitelist for {@see toggleRegion()}. Keys of config('bc_regions') carry
+     * the same names (the SVG geometry for the region map, SRCH-12).
+     *
+     * @return string[]
+     */
+    public static function regionOptions(): array
+    {
+        return [
+            'North Coast & Nechako',
+            'Northeast',
+            'Cariboo',
+            'Vancouver Island / Coast',
+            'Mainland / Southwest',
+            'Thompson-Okanagan',
+            'Kootenay',
         ];
     }
 
