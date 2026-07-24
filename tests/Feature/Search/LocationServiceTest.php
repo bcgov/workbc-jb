@@ -3,48 +3,29 @@
 namespace Tests\Feature\Search;
 
 use App\Services\Search\LocationService;
-use Mockery;
-use OpenSearch\Client;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\Concerns\InteractsWithLocationsTable;
 use Tests\TestCase;
 
+/**
+ * LocationService reads the curated `Locations` reference table (mirroring the
+ * production LocationController), so suggestions are canonical and validation
+ * accepts any known B.C. place — not only cities with an active posting.
+ */
 class LocationServiceTest extends TestCase
 {
-    /** @var array<int, array<string, mixed>> Captured search params, newest last. */
-    private array $captured = [];
+    use InteractsWithLocationsTable;
 
-    /**
-     * A Client whose search() branches on the request body: an `aggs.cities`
-     * request returns the given buckets; a `City.normalize` term request returns
-     * the given hit total; anything else returns an empty response.
-     *
-     * @param  string[]  $cityBuckets
-     */
-    private function fakeClient(array $cityBuckets = [], int $cityExistsTotal = 0): Client
+    protected function setUp(): void
     {
-        $client = Mockery::mock(Client::class);
-        $client->shouldReceive('search')->andReturnUsing(function (array $params) use ($cityBuckets, $cityExistsTotal) {
-            $this->captured[] = $params;
-            $body = $params['body'];
+        parent::setUp();
+        $this->createLocationsFixture();
+    }
 
-            if (isset($body['aggs']['cities'])) {
-                return [
-                    'aggregations' => [
-                        'cities' => [
-                            'buckets' => array_map(fn (string $c) => ['key' => $c, 'doc_count' => 1], $cityBuckets),
-                        ],
-                    ],
-                ];
-            }
-
-            if (isset($body['query']['term']['City.normalize'])) {
-                return ['hits' => ['total' => ['value' => $cityExistsTotal]]];
-            }
-
-            return ['hits' => ['total' => ['value' => 0]], 'aggregations' => []];
-        });
-
-        return $client;
+    protected function tearDown(): void
+    {
+        $this->dropLocationsFixture();
+        parent::tearDown();
     }
 
     /**
@@ -66,55 +47,49 @@ class LocationServiceTest extends TestCase
     #[DataProvider('postalCodes')]
     public function test_is_postal_code_recognises_canadian_postal_codes(string $input, bool $expected): void
     {
-        $service = new LocationService($this->fakeClient());
-
-        $this->assertSame($expected, $service->isPostalCode($input));
+        $this->assertSame($expected, (new LocationService())->isPostalCode($input));
     }
 
-    public function test_suggest_cities_returns_prefix_matched_city_names(): void
+    public function test_suggest_cities_prefix_matches_sort_alphabetically(): void
     {
-        $service = new LocationService($this->fakeClient(cityBuckets: ['Victoria', 'Victoria Harbour', 'Nanaimo']));
+        $out = (new LocationService())->suggestCities('Vic');
 
-        $suggestions = $service->suggestCities('Vic');
+        $this->assertSame(['Victoria', 'Victoria Harbour'], $out);
+    }
 
-        $this->assertSame(['Victoria', 'Victoria Harbour'], $suggestions);
+    public function test_suggest_cities_matches_word_start_but_ranks_prefix_first(): void
+    {
+        // "van": Vancouver prefix-matches; North Vancouver word-start-matches.
+        $out = (new LocationService())->suggestCities('van');
 
-        // It aggregates on City.keyword against a match_phrase_prefix on City.
-        $body = $this->captured[0]['body'];
-        $this->assertSame(0, $body['size']);
-        $this->assertSame('Vic', $body['query']['match_phrase_prefix']['City']);
-        $this->assertSame('City.keyword', $body['aggs']['cities']['terms']['field']);
+        $this->assertSame(['Vancouver', 'North Vancouver'], $out);
+    }
+
+    public function test_suggest_cities_is_case_insensitive(): void
+    {
+        $this->assertSame(['Surrey', 'Surrey Village'], (new LocationService())->suggestCities('sur'));
+    }
+
+    public function test_suggest_cities_excludes_hidden_and_nonpositive_ids(): void
+    {
+        $this->assertSame([], (new LocationService())->suggestCities('Hidden'));
+        $this->assertSame([], (new LocationService())->suggestCities('Zero'));
     }
 
     public function test_suggest_cities_short_circuits_below_two_characters(): void
     {
-        $service = new LocationService($this->fakeClient(cityBuckets: ['Victoria']));
-
-        $this->assertSame([], $service->suggestCities('V'));
-        $this->assertSame([], $this->captured, 'It must not hit OpenSearch for a one-character term.');
+        $this->assertSame([], (new LocationService())->suggestCities('V'));
     }
 
-    public function test_city_exists_is_true_when_the_index_has_a_match(): void
+    public function test_city_exists_is_a_case_insensitive_exact_match_on_visible_locations(): void
     {
-        $service = new LocationService($this->fakeClient(cityExistsTotal: 3));
+        $service = new LocationService();
 
         $this->assertTrue($service->cityExists('Victoria'));
-
-        $body = $this->captured[0]['body'];
-        $this->assertSame('victoria', $body['query']['term']['City.normalize']);
-        $this->assertSame(1, $body['terminate_after']);
-    }
-
-    public function test_city_exists_is_false_when_the_index_has_no_match(): void
-    {
-        $service = new LocationService($this->fakeClient(cityExistsTotal: 0));
-
+        $this->assertTrue($service->cityExists('victoria'));   // case-insensitive
+        $this->assertFalse($service->cityExists('Vic'));       // not an exact match
+        $this->assertFalse($service->cityExists('Hidden Town')); // hidden
         $this->assertFalse($service->cityExists('Nowherightsville'));
-    }
-
-    protected function tearDown(): void
-    {
-        Mockery::close();
-        parent::tearDown();
+        $this->assertFalse($service->cityExists(''));
     }
 }

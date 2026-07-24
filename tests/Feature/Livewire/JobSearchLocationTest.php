@@ -8,54 +8,36 @@ use App\Search\Support\GeoPoint;
 use Livewire\Livewire;
 use Mockery;
 use OpenSearch\Client;
+use Tests\Concerns\InteractsWithLocationsTable;
 use Tests\Fakes\FakeGeocoder;
 use Tests\TestCase;
 
 /**
  * SRCH-2 Livewire test: the location facet turns city/postal input into the
- * FND-7 JobSearchQuery location clauses, validates cities against the index,
- * and drives radius search through the injected Geocoder — all deterministically
- * (mocked OpenSearch client + fake Geocoder, no DB, Rule B reads only).
+ * FND-7 JobSearchQuery location clauses, validates cities against the curated
+ * `Locations` table (via LocationService), and drives radius search through the
+ * injected Geocoder — deterministically (mocked OpenSearch client for the search
+ * itself, a Locations fixture for suggestions/validation, and a fake Geocoder).
  */
 class JobSearchLocationTest extends TestCase
 {
-    /** @var array<int, array<string, mixed>> Main (non-suggestion, non-validation) search bodies. */
+    use InteractsWithLocationsTable;
+
+    /** @var array<int, array<string, mixed>> Captured main-search bodies, newest last. */
     private array $bodies = [];
-
-    /** Hit total returned for a City.normalize validation query. */
-    private int $cityExistsTotal = 3;
-
-    /** @var string[] Buckets returned for a city-suggestion aggregation. */
-    private array $suggestBuckets = [];
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->createLocationsFixture();
         $this->bodies = [];
 
+        // LocationService now reads the Locations table, so the OpenSearch client
+        // only serves the main results query here.
         $client = Mockery::mock(Client::class);
         $client->shouldReceive('search')->andReturnUsing(function (array $params): array {
-            $body = $params['body'];
-
-            // City autocomplete aggregation.
-            if (isset($body['aggs']['cities'])) {
-                return [
-                    'aggregations' => [
-                        'cities' => [
-                            'buckets' => array_map(fn (string $c) => ['key' => $c, 'doc_count' => 1], $this->suggestBuckets),
-                        ],
-                    ],
-                ];
-            }
-
-            // City existence validation.
-            if (isset($body['query']['term']['City.normalize'])) {
-                return ['hits' => ['total' => ['value' => $this->cityExistsTotal]]];
-            }
-
-            // Main results query — capture and return canned hits.
-            $this->bodies[] = $body;
+            $this->bodies[] = $params['body'];
 
             return [
                 'hits' => [
@@ -72,6 +54,7 @@ class JobSearchLocationTest extends TestCase
 
     protected function tearDown(): void
     {
+        $this->dropLocationsFixture();
         Mockery::close();
         parent::tearDown();
     }
@@ -114,7 +97,6 @@ class JobSearchLocationTest extends TestCase
     public function test_adding_a_valid_city_builds_an_exact_normalized_term_with_virtual_jobs(): void
     {
         $this->bindGeocoder();
-        $this->cityExistsTotal = 3;
 
         Livewire::test(JobSearch::class)
             ->set('locationInput', 'Victoria')
@@ -139,7 +121,6 @@ class JobSearchLocationTest extends TestCase
     public function test_city_with_radius_uses_geo_distance_and_geo_sort(): void
     {
         $this->bindGeocoder(new GeoPoint(48.4284, -123.3656));
-        $this->cityExistsTotal = 3;
 
         Livewire::test(JobSearch::class)
             ->set('locationInput', 'Victoria')
@@ -175,7 +156,6 @@ class JobSearchLocationTest extends TestCase
     public function test_unknown_city_sets_an_accessible_error_and_adds_no_location(): void
     {
         $this->bindGeocoder();
-        $this->cityExistsTotal = 0;
 
         Livewire::test(JobSearch::class)
             ->set('locationInput', 'Nowherightsville')
@@ -187,7 +167,6 @@ class JobSearchLocationTest extends TestCase
     public function test_typing_populates_city_suggestions(): void
     {
         $this->bindGeocoder();
-        $this->suggestBuckets = ['Victoria', 'Victoria Harbour'];
 
         Livewire::test(JobSearch::class)
             ->set('locationInput', 'Vic')
@@ -207,7 +186,6 @@ class JobSearchLocationTest extends TestCase
     public function test_removing_a_location_clears_it(): void
     {
         $this->bindGeocoder();
-        $this->cityExistsTotal = 3;
 
         Livewire::test(JobSearch::class)
             ->set('locationInput', 'Victoria')

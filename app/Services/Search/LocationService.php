@@ -2,21 +2,21 @@
 
 namespace App\Services\Search;
 
-use OpenSearch\Client;
+use Illuminate\Support\Facades\DB;
 
 /**
- * Location autocomplete + validation against the derived OpenSearch read model
- * (Rule B — reads only). Suggestions come from a `City.keyword` aggregation so
- * the suggested strings match the exact city names the geocoder cache is keyed
- * on ("{city}, BC, CANADA"), and city validation checks the index rather than a
- * separate list.
+ * Location autocomplete + validation against the curated `Locations` reference
+ * table (map, don't create — data-model.md §0; reads only — Rule B). This mirrors
+ * the production `LocationController`/`GetCitiesAsync`, which query `Locations`
+ * (a clean geography list) rather than aggregating the job documents' raw `City`
+ * field — so suggestions are canonical (one "Victoria", not the source-feed's
+ * mis-cased duplicates) and validation accepts any real B.C. location, not only
+ * cities that happen to have an active posting.
  */
 final class LocationService
 {
     /** Canadian postal code (ANA NAN), optional single space; case-insensitive. */
     private const POSTAL_PATTERN = '/^[ABCEGHJ-NPRSTVXYabceghj-nprstvxy]\d[A-Za-z][ ]?\d[A-Za-z]\d$/';
-
-    public function __construct(private Client $client) {}
 
     public function isPostalCode(string $input): bool
     {
@@ -24,7 +24,10 @@ final class LocationService
     }
 
     /**
-     * Distinct city names whose name starts with $term (case-insensitive).
+     * Distinct, visible city names matching $term — a prefix match, or (for 2+
+     * chars) a word-start match anywhere in the name. Prefix matches sort first,
+     * then alphabetically. Mirrors the .NET `GetCitiesAsync`
+     * (`ILIKE 'term%' OR ILIKE '% term%'`, distinct, prefix-first ordering).
      *
      * @return string[]
      */
@@ -35,34 +38,38 @@ final class LocationService
             return [];
         }
 
-        $response = $this->client->search([
-            'index' => $this->index(),
-            'body' => [
-                'size' => 0,
-                'query' => ['match_phrase_prefix' => ['City' => $term]],
-                'aggs' => ['cities' => ['terms' => ['field' => 'City.keyword', 'size' => 50]]],
-            ],
-        ]);
+        $lower = mb_strtolower($term);
 
-        $buckets = $response['aggregations']['cities']['buckets'] ?? [];
-        $needle = mb_strtolower($term);
+        // lower("City") LIKE … keeps it case-insensitive on both Postgres (prod)
+        // and SQLite (tests) without relying on Postgres-only ILIKE.
+        $cities = DB::table('Locations')
+            ->where('IsHidden', false)
+            ->where('LocationId', '>', 0)
+            ->where(function ($q) use ($lower): void {
+                $q->whereRaw('lower("City") like ?', [$lower.'%'])
+                    ->orWhereRaw('lower("City") like ?', ['% '.$lower.'%']);
+            })
+            ->distinct()
+            ->pluck('City')
+            ->filter(static fn ($c): bool => $c !== null && $c !== '')
+            ->values()
+            ->all();
 
-        $out = [];
-        foreach ($buckets as $bucket) {
-            $city = (string) ($bucket['key'] ?? '');
-            if ($city !== '' && str_starts_with(mb_strtolower($city), $needle)) {
-                $out[] = $city;
-                if (count($out) >= $limit) {
-                    break;
-                }
+        usort($cities, static function (string $a, string $b) use ($lower): int {
+            $aStarts = str_starts_with(mb_strtolower($a), $lower);
+            $bStarts = str_starts_with(mb_strtolower($b), $lower);
+            if ($aStarts !== $bStarts) {
+                return $aStarts ? -1 : 1;
             }
-        }
 
-        return $out;
+            return strcasecmp($a, $b);
+        });
+
+        return array_slice($cities, 0, $limit);
     }
 
     /**
-     * True when at least one active job is in the given city (exact, normalized).
+     * True when $city is a known, visible B.C. location (exact name, case-insensitive).
      */
     public function cityExists(string $city): bool
     {
@@ -71,22 +78,10 @@ final class LocationService
             return false;
         }
 
-        $response = $this->client->search([
-            'index' => $this->index(),
-            'body' => [
-                'size' => 0,
-                'terminate_after' => 1,
-                'query' => ['term' => ['City.normalize' => mb_strtolower($city)]],
-            ],
-        ]);
-
-        return (int) ($response['hits']['total']['value'] ?? 0) > 0;
-    }
-
-    private function index(): string
-    {
-        $key = app()->getLocale() === 'fr' ? 'fr' : 'en';
-
-        return (string) config("opensearch.indexes.{$key}", config('opensearch.indexes.en'));
+        return DB::table('Locations')
+            ->where('IsHidden', false)
+            ->where('LocationId', '>', 0)
+            ->whereRaw('lower("City") = ?', [mb_strtolower($city)])
+            ->exists();
     }
 }

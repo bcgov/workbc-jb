@@ -1169,32 +1169,44 @@ final class JobSearch extends Component
     }
 
     /**
-     * Industry options: NAICS id → sector name (edm_naics.json, enabled sectors,
-     * excluding "All Industries" id 0 and the disabled id 7).
+     * Industry options: Industries.Id → Title. The indexer writes Industries.Id
+     * into the ES `NaicsId` field (`Jobs.IndustryId == NaicsId`) and the query
+     * filters `NaicsId = id`, so these are the real `Industries.Id` values (1,
+     * 21–46) — NOT the legacy 1–19 EDM/NAICS scheme, which never matched the index
+     * and silently returned zero results. These are the 25 sectors the search UI
+     * exposes (the combined id 33 and "Other services" id 38 are omitted, matching
+     * the old Angular filter). Ordered by title. Source of truth: DB `Industries`.
      *
      * @return array<int, string>
      */
     public static function industryOptions(): array
     {
         return [
-            1 => 'Accommodation and Food Services',
-            2 => 'Agriculture and Fishing',
-            3 => 'Business, Building and Other Support Services',
-            4 => 'Construction',
-            5 => 'Educational Services',
-            6 => 'Finance, Insurance and Real Estate',
-            8 => 'Forestry and Logging with Support Activities',
-            9 => 'Health Care and Social Assistance',
-            10 => 'Information, Culture and Recreation',
-            11 => 'Manufacturing',
-            12 => 'Utilities',
-            13 => 'Mining and Oil and Gas Extraction',
-            14 => 'Repair, Personal and Non-Profit Services',
-            15 => 'Professional, Scientific, and Technical Services',
-            16 => 'Public Administration',
-            17 => 'Transportation and Warehousing',
-            18 => 'Wholesale Trade',
-            19 => 'Retail Trade',
+            37 => 'Accommodation and food services',
+            40 => 'Administrative and support services',
+            1 => 'Agriculture, forestry, fishing and hunting',
+            36 => 'Arts, entertainment and recreation',
+            23 => 'Construction',
+            34 => 'Educational services',
+            42 => 'Employment services',
+            29 => 'Finance and insurance',
+            35 => 'Health care and social assistance',
+            28 => 'Information and cultural industries',
+            32 => 'Management of companies and enterprises',
+            24 => 'Manufacturing',
+            21 => 'Mining and oil and gas extraction',
+            44 => 'Personal and laundry services',
+            46 => 'Private households',
+            31 => 'Professional, scientific and technical services',
+            39 => 'Public administration',
+            30 => 'Real estate and rental and leasing',
+            45 => 'Religious, grant-making, civic, and professional and similar organizations',
+            43 => 'Repair and maintenance',
+            26 => 'Retail trade',
+            27 => 'Transportation and warehousing',
+            22 => 'Utilities',
+            41 => 'Waste management and remediation services',
+            25 => 'Wholesale trade',
         ];
     }
 
