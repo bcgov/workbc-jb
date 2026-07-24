@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\JobSeekerPasswordResetController;
 use App\Http\Controllers\Auth\JobSeekerRegistrationController;
 use App\Http\Controllers\Auth\JobSeekerSessionController;
 use App\Http\Controllers\Web\SitemapController;
+use App\Livewire\JobAlertsList;
 use App\Livewire\JobSeekerDashboard;
 use App\Livewire\JobSearch;
 use App\Livewire\SavedJobsPage;
@@ -29,6 +30,14 @@ Route::view('/login', 'welcome')->name('login');
 Route::middleware('auth:web')->group(function (): void {
     Route::get('/account', JobSeekerDashboard::class)->name('account.dashboard');
     Route::get('/account/saved-jobs', SavedJobsPage::class)->name('account.saved-jobs');
+
+    // ACCT-3: alert management. Create/edit reuse the JobSearch component in
+    // "alert mode" — detected from the route name in mount() (see JobSearch).
+    Route::get('/account/alerts', JobAlertsList::class)->name('account.alerts');
+    Route::get('/account/alerts/create', JobSearch::class)->name('account.alerts.create');
+    Route::get('/account/alerts/{alertId}/edit', JobSearch::class)
+        ->whereNumber('alertId')
+        ->name('account.alerts.edit');
 });
 
 // Local-only preview helpers live in a gitignored file so they can never be

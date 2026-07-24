@@ -201,6 +201,57 @@
     </div>
     </div>{{-- end search band --}}
 
+    @if ($alertMode)
+        <section aria-labelledby="job-alert-heading" class="rounded-lg border border-slate-200 bg-white p-4 shadow-workbc">
+            <div class="flex flex-col gap-4">
+                <div>
+                    <h2 id="job-alert-heading" class="text-xl font-semibold text-slate-900">Job alert</h2>
+                    <p class="text-sm text-slate-600">Adjust the search filters below, then save this alert.</p>
+                </div>
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label for="alert-title" class="block text-sm font-medium text-slate-900">Alert title</label>
+                        <input id="alert-title" type="text" wire:model.live="alertTitle"
+                               class="mt-1 block w-full rounded-md border border-slate-400 px-3 py-2 text-slate-900 shadow-sm focus-visible:border-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                        @error('alertTitle')
+                            <p class="mt-1 text-sm font-medium text-red-800" role="alert">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="alert-frequency" class="block text-sm font-medium text-slate-900">Email frequency</label>
+                        <select id="alert-frequency" wire:model.live="alertFrequency"
+                                class="mt-1 block w-full rounded-md border border-slate-400 px-3 py-2 text-slate-900 shadow-sm focus-visible:border-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                            <option value="1">Daily</option>
+                            <option value="2">Weekly</option>
+                            <option value="3">BiWeekly</option>
+                            <option value="4">Monthly</option>
+                        </select>
+                        @error('alertFrequency')
+                            <p class="mt-1 text-sm font-medium text-red-800" role="alert">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3">
+                    <x-button type="button" wire:click="saveAlert">
+                        {{ $alertId ? 'Update alert' : 'Save alert' }}
+                    </x-button>
+                    @if ($alertId)
+                        <x-button type="button" variant="secondary" wire:click="deleteAlert">Delete alert</x-button>
+                    @endif
+                    <p class="text-sm text-slate-700" role="status" aria-live="polite" aria-atomic="true">
+                        {{ $alertStatus }}
+                    </p>
+                    <p class="text-sm text-slate-700" role="status" aria-live="polite" aria-atomic="true">
+                        {{ number_format($alertMatchCount) }} {{ \Illuminate\Support\Str::plural('job', $alertMatchCount) }} match the current filters.
+                    </p>
+                </div>
+            </div>
+        </section>
+    @endif
+
     {{-- Standard filter facets (SRCH-3). Each dropdown is an accessible disclosure:
          Alpine owns the open/close view state; Livewire owns the checkbox/radio
          selections (the data) and applies them. AND across facets, OR within. --}}
@@ -581,64 +632,65 @@
         </x-alert>
     @endif
 
-    {{-- Result count + sort control. The count is announced politely on update. --}}
-    <div class="flex flex-col gap-3 border-b border-slate-200 pb-3 sm:flex-row sm:items-center sm:justify-between">
-        <p role="status" aria-live="polite" class="text-sm text-slate-700">
-            @if ($result->count === 0)
-                No jobs found.
-            @else
-                Showing <span class="font-medium">{{ number_format($firstItem) }}</span>&ndash;<span class="font-medium">{{ number_format($lastItem) }}</span>
-                of <span class="font-medium">{{ number_format($result->count) }}</span> {{ \Illuminate\Support\Str::plural('job', $result->count) }}
-            @endif
-        </p>
+    @unless ($alertMode)
+        {{-- Result count + sort control. The count is announced politely on update. --}}
+        <div class="flex flex-col gap-3 border-b border-slate-200 pb-3 sm:flex-row sm:items-center sm:justify-between">
+            <p role="status" aria-live="polite" class="text-sm text-slate-700">
+                @if ($result->count === 0)
+                    No jobs found.
+                @else
+                    Showing <span class="font-medium">{{ number_format($firstItem) }}</span>&ndash;<span class="font-medium">{{ number_format($lastItem) }}</span>
+                    of <span class="font-medium">{{ number_format($result->count) }}</span> {{ \Illuminate\Support\Str::plural('job', $result->count) }}
+                @endif
+            </p>
 
-        <div class="flex flex-wrap items-center gap-4">
-            {{-- SRCH-9: switch between the list and map presentations of the SAME
-                 results. Data-backed (the map needs server-built pins), so Livewire
-                 owns it. The list is the default and always one activation away, so
-                 the map is never the only way to reach results (a11y). --}}
-            <div role="group" aria-label="Result view" class="inline-flex overflow-hidden rounded-md border border-slate-400">
-                <button type="button" wire:click="showListView"
-                        aria-pressed="{{ $view === 'list' ? 'true' : 'false' }}"
-                        @class([
-                            'inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900',
-                            'bg-blue-700 text-white' => $view === 'list',
-                            'bg-white text-slate-900 hover:bg-slate-50' => $view !== 'list',
-                        ])>
-                    <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M3 4.75A.75.75 0 013.75 4h12.5a.75.75 0 010 1.5H3.75A.75.75 0 013 4.75zm0 5A.75.75 0 013.75 9h12.5a.75.75 0 010 1.5H3.75A.75.75 0 013 9.75zm0 5a.75.75 0 01.75-.75h12.5a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75z" clip-rule="evenodd" />
-                    </svg>
-                    List
-                </button>
-                <button type="button" wire:click="showMapView"
-                        aria-pressed="{{ $view === 'map' ? 'true' : 'false' }}"
-                        @class([
-                            'inline-flex items-center gap-1.5 border-l border-slate-400 px-3 py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900',
-                            'bg-blue-700 text-white' => $view === 'map',
-                            'bg-white text-slate-900 hover:bg-slate-50' => $view !== 'map',
-                        ])>
-                    <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M8.157 2.176a1.5 1.5 0 00-1.147 0l-4.084 1.69A1.5 1.5 0 002 5.244v9.483c0 1.075 1.086 1.81 2.083 1.408l3.51-1.451.766.317a1.5 1.5 0 001.147 0l4.084-1.69A1.5 1.5 0 0018 11.816V2.333c0-1.075-1.086-1.81-2.083-1.408L12.407 2.16 8.157 2.176zM7.5 3.5l5 2v11l-5-2v-11z" clip-rule="evenodd" />
-                    </svg>
-                    Map
-                </button>
-            </div>
+            <div class="flex flex-wrap items-center gap-4">
+                {{-- SRCH-9: switch between the list and map presentations of the SAME
+                     results. Data-backed (the map needs server-built pins), so Livewire
+                     owns it. The list is the default and always one activation away, so
+                     the map is never the only way to reach results (a11y). --}}
+                <div role="group" aria-label="Result view" class="inline-flex overflow-hidden rounded-md border border-slate-400">
+                    <button type="button" wire:click="showListView"
+                            aria-pressed="{{ $view === 'list' ? 'true' : 'false' }}"
+                            @class([
+                                'inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900',
+                                'bg-blue-700 text-white' => $view === 'list',
+                                'bg-white text-slate-900 hover:bg-slate-50' => $view !== 'list',
+                            ])>
+                        <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M3 4.75A.75.75 0 013.75 4h12.5a.75.75 0 010 1.5H3.75A.75.75 0 013 4.75zm0 5A.75.75 0 013.75 9h12.5a.75.75 0 010 1.5H3.75A.75.75 0 013 9.75zm0 5a.75.75 0 01.75-.75h12.5a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75z" clip-rule="evenodd" />
+                        </svg>
+                        List
+                    </button>
+                    <button type="button" wire:click="showMapView"
+                            aria-pressed="{{ $view === 'map' ? 'true' : 'false' }}"
+                            @class([
+                                'inline-flex items-center gap-1.5 border-l border-slate-400 px-3 py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900',
+                                'bg-blue-700 text-white' => $view === 'map',
+                                'bg-white text-slate-900 hover:bg-slate-50' => $view !== 'map',
+                            ])>
+                        <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M8.157 2.176a1.5 1.5 0 00-1.147 0l-4.084 1.69A1.5 1.5 0 002 5.244v9.483c0 1.075 1.086 1.81 2.083 1.408l3.51-1.451.766.317a1.5 1.5 0 001.147 0l4.084-1.69A1.5 1.5 0 0018 11.816V2.333c0-1.075-1.086-1.81-2.083-1.408L12.407 2.16 8.157 2.176zM7.5 3.5l5 2v11l-5-2v-11z" clip-rule="evenodd" />
+                        </svg>
+                        Map
+                    </button>
+                </div>
 
-            <div class="flex items-center gap-2">
-                <label for="sort" class="text-sm font-medium text-slate-900">Sort by</label>
-                <select id="sort" wire:model.live="sort"
-                        class="rounded-md border border-slate-400 px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
-                    @foreach ($sortOptions as $value => $label)
-                        <option value="{{ $value }}">{{ $label }}</option>
-                    @endforeach
-                </select>
+                <div class="flex items-center gap-2">
+                    <label for="sort" class="text-sm font-medium text-slate-900">Sort by</label>
+                    <select id="sort" wire:model.live="sort"
+                            class="rounded-md border border-slate-400 px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-blue-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-900">
+                        @foreach ($sortOptions as $value => $label)
+                            <option value="{{ $value }}">{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
         </div>
-    </div>
 
-    @if ($view === 'map')
-        @include('livewire.partials.job-map', ['mapPins' => $mapPins, 'mapApiKey' => $mapApiKey, 'count' => $result->count])
-    @else
+        @if ($view === 'map')
+            @include('livewire.partials.job-map', ['mapPins' => $mapPins, 'mapApiKey' => $mapApiKey, 'count' => $result->count])
+        @else
     {{-- Results: an ARIA live region; aria-busy flips while Livewire is loading. --}}
     <p class="sr-only" role="status" aria-live="polite" aria-atomic="true">{{ $savedJobStatus }}</p>
     <div
@@ -757,5 +809,6 @@
             </ul>
         </nav>
     @endif
-    @endif
+        @endif
+    @endunless
 </div>
