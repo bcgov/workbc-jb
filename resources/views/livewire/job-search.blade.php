@@ -64,7 +64,10 @@
             open: false,
             activeIndex: -1,
             get options() { return Array.from(this.$refs.listbox ? this.$refs.listbox.querySelectorAll('[role=option]') : []); },
-            hasOptions() { return this.options.length > 0; },
+            // Read the reactive Livewire property (not the DOM) so x-show re-evaluates
+            // when suggestions arrive from the server; a DOM-length check is invisible
+            // to Alpine's reactivity and would keep the listbox hidden (SRCH-2 fix).
+            hasOptions() { return this.$wire.suggestions.length > 0; },
             activeId() { return this.activeIndex >= 0 ? 'location-option-' + this.activeIndex : null; },
             openIfOptions() { this.open = this.hasOptions(); },
             next() { this.open = true; const n = this.options.length; if (!n) return; this.activeIndex = (this.activeIndex + 1) % n; },
