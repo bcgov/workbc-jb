@@ -118,4 +118,31 @@
     .nav-link {
         @apply rounded px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-workbc-navy aria-[current=page]:bg-blue-50 aria-[current=page]:text-workbc-blue;
     }
+
+    /* SRCH-12 — BC region map. Regions are steel by default, brand-blue when
+       selected; hover/focus darken. Focus draws a navy stroke (the SVG paths are
+       keyboard-focusable buttons). Rules are ordered so is-active + its hover win
+       on specificity ties. */
+    .region-map path {
+        fill: var(--color-workbc-steel);
+        stroke: #ffffff;
+        cursor: pointer;
+        outline: none;
+        transition: fill 0.15s ease;
+    }
+    .region-map path:hover,
+    .region-map path:focus-visible {
+        fill: var(--color-workbc-steel-dark);
+    }
+    .region-map path:focus-visible {
+        stroke: var(--color-workbc-navy);
+        stroke-width: 1.5;
+    }
+    .region-map path.is-active {
+        fill: var(--color-workbc-blue);
+    }
+    .region-map path.is-active:hover,
+    .region-map path.is-active:focus-visible {
+        fill: var(--color-workbc-navy);
+    }
 }

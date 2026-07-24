@@ -177,6 +177,11 @@
                 @endforeach
             </select>
         </div>
+
+        {{-- SRCH-12: region map spans both columns of the location row. --}}
+        <div class="sm:col-span-2">
+            @include('livewire.partials.region-map', ['selectedRegions' => $selectedRegions])
+        </div>
     </div>
     </div>{{-- end search band --}}
 
