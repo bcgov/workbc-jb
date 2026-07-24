@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use App\Models\JobSeeker;
 
 return [
 
@@ -17,7 +17,7 @@ return [
 
     'defaults' => [
         'guard' => env('AUTH_GUARD', 'web'),
-        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
+        'passwords' => env('AUTH_PASSWORD_BROKER', 'job_seekers'),
     ],
 
     /*
@@ -40,7 +40,7 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'job_seekers',
         ],
     ],
 
@@ -62,9 +62,9 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', User::class),
+        'job_seekers' => [
+            'driver' => 'jobseeker',
+            'model' => env('AUTH_MODEL', JobSeeker::class),
         ],
 
         // 'users' => [
@@ -93,8 +93,8 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'job_seekers' => [
+            'provider' => 'job_seekers',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
             'expire' => 60,
             'throttle' => 60,

@@ -4,12 +4,18 @@ namespace App\Models;
 
 use App\Models\Casts\TolerantEnum;
 use App\Models\Enums\AccountStatus;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-final class JobSeeker extends Authenticatable
+final class JobSeeker extends Authenticatable implements CanResetPasswordContract
 {
+    use CanResetPassword;
+    use Notifiable;
+
     protected $table = 'AspNetUsers';
 
     protected $primaryKey = 'Id';
@@ -35,6 +41,16 @@ final class JobSeeker extends Authenticatable
     public function getAuthPassword(): string
     {
         return (string) $this->PasswordHash;
+    }
+
+    public function getEmailForPasswordReset(): string
+    {
+        return (string) $this->Email;
+    }
+
+    public function routeNotificationForMail(): string
+    {
+        return (string) $this->Email;
     }
 
     public function savedJobs(): HasMany

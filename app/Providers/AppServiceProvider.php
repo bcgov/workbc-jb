@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Auth\JobSeekerUserProvider;
+use App\Auth\LegacyPasswordHasher;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use OpenSearch\Client;
 use OpenSearch\ClientBuilder;
@@ -39,6 +42,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Auth::provider('jobseeker', function ($app, array $config) {
+            return new JobSeekerUserProvider(
+                $app['hash'],
+                $config['model'],
+                $app->make(LegacyPasswordHasher::class),
+            );
+        });
     }
 }
