@@ -39,6 +39,16 @@ Detail: `docs/architecture.md` · Terms: `docs/glossary.md` · Data model: `docs
    controllers, Livewire components, or Filament resources; no service calls from models.
 7. All date logic assumes **`America/Vancouver`**. **MUST NOT** mix naive UTC/local.
 8. **MUST NOT** log personal data (FOIPPA), commit secrets, or issue non-expiring tokens.
+9. **Do NOT invent domain values — copy them from the source of truth, never infer.** Enum
+   cases/codes come from `../workbc-jb/src/WorkBC.Data/Enums/*.cs` (values AND names, exactly — e.g.
+   `AdminLevel` is ascending privilege `Reporting=1…SuperAdmin=3`; getting it wrong is a
+   privilege-escalation bug). Table/column names and every relationship's FK **MUST** be verified
+   against the real schema (`docs/data-model.md` + the live DB) — never assume a column exists (e.g.
+   `Jobs` has **no** `RegionId`; region is via `Location`). Reference-data ids (NAICS/`Industries`,
+   NOC, `Regions`) come from the DB tables, not a guessed scheme. **Assume legacy data is dirty:**
+   cast enums **tolerantly** (unknown code → `null`, never a 500), and test fixtures **MUST** mirror
+   the real column names and include out-of-range/edge values — a golden-read test that only uses
+   clean in-range fixtures does **not** prove the mapping.
 
 ## Authentication (ADR-003)
 - **Job seekers:** Laravel **session** auth. Verify legacy ASP.NET Identity (v2/v3 PBKDF2)
@@ -94,6 +104,8 @@ resources/views/         (Blade)
 - [ ] API change additive (or ADR linked).
 - [ ] Dates assume America/Vancouver.
 - [ ] No secrets/PII in code or logs; no non-expiring tokens.
+- [ ] No invented domain values: enum cases match `WorkBC.Data/Enums/*.cs`; every column/FK verified
+      against the real schema; enums cast tolerantly; fixtures mirror real columns + include edge values.
 - [ ] Alpine for view state, Livewire for data (no needless server round-trips).
 - [ ] Tests written; `php artisan test` passes; a11y verified if UI.
 - [ ] PR links Jira ticket; scope is one ticket.
