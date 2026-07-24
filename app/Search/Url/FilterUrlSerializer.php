@@ -68,7 +68,8 @@ final class FilterUrlSerializer
     ];
 
     /** Enabled NAICS sector ids (edm_naics.json; excludes "All" 0 and disabled 7). */
-    private const INDUSTRY_IDS = [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+    /** Real Industries.Id values the search UI exposes (mirror of JobSearch::industryOptions keys). */
+    private const INDUSTRY_IDS = [1, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 34, 35, 36, 37, 39, 40, 41, 42, 43, 44, 45, 46];
 
     /** Valid keyword scopes. */
     private const SEARCH_IN = ['all', 'title', 'employer', 'jobId'];

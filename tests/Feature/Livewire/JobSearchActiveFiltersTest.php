@@ -35,13 +35,13 @@ class JobSearchActiveFiltersTest extends TestCase
         Livewire::test(JobSearch::class)
             ->set('locations', [['City' => 'Victoria']])
             ->set('hours', ['FullTime'])
-            ->set('industries', [9])
+            ->set('industries', [35]) // Industries.Id 35 = Health care and social assistance
             ->set('salaryUnknown', true)
             ->assertSee('Filters:')
             // The aria-label text is unique to the chip (not the facet dropdowns).
             ->assertSee('Remove filter Victoria')
             ->assertSee('Remove filter Full-time')
-            ->assertSee('Remove filter Health Care and Social Assistance')
+            ->assertSee('Remove filter Health care and social assistance')
             ->assertSee('Includes no salary listed');
     }
 

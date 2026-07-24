@@ -43,7 +43,7 @@ class FilterUrlSerializerTest extends TestCase
             'SearchJobTypePermanent' => true,
             'SearchJobTypeWeekend' => true,
             'SearchJobTypeVirtual' => true,
-            'SearchIndustry' => [4, 9, 19],
+            'SearchIndustry' => [23, 35, 26],
             'SearchJobEducationLevel' => ['University', 'No education'],
             'SearchDateSelection' => '3',
             'StartDate' => ['Year' => 2024, 'Month' => 1, 'Day' => 15],
@@ -128,14 +128,14 @@ class FilterUrlSerializerTest extends TestCase
             'utm_source' => 'newsletter',   // unrelated tracking param
             'jt' => 'FullTime,Bogus',        // one valid, one tampered suffix
             'in' => 'sql-injection',         // invalid scope
-            'ind' => '4,999',                // one valid, one unknown industry
+            'ind' => '23,999',               // one valid, one unknown industry
             'source' => '42',                // invalid source enum
         ]);
 
         $this->assertSame('nurse', $restored->Keyword);
         $this->assertTrue($restored->SearchJobTypeFullTime);
         $this->assertSame('all', $restored->SearchInField);      // fell back to default
-        $this->assertSame([4], $restored->SearchIndustry);       // unknown id dropped
+        $this->assertSame([23], $restored->SearchIndustry);      // unknown id dropped
         $this->assertSame('0', $restored->SearchJobSource);      // invalid enum ignored
     }
 

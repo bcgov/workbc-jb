@@ -151,22 +151,23 @@ class JobSearchFacetsTest extends TestCase
     public function test_industry_maps_to_naics_id_terms(): void
     {
         // Values arrive from checkboxes as strings; the component casts + whitelists.
+        // Real Industries.Id values: 35 = Health care, 31 = Professional services.
         Livewire::test(JobSearch::class)
-            ->set('industries', ['9', '15']);
+            ->set('industries', ['35', '31']);
 
         $should = $this->shouldGroupFor('NaicsId');
         $this->assertNotNull($should);
-        $this->assertEqualsCanonicalizing([9, 15], $this->termValues($should, 'NaicsId'));
+        $this->assertEqualsCanonicalizing([35, 31], $this->termValues($should, 'NaicsId'));
     }
 
     public function test_unknown_industry_id_is_discarded(): void
     {
         Livewire::test(JobSearch::class)
-            ->set('industries', ['9', '999']);
+            ->set('industries', ['35', '999']);
 
         $should = $this->shouldGroupFor('NaicsId');
         $this->assertNotNull($should);
-        $this->assertSame([9], $this->termValues($should, 'NaicsId'));
+        $this->assertSame([35], $this->termValues($should, 'NaicsId'));
     }
 
     public function test_education_maps_to_edu_level_terms(): void
@@ -232,7 +233,7 @@ class JobSearchFacetsTest extends TestCase
     {
         Livewire::test(JobSearch::class)
             ->set('hours', ['FullTime'])
-            ->set('industries', ['9'])
+            ->set('industries', ['35'])
             ->set('educationLevels', ['University'])
             ->set('dateSelection', '2')
             ->call('clearFilters')
