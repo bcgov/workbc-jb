@@ -349,6 +349,214 @@ final class JobSearch extends Component
         $this->page = 1;
     }
 
+    /**
+     * SRCH-11 — remove a single active filter value (from the chips strip), then
+     * return to the first page. `$value` selects which value within a multi-value
+     * facet (or the location index); single-value facets ignore it and reset to
+     * their default.
+     */
+    public function removeFilter(string $type, string $value = ''): void
+    {
+        switch ($type) {
+            case 'location':
+                $this->removeLocation((int) $value); // already resets the page
+
+                return;
+            case 'distance': $this->distance = -1; break;
+            case 'hours': $this->hours = array_values(array_diff($this->hours, [$value])); break;
+            case 'period': $this->period = array_values(array_diff($this->period, [$value])); break;
+            case 'terms': $this->terms = array_values(array_diff($this->terms, [$value])); break;
+            case 'workplace': $this->workplace = array_values(array_diff($this->workplace, [$value])); break;
+            case 'industries':
+                $this->industries = array_values(array_filter(
+                    $this->industries,
+                    static fn ($v): bool => (string) $v !== $value,
+                ));
+                break;
+            case 'education': $this->educationLevels = array_values(array_diff($this->educationLevels, [$value])); break;
+            case 'date':
+                $this->dateSelection = '0';
+                $this->startDate = '';
+                $this->endDate = '';
+                break;
+            case 'salaryBracket': $this->salaryBrackets = array_values(array_diff($this->salaryBrackets, [$value])); break;
+            case 'salaryCustom':
+                $this->salaryCustom = false;
+                $this->salaryMin = '';
+                $this->salaryMax = '';
+                break;
+            case 'salaryUnknown': $this->salaryUnknown = false; break;
+            case 'salaryCondition': $this->salaryConditions = array_values(array_diff($this->salaryConditions, [$value])); break;
+            case 'equity': $this->equityGroups = array_values(array_diff($this->equityGroups, [$value])); break;
+            case 'postingLanguage': $this->postingLanguage = '1'; break;
+            case 'noc': $this->nocCode = ''; break;
+            case 'jobSource': $this->jobSource = '0'; break;
+            case 'excludeAgency': $this->excludePlacementAgency = false; break;
+        }
+
+        $this->page = 1;
+    }
+
+    /**
+     * SRCH-11 — the active filters as removable chips, in facet order. Each entry
+     * is { type, value, label }; type/value map to {@see removeFilter()}. Labels
+     * reuse the facet option maps. Keyword/scope are excluded — they live in the
+     * search band, not the filter strip.
+     *
+     * @return array<int, array{type: string, value: string, label: string}>
+     */
+    private function activeFilters(): array
+    {
+        $chips = [];
+        $add = static function (string $type, string $value, string $label) use (&$chips): void {
+            $chips[] = ['type' => $type, 'value' => $value, 'label' => $label];
+        };
+
+        // Location + radius.
+        foreach ($this->locations as $i => $loc) {
+            $add('location', (string) $i, $this->locationLabel($loc));
+        }
+        if ($this->distance !== -1 && $this->locations !== []) {
+            $add('distance', '', self::distanceOptions()[$this->distance] ?? "Within {$this->distance} km");
+        }
+
+        // Job type (hours / period / terms / workplace).
+        foreach ([
+            ['hours', self::jobTypeHoursOptions(), $this->hours],
+            ['period', self::jobTypePeriodOptions(), $this->period],
+            ['terms', self::jobTypeTermsOptions(), $this->terms],
+            ['workplace', self::workplaceOptions(), $this->workplace],
+        ] as [$type, $map, $selected]) {
+            foreach ($selected as $key) {
+                if (isset($map[$key])) {
+                    $add($type, (string) $key, $map[$key]);
+                }
+            }
+        }
+
+        // Industry.
+        $industries = self::industryOptions();
+        foreach ($this->industries as $id) {
+            $id = (int) $id;
+            if (isset($industries[$id])) {
+                $add('industries', (string) $id, $industries[$id]);
+            }
+        }
+
+        // Education (the value is itself the label).
+        foreach ($this->educationLevels as $level) {
+            if (in_array($level, self::educationOptions(), true)) {
+                $add('education', $level, $level);
+            }
+        }
+
+        // Date.
+        if (in_array($this->dateSelection, ['1', '2', '3'], true)) {
+            $label = self::dateOptions()[$this->dateSelection] ?? 'Date';
+            if ($this->dateSelection === '3') {
+                $label = $this->customDateLabel() ?: 'Custom date range';
+            }
+            $add('date', '', $label);
+        }
+
+        // Salary (brackets / custom / unknown / conditions).
+        $brackets = $this->salaryBracketLabels();
+        foreach ($this->salaryBrackets as $bracket) {
+            if (isset($brackets[$bracket])) {
+                $add('salaryBracket', (string) $bracket, $brackets[$bracket]);
+            }
+        }
+        if ($this->salaryCustom) {
+            $add('salaryCustom', '', $this->customSalaryLabel());
+        }
+        if ($this->salaryUnknown) {
+            $add('salaryUnknown', '', 'Includes no salary listed');
+        }
+        foreach ($this->salaryConditions as $condition) {
+            if (in_array($condition, self::salaryConditionOptions(), true)) {
+                $add('salaryCondition', $condition, $condition);
+            }
+        }
+
+        // More (equity / NOC / source / agency / language).
+        $equity = self::equityOptions();
+        foreach ($this->equityGroups as $key) {
+            if (isset($equity[$key])) {
+                $add('equity', (string) $key, $equity[$key]);
+            }
+        }
+        if (trim($this->nocCode) !== '') {
+            $add('noc', '', 'NOC '.trim($this->nocCode));
+        }
+        if ($this->jobSource !== '0' && isset(self::jobSourceOptions()[$this->jobSource])) {
+            $add('jobSource', '', self::jobSourceOptions()[$this->jobSource]);
+        }
+        if ($this->excludePlacementAgency) {
+            $add('excludeAgency', '', 'Excludes placement agencies');
+        }
+        if ($this->postingLanguage !== '1' && isset(self::postingLanguageOptions()[$this->postingLanguage])) {
+            $add('postingLanguage', '', self::postingLanguageOptions()[$this->postingLanguage]);
+        }
+
+        return $chips;
+    }
+
+    /**
+     * Human label for a committed location chip (City → Region → postal).
+     *
+     * @param  array<string, string>  $loc
+     */
+    private function locationLabel(array $loc): string
+    {
+        if (! empty($loc['City'])) {
+            return $loc['City'];
+        }
+        if (! empty($loc['Region'])) {
+            return $loc['Region'];
+        }
+        if (isset($loc['Postal'])) {
+            return (string) LocationField::fromArray($loc)->getPostal();
+        }
+
+        return 'Location';
+    }
+
+    private function customDateLabel(): string
+    {
+        $start = trim($this->startDate);
+        $end = trim($this->endDate);
+        if ($start !== '' && $end !== '') {
+            return "{$start} to {$end}";
+        }
+        if ($start !== '') {
+            return "From {$start}";
+        }
+        if ($end !== '') {
+            return "Until {$end}";
+        }
+
+        return '';
+    }
+
+    private function customSalaryLabel(): string
+    {
+        $unit = self::salaryTypeOptions()[$this->selectedSalaryType()] ?? '';
+        $unit = $unit !== '' ? ' '.mb_strtolower($unit) : '';
+        $min = trim($this->salaryMin);
+        $max = trim($this->salaryMax);
+        if ($min !== '' && $max !== '') {
+            return "\${$min}–\${$max}{$unit}";
+        }
+        if ($min !== '') {
+            return "From \${$min}{$unit}";
+        }
+        if ($max !== '') {
+            return "Up to \${$max}{$unit}";
+        }
+
+        return 'Custom salary';
+    }
+
     /** As the user types, refresh city suggestions (skip when it looks like a postal code). */
     public function updatedLocationInput(): void
     {
@@ -484,6 +692,7 @@ final class JobSearch extends Component
         return view('livewire.job-search', [
             'result' => $result,
             'unavailable' => $unavailable,
+            'activeFilters' => $this->activeFilters(),
             'shareUrl' => $this->shareUrl(),
             'view' => $this->view,
             'mapPins' => $mapPins,
