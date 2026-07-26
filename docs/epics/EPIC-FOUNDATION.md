@@ -159,17 +159,48 @@ password verifier that rehashes to bcrypt on login. Email-only reset.
 ## FND-6 — Admin auth: Keycloak OIDC → Filament
 **Description:** Keycloak OIDC login for the Filament admin panel, mapped to `AdminUsers` roles.
 
+**Split per ADR-008** (no Keycloak realm/client available yet; `AdminUsers` has no credential column
+— verified against the real schema, confirming ADR-003's own note that it's "not used for login"):
+this story (FND-6) delivers everything **except** the OIDC handshake. **FND-6b** (below) is the
+handshake itself, once real Keycloak credentials exist.
+
+**Acceptance criteria**
+- [ ] A dedicated `admin` guard (session-based); provider bound to `App\Models\AdminUser` (FND-2).
+      `AdminUser` implements `Authenticatable` but the provider has **no password check** — there is
+      no credential to check (`AdminUsers` has none). It supports direct session login only
+      (`Auth::guard('admin')->login($adminUser)`) — the shape FND-6b's OIDC callback will call.
+- [ ] Filament's admin panel authenticates via the `admin` guard (not the default `web`/job-seeker guard).
+- [ ] `AdminUsers.AdminLevel` (`Disabled`/`Reporting`/`Admin`/`SuperAdmin`) drives Filament navigation
+      + resource access policies (ADM-1 detail).
+- [ ] Impersonation scaffold: a Filament action starts an impersonated **seeker session** and writes
+      an `ImpersonationLog` row (`Token`, `AspNetUserId`, `AdminUserId`, `DateTokenCreated`); ending
+      impersonation returns to the admin session (full flow ADM-4; the audit-write + session-switch
+      exists here).
+- [ ] Local/demo access: the same gitignored, `local`-env-guarded pattern as the job-seeker portal
+      (`routes/dev-preview.php`) — logs in a chosen `AdminUser` directly. No schema change.
+- [ ] Feature tests: guard resolves an `AdminUser`; role gate denies a lower `AdminLevel`; Filament
+      panel unreachable when logged out (of the `admin` guard specifically); impersonation writes the
+      audit row + switches the session; ending impersonation returns cleanly.
+
+**Docs:** `ADR-003`, **`ADR-008`**; `data-model.md` (AdminUsers, ImpersonationLog). **Depends on:** FND-1, FND-2.
+
+---
+
+## FND-6b — Keycloak OIDC handshake (follow-up; needs real IdP credentials)
+**Description:** Replace FND-6's local/demo login route with the real Socialite ↔ Keycloak
+Authorization-Code exchange. **Not started — blocked on Keycloak realm/client/issuer credentials.**
+
 **Acceptance criteria**
 - [ ] Socialite (or OIDC middleware) authenticates admins via Keycloak (Authorization-Code flow);
       config from Secrets Manager, no committed secrets.
-- [ ] On login, the Keycloak identity maps to an `AdminUsers` row; roles (SuperAdmin/Admin/Reporting)
-      drive Filament access policies.
-- [ ] Filament panel is reachable only after OIDC auth; a smoke resource (e.g. read-only SystemSettings) loads.
-- [ ] Impersonation scaffold: a Filament action starts an impersonated **seeker session** and writes
-      an `ImpersonationLog` row (full flow can be a later story; the audit-write + session-switch exists).
-- [ ] Feature test: unauthenticated → redirected to Keycloak; role gate denies a non-admin.
+- [ ] On successful callback, resolve the Keycloak identity to an `AdminUsers` row and call
+      `Auth::guard('admin')->login($adminUser)` — the same call FND-6's guard already supports.
+- [ ] Unauthenticated access to the admin panel redirects to Keycloak (not a local login form).
+- [ ] Delete/disable `routes/dev-preview.php`'s admin shortcut once this ships (it's gitignored, so
+      nothing to remove from the repo — just stop relying on it locally).
+- [ ] Feature test: unauthenticated → redirected to Keycloak.
 
-**Docs:** `ADR-003`; `data-model.md` (AdminUsers, ImpersonationLog). **Depends on:** FND-1, FND-2.
+**Docs:** `ADR-003`, `ADR-008`. **Depends on:** FND-6; real Keycloak dev/test realm credentials.
 
 ---
 
