@@ -192,7 +192,8 @@ class CoreModelMappingTest extends TestCase
         $this->assertSame('int', $admin->getKeyType());
         $this->assertSame(AdminLevel::Admin, $admin->AdminLevel);
         $this->assertSame('SiteTitle', $admin->systemSettings->first()?->Name);
-        $this->assertSame('2026-07-20 12:00:00', $admin->DateAdded?->format('Y-m-d H:i:s'));
+        $this->assertSame('2026-07-20 12:00:00', $admin->DateCreated?->format('Y-m-d H:i:s'));
+        $this->assertFalse((bool) $admin->Deleted);
     }
 
     public function test_job_seeker_flags_mapping_casts_and_relationship(): void
@@ -349,9 +350,12 @@ class CoreModelMappingTest extends TestCase
         Schema::create('AdminUsers', function (Blueprint $table): void {
             $table->integer('Id')->primary();
             $table->smallInteger('AdminLevel')->default(2);
+            $table->boolean('Deleted')->default(false);
             $table->integer('LockedByAdminUserId')->nullable();
             $table->dateTime('DateLocked')->nullable();
-            $table->dateTime('DateAdded')->nullable();
+            $table->dateTime('DateCreated')->nullable();
+            $table->dateTime('DateUpdated')->nullable();
+            $table->dateTime('DateLastLogin')->nullable();
         });
 
         Schema::create('SystemSettings', function (Blueprint $table): void {
@@ -536,8 +540,8 @@ class CoreModelMappingTest extends TestCase
         ]);
 
         DB::table('AdminUsers')->insert([
-            ['Id' => 500, 'AdminLevel' => 2, 'LockedByAdminUserId' => null, 'DateLocked' => null, 'DateAdded' => '2026-07-20 12:00:00'],
-            ['Id' => 501, 'AdminLevel' => 1, 'LockedByAdminUserId' => 500, 'DateLocked' => '2026-07-21 12:00:00', 'DateAdded' => '2026-07-19 12:00:00'],
+            ['Id' => 500, 'AdminLevel' => 2, 'Deleted' => false, 'LockedByAdminUserId' => null, 'DateLocked' => null, 'DateCreated' => '2026-07-20 12:00:00'],
+            ['Id' => 501, 'AdminLevel' => 1, 'Deleted' => false, 'LockedByAdminUserId' => 500, 'DateLocked' => '2026-07-21 12:00:00', 'DateCreated' => '2026-07-19 12:00:00'],
         ]);
 
         DB::table('SystemSettings')->insert([
