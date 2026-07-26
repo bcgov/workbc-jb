@@ -27,6 +27,12 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            // FND-6 / ADR-008: authenticate against the dedicated `admin` guard
+            // (AdminUsers), not the job-seeker `web` guard. The stock login() page
+            // stays registered so unauthenticated visits redirect somewhere valid,
+            // but AdminUsers has no password to check it against — real entry is
+            // FND-6b's Keycloak callback (or, locally, routes/dev-preview.php).
+            ->authGuard('admin')
             ->login()
             ->colors([
                 'primary' => Color::Amber,

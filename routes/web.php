@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\JobDetailController;
 use App\Http\Controllers\LegacyAlertRedirectController;
+use App\Http\Controllers\Admin\ImpersonationController;
 use App\Http\Controllers\Auth\JobSeekerPasswordResetController;
 use App\Http\Controllers\Auth\JobSeekerRegistrationController;
 use App\Http\Controllers\Auth\JobSeekerSessionController;
@@ -38,6 +39,12 @@ Route::middleware('auth:web')->group(function (): void {
     Route::get('/account/alerts/{alertId}/edit', JobSearch::class)
         ->whereNumber('alertId')
         ->name('account.alerts.edit');
+
+    // FND-6 / ADM-4 scaffold: ends the impersonated seeker session (web guard
+    // only) and returns to the admin panel. The admin's own `admin`-guard
+    // session was never touched by impersonation, so this is a clean return.
+    Route::post('/account/impersonation/end', [ImpersonationController::class, 'end'])
+        ->name('account.impersonation.end');
 });
 
 // Local-only preview helpers live in a gitignored file so they can never be

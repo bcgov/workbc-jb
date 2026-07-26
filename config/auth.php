@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\AdminUser;
 use App\Models\JobSeeker;
 
 return [
@@ -42,6 +43,14 @@ return [
             'driver' => 'session',
             'provider' => 'job_seekers',
         ],
+
+        // FND-6 / ADR-008: a separate guard for Filament admins. AdminUsers has
+        // no credential column, so this guard is only ever populated by a direct
+        // login() call (never ->attempt()) — see App\Models\AdminUser.
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
     ],
 
     /*
@@ -65,6 +74,13 @@ return [
         'job_seekers' => [
             'driver' => 'jobseeker',
             'model' => env('AUTH_MODEL', JobSeeker::class),
+        ],
+
+        // Standard Eloquent provider: retrieveById (session reload) is all this
+        // guard ever uses. No credential columns exist to check.
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => AdminUser::class,
         ],
 
         // 'users' => [
