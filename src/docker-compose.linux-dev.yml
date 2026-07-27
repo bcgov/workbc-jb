@@ -38,11 +38,11 @@ services:
         condition: service_healthy
       elasticsearch:
         condition: service_healthy
-  notifications-job-alerts:
-    volumes:
-      - ./WorkBC.Notifications.JobAlerts/appsettings.linux.json:/app/appsettings.json
+  notifications-jobalerts-v2:
     depends_on:
       postgres:
+        condition: service_healthy
+      elasticsearch:
         condition: service_healthy
   migration-runner:
     volumes:
@@ -52,7 +52,6 @@ services:
         condition: service_healthy
   dotnet-cli:
     volumes:
-      - ./WorkBC.Notifications.JobAlerts/appsettings.linux.json:/app/workbc-notifications-jobalerts/appsettings.json
       - ./EFMigrationRunner/appsettings.linux.json:/app/efmigrationrunner/appsettings.json
     depends_on:
       postgres:

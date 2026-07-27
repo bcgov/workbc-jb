@@ -1,0 +1,40 @@
+{
+  "track_total_hits": true,
+  "size": 0,
+  "from": 0,
+  "sort":[{"Title.normalize":"DESC"},{"DatePosted":"desc"},{"JobId.keyword":"asc"}],
+  "_source": [
+    "City",
+    "EmployerName",
+    "JobId",
+    "SalarySummary",
+    "Title",
+    "ExternalSource",
+    "HoursOfWork",
+    "PeriodOfEmployment",
+    "IsFederalJob",
+    "DatePosted",
+    "ExpireDate",
+    "LastUpdated",
+    "Location",
+    "WorkplaceType"
+  ],
+  "query": {
+    "bool": {
+      "must": [
+        { "bool": { "should" : [ { "range": { "DatePosted": { "gte": "now-3d/d", "lte": "now", "time_zone": "America/Vancouver" } } } ] } }
+      ],
+      "must_not": [
+        
+      ],
+      "filter": {
+        "range": {
+          "ExpireDate": {
+            "gte": "now/d",
+            "time_zone": "America/Vancouver"
+          }
+        }
+      }
+    }
+  }
+}

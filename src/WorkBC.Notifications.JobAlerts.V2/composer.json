@@ -1,0 +1,27 @@
+{
+    "name": "workbc/jobalert-notifier",
+    "description": "WorkBC Job Alert Notifier – matches saved job alerts against Elasticsearch and emails job seekers (PHP rewrite of WorkBC.Notifications.JobAlerts)",
+    "type": "project",
+    "require": {
+        "php": ">=8.3",
+        "ext-dom": "*",
+        "ext-json": "*",
+        "ext-pdo": "*",
+        "ext-pdo_pgsql": "*",
+        "ext-simplexml": "*",
+        "aws/aws-sdk-php": "^3.300",
+        "guzzlehttp/guzzle": "^7.9",
+        "monolog/monolog": "^3.5",
+        "phpmailer/phpmailer": "^6.9",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "WorkBC\\JobAlertNotifier\\": "src/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true
+    }
+}

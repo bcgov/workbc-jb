@@ -1,0 +1,40 @@
+{
+  "track_total_hits": true,
+  "size": 0,
+  "from": 0,
+  "sort":[{"Title.normalize":"ASC"},{"DatePosted":"desc"},{"JobId.keyword":"asc"}],
+  "_source": [
+    "City",
+    "EmployerName",
+    "JobId",
+    "SalarySummary",
+    "Title",
+    "ExternalSource",
+    "HoursOfWork",
+    "PeriodOfEmployment",
+    "IsFederalJob",
+    "DatePosted",
+    "ExpireDate",
+    "LastUpdated",
+    "Location",
+    "WorkplaceType"
+  ],
+  "query": {
+    "bool": {
+      "must": [
+        { "bool": { "should" : [ { "range": { "DatePosted": { "gte": "2026-07-15T00:00:00.000", "lte": "2026-07-16T23:59:59.999" } } } ] } },{ "bool": { "should" : [ { "term": { "HoursOfWork.Description.keyword": "Full-time" } },{ "term": { "HoursOfWork.Description.keyword": "Part-time" } },{ "term": { "HoursOfWork.Description.keyword": "Part-time leading to full-time" } } ] } },{ "bool": { "should" : [ { "term": { "PeriodOfEmployment.Description.keyword": "Temporary" } },{ "term": { "PeriodOfEmployment.Description.keyword": "Permanent" } },{ "term": { "PeriodOfEmployment.Description.keyword": "Casual" } },{ "term": { "PeriodOfEmployment.Description.keyword": "Seasonal" } } ] } },{ "bool": { "should" : [ { "term": { "EmploymentTerms.Description.keyword": "Day" } },{ "term": { "EmploymentTerms.Description.keyword": "Early morning" } },{ "term": { "EmploymentTerms.Description.keyword": "Evening" } },{ "term": { "EmploymentTerms.Description.keyword": "Flexible hours" } },{ "term": { "EmploymentTerms.Description.keyword": "Morning" } },{ "term": { "EmploymentTerms.Description.keyword": "Night" } },{ "term": { "EmploymentTerms.Description.keyword": "On call" } },{ "term": { "EmploymentTerms.Description.keyword": "Overtime" } },{ "term": { "EmploymentTerms.Description.keyword": "Shift" } },{ "term": { "EmploymentTerms.Description.keyword": "To be determined" } },{ "term": { "EmploymentTerms.Description.keyword": "Weekend" } } ] } },{ "bool": { "should" : [ { "term": { "WorkplaceType.Id": 0 } },{ "term": { "WorkplaceType.Id": 100000 } },{ "term": { "WorkplaceType.Id": 100001 } },{ "term": { "WorkplaceType.Id": 15141 } } ] } },{ "bool": { "should" : [ { "term": { "EduLevel.keyword": "University" } },{ "term": { "EduLevel.keyword": "No education" } } ] } }
+      ],
+      "must_not": [
+        
+      ],
+      "filter": {
+        "range": {
+          "ExpireDate": {
+            "gte": "now/d",
+            "time_zone": "America/Vancouver"
+          }
+        }
+      }
+    }
+  }
+}
