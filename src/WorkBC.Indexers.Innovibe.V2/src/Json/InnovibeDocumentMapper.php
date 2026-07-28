@@ -27,6 +27,14 @@ final class InnovibeDocumentMapper
     private const SENTINEL_LAT = '54.5000992';
     private const SENTINEL_LON = '-125.1159973';
 
+    // NOC-387: senior-manager unit groups 00011..00015 consolidate to 00018.
+    // The granular codes are intentionally absent from NocCodes2021, so they
+    // must be remapped BEFORE validation or the job loses its NOC and is
+    // rejected by the publishable gate. Mirrors FederalDocumentMapper and
+    // the importer's JobImportService.
+    private const SPECIAL_NOC_2021_CODES = [11, 12, 13, 14, 15];
+    private const SPECIAL_NOC_2021_REPLACEMENT = 18;
+
     /** @var array<int,array{title:?string,frenchTitle:?string}>|null */
     private ?array $nocGroups2021 = null;
     /** @var array<string,string>|null  lower-case city name → region label */
@@ -339,6 +347,9 @@ final class InnovibeDocumentMapper
         $noc2021Int = 0;
         if ($nocStr !== '') {
             $noc2021Int = (int) $nocStr;
+            if (in_array($noc2021Int, self::SPECIAL_NOC_2021_CODES, true)) {
+                $noc2021Int = self::SPECIAL_NOC_2021_REPLACEMENT;
+            }
             if (!$this->isValidNoc2021($noc2021Int)) {
                 $noc2021Int = 0;
             }
