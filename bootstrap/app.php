@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,7 +13,30 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        /*
+         * The app is served behind CloudFront → AWS ALB (see
+         * docs/integration/drupal-embed.md). CloudFront sends the ORIGIN's
+         * hostname in `Host` and the real public hostname in a
+         * `X-Forwarded-Host` custom origin header; the ALB adds
+         * X-Forwarded-For/Proto/Port. Without trusting those, url()/route()
+         * would build absolute URLs from the internal origin hostname —
+         * corrupting the SRCH-7 canonical/hreflang links, every URL in the
+         * SRCH-8 sitemap, and post-login redirects.
+         *
+         * TRUSTED_PROXIES defaults to '*' because the ingress IP set is
+         * CloudFront's (large and changing). NOTE: the origin is also
+         * reachable directly, so '*' means `X-Forwarded-Host` is spoofable by
+         * anyone who can reach it — mitigate with TrustHosts in production
+         * (see the ADR-009 "Host spoofing" note) rather than by narrowing
+         * this list.
+         */
+        $middleware->trustProxies(
+            at: env('TRUSTED_PROXIES', '*'),
+            headers: Request::HEADER_X_FORWARDED_FOR
+                | Request::HEADER_X_FORWARDED_HOST
+                | Request::HEADER_X_FORWARDED_PORT
+                | Request::HEADER_X_FORWARDED_PROTO,
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
