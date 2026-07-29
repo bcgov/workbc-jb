@@ -174,10 +174,26 @@ Consumed server-to-server by the Drupal `workbc_jobboard` module. Base URL = Dru
 `GET /api/location/cities/{cityName}/true` → array of strings: `["Surrey", "Surrey, BC", …]`.
 
 ### 2.4 Career / Industry profile — save & status (authenticated)
-- `POST /api/career-profiles/save/{profileId}` — save a career (NOC) profile for the user.
-- `GET  /api/career-profiles/status/{profileId}` → boolean.
-- `POST /api/industry-profiles/save/{profileId}` · `GET /api/industry-profiles/status/{profileId}`.
-- **Auth:** Drupal forwards the job seeker's `Authorization` header.
+
+> **RETIRED as a server-to-server contract** (2026-07-29, [ADR-009](adr/ADR-009-same-site-session-auth-for-embed.md)).
+> The previous text here claimed *"Drupal forwards the job seeker's `Authorization` header."* That was
+> **never how this worked.** Inspection of the live Drupal module showed the save/status calls are made
+> **from the browser** by `js/workbc_jobboard.js` (URLs pushed to `drupalSettings` by
+> `WorkbcJobboardSaveProfile.php`), authenticated with a JWT the inline-embedded Angular app stores
+> client-side. The `Authorization`-forwarding branches in Drupal's `WorkBcJobboardController.php` exist
+> but are **dead code** — nothing calls them, and they are the likely source of the wrong claim.
+>
+> These are therefore **not** part of the Drupal-facing server-to-server API. Under ADR-009 they become
+> ordinary **session-authenticated** routes (same-site cookie, **401** when anonymous), called from the
+> browser by Drupal's JS with `withCredentials`. Owned by **ACCT-6**.
+>
+> - `POST /career-profiles/save/{profileId}` · `GET /career-profiles/status/{profileId}` → `{ saved, csrf }`
+> - `POST /industry-profiles/save/{profileId}` · `GET /industry-profiles/status/{profileId}`
+> - **Auth:** Laravel session (ADR-003). No bearer token. CSRF token is returned in the *status*
+>   response body, because the `XSRF-TOKEN` cookie is unreadable cross-origin — see ADR-009.
+>
+> Only §2.1–2.3 remain genuine server-to-server contracts. See
+> `integration/drupal-embed.md §6` and `integration/api-status.md`.
 
 ### 2.5 Dead endpoint
 `GET /api/career-profiles/topjobs/{noc}` exists but is **not called** by Drupal (it uses §2.1).
