@@ -22,6 +22,7 @@ and coding agents — don't unknowingly undo a deliberate choice.
 | [ADR-006](ADR-006-drupal-embed-iframe.md) | Public search embeds into the Drupal page via iframe (Drupal owns chrome); SEO not a driver | Accepted |
 | [ADR-007](ADR-007-verify-legacy-md5-passwords.md) | Verify legacy MD5-wrapped password hashes on login + rehash (amends ADR-003; avoids resetting 62% of users) | Accepted |
 | [ADR-008](ADR-008-admin-auth-phased-delivery.md) | Build FND-6's admin-auth substance now (guard/policies/impersonation); defer the Keycloak handshake to FND-6b | Accepted |
+| [ADR-009](ADR-009-same-site-session-auth-for-embed.md) | Serve the app same-site (`*.workbc.ca`) so session auth survives the Drupal embed; no bearer tokens; CORS is CDN-owned | Accepted |
 
 ## Template
 

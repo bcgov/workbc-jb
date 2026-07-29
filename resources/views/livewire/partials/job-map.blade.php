@@ -63,8 +63,17 @@
                     window.__jobMapMapsPromise = new Promise((res, rej) => {
                         window.__jobMapMapsReady = res;
                         const s = document.createElement('script');
+                        // `libraries=marker` loads the Marker library eagerly with the
+                        // core bundle. Without it, `new google.maps.Marker(...)` in
+                        // draw() below triggers a second, separate on-demand fetch the
+                        // first time it's called — a fetch Google's own docs flag as
+                        // less reliable, and whose failure (e.g. a transient cache
+                        // error) throws as an unhandled rejection deep inside the Maps
+                        // SDK, past the point loadMaps() already resolved, so nothing
+                        // here catches it and the map is left blank instead of showing
+                        // the 'error' status.
                         s.src = 'https://maps.googleapis.com/maps/api/js?key='
-                            + encodeURIComponent(apiKey) + '&callback=__jobMapMapsReady&loading=async';
+                            + encodeURIComponent(apiKey) + '&libraries=marker&callback=__jobMapMapsReady&loading=async';
                         s.async = true;
                         s.onerror = rej;
                         document.head.appendChild(s);

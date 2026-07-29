@@ -1,9 +1,16 @@
 # ADR-006: The public search embeds into the Drupal page via iframe (Drupal owns chrome)
 
-- **Status:** Accepted
+- **Status:** Accepted — **extended by [ADR-009](ADR-009-same-site-session-auth-for-embed.md)**
 - **Date:** 2026-07-23
 - **Deciders:** Architecture owner
 - **Jira:** —
+
+> **ADR-009 extends this decision** with what was unknown when it was written: the app must be served
+> **same-site** (`*.workbc.ca`) for session auth to survive the boundary; CORS/cache behaviour for that
+> host is **CDN-owned**; the embed touches **five** surfaces, not one (search, account, the
+> career/industry save button, the Drupal header's login state, and the server-to-server widgets); and
+> **login is deliberately not placed inside a cross-origin iframe**. §5 below ("the frame and the app
+> must agree on auth — covered when that epic is scoped") is the part ADR-009 scopes.
 
 ## Context
 WorkBC.ca is a **Drupal** site that owns the page chrome (header, nav, footer, branding) and the

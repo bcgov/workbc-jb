@@ -187,16 +187,21 @@ redirects into indexable pages (major SEO gain) and unifies external/federal beh
 **Description:** The JSON API consumed by the Drupal WorkBC.ca site.
 
 **Acceptance criteria**
-- [ ] `POST /api/Search/JobSearch` (+ `/{language}`): accepts a `JobSearchFilters` body; returns the
+- [x] `POST /api/Search/JobSearch` (+ `/{language}`): accepts a `JobSearchFilters` body; returns the
       `SearchResultsModel` shape with the **exact keys/casing** per `contracts.md §2.1`.
-- [ ] **Strict validation:** unknown request fields → **400** (Form Request, fail closed).
-- [ ] **Profile-sidebar heuristic:** NOC filter + `PageSize ≤ 10` + no source pinned ⇒ **federal-first**
+- [x] **Strict validation:** unknown request fields → **400** (Form Request, fail closed).
+- [x] **Profile-sidebar heuristic:** NOC filter + `PageSize ≤ 10` + no source pinned ⇒ **federal-first**
       (NJB results first, external fallback).
-- [ ] `GET /api/Search/gettotaljobs` → `{ count }`; `GET /api/location/cities/{name}/true` → string[].
-- [ ] Responses use API Resources; additive-only contract (ADR/version for breaking).
-- [ ] Feature tests: search shape + casing; unknown field → 400; federal-first heuristic; total; cities.
+- [x] `GET /api/Search/gettotaljobs` → `{ count }`; `GET /api/location/cities/{name}/true` → string[].
+- [x] Responses use API Resources; additive-only contract (ADR/version for breaking).
+- [x] Feature tests: search shape + casing; unknown field → 400; federal-first heuristic; total; cities.
 
-**Docs:** `contracts.md §2`, `architecture.md §8`. **Depends on:** SRCH-1, FND-7.
+**Status (2026-07-27):** done and verified (`JobSearchApiTest`, `TotalJobsApiTest`,
+`LocationCitiesApiTest` all passing). The `career-profiles`/`industry-profiles` endpoints in
+`contracts.md §2.4` are a separate concern owned by **ACCT-6** (career-profiles is a routed stub;
+industry-profiles isn't built yet) — see `docs/integration/api-status.md` for the full breakdown.
+
+**Docs:** `contracts.md §2`, `architecture.md §8`, `docs/integration/api-status.md`. **Depends on:** SRCH-1, FND-7.
 
 ---
 
