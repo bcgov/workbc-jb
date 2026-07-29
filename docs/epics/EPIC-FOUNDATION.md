@@ -82,11 +82,20 @@ for manual `tinker` against the local `jobboard` DB.
 sitemap regeneration, view-count flush). Feed import/index jobs are **out of scope** — existing containers.
 
 **Acceptance criteria**
-- [ ] `BaseJob` abstract class: `$tries`/`$backoff` (default 3 + exponential), `failOnTimeout`,
+- [x] `BaseJob` abstract class: `$tries`/`$backoff` (default 3 + exponential), `failOnTimeout`,
       idempotency helpers; `ShouldBeUnique` where re-runs must not duplicate.
-- [ ] Structured logging to stdout (container-friendly).
-- [ ] Dedicated Redis queues (`notifications`, `default`) configured.
-- [ ] Unit test: a sample job records start/finish and is idempotent on re-run.
+- [x] Structured logging to stdout (container-friendly).
+- [x] Dedicated Redis queues (`notifications`, `default`) configured.
+- [x] Unit test: a sample job records start/finish and is idempotent on re-run.
+
+**Status (2026-07-29):** done. `App\Jobs\BaseJob` (`app/Jobs/BaseJob.php`) wraps subclasses'
+`process()` with started/finished/failed logging to the `stderr` channel (container log collectors
+capture stderr identically to stdout) and provides `idempotent(string $key, Closure $callback)` —
+a `Cache`-backed guard against a retried job repeating a side effect. `ShouldBeUnique` is left to
+individual subclasses (e.g. the future ACCT-4 alert sender) since not every job needs dispatch-time
+dedup. Queue names ('notifications' for user-facing work, 'default' otherwise) are a documented
+convention via `$this->onQueue(...)`, not new config — Laravel's Redis queue driver already
+supports arbitrary queue names. Tests: `tests/Unit/Jobs/BaseJobTest.php` (3 passing).
 
 **Docs:** copilot-instructions (Coding standards); `architecture.md §9`. **Depends on:** FND-1.
 
