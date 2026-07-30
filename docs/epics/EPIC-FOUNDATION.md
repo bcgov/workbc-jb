@@ -114,9 +114,21 @@ supports arbitrary queue names. Tests: `tests/Unit/Jobs/BaseJobTest.php` (3 pass
       pagination — each meeting WCAG 2.1 AA (keyboard, contrast, focus, ARIA where needed).
 - [ ] Livewire installed and demonstrated with one trivial reactive component; Alpine used for a
       trivial view-state toggle (documents the "Alpine for view / Livewire for data" rule).
+- [ ] **Security response headers.** Verified 2026-07-29: the app currently sets **none**, and
+      CloudFront sets none either — so today any site can frame our authenticated pages
+      (clickjacking against saved-jobs/alerts/settings actions). Emit:
+      - `Content-Security-Policy: frame-ancestors https://www.workbc.ca https://workbc.ca` —
+        the **exact** parent origins, never `*`, and never `X-Frame-Options: DENY` (which would
+        break the ADR-006 embed). Origins are per-environment, so make them configurable.
+      - `X-Content-Type-Options: nosniff` and a `Referrer-Policy`.
+      Note these must come from the **app**: the CloudFront response-headers policy
+      (`cors-api-jobboard`) contains CORS only and no security headers (ADR-009).
 - [ ] An automated a11y check (axe or pa11y) runs in CI against the base layout.
+- [ ] Test: the embed response carries `frame-ancestors` with the configured origins and no
+      `X-Frame-Options`.
 
-**Docs:** copilot-instructions (Frontend, Accessibility); `ADR-002`, `ADR-006` (embed mode).
+**Docs:** copilot-instructions (Frontend, Accessibility); `ADR-002`, `ADR-006` (embed mode),
+`ADR-009` (headers are app-owned; CORS is CDN-owned).
 **Depends on:** FND-1.
 
 ---
@@ -139,8 +151,20 @@ password verifier that rehashes to bcrypt on login. Email-only reset.
 - [ ] Registration + **email verification** (`VerificationGuid`) flow; **email-only** password reset
       (`password_reset_tokens`); **no** security-question flow.
 - [ ] `NormalizedEmail`/`NormalizedUserName` maintained on writes (Identity uses `ToUpperInvariant()`).
+- [ ] **Rate limiting** on every auth route — login, register, forgot-password, reset-password.
+      Laravel's `web` group has **no** throttle by default (unlike `api`), so these are currently
+      unlimited: a public login over a table where **62% of hashes are legacy MD5-derived**
+      (ADR-007) is a credential-stuffing target, and unthrottled forgot-password allows email
+      bombing and user-enumeration probing. Throttle per-IP **and** per-account; reset-password
+      also per-token.
+- [ ] **Account lockout parity.** `AspNetUsers` already carries `LockoutEnabled`, `LockoutEnd` and
+      `AccessFailedCount` (confirmed in the build brief below) — the legacy .NET app locked accounts
+      after repeated failures. Port that behaviour: increment `AccessFailedCount` on failure, clear
+      it on success, honour `LockoutEnd`, and refuse login while locked. Without this we silently
+      drop a security control the current system has.
 - [ ] Feature tests: **v3** login → success + bcrypt rehash; **`0xF0`** login → success + rehash;
-      unrecognized hash → reset path; register→verify; reset.
+      unrecognized hash → reset path; register→verify; reset; **throttle returns 429 after the
+      limit**; **lockout blocks login and clears on success**.
 
 **Build brief (verified against the real DB + .NET source, 2026-07-24):**
 - Auth columns confirmed present on `AspNetUsers`: `PasswordHash`(text), `SecurityStamp`,
@@ -159,6 +183,13 @@ password verifier that rehashes to bcrypt on login. Email-only reset.
   Generate `{password → hash}` pairs (the reference `Md5PasswordHasher` can emit a `0xF0` and a v3
   hash for a known password; dotnet 6 is installed), commit them as fixtures, and assert the PHP
   verifier accepts the right password and rejects a wrong one for each format.
+
+> **Status (2026-07-29): reopened.** The session guard, three-format verifier, rehash, registration/
+> verification and reset flows were delivered and are passing. The **rate-limiting** and **account
+> lockout** criteria above were added afterwards — a security review found no `throttle` middleware
+> on any app route and no `RateLimiter` defined, and spotted that the legacy lockout columns are
+> unused. Auth is not "done" without them, and nothing is deployed until every Foundation/epic story
+> is complete, so they are tracked here rather than as a separate hardening pass.
 
 **Docs:** `ADR-003`, **`ADR-007`** (verify MD5-wrapped hashes); `data-model.md` (AspNetUsers).
 **Depends on:** FND-1, FND-2.
@@ -241,8 +272,23 @@ Authorization-Code exchange. **Not started — blocked on Keycloak realm/client/
       command (proves the app's scheduled-job path — alert emails, sitemap; ADR-004).
 - [ ] Secrets via AWS Secrets Manager; no secrets in the repo or images.
 - [ ] The **existing importer/indexer containers and pg_cron are not touched**.
+- [ ] **`TrustHosts` in production** — constrain accepted hosts to `^(.+\.)?workbc\.ca$`.
+      `TRUSTED_PROXIES=*` is set because CloudFront's ingress IPs are large and changing, and the
+      Stratus origin is **directly reachable** (verified), so `X-Forwarded-Host` is otherwise
+      spoofable. Highest-impact consequence is **password-reset link poisoning** once ACCT-4 builds
+      that email with `url()`/`route()` — an attacker triggers a reset for a victim, who receives a
+      genuine email pointing at the attacker's host with a valid token. **Must land before ACCT-4
+      sends any email.** Not enabled yet because a wrong pattern throws
+      `SuspiciousOperationException` on every request, so it needs per-environment values and a
+      smoke test. See ADR-009 "Host spoofing".
+- [ ] **Deploy-time assertion that `APP_ENV` is not `local`.** `routes/dev-preview.php` grants
+      credential-free login as a job seeker *and* as a SuperAdmin. It is correctly double-gated
+      (`app()->environment('local')` **and** file existence) and gitignored — but that makes
+      `APP_ENV` a security control, so fail the deploy rather than trust configuration.
+- [ ] Prod env set: `SESSION_SECURE_COOKIE=true`, correct `APP_URL`, `TRUSTED_PROXIES`.
 
-**Docs:** `ADR-004`; `architecture.md §9`; copilot-instructions (Stack, Security). **Depends on:** FND-1.
+**Docs:** `ADR-004`; **`ADR-009`** (proxy/host/session constraints); `architecture.md §9`;
+copilot-instructions (Stack, Security). **Depends on:** FND-1.
 
 ---
 
