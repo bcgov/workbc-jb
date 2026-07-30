@@ -8,6 +8,7 @@
         "test:a11y": "pa11y-ci"
     },
     "devDependencies": {
+        "@googlemaps/markerclusterer": "^2.6.2",
         "@tailwindcss/vite": "^4.0.0",
         "axios": "^1.11.0",
         "concurrently": "^9.0.1",

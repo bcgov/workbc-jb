@@ -24,6 +24,7 @@
             pins: [],
             map: null,
             infoWindow: null,
+            MarkerClusterer: null, // resolved lazily in loadClusterer(); null = plot markers individually
 
             init() {
                 // Pins are read from a JSON <script> block (see the markup below)
@@ -82,18 +83,17 @@
                 });
             },
 
-            // Marker clustering is provided by the official library; if it fails
-            // to load we still plot the markers individually (graceful degrade).
+            // Clustering comes from our own bundle — app.js exposes the loader
+            // (see its docblock). Always resolves: if the chunk fails or app.js
+            // hasn't run yet, markers are plotted individually.
             loadClusterer() {
-                return new Promise((resolve) => {
-                    if (window.markerClusterer) { resolve(); return; }
-                    const s = document.createElement('script');
-                    s.src = 'https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js';
-                    s.async = true;
-                    s.onload = () => resolve();
-                    s.onerror = () => resolve();
-                    document.head.appendChild(s);
-                });
+                if (typeof window.loadMarkerClusterer !== 'function') {
+                    return Promise.resolve();
+                }
+
+                return window.loadMarkerClusterer()
+                    .then((MarkerClusterer) => { this.MarkerClusterer = MarkerClusterer; })
+                    .catch(() => {});
             },
 
             draw() {
@@ -120,8 +120,8 @@
                     this.map.fitBounds(bounds);
                 }
 
-                if (window.markerClusterer && window.markerClusterer.MarkerClusterer) {
-                    new window.markerClusterer.MarkerClusterer({ map: this.map, markers });
+                if (this.MarkerClusterer) {
+                    new this.MarkerClusterer({ map: this.map, markers });
                 } else {
                     markers.forEach((m) => m.setMap(this.map));
                 }
