@@ -110,6 +110,15 @@ supports arbitrary queue names. Tests: `tests/Unit/Jobs/BaseJobTest.php` (3 pass
       header/footer** for serving the search inside the Drupal iframe, selectable per-request (e.g.
       `?embed=1` or a route/middleware). The full layout is retained for local dev / direct access.
       Embed mode also emits the `postMessage` content-height bridge so the parent frame can auto-size.
+- [ ] **French via page translation** (`ADR-010`). Today's FRANÇAIS toggle is the **Google Translate
+      widget** rewriting the DOM; it reaches the job board only because the current app is inline-
+      injected, and a page translator **cannot** reach into a cross-origin iframe. To keep parity:
+      - Load the translate widget in the embed layout.
+      - Extend the same `postMessage` channel as the height bridge with a language message
+        (`{ type: 'jobboard:lang', lang: 'fr'|'en' }`), so Drupal's toggle drives our document.
+      - **Re-apply translation after Livewire DOM updates** — the widget walks the DOM once, so new
+        search results arrive untranslated otherwise. This is the main implementation risk.
+      - Do **not** add `lang/fr` files or wire `jobs_fr` into search (ADR-010 supersedes needed first).
 - [ ] Internal Blade component library: button, form field (with associated `<label>`), alert,
       pagination — each meeting WCAG 2.1 AA (keyboard, contrast, focus, ARIA where needed).
 - [ ] Livewire installed and demonstrated with one trivial reactive component; Alpine used for a
@@ -125,10 +134,10 @@ supports arbitrary queue names. Tests: `tests/Unit/Jobs/BaseJobTest.php` (3 pass
       (`cors-api-jobboard`) contains CORS only and no security headers (ADR-009).
 - [ ] An automated a11y check (axe or pa11y) runs in CI against the base layout.
 - [ ] Test: the embed response carries `frame-ancestors` with the configured origins and no
-      `X-Frame-Options`.
+      `X-Frame-Options`; the language message applies translation and survives a Livewire update.
 
 **Docs:** copilot-instructions (Frontend, Accessibility); `ADR-002`, `ADR-006` (embed mode),
-`ADR-009` (headers are app-owned; CORS is CDN-owned).
+`ADR-009` (headers are app-owned; CORS is CDN-owned), **`ADR-010`** (French via page translation).
 **Depends on:** FND-1.
 
 ---

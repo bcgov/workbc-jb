@@ -121,6 +121,24 @@ window.addEventListener('message', function (e) {
 });
 ```
 
+**The FRANÇAIS toggle must also notify the frame** (`ADR-010`). Today's toggle is the **Google
+Translate widget** rewriting the DOM; it reaches job-board content only because the current app is
+inline-injected into this document. A page translator **cannot** reach into a cross-origin iframe, so
+without this the Drupal chrome would translate while the framed search stayed English:
+
+```js
+// wherever the ANGLAIS/FRANÇAIS toggle is handled
+var f = document.getElementById('jobboard-search');
+if (f) {
+  f.contentWindow.postMessage(
+    { type: 'jobboard:lang', lang: /* 'fr' | 'en' */ },
+    'https://api-jobboard.workbc.ca'
+  );
+}
+```
+
+Our side runs the widget inside the frame and re-applies it after Livewire updates (FND-4).
+
 ### Surface 2 — account area
 
 Point `jobboard.find_job_account_url` at the app and let the menu/CTAs navigate there directly, rather
