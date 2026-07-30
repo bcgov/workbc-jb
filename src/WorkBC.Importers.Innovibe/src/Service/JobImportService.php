@@ -138,7 +138,7 @@ final class JobImportService
 
         $chk     = $this->db->prepare('SELECT "ApiDate" FROM "ImportedJobsWanted" WHERE "JobId" = ?');
         $del     = $this->db->prepare('SELECT 1 FROM "DeletedJobs" WHERE "JobId" = ? LIMIT 1');
-        $hashChk = $this->db->prepare('SELECT 1 FROM "ImportedJobsWanted" WHERE "HashId" = ? LIMIT 1');
+        $hashChk = $this->db->prepare('SELECT "JobId" FROM "ImportedJobsWanted" WHERE "HashId" = ? LIMIT 1');
         // If a previously-expired job re-appears in the API, drop its stale
         $unexpire = $this->db->prepare('DELETE FROM "ExpiredJobs" WHERE "JobId" = ?');
 
@@ -146,6 +146,16 @@ final class JobImportService
             UPDATE "ImportedJobsWanted" SET
                 "JobPostEnglish" = ?, "ApiDate" = ?, "DateLastImported" = NOW(),
                 "DateLastSeen" = NOW(), "ReIndexNeeded" = TRUE, "HashId" = ?
+            WHERE "JobId" = ?
+        ');
+
+        // Same update but leaves "HashId" untouched — used when the new hash is
+        // already owned by a different row (crc32 collision), where writing it
+        // would violate the unique index IX_ImportedJobsWanted_HashId.
+        $updKeepHash = $this->db->prepare('
+            UPDATE "ImportedJobsWanted" SET
+                "JobPostEnglish" = ?, "ApiDate" = ?, "DateLastImported" = NOW(),
+                "DateLastSeen" = NOW(), "ReIndexNeeded" = TRUE
             WHERE "JobId" = ?
         ');
 
@@ -199,26 +209,31 @@ final class JobImportService
                 continue;
             }
 
-            // Duplicate hash check
+            // Duplicate hash check: who (if anyone) already owns this hash?
             $hashChk->execute([$hashId]);
-            if ($hashChk->fetchColumn()) {
-                $chk->execute([$id]);
-                $existingRow = $chk->fetch();
-                if (!$existingRow) {
-                    $this->skipped++;
-                    $progress .= 'H';
-                    $seen[] = $id;
-                    continue;
-                }
-                $row = $existingRow;
-            } else {
-                $chk->execute([$id]);
-                $row = $chk->fetch();
+            $hashOwner = $hashChk->fetchColumn();
+            $hashTaken = $hashOwner !== false && (string) $hashOwner !== $id;
+
+            $chk->execute([$id]);
+            $row = $chk->fetch();
+
+            // No row of our own and the hash belongs to another posting → duplicate
+            if (!$row && $hashTaken) {
+                $this->skipped++;
+                $progress .= 'H';
+                $seen[] = $id;
+                continue;
             }
 
             if ($row) {
                 if (($row['ApiDate'] ?? '') !== $apiDate) {
-                    $upd->execute([$json, $apiDate, $hashId, $id]);
+                    if ($hashTaken) {
+                        // Overwrite the content but keep the row's existing
+                        // HashId — the new hash is taken by another row.
+                        $updKeepHash->execute([$json, $apiDate, $id]);
+                    } else {
+                        $upd->execute([$json, $apiDate, $hashId, $id]);
+                    }
                     $unexpire->execute([$id]);
                     $this->updated++;
                     $progress .= 'U';
