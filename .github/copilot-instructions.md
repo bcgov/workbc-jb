@@ -93,9 +93,22 @@ resources/views/         (Blade)
 - Acceptance criteria met and verified. Follows this file.
 - Unit test per Service method; feature test per API endpoint (happy + ≥1 failure);
   Livewire component tests for interactive components.
-- `php artisan test` passes; coverage not reduced. Accessibility verified if UI.
+- Tests pass; coverage not reduced. Accessibility verified if UI. **Run them in the container** —
+  this project runs on Laravel Sail, so a bare `php artisan test` fails with `php: command not found`:
+  ```bash
+  docker compose exec -T laravel.test php artisan test          # all
+  docker compose exec -T laravel.test php artisan test --filter=SomeTest
+  ```
+  (`docker compose up -d` first if the stack is down.)
 - PR links the Jira ticket (`Closes JOBS-123`), explains what/why, conventional-commit title,
-  one ticket per PR. Reviewed, approved, merged to `main`, deployed.
+  one ticket per PR. Reviewed, approved, merged to **`develop`** (the integration branch — *not*
+  `main`), deployed.
+
+## Branching
+- **Code** → feature branch off `develop`, merged back with `--no-ff` (e.g. `srch-9-map`,
+  `acct-3-alerts`). One story per branch.
+- **Docs-only** → commit directly on `develop`.
+- Never commit directly to `main`.
 
 ## Before opening a PR — self-check (confirm ALL)
 - [ ] No derived field computed outside ingestion; indexer copies, doesn't recompute.
@@ -107,5 +120,8 @@ resources/views/         (Blade)
 - [ ] No invented domain values: enum cases match `WorkBC.Data/Enums/*.cs`; every column/FK verified
       against the real schema; enums cast tolerantly; fixtures mirror real columns + include edge values.
 - [ ] Alpine for view state, Livewire for data (no needless server round-trips).
-- [ ] Tests written; `php artisan test` passes; a11y verified if UI.
-- [ ] PR links Jira ticket; scope is one ticket.
+- [ ] Tests written and passing via `docker compose exec -T laravel.test php artisan test`;
+      a11y verified if UI.
+- [ ] Story checkboxes in `docs/epics/` ticked and a dated status line added — a story that reads
+      "not built" when it is gets rebuilt or skipped next time.
+- [ ] PR links Jira ticket; scope is one ticket; branch targets `develop`.
