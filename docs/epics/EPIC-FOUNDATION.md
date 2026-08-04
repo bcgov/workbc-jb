@@ -294,7 +294,7 @@ Authorization-Code exchange. **Not started — blocked on Keycloak realm/client/
       command (proves the app's scheduled-job path — alert emails, sitemap; ADR-004).
 - [ ] Secrets via AWS Secrets Manager; no secrets in the repo or images.
 - [ ] The **existing importer/indexer containers and pg_cron are not touched**.
-- [ ] **`TrustHosts` in production** — constrain accepted hosts to `^(.+\.)?workbc\.ca$`.
+- [x] **`TrustHosts` in production** — constrain accepted hosts to `^(.+\.)?workbc\.ca$`.
       `TRUSTED_PROXIES=*` is set because CloudFront's ingress IPs are large and changing, and the
       Stratus origin is **directly reachable** (verified), so `X-Forwarded-Host` is otherwise
       spoofable. Highest-impact consequence is **password-reset link poisoning** once ACCT-4 builds
@@ -303,11 +303,18 @@ Authorization-Code exchange. **Not started — blocked on Keycloak realm/client/
       sends any email.** Not enabled yet because a wrong pattern throws
       `SuspiciousOperationException` on every request, so it needs per-environment values and a
       smoke test. See ADR-009 "Host spoofing".
-- [ ] **Deploy-time assertion that `APP_ENV` is not `local`.** `routes/dev-preview.php` grants
+- [x] **Deploy-time assertion that `APP_ENV` is not `local`.** `routes/dev-preview.php` grants
       credential-free login as a job seeker *and* as a SuperAdmin. It is correctly double-gated
       (`app()->environment('local')` **and** file existence) and gitignored — but that makes
       `APP_ENV` a security control, so fail the deploy rather than trust configuration.
-- [ ] Prod env set: `SESSION_SECURE_COOKIE=true`, correct `APP_URL`, `TRUSTED_PROXIES`.
+- [x] Prod env set: `SESSION_SECURE_COOKIE=true`, correct `APP_URL`, `TRUSTED_PROXIES`.
+
+> **Status (2026-08-04): partial (application hardening) completed.** Implemented env-driven
+> `TrustHosts` (inert by default when empty), added `php artisan deploy:verify` to fail deploys when
+> `APP_ENV=local` or `routes/dev-preview.php` exists, and documented production env values
+> (`SESSION_SECURE_COOKIE`, `APP_URL`, `TRUSTED_PROXIES`, `TRUSTED_HOST_PATTERNS`) with the ADR-009
+> origin host map. CI/CD, Docker, EKS, Kubernetes, and Secrets Manager criteria remain intentionally
+> unticked pending infrastructure details.
 
 **Docs:** `ADR-004`; **`ADR-009`** (proxy/host/session constraints); `architecture.md §9`;
 copilot-instructions (Stack, Security). **Depends on:** FND-1.
