@@ -127,15 +127,57 @@ emails; **cadence is configured by Kubernetes CronJob(s)**.
 ---
 
 ## ACCT-5 — Recommended jobs
-**Description:** Personalized recommendations from the seeker's saved-job signals.
-- [ ] Builds a boost-weighted OpenSearch query from the user's saved-job **NOC 2021 / employers /
-      titles / city** (with the per-item boost increments), `minimum_should_match`, and
-      `IgnoreJobIdList` (exclude already-saved).
-- [ ] Reads OpenSearch only; respects the base `ExpireDate >= now` filter.
-- [ ] Empty-state when the user has no saved jobs / no matches.
-- [ ] Tests: query composition from saved signals; excludes saved jobs; empty state.
+**Description:** Personalized recommendations from the seeker's saved-job signals. Also supplies the
+**Recommended Jobs count** that ACCT-1's Jobs card currently omits.
+- [ ] **Signal aggregation** from the seeker's saved jobs (see Build brief for the exact shape):
+      the **200 most recent** non-deleted saved jobs, grouped into count maps of NOC 2021 code,
+      employer name and job title — **lowercased for grouping** — plus the seeker's city from their
+      profile and their equity-group flags from `JobSeekerFlags`.
+- [ ] **Boost-weighted OpenSearch query**: one `should` clause per signal, boosts exactly per the
+      table below, `minimum_should_match: 1`, and an `IgnoreJobIdList` that **excludes the saved
+      jobs the recommendations were derived from**.
+- [ ] Reads OpenSearch only (Rule B / constraint #1); respects the base `ExpireDate >= now` filter.
+- [ ] **Per-result `Reason` sentence** explaining why each job was recommended, and `Score` from the
+      hit. These are decoration fields not present in the index (`contracts.md §2.1`).
+- [ ] Empty-state when the seeker has no saved jobs, and a distinct one when there are no matches.
+- [ ] Tests: query composition from saved signals (boost values asserted); count bonus scales with
+      repeat saves; saved jobs excluded; reason sentences; both empty states.
 
-**Docs:** `architecture.md §7`, current `RecommendedJobsQuery`. **Depends on:** ACCT-2, FND-7.
+**Build brief (extracted from the .NET source, 2026-08-04 — these are facts, do not re-derive):**
+
+Boost constants — `WorkBC.ElasticSearch.Search/Boosts/RecomendedJobsBoost.cs` (note the misspelled
+filename):
+
+| Signal | Base boost | Per-repeat bonus |
+|---|---|---|
+| NOC 2021 (`Noc2021`) | `1.0` | `+0.01` per saved job with that NOC |
+| Employer (`EmployerName.normalize`) | `1.0` | `+0.01` per saved job with that employer |
+| Title (`Title.normalize`) | `1.0` | `+0.01` per saved job with that title |
+| City (`City.normalize`) | `1.0` | — |
+| Each equity group (`IsApprentice`, `IsVeteran`, `IsAboriginal`, `IsMatureWorker`, `IsNewcomer`, `IsDisability`, `IsStudent`, `IsVismin`, `IsYouth`) | `0.25` | — |
+
+`minimum_should_match = 1`; `MaxSavedJobs = 200`. The bonus is applied as
+`boost = base + bonus * count` (`RecommendedJobsQuery.cs:161, 175, 189`) — so an employer saved
+twice scores `1.02`.
+
+Other verified details:
+- **Index field names differ from our search fields**: the equity terms are `IsAboriginal`,
+  `IsMatureWorker`, `IsVismin`, `IsDisability` — *not* the `SearchIs*` names used by SRCH-5.
+  Verify each against `docs/opensearch/` before use.
+- **Virtual jobs get no city boost**: when the city clause is added, the query also adds
+  `{"term":{"WorkplaceType.Id":{"value":15141,"boost":0}}}` (`RecommendedJobsQuery.cs:148`).
+- **Signals are lowercased before grouping** (`RecommendedJobsService.cs:138-155`) — employer and
+  title only; NOC is numeric, with a null NOC bucketed as `0`.
+- **Equity flags come from `JobSeekerFlags`**, not the search filters; each group is only boosted
+  when the seeker has that flag set.
+- **`Reason` is a composed sentence**, one clause per matching signal
+  (`RecommendedJobsService.cs:310-365`), e.g. *"based on having the same NOC code as two of your
+  saved jobs"* — the count is spelled as a word. Multiple clauses combine; equity groups append a
+  separate "as a student"-style phrase. Reproduce the shape, not necessarily the exact grammar.
+
+**Docs:** `architecture.md §7`, `contracts.md §2.1` (Score/Reason are decoration fields),
+`data-model.md` (SavedJobs, JobSeekerFlags). **Depends on:** ACCT-2, FND-7.
+**Related:** ACCT-1 (its Jobs card is waiting on this count).
 
 ---
 
