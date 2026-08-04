@@ -3,11 +3,9 @@
     use Illuminate\Support\Carbon;
 @endphp
 
+<x-account.layout page-title="Saved jobs" page-description="Review jobs you saved, update notes, or remove jobs from your list.">
 <section aria-labelledby="saved-jobs-heading" class="space-y-6">
-    <header class="space-y-1">
-        <h1 id="saved-jobs-heading" class="text-3xl font-bold tracking-tight text-slate-900">Saved jobs</h1>
-        <p class="text-slate-700">Review jobs you saved, update notes, or remove jobs from your list.</p>
-    </header>
+    <h2 id="saved-jobs-heading" class="text-2xl font-semibold tracking-tight text-slate-900">Saved jobs list</h2>
 
     <p class="sr-only" role="status" aria-live="polite" aria-atomic="true">{{ $statusMessage }}</p>
 
@@ -96,3 +94,4 @@
         </ul>
     @endif
 </section>
+</x-account.layout>

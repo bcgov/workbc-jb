@@ -44,4 +44,10 @@ return [
         'geocoding_key' => env('GOOGLE_MAPS_GEOCODING_KEY'),
     ],
 
+    'workbc' => [
+        // ACCT-1 dashboard resources use relative WorkBC paths in SystemSettings.
+        // Resolve them against the public WorkBC host, not this app's host.
+        'base_url' => env('WORKBC_PUBLIC_BASE_URL', 'https://www.workbc.ca'),
+    ],
+
 ];
