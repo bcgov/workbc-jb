@@ -71,12 +71,12 @@ persistent navigation, and the admin-managed copy that surrounds them.
 
 ## ACCT-2 — Saved jobs
 **Description:** Save/unsave jobs with an optional note; list them.
-- [ ] Save/unsave toggle (Livewire) from search results + job detail; writes `SavedJobs`
+- [x] Save/unsave toggle (Livewire) from search results + job detail; writes `SavedJobs`
       (`AspNetUserId`, `JobId`, `DateSaved`).
-- [ ] 800-char `Note` with `NoteUpdatedDate`; add/edit inline.
-- [ ] Soft-delete (unsave) sets `IsDeleted`+`DateDeleted` (shared trait); list excludes deleted.
-- [ ] List shows current job data (join to `Jobs`); handles jobs that later expired.
-- [ ] Tests: save, note add/edit, unsave (soft), list scoping, 800-char validation.
+- [x] 800-char `Note` with `NoteUpdatedDate`; add/edit inline.
+- [x] Soft-delete (unsave) sets `IsDeleted`+`DateDeleted` (shared trait); list excludes deleted.
+- [x] List shows current job data (join to `Jobs`); handles jobs that later expired.
+- [x] Tests: save, note add/edit, unsave (soft), list scoping, 800-char validation.
 
 **Docs:** `data-model.md` (SavedJobs), `glossary.md` (soft-delete). **Depends on:** ACCT-1, SRCH-1/7.
 
@@ -84,15 +84,15 @@ persistent navigation, and the admin-managed copy that surrounds them.
 
 ## ACCT-3 — Job alerts management (create / edit / list / delete)
 **Description:** Create and manage saved-search alerts, reusing the search filter UI.
-- [ ] Create/edit reuses the **search filter components** in "alert" mode; stores the criteria as
+- [x] Create/edit reuses the **search filter components** in "alert" mode; stores the criteria as
       **`JobSearchFilters` JSON** in `JobAlerts.JobSearchFilters` (+ `JobSearchFiltersVersion`),
       plus `Title`, `AlertFrequency` (daily/weekly/biweekly/monthly), `UrlParameters`.
-- [ ] **Live match-count preview** (Livewire) — runs the current filters against OpenSearch and shows
+- [x] **Live match-count preview** (Livewire) — runs the current filters against OpenSearch and shows
       the total (read-only; `PageSize=0`).
-- [ ] List active alerts; **delete** = soft-delete (`IsDeleted`+`DateDeleted`) **and** writes a
+- [x] List active alerts; **delete** = soft-delete (`IsDeleted`+`DateDeleted`) **and** writes a
       `JobSeekerChangeLog` audit row (preserve this side effect).
-- [ ] `JobSearchFilters` version 0/1 handled (contracts.md §1); `UrlParameters` stays alert/search-compatible (SRCH-6).
-- [ ] Tests: create→stored JSON round-trips; edit; live count; delete soft + audit row written.
+- [x] `JobSearchFilters` version 0/1 handled (contracts.md §1); `UrlParameters` stays alert/search-compatible (SRCH-6).
+- [x] Tests: create→stored JSON round-trips; edit; live count; delete soft + audit row written.
 
 **Docs:** `contracts.md §1`, `data-model.md` (JobAlerts), `glossary.md`. **Depends on:** ACCT-1, FND-7, SRCH-1..6.
 

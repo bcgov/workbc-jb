@@ -19,15 +19,15 @@ FND-7 depends on FND-1 (+ `contracts.md`).
 the **existing** PostgreSQL, Redis, and OpenSearch — no schema creation.
 
 **Acceptance criteria**
-- [ ] Laravel 12, PHP 8.3; Livewire + Filament 4 installed; **no Inertia/React** packages.
-- [ ] `config/app.php` timezone = **`America/Vancouver`**; a test fails if it changes (Rule F).
-- [ ] PostgreSQL connection points at the existing database; `php artisan migrate:status` runs
+- [x] Laravel 12, PHP 8.3; Livewire + Filament 4 installed; **no Inertia/React** packages.
+- [x] `config/app.php` timezone = **`America/Vancouver`**; a test fails if it changes (Rule F).
+- [x] PostgreSQL connection points at the existing database; `php artisan migrate:status` runs
       against Laravel's **own** `migrations` table (does not touch `__EFMigrationsHistory` or any
       existing table).
-- [ ] Redis configured as **cache, session, and queue** driver (no DB `jobs`/`sessions`/`cache` tables).
-- [ ] OpenSearch client (`opensearch-project/opensearch-php` or equivalent) wired; a health check
+- [x] Redis configured as **cache, session, and queue** driver (no DB `jobs`/`sessions`/`cache` tables).
+- [x] OpenSearch client (`opensearch-project/opensearch-php` or equivalent) wired; a health check
       command pings the cluster and lists the `jobs_en`/`jobs_fr` indexes.
-- [ ] A `README` documents local run (existing-DB pointer, seeded/real data expectations).
+- [x] A `README` documents local run (existing-DB pointer, seeded/real data expectations).
 
 **Docs:** copilot-instructions (Stack, Enforced constraints); `data-model.md §0, §5`; `architecture.md §9`.
 
@@ -38,16 +38,16 @@ the **existing** PostgreSQL, Redis, and OpenSearch — no schema creation.
 epics need first.
 
 **Acceptance criteria**
-- [ ] Models for: `Job`, `JobSeeker` (`AspNetUsers`), `SavedJob`, `JobAlert`, `JobSource`,
+- [x] Models for: `Job`, `JobSeeker` (`AspNetUsers`), `SavedJob`, `JobAlert`, `JobSource`,
       `Location`, `Region`, `Industry`, `NocCode`, `NocCode2021`, `SystemSetting`, `AdminUser`,
       `JobSeekerFlags`.
-- [ ] Each model sets `$table` (PascalCase), `$timestamps = false`, correct `$primaryKey`/`$keyType`/
+- [x] Each model sets `$table` (PascalCase), `$timestamps = false`, correct `$primaryKey`/`$keyType`/
       `$incrementing`, and casts (bools, `datetime`, `Salary` decimal:2, enums).
-- [ ] `SavedJob`/`JobAlert` use a shared **soft-delete trait** on `IsDeleted`+`DateDeleted`
+- [x] `SavedJob`/`JobAlert` use a shared **soft-delete trait** on `IsDeleted`+`DateDeleted`
       (not Laravel `SoftDeletes`).
-- [ ] Composite-PK tables (`JobStats`, `JobSeekerStats`, `ReportPersistenceControl`) are **not**
+- [x] Composite-PK tables (`JobStats`, `JobSeekerStats`, `ReportPersistenceControl`) are **not**
       modeled as standard Eloquent (query-builder only) — documented in code.
-- [ ] **Golden-read tests:** for each model, assert reads against known real rows (counts, casts,
+- [x] **Golden-read tests:** for each model, assert reads against known real rows (counts, casts,
       one relationship traversal) — proves the mapping before any writes.
 
 **Build notes (schema verified against the restored real DB, 2026-07-24):**
@@ -105,7 +105,7 @@ supports arbitrary queue names. Tests: `tests/Unit/Jobs/BaseJobTest.php` (3 pass
 **Description:** The server-rendered layout and a small internal, accessible component set.
 
 **Acceptance criteria**
-- [ ] Base Blade layout (header/footer/nav), responsive, no horizontal body scroll.
+- [x] Base Blade layout (header/footer/nav), responsive, no horizontal body scroll.
 - [ ] **Chrome-less "embed" layout mode** (per `ADR-006`): a layout variant with **no WorkBC
       header/footer** for serving the search inside the Drupal iframe, selectable per-request (e.g.
       `?embed=1` or a route/middleware). The full layout is retained for local dev / direct access.
@@ -119,9 +119,9 @@ supports arbitrary queue names. Tests: `tests/Unit/Jobs/BaseJobTest.php` (3 pass
       - **Re-apply translation after Livewire DOM updates** — the widget walks the DOM once, so new
         search results arrive untranslated otherwise. This is the main implementation risk.
       - Do **not** add `lang/fr` files or wire `jobs_fr` into search (ADR-010 supersedes needed first).
-- [ ] Internal Blade component library: button, form field (with associated `<label>`), alert,
+- [x] Internal Blade component library: button, form field (with associated `<label>`), alert,
       pagination — each meeting WCAG 2.1 AA (keyboard, contrast, focus, ARIA where needed).
-- [ ] Livewire installed and demonstrated with one trivial reactive component; Alpine used for a
+- [x] Livewire installed and demonstrated with one trivial reactive component; Alpine used for a
       trivial view-state toggle (documents the "Alpine for view / Livewire for data" rule).
 - [ ] **Security response headers.** Verified 2026-07-29: the app currently sets **none**, and
       CloudFront sets none either — so today any site can frame our authenticated pages
@@ -132,7 +132,7 @@ supports arbitrary queue names. Tests: `tests/Unit/Jobs/BaseJobTest.php` (3 pass
       - `X-Content-Type-Options: nosniff` and a `Referrer-Policy`.
       Note these must come from the **app**: the CloudFront response-headers policy
       (`cors-api-jobboard`) contains CORS only and no security headers (ADR-009).
-- [ ] An automated a11y check (axe or pa11y) runs in CI against the base layout.
+- [x] An automated a11y check (axe or pa11y) runs in CI against the base layout.
 - [ ] Test: the embed response carries `frame-ancestors` with the configured origins and no
       `X-Frame-Options`; the language message applies translation and survives a Livewire update.
 
@@ -147,19 +147,19 @@ supports arbitrary queue names. Tests: `tests/Unit/Jobs/BaseJobTest.php` (3 pass
 password verifier that rehashes to bcrypt on login. Email-only reset.
 
 **Acceptance criteria**
-- [ ] `JobSeeker` implements `Authenticatable` (`getAuthPassword()` → `PasswordHash`) — **done in
+- [x] `JobSeeker` implements `Authenticatable` (`getAuthPassword()` → `PasswordHash`) — **done in
       FND-2**; here wire the session guard + a custom user-provider/hasher.
-- [ ] The verifier accepts the **three** stored formats and, on **any** success, rehashes to
+- [x] The verifier accepts the **three** stored formats and, on **any** success, rehashes to
       **bcrypt/argon2** and overwrites `PasswordHash` (+ regenerate `SecurityStamp`):
       - **v3** (`0x01`, base64 `AQAAAA…`) → PBKDF2-HMAC-SHA256, params read from the blob;
       - **v2** (`0x00`) → PBKDF2-HMAC-SHA1, 1000 iters, 16-byte salt, 32-byte subkey;
       - **MD5-marker** (`0xF0`, base64 `8AAAAA…`) → **verify per ADR-007** (flip byte 0 to `0x01`, then
         verify the v3 blob against `md5_hex(password)`). MD5 is **verification-only**, never used to
         create a hash.
-- [ ] Truly unrecognized format (not `0x00`/`0x01`/`0xF0`, or an undecodable blob) → **force-reset** path.
-- [ ] Registration + **email verification** (`VerificationGuid`) flow; **email-only** password reset
+- [x] Truly unrecognized format (not `0x00`/`0x01`/`0xF0`, or an undecodable blob) → **force-reset** path.
+- [x] Registration + **email verification** (`VerificationGuid`) flow; **email-only** password reset
       (`password_reset_tokens`); **no** security-question flow.
-- [ ] `NormalizedEmail`/`NormalizedUserName` maintained on writes (Identity uses `ToUpperInvariant()`).
+- [x] `NormalizedEmail`/`NormalizedUserName` maintained on writes (Identity uses `ToUpperInvariant()`).
 - [ ] **Rate limiting** on every auth route — login, register, forgot-password, reset-password.
       Laravel's `web` group has **no** throttle by default (unlike `api`), so these are currently
       unlimited: a public login over a table where **62% of hashes are legacy MD5-derived**
@@ -171,7 +171,7 @@ password verifier that rehashes to bcrypt on login. Email-only reset.
       after repeated failures. Port that behaviour: increment `AccessFailedCount` on failure, clear
       it on success, honour `LockoutEnd`, and refuse login while locked. Without this we silently
       drop a security control the current system has.
-- [ ] Feature tests: **v3** login → success + bcrypt rehash; **`0xF0`** login → success + rehash;
+- [x] Feature tests: **v3** login → success + bcrypt rehash; **`0xF0`** login → success + rehash;
       unrecognized hash → reset path; register→verify; reset; **throttle returns 429 after the
       limit**; **lockout blocks login and clears on success**.
 
@@ -214,20 +214,20 @@ this story (FND-6) delivers everything **except** the OIDC handshake. **FND-6b**
 handshake itself, once real Keycloak credentials exist.
 
 **Acceptance criteria**
-- [ ] A dedicated `admin` guard (session-based); provider bound to `App\Models\AdminUser` (FND-2).
+- [x] A dedicated `admin` guard (session-based); provider bound to `App\Models\AdminUser` (FND-2).
       `AdminUser` implements `Authenticatable` but the provider has **no password check** — there is
       no credential to check (`AdminUsers` has none). It supports direct session login only
       (`Auth::guard('admin')->login($adminUser)`) — the shape FND-6b's OIDC callback will call.
-- [ ] Filament's admin panel authenticates via the `admin` guard (not the default `web`/job-seeker guard).
-- [ ] `AdminUsers.AdminLevel` (`Disabled`/`Reporting`/`Admin`/`SuperAdmin`) drives Filament navigation
+- [x] Filament's admin panel authenticates via the `admin` guard (not the default `web`/job-seeker guard).
+- [x] `AdminUsers.AdminLevel` (`Disabled`/`Reporting`/`Admin`/`SuperAdmin`) drives Filament navigation
       + resource access policies (ADM-1 detail).
-- [ ] Impersonation scaffold: a Filament action starts an impersonated **seeker session** and writes
+- [x] Impersonation scaffold: a Filament action starts an impersonated **seeker session** and writes
       an `ImpersonationLog` row (`Token`, `AspNetUserId`, `AdminUserId`, `DateTokenCreated`); ending
       impersonation returns to the admin session (full flow ADM-4; the audit-write + session-switch
       exists here).
-- [ ] Local/demo access: the same gitignored, `local`-env-guarded pattern as the job-seeker portal
+- [x] Local/demo access: the same gitignored, `local`-env-guarded pattern as the job-seeker portal
       (`routes/dev-preview.php`) — logs in a chosen `AdminUser` directly. No schema change.
-- [ ] Feature tests: guard resolves an `AdminUser`; role gate denies a lower `AdminLevel`; Filament
+- [x] Feature tests: guard resolves an `AdminUser`; role gate denies a lower `AdminLevel`; Filament
       panel unreachable when logged out (of the `admin` guard specifically); impersonation writes the
       audit row + switches the session; ending impersonation returns cleanly.
 
@@ -257,15 +257,15 @@ Authorization-Code exchange. **Not started — blocked on Keycloak realm/client/
 **Description:** The search building blocks the public search and Drupal API will use.
 
 **Acceptance criteria**
-- [ ] `JobSearchFilters` **value object** (`Castable`) with **all** fields per `contracts.md §1`,
+- [x] `JobSearchFilters` **value object** (`Castable`) with **all** fields per `contracts.md §1`,
       exact PascalCase names; deserializes version **0 and 1**; rejects unknown fields.
-- [ ] `App\Search\Queries\JobSearchQuery` builds the OpenSearch body as a **structured array**
+- [x] `App\Search\Queries\JobSearchQuery` builds the OpenSearch body as a **structured array**
       (no string concatenation); base filter `ExpireDate >= now/d` (America/Vancouver); the 11 sort
       orders and paging.
-- [ ] Result DTO mapping (count, result[], the job fields per `contracts.md §2.1`).
-- [ ] **JSON-diff test harness:** for a corpus of recorded filter inputs, the PHP query body matches
+- [x] Result DTO mapping (count, result[], the job fields per `contracts.md §2.1`).
+- [x] **JSON-diff test harness:** for a corpus of recorded filter inputs, the PHP query body matches
       the reference bodies byte-for-byte (or normalized-JSON equal).
-- [ ] Keyword parser ported with the documented BRD examples as unit tests.
+- [x] Keyword parser ported with the documented BRD examples as unit tests.
 
 **Docs:** `contracts.md §1–2`; `architecture.md §7`; `glossary.md`. **Depends on:** FND-1.
 
