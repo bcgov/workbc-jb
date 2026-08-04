@@ -4,6 +4,7 @@ namespace Tests\Feature\Account;
 
 use App\Models\Enums\AlertFrequency;
 use App\Models\JobSeeker;
+use App\Services\Settings\SystemSettingsService;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -77,6 +78,88 @@ class JobSeekerDashboardTest extends TestCase
         $response->assertRedirect('/login');
     }
 
+    public function test_dashboard_groups_counts_as_links_and_has_no_dead_account_settings_link(): void
+    {
+        $this->seedUsers();
+
+        $user = JobSeeker::query()->findOrFail('user-a');
+
+        $this->seedSavedJobs('user-a', 2, 0);
+        $this->seedJobAlerts('user-a', [['frequency' => AlertFrequency::Daily->value, 'deleted' => false]]);
+        $this->seedSavedCareerProfiles('user-a', 4, 0);
+        $this->seedSavedIndustryProfiles('user-a', 5, 0);
+
+        $response = $this->actingAs($user, 'web')->get('/account');
+
+        $response->assertOk()
+            ->assertSee('Jobs')
+            ->assertSee('Careers &amp; industries', false)
+            ->assertSee('Manage account')
+            ->assertSee('href="'.route('account.saved-jobs').'"', false)
+            ->assertSee('href="'.route('account.alerts').'"', false)
+            ->assertSee('href="'.route('account.profiles').'"', false)
+            ->assertDontSee('/account/settings', false)
+            ->assertSee('Personal settings (coming soon)');
+
+        $html = $response->getContent();
+
+        $this->assertMetricCount($html, 'saved-jobs-count', 2);
+        $this->assertMetricCount($html, 'active-alerts-count', 1);
+        $this->assertMetricCount($html, 'saved-career-profiles-count', 4);
+        $this->assertMetricCount($html, 'saved-industry-profiles-count', 5);
+    }
+
+    public function test_dashboard_reads_copy_from_system_settings_and_caches_until_invalidation(): void
+    {
+        $this->seedUsers();
+        $this->seedDashboardSettings([
+            'introText' => '<p>Intro <strong>copy</strong><script>alert(1)</script></p>',
+            'jobsDescription' => '<p>Jobs area description.</p>',
+            'careersDescription' => '<p>Careers area description.</p>',
+            'accountDescription' => '<p>Account area description.</p>',
+            'newAccountMessageTitle' => 'Welcome to your account',
+            'newAccountMessageBody' => '<p>This is your first visit.</p>',
+            'notification1Title' => 'Service update',
+            'notification1Body' => '<p>Maintenance this weekend.</p>',
+            'notification1Enabled' => '1',
+            'notification2Title' => 'Hidden notification',
+            'notification2Body' => '<p>Should not render.</p>',
+            'notification2Enabled' => '0',
+            'resource1Title' => 'High opportunity occupations',
+            'resource1Body' => '<p>Explore labour market insights.</p>',
+            'resource1Url' => '/research-labour-market/high-opportunity-occupations',
+        ]);
+
+        $user = JobSeeker::query()->findOrFail('user-a');
+
+        $first = $this->actingAs($user, 'web')->get('/account');
+
+        $first->assertOk()
+            ->assertSee('Welcome to your account')
+            ->assertSee('Service update')
+            ->assertDontSee('Hidden notification')
+            ->assertSee('Intro', false)
+            ->assertSee('Jobs area description.', false)
+            ->assertSee('High opportunity occupations')
+            ->assertSee('https://www.workbc.ca/research-labour-market/high-opportunity-occupations', false)
+            ->assertDontSee('alert(1)');
+
+        DB::table('SystemSettings')
+            ->where('Name', 'jbAccount.dashboard.introText')
+            ->update(['Value' => '<p>Updated intro after first render.</p>']);
+
+        $cached = $this->actingAs($user, 'web')->get('/account');
+        $cached->assertOk()
+            ->assertSee('Intro', false)
+            ->assertDontSee('Updated intro after first render.', false);
+
+        app(SystemSettingsService::class)->invalidateCache();
+
+        $fresh = $this->actingAs($user, 'web')->get('/account');
+        $fresh->assertOk()
+            ->assertSee('Updated intro after first render.', false);
+    }
+
     private function assertMetricCount(string $html, string $testId, int $count, bool $shouldExist = true): void
     {
         $pattern = '/data-testid="'.preg_quote($testId, '/').'"[^>]*>\s*'.preg_quote((string) $count, '/').'\s*</';
@@ -98,12 +181,22 @@ class JobSeekerDashboardTest extends TestCase
         Schema::create('AspNetUsers', function (Blueprint $table): void {
             $table->string('Id')->primary();
             $table->string('UserName')->nullable();
+            $table->string('FirstName')->nullable();
             $table->string('NormalizedUserName')->nullable();
             $table->string('Email')->nullable();
             $table->string('NormalizedEmail')->nullable();
             $table->string('PasswordHash')->nullable();
             $table->string('SecurityStamp')->nullable();
             $table->boolean('EmailConfirmed')->default(true);
+        });
+
+        Schema::create('SystemSettings', function (Blueprint $table): void {
+            $table->string('Name')->primary();
+            $table->text('Value')->nullable();
+            $table->integer('FieldType')->default(0);
+            $table->text('DefaultValue')->nullable();
+            $table->integer('ModifiedByAdminUserId')->nullable();
+            $table->dateTime('DateUpdated')->nullable();
         });
 
         Schema::create('SavedJobs', function (Blueprint $table): void {
@@ -141,6 +234,7 @@ class JobSeekerDashboardTest extends TestCase
         Schema::dropIfExists('SavedCareerProfiles');
         Schema::dropIfExists('JobAlerts');
         Schema::dropIfExists('SavedJobs');
+        Schema::dropIfExists('SystemSettings');
         Schema::dropIfExists('AspNetUsers');
     }
 
@@ -150,12 +244,30 @@ class JobSeekerDashboardTest extends TestCase
             DB::table('AspNetUsers')->insert([
                 'Id' => $id,
                 'UserName' => $id.'@example.com',
+                'FirstName' => $id === 'user-a' ? 'Alex' : 'Bryn',
                 'NormalizedUserName' => mb_strtoupper($id.'@example.com', 'UTF-8'),
                 'Email' => $id.'@example.com',
                 'NormalizedEmail' => mb_strtoupper($id.'@example.com', 'UTF-8'),
                 'PasswordHash' => 'unused-hash',
                 'SecurityStamp' => 'stamp-'.$id,
                 'EmailConfirmed' => true,
+            ]);
+        }
+    }
+
+    /**
+     * @param  array<string, string>  $values
+     */
+    private function seedDashboardSettings(array $values): void
+    {
+        foreach ($values as $name => $value) {
+            DB::table('SystemSettings')->insert([
+                'Name' => 'jbAccount.dashboard.'.$name,
+                'Value' => $value,
+                'FieldType' => 5,
+                'DefaultValue' => null,
+                'ModifiedByAdminUserId' => null,
+                'DateUpdated' => now(),
             ]);
         }
     }

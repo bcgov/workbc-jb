@@ -27,32 +27,32 @@ persistent navigation, and the admin-managed copy that surrounds them.
 
 **Layout parity (added 2026-07-30 — see Status below).** Compared against the live .NET account page:
 
-- [ ] **No dead navigation.** The dashboard currently links to `/account/profiles` and
+- [x] **No dead navigation.** The dashboard currently links to `/account/profiles` and
       `/account/settings`, which both **404** today (they arrive with ACCT-6 / ACCT-7). Either ship
       the target or hide the link — never link to a 404 from our own navigation.
-- [ ] **Persistent account navigation** on *every* account page, not just the dashboard. Legacy has a
+- [x] **Persistent account navigation** on *every* account page, not just the dashboard. Legacy has a
       standing bar — `Account Profile ｜ Jobs ▾ ｜ Careers & Industries ▾ ｜ Manage Account ▾` — plus a
       greeting ("Hello, {FirstName}"). Today you cannot get from Saved Jobs to Alerts without
       returning to the dashboard. Extract it as a shared account layout the other ACCT pages use.
-- [ ] **Group the counts, and make the count the link.** Legacy uses three thematic cards, each with a
+- [x] **Group the counts, and make the count the link.** Legacy uses three thematic cards, each with a
       heading, a description and count rows that *are* the links:
       - **Jobs** → Saved Jobs, Recommended Jobs *(count arrives with ACCT-5)*, Job Alerts
       - **Careers & Industries** → Saved Career Profiles, Saved Industry Profiles
       - **Manage Account** → Personal Settings
 
       Ours renders four flat stat tiles *plus* a separate "Go to" link row — the same concept twice.
-- [ ] **`SystemSettings` read-through service** (cached, explicit invalidation per `architecture.md §9`).
+- [x] **`SystemSettings` read-through service** (cached, explicit invalidation per `architecture.md §9`).
       **Nothing in the app reads `SystemSettings` today** — only the model, its enum and an `AdminUser`
       relation exist — so every piece of admin-managed copy below is currently missing. This service is
       the first consumer and is reusable; **ADM-7** owns the editor that writes these values.
-- [ ] **Admin-managed dashboard copy**, from the 21 `jbAccount.dashboard.*` keys (verified in the real
+- [x] **Admin-managed dashboard copy**, from the 21 `jbAccount.dashboard.*` keys (verified in the real
       DB):
       - `introText`, `jobsDescription`, `careersDescription`, `accountDescription`
       - `newAccountMessageTitle`/`Body` — the dismissible welcome banner
       - `notification1*`/`notification2*` — two banner slots, each with its own `Enabled` flag, so
         these are a **feature** (admin-toggleable announcements), not fixed copy
       - `resource1..3Title`/`Body`/`Url` — the "Recommended Resources" block
-- [ ] Tests: persistent nav renders on every account page; no account link resolves to 404; grouped
+- [x] Tests: persistent nav renders on every account page; no account link resolves to 404; grouped
       cards show the right counts and link targets; a disabled notification slot renders nothing;
       `SystemSettings` copy is read (not hardcoded) and cached.
 
@@ -62,6 +62,12 @@ persistent navigation, and the admin-managed copy that surrounds them.
 > account *area* with persistent wayfinding — and two of those links 404. Nothing deploys until every
 > Foundation/epic story is complete, so this is tracked here rather than as a separate parity pass.
 > Note ADR-010: French comes from page translation, so this copy needs **no** `lang/fr` variants.
+>
+> **Status (2026-08-04): parity criteria completed.** Added a cached `SystemSettings` read-through
+> service with explicit invalidation, moved account pages onto a shared persistent navigation layout,
+> regrouped dashboard counts into three cards with count-row links, wired admin-managed dashboard copy
+> + notifications + resources from `jbAccount.dashboard.*`, and expanded tests for navigation, no dead
+> links, disabled-notification rendering, and settings-cache behaviour.
 
 **Docs:** `data-model.md` (SavedJobs/JobAlerts/Saved*Profiles/SystemSettings); `architecture.md §9`
 (caching); `ADR-010` (no French variants needed); copilot-instructions (Accessibility).

@@ -2,11 +2,9 @@
     use Illuminate\Support\Carbon;
 @endphp
 
+<x-account.layout page-title="Saved profiles" page-description="Career and industry profiles you saved while exploring WorkBC.">
 <section aria-labelledby="saved-profiles-heading" class="space-y-8">
-    <header class="space-y-1">
-        <h1 id="saved-profiles-heading" class="text-3xl font-bold tracking-tight text-slate-900">Saved profiles</h1>
-        <p class="text-slate-700">Career and industry profiles you saved while exploring WorkBC.</p>
-    </header>
+    <h2 id="saved-profiles-heading" class="text-2xl font-semibold tracking-tight text-slate-900">Saved profiles overview</h2>
 
     <p class="sr-only" role="status" aria-live="polite" aria-atomic="true">{{ $statusMessage }}</p>
 
@@ -77,3 +75,4 @@
         @endif
     </section>
 </section>
+</x-account.layout>
