@@ -19,8 +19,8 @@ live test run (not just doc checkboxes, which had drifted out of date).
 | `POST /api/Search/JobSearch(/{lang})` | **Built** | `JobSearchApiTest` (7 passing) | Drupal: career/NOC pages, industry pages, region/city pages, "Recent Jobs" widgets |
 | `GET /api/Search/gettotaljobs(/{lang})` | **Built** | `TotalJobsApiTest` (2 passing) | Drupal `hook_cron` → sitewide "Search N jobs" count |
 | `GET /api/location/cities/{name}/{includeRegion}` | **Built** | `LocationCitiesApiTest` (2 passing) | Drupal `/api/getCities` proxy → city autocomplete widget |
-| `POST/GET /api/career-profiles/{save,status}/{id}` | **Stub, on a wrong premise** — needs rework, not extension | `CareerProfileApiTest` (5 passing — assert *bearer* behaviour, so they go too) | Drupal NOC/career pages — "save this career profile" button (browser-side, not server-to-server) |
-| `POST/GET /api/industry-profiles/{save,status}/{id}` | **Not built** — no route, no controller | none | Drupal industry pages — "save this industry" button (currently has nowhere to call) |
+| `GET/POST/DELETE /api/career-profiles/…` | **Built** (ACCT-6) — session-authenticated, not server-to-server | `SavedProfilesTest` (13 passing, shared with industry) | Drupal NOC/career pages — "save this career profile" button (browser-side) |
+| `GET/POST/DELETE /api/industry-profiles/…` | **Built** (ACCT-6) — previously did not exist at all | `SavedProfilesTest` | Drupal industry pages — "save this industry" button (browser-side) |
 | `GET /api/career-profiles/topjobs/{noc}` | **Dead** — not called by Drupal (superseded by `Search/JobSearch`) | n/a | Removable, not a gap |
 
 Verified 2026-07-27 by reading `routes/api.php` + each controller, then running the full suite in
@@ -62,39 +62,41 @@ Built. Path-param style (`.../cities/Surrey/true`), matching the legacy contract
 query string. Backs the location combobox's suggestion list on both the Drupal-proxied
 `/api/getCities` route and (inside the app itself) the search page's own city input.
 
-## 4. Career profile save/status — stub built on a premise that turned out to be false
+## 4 & 5. Career and industry profile save/status — built (ACCT-6)
 
-`CareerProfileApiController` is a deliberate stub (`save()` returns `true` without writing;
-`status()` returns `false`, avoiding a false "saved" state). Persistence was scoped to **ACCT-6**.
+Both sets are live and behave identically; the industry endpoints previously did not exist at all.
 
-What changed: it sits behind `EnsureJobSeekerToken`, which requires a **bearer token** because
-`contracts.md §2.4` described Drupal forwarding an `Authorization` header. Verified against the live
-Drupal module, that never happened — the calls come **from the browser**, and the forwarding code in
-Drupal is dead. Under [ADR-009](../adr/ADR-009-same-site-session-auth-for-embed.md) these become
-**session-authenticated** routes returning **401** when anonymous.
+```
+GET    /api/{career|industry}-profiles/status/{profileId}   → { saved, csrf }
+POST   /api/{career|industry}-profiles/save/{profileId}     → { saved: true }
+DELETE /api/{career|industry}-profiles/{profileId}          → { saved: false, removed }
+```
 
-So ACCT-6 is partly **rework**, not extension:
+**These are not server-to-server.** They are called from the browser by Drupal's profile pages and
+authenticate with the seeker's session cookie (ADR-009). Consequences worth knowing:
 
-- `EnsureJobSeekerToken` is replaced by session auth (its 5 tests assert bearer behaviour and go with it)
-- The routes need **session middleware** — `routes/api.php` uses the `api` group, which in Laravel 12 is
-  throttle + `SubstituteBindings` only, **no session/cookies**. A session cookie arriving here today
-  would be ignored entirely. Either add session middleware to this group or move these routes to `web.php`
-- `status` must also return a **CSRF token** in its body (`{ saved, csrf }`) — the `XSRF-TOKEN` cookie is
-  unreadable cross-origin, so the usual double-submit pattern can't work (ADR-009)
+- **Defined in `web.php`, not `api.php`**, despite the `api/` path. They need the `web` group's
+  session/cookie/CSRF; Laravel 12's `api` group is throttle + `SubstituteBindings` only, so a session
+  cookie arriving there is ignored. The `api/` prefix is kept because Drupal's
+  `WorkbcJobboardSaveProfile` block builds these URLs.
+- **`EnsureJobSeekerSession` returns 401**, replacing the retired `EnsureJobSeekerToken`. Deliberately
+  not `auth:web`: that only 401s when the request `expectsJson()`, and Drupal's JS sends a wildcard
+  `Accept`, so it would 302 to the login page and the caller would read login HTML as success.
+- **The CSRF token is in the `status` body.** Drupal's JS is cross-origin and cannot read our
+  `XSRF-TOKEN` cookie, so double-submit can't work. Status is already fetched on page load, so the
+  save POST gets its token without an extra round-trip. Note `X-XSRF-TOKEN` still needs adding to the
+  CloudFront CORS allowlist — an infra change, not code (ADR-009).
+- **`profileId` is the `NocCodeId2021` / `IndustryId` itself** — not the row `Id`, and not
+  `EDM_CareerProfile_CareerProfileId` (always null in the legacy code).
+- Save is **insert-if-absent**; remove is **soft-delete only**. A soft-deleted row is restored rather
+  than duplicated (divergence from legacy, matching `SavedJobService`).
 
-The app's own dashboard already reads `SavedCareerProfiles` directly for its **count**
-(`JobSeekerDashboardService::summaryFor()`) — a read-only query-builder call, not via this API.
+Listing lives at `/account/profiles` (`SavedProfilesPage`), joining `NocCodes2021.Title`/`Code` and
+`Industries.TitleBC`. The dashboard's counts still come from `JobSeekerDashboardService::summaryFor()`,
+a read-only query-builder call rather than this API.
 
-**Used by:** the "Save this career profile" button on Drupal's NOC/career pages — browser-side.
-
-## 5. Industry profile save/status — not built
-
-No route, no controller — `routes/api.php` only has the `career-profiles/*` group. A real gap, not an
-unfinished stub. Already tracked inside **ACCT-6** ("+ industry equivalents"), so no new story is
-needed; but until ACCT-6 lands, a Drupal industry page has nothing to call. Same session-auth and CSRF
-shape as §4.
-
-**Would be used by:** the "Save this industry" button on Drupal's industry pages (parallel to #4).
+Tests: `tests/Feature/Account/SavedProfilesTest.php` (13), plus a live round-trip against the restored
+DB — saved NOC 00010 and industry 1, titles joined, soft-delete confirmed, anonymous calls 401.
 
 ## 6. Dead endpoint — `career-profiles/topjobs/{noc}`
 
@@ -106,18 +108,15 @@ rewrite entirely.
 
 ## What's left to reach full parity
 
-Everything left lives in **ACCT-6** (depends on ACCT-1, which is done):
+**Nothing in this app.** All five endpoints are built and tested; the sixth (`topjobs`) is dead by
+design. Two items sit outside the codebase:
 
-1. `SavedCareerProfiles` / `SavedIndustryProfiles` Eloquent models + `SoftDeletesByFlag`.
-2. **Swap the auth model** (ADR-009): retire `EnsureJobSeekerToken`, put the routes on session
-   middleware, return 401 when anonymous, and return a CSRF token from `status`.
-3. Real save/remove/status logic replacing the stub + a parallel `IndustryProfileApiController`
-   and its two routes. Port the legacy semantics: `profileId` is the **`NocCodeId2021` / `IndustryId`
-   directly** (not `EDM_CareerProfile_CareerProfileId`, which the .NET code always wrote as `null`);
-   save is **insert-if-absent** (no duplicate active rows, no toggle); remove is **soft-delete only**.
-4. A "list saved profiles with titles" view for the account dashboard (currently only a count).
-   Note the legacy list joins industry titles on **`Industries.TitleBC`**, not `Title`.
-5. Tests: save, status, remove (soft), list scoping, session-auth enforcement, CSRF, for both types.
+1. **Infra:** add `X-XSRF-TOKEN` to the CloudFront `cors-api-jobboard` response-headers policy, or the
+   save POST's preflight will be rejected. CORS here is CDN-owned (`OriginOverride: true`), so this is
+   an infra change and `config/cors.php` has no effect (ADR-009).
+2. **Drupal:** the profile pages' JS must drop its `Authorization` header, add
+   `xhrFields: { withCredentials: true }`, branch on **401** instead of token presence, and send the
+   CSRF token from the status response — see `drupal-embed.md §3` surface 3.
 
 No other SRCH-10 work is outstanding — job search, total jobs, and city autocomplete are complete
 and match the documented contract.
