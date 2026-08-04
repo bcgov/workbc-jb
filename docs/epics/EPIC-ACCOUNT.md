@@ -67,7 +67,9 @@ persistent navigation, and the admin-managed copy that surrounds them.
 > service with explicit invalidation, moved account pages onto a shared persistent navigation layout,
 > regrouped dashboard counts into three cards with count-row links, wired admin-managed dashboard copy
 > + notifications + resources from `jbAccount.dashboard.*`, and expanded tests for navigation, no dead
-> links, disabled-notification rendering, and settings-cache behaviour.
+> links, disabled-notification rendering, and settings-cache behaviour. **Updated 2026-08-04**: with
+> ACCT-7 shipped, the Manage Account → Personal Settings link is restored in the shared nav and
+> dashboard card, and `/account/settings` is now live.
 
 **Docs:** `data-model.md` (SavedJobs/JobAlerts/Saved*Profiles/SystemSettings); `architecture.md §9`
 (caching); `ADR-010` (no French variants needed); copilot-instructions (Accessibility).
@@ -178,12 +180,12 @@ against the restored DB. Notes for whoever touches this next:
 ## ACCT-7 — Personal settings
 **Description:** Profile management, email change and password change. Also closes the
 `/account/settings` **404** that ACCT-1 deliberately stopped linking to.
-- [ ] Edit profile: `FirstName`, `LastName`, `City`, `LocationId`, `CountryId`, `ProvinceId`.
+- [x] Edit profile: `FirstName`, `LastName`, `City`, `LocationId`, `CountryId`, `ProvinceId`.
       Max length **50** on `FirstName`/`LastName`/`City` (legacy `MaxLength(50)`).
-- [ ] **Location consistency rules** (ported, verified in `JobSeekerRepository.cs:261-265, 392`):
+- [x] **Location consistency rules** (ported, verified in `JobSeekerRepository.cs:261-265, 392`):
       when `ProvinceId != 2` (not B.C.) the server **clears** `LocationId` and `City`; otherwise
       `City` is **derived from the chosen `Location`**, never accepted as free text.
-- [ ] **Email change requires re-verification** (decision 2026-08-04 — this deliberately
+- [x] **Email change requires re-verification** (decision 2026-08-04 — this deliberately
       **diverges from legacy**). Legacy assigns the new address immediately: `EmailConfirmed`
       is never reset, no confirmation is sent, no token regenerated — so a hijacked session can
       permanently seize the account, and the address need not be one the user owns. Instead:
@@ -192,22 +194,28 @@ against the restored DB. Notes for whoever touches this next:
       `/auth/job-seeker/verify/{userId}/{guid}` flow. Maintain
       `NormalizedEmail`/`NormalizedUserName` (Identity uses `ToUpperInvariant()`); legacy relied
       on Identity recomputing these, so we must set them explicitly.
-- [ ] Change password: **current password required** (legacy behaviour), rehash via the FND-5
+- [x] Change password: **current password required** (legacy behaviour), rehash via the FND-5
       hasher (bcrypt/argon2, never MD5), and regenerate `SecurityStamp`.
-- [ ] **`JobSeekerChangeLog` audit rows.** Legacy writes **one summary row per save**, not one
+- [x] **`JobSeekerChangeLog` audit rows.** Legacy writes **one summary row per save**, not one
       per field — `Field`/`OldValue`/`NewValue` are comma-joined lists
       (`JobSeekerRepository.cs:532-565`). `Field` holds human sentences (`"First name edited"`,
       `"Email edited"`), **not** column names, and Country/Province/City log their **display
       labels** (`Country.Name`, `Province.Name`, `Location.Label`), not IDs.
       `ModifiedByAdminUserId` is **null for self-edits**, set when an admin acts via
       impersonation. Follow the existing shape in `JobAlertsService::writeAuditRow()`.
-- [ ] **Password changes also write an audit row** (decision 2026-08-04 — legacy writes none).
+- [x] **Password changes also write an audit row** (decision 2026-08-04 — legacy writes none).
       `Field = 'Password changed'`, `OldValue`/`NewValue` = `'-'`; **never** log the password,
       old or new.
-- [ ] a11y: labelled inputs, error messaging via ARIA live.
-- [ ] Tests: profile update + summary audit row; province≠BC clears city/location; email change
+- [x] a11y: labelled inputs, error messaging via ARIA live.
+- [x] Tests: profile update + summary audit row; province≠BC clears city/location; email change
       requires re-verification and blocks duplicates; password change requires the current
       password, rehashes, and writes an audit row without the secret; max-length validation.
+
+> **Status (2026-08-04): completed.** Added `/account/settings` with profile, email and password
+> flows backed by a dedicated JobSeeker service; implemented server-side province/location/city
+> consistency, email re-verification with `VerificationGuid` regeneration and confirmation email to
+> the new address, password change with current-password check + `SecurityStamp` regeneration, and
+> one summary audit row per save (plus password-change audit row) without storing secrets.
 
 **Build brief (verified against the .NET source, 2026-08-04):**
 - Legacy endpoint `PUT /api/users/update-personal-settings` → `UsersController.cs:291-314` →

@@ -12,6 +12,7 @@ use App\Http\Controllers\Web\SitemapController;
 use App\Http\Middleware\EnsureJobSeekerSession;
 use App\Livewire\JobAlertsList;
 use App\Livewire\JobSeekerDashboard;
+use App\Livewire\PersonalSettingsPage;
 use App\Livewire\JobSearch;
 use App\Livewire\SavedJobsPage;
 use App\Livewire\SavedProfilesPage;
@@ -54,6 +55,9 @@ Route::middleware('auth:web')->group(function (): void {
 
     // ACCT-6: saved career & industry profiles.
     Route::get('/account/profiles', SavedProfilesPage::class)->name('account.profiles');
+
+    // ACCT-7: personal settings.
+    Route::get('/account/settings', PersonalSettingsPage::class)->name('account.settings');
 
     // FND-6 / ADM-4 scaffold: ends the impersonated seeker session (web guard
     // only) and returns to the admin panel. The admin's own `admin`-guard

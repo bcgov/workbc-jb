@@ -9,6 +9,7 @@
     $greetingName = $firstName !== '' ? $firstName : 'there';
     $jobsOpen = request()->routeIs('account.saved-jobs') || request()->routeIs('account.alerts*');
     $careersOpen = request()->routeIs('account.profiles');
+    $manageOpen = request()->routeIs('account.settings');
 @endphp
 
 <section class="space-y-6">
@@ -64,13 +65,15 @@
             </li>
 
             <li>
-                <details>
+                <details @if ($manageOpen) open @endif>
                     <summary class="cursor-pointer rounded px-2 py-1 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-workbc-navy">
                         Manage account
                     </summary>
                     <ul class="mt-2 space-y-1 border-l border-slate-200 ps-3 text-sm font-normal">
                         <li>
-                            <span class="block rounded px-2 py-1 text-slate-500" aria-disabled="true">Personal settings (coming soon)</span>
+                            <a href="{{ route('account.settings') }}" wire:navigate class="nav-link block px-2 py-1" @if (request()->routeIs('account.settings')) aria-current="page" @endif>
+                                Personal settings
+                            </a>
                         </li>
                     </ul>
                 </details>
