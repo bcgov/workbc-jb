@@ -98,8 +98,8 @@ class JobSeekerDashboardTest extends TestCase
             ->assertSee('href="'.route('account.saved-jobs').'"', false)
             ->assertSee('href="'.route('account.alerts').'"', false)
             ->assertSee('href="'.route('account.profiles').'"', false)
-            ->assertDontSee('/account/settings', false)
-            ->assertSee('Personal settings (coming soon)');
+            ->assertSee('href="'.route('account.settings').'"', false)
+            ->assertSee('Personal settings');
 
         $html = $response->getContent();
 

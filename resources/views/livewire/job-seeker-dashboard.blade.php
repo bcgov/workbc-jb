@@ -96,10 +96,10 @@
                 @endif
                 <ul class="mt-4 space-y-2" aria-label="Manage account links">
                     <li>
-                        <span class="flex items-center justify-between rounded border border-dashed border-slate-300 px-3 py-2 font-medium text-slate-500" aria-disabled="true">
-                            <span>Personal settings (coming soon)</span>
-                            <span class="tabular-nums">-</span>
-                        </span>
+                        <a href="{{ route('account.settings') }}" wire:navigate class="flex items-center justify-between rounded border border-slate-200 px-3 py-2 font-medium text-slate-900 hover:bg-slate-50">
+                            <span>Personal settings</span>
+                            <span class="tabular-nums">&rarr;</span>
+                        </a>
                     </li>
                 </ul>
             </section>

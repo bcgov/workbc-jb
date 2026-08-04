@@ -28,7 +28,7 @@ class AccountNavigationTest extends TestCase
         $user = $this->createUser('user-a', 'Pat');
         Auth::guard('web')->login($user);
 
-        foreach (['/account', '/account/saved-jobs', '/account/alerts', '/account/profiles'] as $path) {
+        foreach (['/account', '/account/saved-jobs', '/account/alerts', '/account/profiles', '/account/settings'] as $path) {
             $response = $this->get($path);
 
             $response->assertOk()
@@ -40,7 +40,7 @@ class AccountNavigationTest extends TestCase
         }
     }
 
-    public function test_account_navigation_has_no_link_to_a_404_settings_page(): void
+    public function test_account_navigation_links_to_live_settings_page(): void
     {
         $user = $this->createUser('user-a', 'Pat');
         Auth::guard('web')->login($user);
@@ -48,14 +48,14 @@ class AccountNavigationTest extends TestCase
         $response = $this->get('/account');
 
         $response->assertOk()
-            ->assertDontSee('/account/settings', false)
             ->assertSee('href="'.route('account.dashboard').'"', false)
             ->assertSee('href="'.route('account.saved-jobs').'"', false)
             ->assertSee('href="'.route('account.alerts').'"', false)
             ->assertSee('href="'.route('account.profiles').'"', false)
-            ->assertSee('Personal settings (coming soon)');
+            ->assertSee('href="'.route('account.settings').'"', false)
+            ->assertSee('Personal settings');
 
-        foreach ([route('account.dashboard'), route('account.saved-jobs'), route('account.alerts'), route('account.profiles')] as $link) {
+        foreach ([route('account.dashboard'), route('account.saved-jobs'), route('account.alerts'), route('account.profiles'), route('account.settings')] as $link) {
             $this->get($link)->assertOk();
         }
     }
@@ -147,10 +147,55 @@ class AccountNavigationTest extends TestCase
             $table->string('City')->nullable();
             $table->dateTime('ExpireDate')->nullable();
         });
+
+        Schema::create('Countries', function (Blueprint $table): void {
+            $table->integer('Id')->primary();
+            $table->string('Name', 100);
+        });
+
+        Schema::create('Provinces', function (Blueprint $table): void {
+            // Real schema keys on ProvinceId, not Id (unlike Countries).
+            $table->integer('ProvinceId')->primary();
+            $table->string('Name', 100);
+        });
+
+        Schema::create('Locations', function (Blueprint $table): void {
+            $table->integer('LocationId')->primary();
+            $table->string('City', 50)->nullable();
+            $table->string('Label', 100)->nullable();
+            $table->boolean('IsHidden')->default(false);
+            $table->boolean('IsDuplicate')->default(false);
+        });
+
+        Schema::create('JobSeekerChangeLog', function (Blueprint $table): void {
+            $table->increments('Id');
+            $table->string('AspNetUserId')->nullable();
+            $table->integer('ModifiedByAdminUserId')->nullable();
+            $table->dateTime('DateUpdated');
+            $table->text('Field')->nullable();
+            $table->text('OldValue')->nullable();
+            $table->text('NewValue')->nullable();
+        });
+
+        DB::table('Countries')->insert([
+            ['Id' => 1, 'Name' => 'Canada'],
+        ]);
+
+        DB::table('Provinces')->insert([
+            ['ProvinceId' => 2, 'Name' => 'British Columbia'],
+        ]);
+
+        DB::table('Locations')->insert([
+            ['LocationId' => 10, 'City' => 'Vancouver', 'Label' => 'Vancouver, BC', 'IsHidden' => false, 'IsDuplicate' => false],
+        ]);
     }
 
     private function dropFixture(): void
     {
+        Schema::dropIfExists('JobSeekerChangeLog');
+        Schema::dropIfExists('Locations');
+        Schema::dropIfExists('Provinces');
+        Schema::dropIfExists('Countries');
         Schema::dropIfExists('Jobs');
         Schema::dropIfExists('Industries');
         Schema::dropIfExists('NocCodes2021');
