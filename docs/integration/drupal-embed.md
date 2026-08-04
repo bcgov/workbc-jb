@@ -17,6 +17,23 @@ profile-save endpoints as server-to-server (they are not) and cited untracked fi
 
 ---
 
+## 0. Origin map (confirmed 2026-08-04, DNS-verified)
+
+| Env | Drupal parent | App (job seeker) | Admin (Filament) |
+|---|---|---|---|
+| **prod** | `www.workbc.ca` | `api-jobboard.workbc.ca` | `admin-jobboard.workbc.ca` |
+| **test** | `test.workbc.ca` | `test-api-jobboard.workbc.ca` | `test-admin-jobboard.workbc.ca` |
+| **dev** | `dev.workbc.ca` | `dev-api-jobboard.workbc.ca` | `dev-admin-jobboard.workbc.ca` |
+
+Each job-board host is its own CloudFront distribution, and **each Drupal environment currently
+points at its matching Stratus origin** (`a55eb5-{prod,test,dev}`) — so the repoint in §7 is a
+per-environment change, and TEST can be exercised end to end before prod.
+
+Everything is same-site under `workbc.ca`, so ADR-009's session model holds in all three
+environments. The values FND-4 needs for `frame-ancestors` are the Drupal-parent column above.
+
+---
+
 ## 1. Verified infrastructure facts
 
 | Fact | Value |

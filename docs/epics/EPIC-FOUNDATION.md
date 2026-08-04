@@ -126,9 +126,17 @@ supports arbitrary queue names. Tests: `tests/Unit/Jobs/BaseJobTest.php` (3 pass
 - [ ] **Security response headers.** Verified 2026-07-29: the app currently sets **none**, and
       CloudFront sets none either — so today any site can frame our authenticated pages
       (clickjacking against saved-jobs/alerts/settings actions). Emit:
-      - `Content-Security-Policy: frame-ancestors https://www.workbc.ca https://workbc.ca` —
-        the **exact** parent origins, never `*`, and never `X-Frame-Options: DENY` (which would
-        break the ADR-006 embed). Origins are per-environment, so make them configurable.
+      - `Content-Security-Policy: frame-ancestors <parent origins>` — the **exact** parent
+        origins, never `*`, and never `X-Frame-Options: DENY` (which would break the ADR-006
+        embed). Origins are per-environment and now **confirmed** (DNS-verified 2026-08-04):
+        | Env | App host (ours) | `frame-ancestors` value |
+        |---|---|---|
+        | prod | `api-jobboard.workbc.ca` | `https://www.workbc.ca` |
+        | test | `test-api-jobboard.workbc.ca` | `https://test.workbc.ca` |
+        | dev | `dev-api-jobboard.workbc.ca` | `https://dev.workbc.ca` |
+
+        Make it env-driven (default to the prod value); the full map is in
+        `integration/drupal-embed.md §0` and `ADR-009`.
       - `X-Content-Type-Options: nosniff` and a `Referrer-Policy`.
       Note these must come from the **app**: the CloudFront response-headers policy
       (`cors-api-jobboard`) contains CORS only and no security headers (ADR-009).

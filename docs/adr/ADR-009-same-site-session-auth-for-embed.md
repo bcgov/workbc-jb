@@ -46,7 +46,34 @@ what `contracts.md` and `drupal-embed.md` previously asserted.
 | Response headers policy | `cors-api-jobboard`: origins `https://www.workbc.ca` + `https://workbc.ca`, **`AccessControlAllowCredentials: true`**, `OriginOverride: true`. No `X-Frame-Options`, no CSP |
 | Origin custom header | `X-Forwarded-Host: api-jobboard.workbc.ca` |
 | Sibling hostname | `admin-jobboard.workbc.ca` exists (convention: `<role>-jobboard.workbc.ca`) |
-| `jobs.workbc.ca` | unregistered |
+| `jobs.workbc.ca` | unregistered — and **not planned**; see the origin map below |
+
+### Origin map (confirmed 2026-08-04, all six DNS-verified)
+
+| Env | Drupal parent | App (job seeker) | Admin (Filament) |
+|---|---|---|---|
+| **prod** | `www.workbc.ca` | `api-jobboard.workbc.ca` | `admin-jobboard.workbc.ca` |
+| **test** | `test.workbc.ca` | `test-api-jobboard.workbc.ca` | `test-admin-jobboard.workbc.ca` |
+| **dev** | `dev.workbc.ca` | `dev-api-jobboard.workbc.ca` | `dev-admin-jobboard.workbc.ca` |
+
+All nine hosts resolve; the six job-board hosts are each their own CloudFront distribution. Each
+Drupal environment currently points at its matching Stratus origin (`a55eb5-{prod,test,dev}`), so
+the config repoint described here applies **per environment**.
+
+Three consequences:
+
+1. **Every environment is same-site under `workbc.ca`**, so this ADR's session model holds in all
+   three — not only production — and `TrustHosts` can safely use `^(.+\.)?workbc\.ca$` without
+   locking out test or dev.
+2. **`frame-ancestors` is now writable per environment** (FND-4): `https://www.workbc.ca`,
+   `https://test.workbc.ca`, `https://dev.workbc.ca` respectively. Make it configurable, never `*`.
+3. **The admin panel is served from a different origin** than the seeker app, so it carries its own
+   session cookie. Same-site, so nothing breaks — but ADM-1 onwards should assume two origins, not
+   one.
+
+**No user-facing hostname is planned.** The seeker app stays on `api-jobboard.workbc.ca`, so the
+ACCT-7 login page shows users a host prefixed `api-`. Recorded as a deliberate position rather than
+an oversight; revisit only if a nicer name is provisioned.
 
 The decisive constraint: a **bearer token in a header is immune to same-site cookie rules**, which is
 what makes the current cross-site topology work. A session cookie is not. So ADR-003's session
