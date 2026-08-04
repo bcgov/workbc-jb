@@ -133,14 +133,39 @@ emails; **cadence is configured by Kubernetes CronJob(s)**.
 
 ## ACCT-6 — Saved career & industry profiles
 **Description:** Save/remove career (NOC) and industry profiles; expose save/status for Drupal.
-- [ ] Career profiles: `SavedCareerProfiles` (`NocCodeId2021`), soft-delete; industry:
+- [x] Career profiles: `SavedCareerProfiles` (`NocCodeId2021`), soft-delete; industry:
       `SavedIndustryProfiles` (`IndustryId`), soft-delete.
-- [ ] `POST /api/career-profiles/save/{id}` + `GET …/status/{id}` (+ industry equivalents),
-      authenticated per `contracts.md §2.4`.
-- [ ] List saved profiles with their NOC/industry titles.
-- [ ] Tests: save, status, remove (soft), list scoping; API auth enforced.
+- [x] `POST /api/career-profiles/save/{id}` + `GET …/status/{id}` (+ industry equivalents),
+      **session-authenticated per `ADR-009`** — `contracts.md §2.4`'s server-to-server framing is
+      retired; these are called from the browser by Drupal's profile pages.
+- [x] List saved profiles with their NOC/industry titles.
+- [x] Tests: save, status, remove (soft), list scoping; API auth enforced.
 
-**Docs:** `contracts.md §2.4`, `data-model.md` (Saved*Profiles). **Depends on:** ACCT-1.
+**Status (2026-07-30): done.** 13 tests (`tests/Feature/Account/SavedProfilesTest.php`), verified live
+against the restored DB. Notes for whoever touches this next:
+
+- **`profileId` is the `NocCodeId2021` / `IndustryId` value itself** — not the row's `Id`, and not
+  `EDM_CareerProfile_CareerProfileId` (which the .NET controller always wrote as null and never read;
+  mapped but never populated here either).
+- Save is **insert-if-absent**, never a toggle; remove is **soft-delete only** (the legacy
+  hard-delete line is commented out deliberately). One divergence, matching `SavedJobService`: a
+  soft-deleted row is **restored** rather than duplicated, so the table stops growing per save/unsave
+  cycle. Observably identical.
+- Industry titles join **`Industries.TitleBC`**, not `Title` (falls back to `Title` when blank).
+- Routes live in **`web.php`, not `api.php`**, despite the `api/` path — they need the `web` group's
+  session/cookie/CSRF, and Laravel 12's `api` group is throttle + `SubstituteBindings` only, so a
+  session cookie arriving there is ignored. The `api/` prefix is kept because Drupal's
+  `WorkbcJobboardSaveProfile` block builds these URLs.
+- `EnsureJobSeekerToken` is retired in favour of `EnsureJobSeekerSession`, which returns **401**
+  rather than using `auth:web` — that would 302 to the login page for Drupal's wildcard `Accept`
+  header, and the caller would read login HTML as success.
+- `status` returns `{ saved, csrf }`; the token is in the body because Drupal's cross-origin JS
+  cannot read our `XSRF-TOKEN` cookie (ADR-009).
+- Closes the `/account/profiles` 404 from ACCT-1's "no dead navigation" criterion.
+  **`/account/settings` is still dead** until ACCT-7.
+
+**Docs:** **`ADR-009`** (session auth; supersedes `contracts.md §2.4`), `data-model.md`
+(Saved*Profiles), `integration/api-status.md`. **Depends on:** ACCT-1.
 
 ---
 

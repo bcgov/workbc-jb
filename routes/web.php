@@ -3,14 +3,18 @@
 use App\Http\Controllers\JobDetailController;
 use App\Http\Controllers\LegacyAlertRedirectController;
 use App\Http\Controllers\Admin\ImpersonationController;
+use App\Http\Controllers\Api\CareerProfileApiController;
+use App\Http\Controllers\Api\IndustryProfileApiController;
 use App\Http\Controllers\Auth\JobSeekerPasswordResetController;
 use App\Http\Controllers\Auth\JobSeekerRegistrationController;
 use App\Http\Controllers\Auth\JobSeekerSessionController;
 use App\Http\Controllers\Web\SitemapController;
+use App\Http\Middleware\EnsureJobSeekerSession;
 use App\Livewire\JobAlertsList;
 use App\Livewire\JobSeekerDashboard;
 use App\Livewire\JobSearch;
 use App\Livewire\SavedJobsPage;
+use App\Livewire\SavedProfilesPage;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Route;
 
@@ -40,12 +44,41 @@ Route::middleware('auth:web')->group(function (): void {
         ->whereNumber('alertId')
         ->name('account.alerts.edit');
 
+    // ACCT-6: saved career & industry profiles.
+    Route::get('/account/profiles', SavedProfilesPage::class)->name('account.profiles');
+
     // FND-6 / ADM-4 scaffold: ends the impersonated seeker session (web guard
     // only) and returns to the admin panel. The admin's own `admin`-guard
     // session was never touched by impersonation, so this is a clean return.
     Route::post('/account/impersonation/end', [ImpersonationController::class, 'end'])
         ->name('account.impersonation.end');
 });
+
+/*
+ * ACCT-6 / ADR-009 — career & industry profile save/status.
+ *
+ * These live in web.php, not api.php, despite the `api/` path: they are called
+ * from the BROWSER by Drupal's profile pages and authenticate with the job
+ * seeker's session cookie, so they need the `web` group's session + cookie +
+ * CSRF middleware. Laravel 12's `api` group is throttle + SubstituteBindings
+ * only — a session cookie arriving there is ignored entirely.
+ *
+ * The `api/` path prefix is retained because Drupal's `WorkbcJobboardSaveProfile`
+ * block builds these URLs; changing it would be a needless Drupal edit.
+ * `{profileId}` is the NocCodeId2021 / IndustryId value itself.
+ */
+Route::middleware(EnsureJobSeekerSession::class)
+    ->prefix('api')
+    ->whereNumber('profileId')
+    ->group(function (): void {
+        Route::get('career-profiles/status/{profileId}', [CareerProfileApiController::class, 'status']);
+        Route::post('career-profiles/save/{profileId}', [CareerProfileApiController::class, 'save']);
+        Route::delete('career-profiles/{profileId}', [CareerProfileApiController::class, 'remove']);
+
+        Route::get('industry-profiles/status/{profileId}', [IndustryProfileApiController::class, 'status']);
+        Route::post('industry-profiles/save/{profileId}', [IndustryProfileApiController::class, 'save']);
+        Route::delete('industry-profiles/{profileId}', [IndustryProfileApiController::class, 'remove']);
+    });
 
 // Local-only preview helpers live in a gitignored file so they can never be
 // committed (routes/dev-preview.php). Harmless if this loader is ever committed:
