@@ -8,6 +8,8 @@ use App\Services\Settings\SystemSettingsService;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Mockery;
+use OpenSearch\Client;
 use Tests\TestCase;
 
 class JobSeekerDashboardTest extends TestCase
@@ -17,10 +19,12 @@ class JobSeekerDashboardTest extends TestCase
         parent::setUp();
 
         $this->createFixture();
+        $this->setOpenSearchRecommendationCount(0);
     }
 
     protected function tearDown(): void
     {
+        Mockery::close();
         $this->dropFixture();
 
         parent::tearDown();
@@ -29,6 +33,7 @@ class JobSeekerDashboardTest extends TestCase
     public function test_dashboard_shows_only_authenticated_users_counts(): void
     {
         $this->seedUsers();
+        $this->setOpenSearchRecommendationCount(6);
 
         $this->seedSavedJobs('user-a', 2, 1);
         $this->seedSavedJobs('user-b', 7, 0);
@@ -60,12 +65,14 @@ class JobSeekerDashboardTest extends TestCase
         $html = $response->getContent();
 
         $this->assertMetricCount($html, 'saved-jobs-count', 2);
+        $this->assertMetricCount($html, 'recommended-jobs-count', 6);
         $this->assertMetricCount($html, 'active-alerts-count', 1);
         $this->assertMetricCount($html, 'saved-career-profiles-count', 1);
         $this->assertMetricCount($html, 'saved-industry-profiles-count', 3);
 
         // Ensure distinct counts from another user are not rendered for user-a.
         $this->assertMetricCount($html, 'saved-jobs-count', 7, false);
+        $this->assertMetricCount($html, 'recommended-jobs-count', 9, false);
         $this->assertMetricCount($html, 'active-alerts-count', 4, false);
         $this->assertMetricCount($html, 'saved-career-profiles-count', 9, false);
         $this->assertMetricCount($html, 'saved-industry-profiles-count', 8, false);
@@ -81,6 +88,7 @@ class JobSeekerDashboardTest extends TestCase
     public function test_dashboard_groups_counts_as_links_and_has_no_dead_account_settings_link(): void
     {
         $this->seedUsers();
+        $this->setOpenSearchRecommendationCount(4);
 
         $user = JobSeeker::query()->findOrFail('user-a');
 
@@ -96,6 +104,7 @@ class JobSeekerDashboardTest extends TestCase
             ->assertSee('Careers &amp; industries', false)
             ->assertSee('Manage account')
             ->assertSee('href="'.route('account.saved-jobs').'"', false)
+            ->assertSee('href="'.route('account.recommended').'"', false)
             ->assertSee('href="'.route('account.alerts').'"', false)
             ->assertSee('href="'.route('account.profiles').'"', false)
             ->assertSee('href="'.route('account.settings').'"', false)
@@ -104,6 +113,7 @@ class JobSeekerDashboardTest extends TestCase
         $html = $response->getContent();
 
         $this->assertMetricCount($html, 'saved-jobs-count', 2);
+        $this->assertMetricCount($html, 'recommended-jobs-count', 4);
         $this->assertMetricCount($html, 'active-alerts-count', 1);
         $this->assertMetricCount($html, 'saved-career-profiles-count', 4);
         $this->assertMetricCount($html, 'saved-industry-profiles-count', 5);
@@ -203,8 +213,30 @@ class JobSeekerDashboardTest extends TestCase
             $table->id('Id');
             $table->string('AspNetUserId');
             $table->string('JobId')->nullable();
+            $table->dateTime('DateSaved')->nullable();
             $table->boolean('IsDeleted')->default(false);
             $table->dateTime('DateDeleted')->nullable();
+        });
+
+        Schema::create('Jobs', function (Blueprint $table): void {
+            $table->string('JobId')->primary();
+            $table->integer('NocCodeId2021')->nullable();
+            $table->string('EmployerName')->nullable();
+            $table->string('Title')->nullable();
+        });
+
+        Schema::create('JobSeekerFlags', function (Blueprint $table): void {
+            $table->id('Id');
+            $table->string('AspNetUserId');
+            $table->boolean('IsApprentice')->default(false);
+            $table->boolean('IsIndigenousPerson')->default(false);
+            $table->boolean('IsMatureWorker')->default(false);
+            $table->boolean('IsNewImmigrant')->default(false);
+            $table->boolean('IsPersonWithDisability')->default(false);
+            $table->boolean('IsStudent')->default(false);
+            $table->boolean('IsVeteran')->default(false);
+            $table->boolean('IsVisibleMinority')->default(false);
+            $table->boolean('IsYouth')->default(false);
         });
 
         Schema::create('JobAlerts', function (Blueprint $table): void {
@@ -233,6 +265,8 @@ class JobSeekerDashboardTest extends TestCase
         Schema::dropIfExists('SavedIndustryProfiles');
         Schema::dropIfExists('SavedCareerProfiles');
         Schema::dropIfExists('JobAlerts');
+        Schema::dropIfExists('JobSeekerFlags');
+        Schema::dropIfExists('Jobs');
         Schema::dropIfExists('SavedJobs');
         Schema::dropIfExists('SystemSettings');
         Schema::dropIfExists('AspNetUsers');
@@ -251,6 +285,19 @@ class JobSeekerDashboardTest extends TestCase
                 'PasswordHash' => 'unused-hash',
                 'SecurityStamp' => 'stamp-'.$id,
                 'EmailConfirmed' => true,
+            ]);
+
+            DB::table('JobSeekerFlags')->insert([
+                'AspNetUserId' => $id,
+                'IsApprentice' => false,
+                'IsIndigenousPerson' => false,
+                'IsMatureWorker' => false,
+                'IsNewImmigrant' => false,
+                'IsPersonWithDisability' => false,
+                'IsStudent' => false,
+                'IsVeteran' => false,
+                'IsVisibleMinority' => false,
+                'IsYouth' => false,
             ]);
         }
     }
@@ -340,5 +387,18 @@ class JobSeekerDashboardTest extends TestCase
                 'IsDeleted' => true,
             ]);
         }
+    }
+
+    private function setOpenSearchRecommendationCount(int $total): void
+    {
+        $client = Mockery::mock(Client::class);
+        $client->shouldReceive('search')->andReturn([
+            'hits' => [
+                'total' => ['value' => $total],
+                'hits' => [],
+            ],
+        ]);
+
+        $this->app->instance(Client::class, $client);
     }
 }

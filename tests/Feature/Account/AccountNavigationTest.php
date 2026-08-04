@@ -28,13 +28,14 @@ class AccountNavigationTest extends TestCase
         $user = $this->createUser('user-a', 'Pat');
         Auth::guard('web')->login($user);
 
-        foreach (['/account', '/account/saved-jobs', '/account/alerts', '/account/profiles', '/account/settings'] as $path) {
+        foreach (['/account', '/account/saved-jobs', '/account/recommended', '/account/alerts', '/account/profiles', '/account/settings'] as $path) {
             $response = $this->get($path);
 
             $response->assertOk()
                 ->assertSee('Hello, Pat')
                 ->assertSee('Account profile')
                 ->assertSee('Jobs')
+                ->assertSee('Recommended jobs')
                 ->assertSee('Careers &amp; industries', false)
                 ->assertSee('Manage account');
         }
@@ -50,12 +51,13 @@ class AccountNavigationTest extends TestCase
         $response->assertOk()
             ->assertSee('href="'.route('account.dashboard').'"', false)
             ->assertSee('href="'.route('account.saved-jobs').'"', false)
+            ->assertSee('href="'.route('account.recommended').'"', false)
             ->assertSee('href="'.route('account.alerts').'"', false)
             ->assertSee('href="'.route('account.profiles').'"', false)
             ->assertSee('href="'.route('account.settings').'"', false)
             ->assertSee('Personal settings');
 
-        foreach ([route('account.dashboard'), route('account.saved-jobs'), route('account.alerts'), route('account.profiles'), route('account.settings')] as $link) {
+        foreach ([route('account.dashboard'), route('account.saved-jobs'), route('account.recommended'), route('account.alerts'), route('account.profiles'), route('account.settings')] as $link) {
             $this->get($link)->assertOk();
         }
     }
@@ -94,6 +96,20 @@ class AccountNavigationTest extends TestCase
             $table->dateTime('NoteUpdatedDate')->nullable();
             $table->boolean('IsDeleted')->default(false);
             $table->dateTime('DateDeleted')->nullable();
+        });
+
+        Schema::create('JobSeekerFlags', function (Blueprint $table): void {
+            $table->id('Id');
+            $table->string('AspNetUserId');
+            $table->boolean('IsApprentice')->default(false);
+            $table->boolean('IsIndigenousPerson')->default(false);
+            $table->boolean('IsMatureWorker')->default(false);
+            $table->boolean('IsNewImmigrant')->default(false);
+            $table->boolean('IsPersonWithDisability')->default(false);
+            $table->boolean('IsStudent')->default(false);
+            $table->boolean('IsVeteran')->default(false);
+            $table->boolean('IsVisibleMinority')->default(false);
+            $table->boolean('IsYouth')->default(false);
         });
 
         Schema::create('JobAlerts', function (Blueprint $table): void {
@@ -142,6 +158,7 @@ class AccountNavigationTest extends TestCase
 
         Schema::create('Jobs', function (Blueprint $table): void {
             $table->string('JobId', 255)->primary();
+            $table->integer('NocCodeId2021')->nullable();
             $table->string('Title')->nullable();
             $table->string('EmployerName')->nullable();
             $table->string('City')->nullable();
@@ -201,6 +218,7 @@ class AccountNavigationTest extends TestCase
         Schema::dropIfExists('NocCodes2021');
         Schema::dropIfExists('SavedIndustryProfiles');
         Schema::dropIfExists('SavedCareerProfiles');
+        Schema::dropIfExists('JobSeekerFlags');
         Schema::dropIfExists('JobAlerts');
         Schema::dropIfExists('SavedJobs');
         Schema::dropIfExists('SystemSettings');
@@ -219,6 +237,19 @@ class AccountNavigationTest extends TestCase
             'PasswordHash' => 'unused-hash',
             'SecurityStamp' => 'stamp-'.$id,
             'EmailConfirmed' => true,
+        ]);
+
+        DB::table('JobSeekerFlags')->insert([
+            'AspNetUserId' => $id,
+            'IsApprentice' => false,
+            'IsIndigenousPerson' => false,
+            'IsMatureWorker' => false,
+            'IsNewImmigrant' => false,
+            'IsPersonWithDisability' => false,
+            'IsStudent' => false,
+            'IsVeteran' => false,
+            'IsVisibleMinority' => false,
+            'IsYouth' => false,
         ]);
 
         return JobSeeker::query()->findOrFail($id);

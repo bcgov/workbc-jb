@@ -43,6 +43,8 @@ final class JobSeekerDashboard extends Component
 
     public int $savedJobs = 0;
 
+    public int $recommendedJobs = 0;
+
     public int $activeAlerts = 0;
 
     public int $savedCareerProfiles = 0;
@@ -79,6 +81,7 @@ final class JobSeekerDashboard extends Component
         $summary = $dashboardService->summaryFor($jobSeeker);
 
         $this->savedJobs = $summary['savedJobs'];
+        $this->recommendedJobs = $summary['recommendedJobs'];
         $this->activeAlerts = $summary['activeAlerts'];
         $this->savedCareerProfiles = $summary['savedCareerProfiles'];
         $this->savedIndustryProfiles = $summary['savedIndustryProfiles'];

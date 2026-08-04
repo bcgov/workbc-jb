@@ -69,7 +69,8 @@ persistent navigation, and the admin-managed copy that surrounds them.
 > + notifications + resources from `jbAccount.dashboard.*`, and expanded tests for navigation, no dead
 > links, disabled-notification rendering, and settings-cache behaviour. **Updated 2026-08-04**: with
 > ACCT-7 shipped, the Manage Account → Personal Settings link is restored in the shared nav and
-> dashboard card, and `/account/settings` is now live.
+> dashboard card, and `/account/settings` is now live. **Updated 2026-08-04 (ACCT-5):** the Jobs card
+> now includes Recommended Jobs with a live count and `/account/recommended` link.
 
 **Docs:** `data-model.md` (SavedJobs/JobAlerts/Saved*Profiles/SystemSettings); `architecture.md §9`
 (caching); `ADR-010` (no French variants needed); copilot-instructions (Accessibility).
@@ -130,18 +131,26 @@ emails; **cadence is configured by Kubernetes CronJob(s)**.
 **Description:** Personalized recommendations from the seeker's saved-job signals. Also supplies the
 **Recommended Jobs count** that ACCT-1's Jobs card currently omits.
 - [ ] **Signal aggregation** from the seeker's saved jobs (see Build brief for the exact shape):
+- [x] **Signal aggregation** from the seeker's saved jobs (see Build brief for the exact shape):
       the **200 most recent** non-deleted saved jobs, grouped into count maps of NOC 2021 code,
       employer name and job title — **lowercased for grouping** — plus the seeker's city from their
       profile and their equity-group flags from `JobSeekerFlags`.
-- [ ] **Boost-weighted OpenSearch query**: one `should` clause per signal, boosts exactly per the
+- [x] **Boost-weighted OpenSearch query**: one `should` clause per signal, boosts exactly per the
       table below, `minimum_should_match: 1`, and an `IgnoreJobIdList` that **excludes the saved
       jobs the recommendations were derived from**.
-- [ ] Reads OpenSearch only (Rule B / constraint #1); respects the base `ExpireDate >= now` filter.
-- [ ] **Per-result `Reason` sentence** explaining why each job was recommended, and `Score` from the
+- [x] Reads OpenSearch only (Rule B / constraint #1); respects the base `ExpireDate >= now` filter.
+- [x] **Per-result `Reason` sentence** explaining why each job was recommended, and `Score` from the
       hit. These are decoration fields not present in the index (`contracts.md §2.1`).
-- [ ] Empty-state when the seeker has no saved jobs, and a distinct one when there are no matches.
-- [ ] Tests: query composition from saved signals (boost values asserted); count bonus scales with
+- [x] Empty-state when the seeker has no saved jobs, and a distinct one when there are no matches.
+- [x] Tests: query composition from saved signals (boost values asserted); count bonus scales with
       repeat saves; saved jobs excluded; reason sentences; both empty states.
+
+> **Status (2026-08-04): completed.** Added saved-job signal aggregation (max 200, lowercased
+> employer/title, NOC null→0), implemented `RecommendedJobsQuery` with the verified boost table
+> (including repeat-save `+0.01*count`, `minimum_should_match: 1`, saved-job exclusion, and virtual
+> city boost `0`), shipped `/account/recommended` with `Reason` + `Score` decoration fields and both
+> empty states, wired the ACCT-1 Recommended Jobs count/link, and added tests asserting exact boosts,
+> repeat-bonus scaling, saved-job exclusion, reason output, and empty states.
 
 **Build brief (extracted from the .NET source, 2026-08-04 — these are facts, do not re-derive):**
 

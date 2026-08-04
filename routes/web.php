@@ -14,6 +14,7 @@ use App\Livewire\JobAlertsList;
 use App\Livewire\JobSeekerDashboard;
 use App\Livewire\PersonalSettingsPage;
 use App\Livewire\JobSearch;
+use App\Livewire\RecommendedJobsPage;
 use App\Livewire\SavedJobsPage;
 use App\Livewire\SavedProfilesPage;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -44,6 +45,7 @@ Route::view('/login', 'welcome')->name('login');
 Route::middleware('auth:web')->group(function (): void {
     Route::get('/account', JobSeekerDashboard::class)->name('account.dashboard');
     Route::get('/account/saved-jobs', SavedJobsPage::class)->name('account.saved-jobs');
+    Route::get('/account/recommended', RecommendedJobsPage::class)->name('account.recommended');
 
     // ACCT-3: alert management. Create/edit reuse the JobSearch component in
     // "alert mode" — detected from the route name in mount() (see JobSearch).

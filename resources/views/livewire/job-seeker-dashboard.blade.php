@@ -43,7 +43,7 @@
         </div>
 
         <p class="sr-only" aria-live="polite" aria-atomic="true">
-            Saved jobs {{ $savedJobs }}, active alerts {{ $activeAlerts }}, saved career profiles {{ $savedCareerProfiles }}, saved industry profiles {{ $savedIndustryProfiles }}.
+            Saved jobs {{ $savedJobs }}, recommended jobs {{ $recommendedJobs }}, active alerts {{ $activeAlerts }}, saved career profiles {{ $savedCareerProfiles }}, saved industry profiles {{ $savedIndustryProfiles }}.
         </p>
 
         <div class="grid gap-4 lg:grid-cols-3">
@@ -57,6 +57,12 @@
                         <a href="{{ route('account.saved-jobs') }}" wire:navigate class="flex items-center justify-between rounded border border-slate-200 px-3 py-2 font-medium text-slate-900 hover:bg-slate-50">
                             <span>Saved jobs</span>
                             <span class="tabular-nums" data-testid="saved-jobs-count">{{ $savedJobs }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('account.recommended') }}" wire:navigate class="flex items-center justify-between rounded border border-slate-200 px-3 py-2 font-medium text-slate-900 hover:bg-slate-50">
+                            <span>Recommended jobs</span>
+                            <span class="tabular-nums" data-testid="recommended-jobs-count">{{ $recommendedJobs }}</span>
                         </a>
                     </li>
                     <li>

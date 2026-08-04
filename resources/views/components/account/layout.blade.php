@@ -7,7 +7,7 @@
     $jobSeeker = \Illuminate\Support\Facades\Auth::guard('web')->user();
     $firstName = trim((string) ($jobSeeker?->FirstName ?? ''));
     $greetingName = $firstName !== '' ? $firstName : 'there';
-    $jobsOpen = request()->routeIs('account.saved-jobs') || request()->routeIs('account.alerts*');
+    $jobsOpen = request()->routeIs('account.saved-jobs') || request()->routeIs('account.recommended') || request()->routeIs('account.alerts*');
     $careersOpen = request()->routeIs('account.profiles');
     $manageOpen = request()->routeIs('account.settings');
 @endphp
@@ -38,6 +38,11 @@
                         <li>
                             <a href="{{ route('account.saved-jobs') }}" wire:navigate class="nav-link block px-2 py-1" @if (request()->routeIs('account.saved-jobs')) aria-current="page" @endif>
                                 Saved jobs
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('account.recommended') }}" wire:navigate class="nav-link block px-2 py-1" @if (request()->routeIs('account.recommended')) aria-current="page" @endif>
+                                Recommended jobs
                             </a>
                         </li>
                         <li>
