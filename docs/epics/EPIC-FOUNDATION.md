@@ -160,13 +160,13 @@ password verifier that rehashes to bcrypt on login. Email-only reset.
 - [x] Registration + **email verification** (`VerificationGuid`) flow; **email-only** password reset
       (`password_reset_tokens`); **no** security-question flow.
 - [x] `NormalizedEmail`/`NormalizedUserName` maintained on writes (Identity uses `ToUpperInvariant()`).
-- [ ] **Rate limiting** on every auth route — login, register, forgot-password, reset-password.
+- [x] **Rate limiting** on every auth route — login, register, forgot-password, reset-password.
       Laravel's `web` group has **no** throttle by default (unlike `api`), so these are currently
       unlimited: a public login over a table where **62% of hashes are legacy MD5-derived**
       (ADR-007) is a credential-stuffing target, and unthrottled forgot-password allows email
       bombing and user-enumeration probing. Throttle per-IP **and** per-account; reset-password
       also per-token.
-- [ ] **Account lockout parity.** `AspNetUsers` already carries `LockoutEnabled`, `LockoutEnd` and
+- [x] **Account lockout parity.** `AspNetUsers` already carries `LockoutEnabled`, `LockoutEnd` and
       `AccessFailedCount` (confirmed in the build brief below) — the legacy .NET app locked accounts
       after repeated failures. Port that behaviour: increment `AccessFailedCount` on failure, clear
       it on success, honour `LockoutEnd`, and refuse login while locked. Without this we silently
@@ -199,6 +199,11 @@ password verifier that rehashes to bcrypt on login. Email-only reset.
 > on any app route and no `RateLimiter` defined, and spotted that the legacy lockout columns are
 > unused. Auth is not "done" without them, and nothing is deployed until every Foundation/epic story
 > is complete, so they are tracked here rather than as a separate hardening pass.
+>
+> **Status (2026-08-04): reopened criteria completed.** Added per-IP + per-account throttles to
+> login/register/forgot/reset (plus per-token for reset), returning 429 when exceeded; and ported
+> persisted lockout parity into `JobSeekerAuthService::attemptLogin()` using
+> `AccessFailedCount`/`LockoutEnd` with configurable legacy defaults (5 attempts, 30 minutes).
 
 **Docs:** `ADR-003`, **`ADR-007`** (verify MD5-wrapped hashes); `data-model.md` (AspNetUsers).
 **Depends on:** FND-1, FND-2.

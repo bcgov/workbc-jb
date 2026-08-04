@@ -130,4 +130,35 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Job Seeker Auth Hardening
+    |--------------------------------------------------------------------------
+    |
+    | FND-5 parity/security controls for job-seeker auth routes. Lockout
+    | defaults mirror the legacy ASP.NET Identity configuration:
+    | MaxFailedAccessAttempts=5 and DefaultLockoutTimeSpan=30 minutes.
+    |
+    */
+
+    'job_seeker_rate_limits' => [
+        'login' => [
+            'per_minute' => (int) env('JOB_SEEKER_LOGIN_THROTTLE_PER_MINUTE', 5),
+        ],
+        'register' => [
+            'per_minute' => (int) env('JOB_SEEKER_REGISTER_THROTTLE_PER_MINUTE', 5),
+        ],
+        'forgot_password' => [
+            'per_minute' => (int) env('JOB_SEEKER_FORGOT_PASSWORD_THROTTLE_PER_MINUTE', 5),
+        ],
+        'reset_password' => [
+            'per_minute' => (int) env('JOB_SEEKER_RESET_PASSWORD_THROTTLE_PER_MINUTE', 5),
+        ],
+    ],
+
+    'job_seeker_lockout' => [
+        'max_failed_attempts' => (int) env('JOB_SEEKER_LOCKOUT_MAX_FAILED_ATTEMPTS', 5),
+        'minutes' => (int) env('JOB_SEEKER_LOCKOUT_MINUTES', 30),
+    ],
+
 ];

@@ -22,12 +22,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/auth/job-seeker/login', [JobSeekerSessionController::class, 'store'])->name('job-seeker.login');
+Route::post('/auth/job-seeker/login', [JobSeekerSessionController::class, 'store'])
+    ->middleware('throttle:job-seeker-login')
+    ->name('job-seeker.login');
 Route::post('/auth/job-seeker/logout', [JobSeekerSessionController::class, 'destroy'])->name('job-seeker.logout');
-Route::post('/auth/job-seeker/register', [JobSeekerRegistrationController::class, 'store'])->name('job-seeker.register');
+Route::post('/auth/job-seeker/register', [JobSeekerRegistrationController::class, 'store'])
+    ->middleware('throttle:job-seeker-register')
+    ->name('job-seeker.register');
 Route::get('/auth/job-seeker/verify/{userId}/{guid}', [JobSeekerRegistrationController::class, 'verify'])->name('job-seeker.verify');
-Route::post('/auth/job-seeker/forgot-password', [JobSeekerPasswordResetController::class, 'request'])->name('job-seeker.forgot-password');
-Route::post('/auth/job-seeker/reset-password', [JobSeekerPasswordResetController::class, 'reset'])->name('job-seeker.reset-password');
+Route::post('/auth/job-seeker/forgot-password', [JobSeekerPasswordResetController::class, 'request'])
+    ->middleware('throttle:job-seeker-forgot-password')
+    ->name('job-seeker.forgot-password');
+Route::post('/auth/job-seeker/reset-password', [JobSeekerPasswordResetController::class, 'reset'])
+    ->middleware('throttle:job-seeker-reset-password')
+    ->name('job-seeker.reset-password');
 
 // Placeholder login page route name for auth middleware guest redirects.
 Route::view('/login', 'welcome')->name('login');
