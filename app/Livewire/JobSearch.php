@@ -51,7 +51,9 @@ use Livewire\Component;
  * {@see JobSearchService}. Alpine handles pure view state elsewhere; this
  * component is the "data" side of the Alpine-vs-Livewire rule.
  */
-#[Layout('components.layouts.app')]
+// NOTE: no #[Layout] attribute — the layout is chosen per-request in
+// {@see layoutName()}, and a static attribute would take precedence over it,
+// silently keeping the full chrome in embed mode.
 #[Title('Find jobs — WorkBC Job Board')]
 final class JobSearch extends Component
 {
@@ -855,7 +857,7 @@ final class JobSearch extends Component
                 'equityOptions' => self::equityOptions(),
                 'jobSourceOptions' => self::jobSourceOptions(),
                 'postingLanguageOptions' => self::postingLanguageOptions(),
-            ]);
+            ])->layout($this->layoutName());
         }
 
         try {
@@ -918,7 +920,22 @@ final class JobSearch extends Component
             'equityOptions' => self::equityOptions(),
             'jobSourceOptions' => self::jobSourceOptions(),
             'postingLanguageOptions' => self::postingLanguageOptions(),
-        ]);
+        ])->layout($this->layoutName());
+    }
+
+    /**
+     * FND-4 / ADR-006 — which layout wraps the search page.
+     *
+     * In embed mode (`?embed=1`) the Drupal host page renders all the site
+     * chrome, so we serve the chrome-less layout; emitting ours as well would
+     * stack two headers, two navs and two footers inside one page. The full
+     * layout is retained for local dev and direct access.
+     */
+    private function layoutName(): string
+    {
+        return $this->embed
+            ? 'components.layouts.embed'
+            : 'components.layouts.app';
     }
 
     /**
