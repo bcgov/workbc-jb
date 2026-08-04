@@ -35,6 +35,7 @@ final class JobSeeker extends Authenticatable implements CanResetPasswordContrac
         'LastLogon' => 'datetime',
         'LastModified' => 'datetime',
         'DateLocked' => 'datetime',
+        'LockoutEnd' => 'datetime',
         'AccountStatus' => TolerantEnum::class.':'.AccountStatus::class,
     ];
 

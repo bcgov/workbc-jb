@@ -7,6 +7,7 @@ use App\Auth\LegacyPasswordHasher;
 use App\Models\Enums\AccountStatus;
 use App\Models\JobSeeker;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -29,6 +30,7 @@ class JobSeekerSessionAuthTest extends TestCase
 
     protected function tearDown(): void
     {
+        Carbon::setTestNow();
         $this->dropFixture();
         parent::tearDown();
     }
@@ -173,6 +175,158 @@ class JobSeekerSessionAuthTest extends TestCase
         $this->assertSame(AccountStatus::Active, $updated->AccountStatus);
     }
 
+    public function test_login_route_returns_429_on_sixth_rapid_attempt(): void
+    {
+        for ($attempt = 1; $attempt <= 5; $attempt++) {
+            $this->postJson('/auth/job-seeker/login', [
+                'email' => 'throttle-login@example.com',
+                'password' => 'wrong',
+            ])->assertStatus(422);
+        }
+
+        $this->postJson('/auth/job-seeker/login', [
+            'email' => 'throttle-login@example.com',
+            'password' => 'wrong',
+        ])->assertStatus(429);
+    }
+
+    public function test_register_forgot_and_reset_routes_are_throttled_with_429(): void
+    {
+        for ($attempt = 1; $attempt <= 5; $attempt++) {
+            $this->postJson('/auth/job-seeker/register', [
+                'email' => 'throttle-register@example.com',
+                'username' => 'throttle-register@example.com',
+                'password' => 'StrongPass!123',
+                'password_confirmation' => 'StrongPass!123',
+            ]);
+        }
+
+        $this->postJson('/auth/job-seeker/register', [
+            'email' => 'throttle-register@example.com',
+            'username' => 'throttle-register@example.com',
+            'password' => 'StrongPass!123',
+            'password_confirmation' => 'StrongPass!123',
+        ])->assertStatus(429);
+
+        for ($attempt = 1; $attempt <= 5; $attempt++) {
+            $this->postJson('/auth/job-seeker/forgot-password', [
+                'email' => 'throttle-forgot@example.com',
+            ]);
+        }
+
+        $this->postJson('/auth/job-seeker/forgot-password', [
+            'email' => 'throttle-forgot@example.com',
+        ])->assertStatus(429);
+
+        for ($attempt = 1; $attempt <= 5; $attempt++) {
+            $this->postJson('/auth/job-seeker/reset-password', [
+                'email' => 'throttle-reset@example.com',
+                'token' => 'token-one',
+                'password' => 'StrongPass!123',
+                'password_confirmation' => 'StrongPass!123',
+            ]);
+        }
+
+        $this->postJson('/auth/job-seeker/reset-password', [
+            'email' => 'throttle-reset@example.com',
+            'token' => 'token-one',
+            'password' => 'StrongPass!123',
+            'password_confirmation' => 'StrongPass!123',
+        ])->assertStatus(429);
+    }
+
+    public function test_access_failed_count_increments_on_failed_password_and_clears_on_success(): void
+    {
+        $this->createJobSeeker('lock-user', 'lock-user@example.com', $this->vectors['v3_hash'], lockoutEnabled: true);
+
+        $this->postJson('/auth/job-seeker/login', [
+            'email' => 'lock-user@example.com',
+            'password' => $this->vectors['wrong_password'],
+        ])->assertStatus(422);
+
+        $afterFailure = JobSeeker::query()->findOrFail('lock-user');
+        $this->assertSame(1, (int) $afterFailure->AccessFailedCount);
+
+        $this->postJson('/auth/job-seeker/login', [
+            'email' => 'lock-user@example.com',
+            'password' => $this->vectors['password'],
+        ])->assertOk()->assertJson(['status' => 'ok']);
+
+        $afterSuccess = JobSeeker::query()->findOrFail('lock-user');
+        $this->assertSame(0, (int) $afterSuccess->AccessFailedCount);
+        $this->assertNull($afterSuccess->LockoutEnd);
+    }
+
+    public function test_locked_account_is_refused_even_with_correct_password(): void
+    {
+        config()->set('auth.job_seeker_lockout.max_failed_attempts', 5);
+        config()->set('auth.job_seeker_lockout.minutes', 30);
+        config()->set('auth.job_seeker_rate_limits.login.per_minute', 50);
+
+        $this->createJobSeeker('locked-user', 'locked@example.com', $this->vectors['v3_hash'], lockoutEnabled: true);
+
+        for ($attempt = 1; $attempt <= 5; $attempt++) {
+            $this->postJson('/auth/job-seeker/login', [
+                'email' => 'locked@example.com',
+                'password' => $this->vectors['wrong_password'],
+            ])->assertStatus(422);
+        }
+
+        $locked = JobSeeker::query()->findOrFail('locked-user');
+        $this->assertSame(5, (int) $locked->AccessFailedCount);
+        $this->assertNotNull($locked->LockoutEnd);
+
+        $this->postJson('/auth/job-seeker/login', [
+            'email' => 'locked@example.com',
+            'password' => $this->vectors['password'],
+        ])->assertStatus(422)->assertJson(['status' => 'invalid_credentials']);
+    }
+
+    public function test_lock_expires_after_lockout_end_and_login_succeeds(): void
+    {
+        Carbon::setTestNow('2026-08-04 10:00:00');
+
+        $this->createJobSeeker('expired-lock', 'expired-lock@example.com', $this->vectors['v3_hash'], lockoutEnabled: true);
+        DB::table('AspNetUsers')->where('Id', 'expired-lock')->update([
+            'AccessFailedCount' => 5,
+            'LockoutEnd' => Carbon::now()->subMinute(),
+            'DateLocked' => Carbon::now()->subMinutes(31),
+        ]);
+
+        $this->postJson('/auth/job-seeker/login', [
+            'email' => 'expired-lock@example.com',
+            'password' => $this->vectors['password'],
+        ])->assertOk()->assertJson(['status' => 'ok']);
+
+        $user = JobSeeker::query()->findOrFail('expired-lock');
+        $this->assertSame(0, (int) $user->AccessFailedCount);
+        $this->assertNull($user->LockoutEnd);
+        $this->assertNull($user->DateLocked);
+    }
+
+    public function test_lockout_disabled_users_are_never_locked(): void
+    {
+        config()->set('auth.job_seeker_rate_limits.login.per_minute', 50);
+
+        $this->createJobSeeker('no-lock', 'no-lock@example.com', $this->vectors['v3_hash'], lockoutEnabled: false);
+
+        for ($attempt = 1; $attempt <= 5; $attempt++) {
+            $this->postJson('/auth/job-seeker/login', [
+                'email' => 'no-lock@example.com',
+                'password' => $this->vectors['wrong_password'],
+            ])->assertStatus(422);
+        }
+
+        $user = JobSeeker::query()->findOrFail('no-lock');
+        $this->assertSame(0, (int) $user->AccessFailedCount);
+        $this->assertNull($user->LockoutEnd);
+
+        $this->postJson('/auth/job-seeker/login', [
+            'email' => 'no-lock@example.com',
+            'password' => $this->vectors['password'],
+        ])->assertOk()->assertJson(['status' => 'ok']);
+    }
+
     private function createFixture(): void
     {
         $this->dropFixture();
@@ -189,6 +343,7 @@ class JobSeekerSessionAuthTest extends TestCase
             $table->boolean('PhoneNumberConfirmed')->default(false);
             $table->boolean('TwoFactorEnabled')->default(false);
             $table->boolean('LockoutEnabled')->default(false);
+            $table->dateTime('LockoutEnd')->nullable();
             $table->integer('AccessFailedCount')->default(0);
             $table->smallInteger('AccountStatus')->default(AccountStatus::Pending->value);
             $table->uuid('VerificationGuid')->nullable();
@@ -211,7 +366,14 @@ class JobSeekerSessionAuthTest extends TestCase
         Schema::dropIfExists('AspNetUsers');
     }
 
-    private function createJobSeeker(string $id, string $email, string $passwordHash, bool $emailConfirmed = true, int $status = 1): void
+    private function createJobSeeker(
+        string $id,
+        string $email,
+        string $passwordHash,
+        bool $emailConfirmed = true,
+        int $status = 1,
+        bool $lockoutEnabled = false,
+    ): void
     {
         DB::table('AspNetUsers')->insert([
             'Id' => $id,
@@ -222,6 +384,9 @@ class JobSeekerSessionAuthTest extends TestCase
             'EmailConfirmed' => $emailConfirmed,
             'PasswordHash' => $passwordHash,
             'SecurityStamp' => 'stamp-'.$id,
+            'LockoutEnabled' => $lockoutEnabled,
+            'AccessFailedCount' => 0,
+            'LockoutEnd' => null,
             'AccountStatus' => $status,
             'VerificationGuid' => null,
             'DateRegistered' => now(),
