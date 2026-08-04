@@ -1,16 +1,10 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="color-scheme" content="light">
-    <title>{{ $title ?? 'WorkBC Job Board' }}</title>
-    @isset($description)
-        <meta name="description" content="{{ $description }}">
-    @endisset
-    {{-- Per-page SEO head (canonical, hreflang, JSON-LD) injected by the view. --}}
-    {{ $head ?? '' }}
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <x-layouts.partials.head :title="$title ?? null" :description="$description ?? null">
+        {{-- Per-page SEO head (canonical, hreflang, JSON-LD) injected by the view. --}}
+        <x-slot:head>{{ $head ?? '' }}</x-slot:head>
+    </x-layouts.partials.head>
 </head>
 <body class="flex min-h-full flex-col bg-slate-50 text-slate-900 antialiased">
     {{-- Keyboard users can jump straight to content (WCAG 2.4.1 Bypass Blocks). --}}

@@ -14,6 +14,13 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         /*
+         * FND-4 — security response headers on every response: frame-ancestors
+         * (who may embed us, per config/embed.php), nosniff, and Referrer-Policy.
+         * Appended so it also covers responses from earlier middleware.
+         */
+        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
+
+        /*
          * The app is served behind CloudFront → AWS ALB (see
          * docs/integration/drupal-embed.md). CloudFront sends the ORIGIN's
          * hostname in `Host` and the real public hostname in a

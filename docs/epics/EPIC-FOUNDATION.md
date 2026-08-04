@@ -106,7 +106,7 @@ supports arbitrary queue names. Tests: `tests/Unit/Jobs/BaseJobTest.php` (3 pass
 
 **Acceptance criteria**
 - [x] Base Blade layout (header/footer/nav), responsive, no horizontal body scroll.
-- [ ] **Chrome-less "embed" layout mode** (per `ADR-006`): a layout variant with **no WorkBC
+- [x] **Chrome-less "embed" layout mode** (per `ADR-006`): a layout variant with **no WorkBC
       header/footer** for serving the search inside the Drupal iframe, selectable per-request (e.g.
       `?embed=1` or a route/middleware). The full layout is retained for local dev / direct access.
       Embed mode also emits the `postMessage` content-height bridge so the parent frame can auto-size.
@@ -123,7 +123,7 @@ supports arbitrary queue names. Tests: `tests/Unit/Jobs/BaseJobTest.php` (3 pass
       pagination — each meeting WCAG 2.1 AA (keyboard, contrast, focus, ARIA where needed).
 - [x] Livewire installed and demonstrated with one trivial reactive component; Alpine used for a
       trivial view-state toggle (documents the "Alpine for view / Livewire for data" rule).
-- [ ] **Security response headers.** Verified 2026-07-29: the app currently sets **none**, and
+- [x] **Security response headers.** Verified 2026-07-29: the app currently sets **none**, and
       CloudFront sets none either — so today any site can frame our authenticated pages
       (clickjacking against saved-jobs/alerts/settings actions). Emit:
       - `Content-Security-Policy: frame-ancestors <parent origins>` — the **exact** parent
@@ -141,8 +141,16 @@ supports arbitrary queue names. Tests: `tests/Unit/Jobs/BaseJobTest.php` (3 pass
       Note these must come from the **app**: the CloudFront response-headers policy
       (`cors-api-jobboard`) contains CORS only and no security headers (ADR-009).
 - [x] An automated a11y check (axe or pa11y) runs in CI against the base layout.
-- [ ] Test: the embed response carries `frame-ancestors` with the configured origins and no
+- [x] Test: the embed response carries `frame-ancestors` with the configured origins and no
       `X-Frame-Options`; the language message applies translation and survives a Livewire update.
+
+**Status (2026-08-04): embed slice done.** Chrome-less `?embed=1` layout
+(`resources/views/components/layouts/embed.blade.php`), the content-height bridge, and
+`SecurityHeaders` middleware are built and tested (`tests/Feature/EmbedLayoutTest.php`, 10 passing).
+Origins are env-driven via `config/embed.php` (`EMBED_PARENT_ORIGINS`); empty fails **closed** to
+`frame-ancestors 'none'`. **The French translate bridge (ADR-010) is deliberately NOT done** — the
+search demo does not need it, and it is only meaningful once a FRANÇAIS toggle on the Drupal page
+drives it.
 
 **Docs:** copilot-instructions (Frontend, Accessibility); `ADR-002`, `ADR-006` (embed mode),
 `ADR-009` (headers are app-owned; CORS is CDN-owned), **`ADR-010`** (French via page translation).
