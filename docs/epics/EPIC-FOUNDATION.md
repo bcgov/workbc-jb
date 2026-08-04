@@ -133,7 +133,7 @@ supports arbitrary queue names. Tests: `tests/Unit/Jobs/BaseJobTest.php` (3 pass
         |---|---|---|
         | prod | `api-jobboard.workbc.ca` | `https://www.workbc.ca` |
         | test | `test-api-jobboard.workbc.ca` | `https://test.workbc.ca` |
-        | dev | `dev-api-jobboard.workbc.ca` | `https://dev.workbc.ca` |
+        | dev | `dev2-api-jobboard.workbc.ca` | `https://dev2.workbc.ca` |
 
         Make it env-driven (default to the prod value); the full map is in
         `integration/drupal-embed.md §0` and `ADR-009`.

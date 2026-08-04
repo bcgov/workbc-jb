@@ -54,7 +54,7 @@ what `contracts.md` and `drupal-embed.md` previously asserted.
 |---|---|---|---|
 | **prod** | `www.workbc.ca` | `api-jobboard.workbc.ca` | `admin-jobboard.workbc.ca` |
 | **test** | `test.workbc.ca` | `test-api-jobboard.workbc.ca` | `test-admin-jobboard.workbc.ca` |
-| **dev** | `dev.workbc.ca` | `dev-api-jobboard.workbc.ca` | `dev-admin-jobboard.workbc.ca` |
+| **dev** | `dev2.workbc.ca` | `dev2-api-jobboard.workbc.ca` | `dev2-admin-jobboard.workbc.ca` |
 
 All nine hosts resolve; the six job-board hosts are each their own CloudFront distribution. Each
 Drupal environment currently points at its matching Stratus origin (`a55eb5-{prod,test,dev}`), so
@@ -66,7 +66,7 @@ Three consequences:
    three — not only production — and `TrustHosts` can safely use `^(.+\.)?workbc\.ca$` without
    locking out test or dev.
 2. **`frame-ancestors` is now writable per environment** (FND-4): `https://www.workbc.ca`,
-   `https://test.workbc.ca`, `https://dev.workbc.ca` respectively. Make it configurable, never `*`.
+   `https://test.workbc.ca`, `https://dev2.workbc.ca` respectively. Make it configurable, never `*`.
 3. **The admin panel is served from a different origin** than the seeker app, so it carries its own
    session cookie. Same-site, so nothing breaks — but ADM-1 onwards should assume two origins, not
    one.

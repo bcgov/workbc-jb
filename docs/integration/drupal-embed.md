@@ -23,7 +23,7 @@ profile-save endpoints as server-to-server (they are not) and cited untracked fi
 |---|---|---|---|
 | **prod** | `www.workbc.ca` | `api-jobboard.workbc.ca` | `admin-jobboard.workbc.ca` |
 | **test** | `test.workbc.ca` | `test-api-jobboard.workbc.ca` | `test-admin-jobboard.workbc.ca` |
-| **dev** | `dev.workbc.ca` | `dev-api-jobboard.workbc.ca` | `dev-admin-jobboard.workbc.ca` |
+| **dev** | `dev2.workbc.ca` | `dev2-api-jobboard.workbc.ca` | `dev2-admin-jobboard.workbc.ca` |
 
 Each job-board host is its own CloudFront distribution, and **each Drupal environment currently
 points at its matching Stratus origin** (`a55eb5-{prod,test,dev}`) — so the repoint in §7 is a
