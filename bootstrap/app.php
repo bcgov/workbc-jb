@@ -37,6 +37,25 @@ return Application::configure(basePath: dirname(__DIR__))
                 | Request::HEADER_X_FORWARDED_PORT
                 | Request::HEADER_X_FORWARDED_PROTO,
         );
+
+        /*
+         * Host spoofing mitigation (ADR-009): when enabled, only accept
+         * forwarded/request hosts matching the configured regex patterns.
+         *
+         * Intentionally inert by default — an empty value means "no
+         * restriction" so local dev, test runs, and health checks are
+         * unaffected until explicitly enabled per environment.
+         */
+        $trustedHostPatterns = array_values(array_filter(
+            array_map('trim', explode(',', (string) env('TRUSTED_HOST_PATTERNS', ''))),
+            static fn (string $pattern): bool => $pattern !== '',
+        ));
+
+        if ($trustedHostPatterns === []) {
+            $trustedHostPatterns = ['^.+$'];
+        }
+
+        $middleware->trustHosts(at: $trustedHostPatterns);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
