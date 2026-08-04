@@ -176,15 +176,52 @@ against the restored DB. Notes for whoever touches this next:
 ---
 
 ## ACCT-7 — Personal settings
-**Description:** Profile management and password change.
-- [ ] Edit profile: `FirstName`, `LastName`, `City`, `LocationId`, `CountryId`, `ProvinceId`;
-      writes maintain `NormalizedEmail`/`NormalizedUserName` where email changes.
-- [ ] Change password → **rehash to bcrypt/argon2** (FND-5 hasher); no MD5.
-- [ ] Profile changes write a `JobSeekerChangeLog` audit row (preserve).
+**Description:** Profile management, email change and password change. Also closes the
+`/account/settings` **404** that ACCT-1 deliberately stopped linking to.
+- [ ] Edit profile: `FirstName`, `LastName`, `City`, `LocationId`, `CountryId`, `ProvinceId`.
+      Max length **50** on `FirstName`/`LastName`/`City` (legacy `MaxLength(50)`).
+- [ ] **Location consistency rules** (ported, verified in `JobSeekerRepository.cs:261-265, 392`):
+      when `ProvinceId != 2` (not B.C.) the server **clears** `LocationId` and `City`; otherwise
+      `City` is **derived from the chosen `Location`**, never accepted as free text.
+- [ ] **Email change requires re-verification** (decision 2026-08-04 — this deliberately
+      **diverges from legacy**). Legacy assigns the new address immediately: `EmailConfirmed`
+      is never reset, no confirmation is sent, no token regenerated — so a hijacked session can
+      permanently seize the account, and the address need not be one the user owns. Instead:
+      reject duplicates, set `EmailConfirmed = false`, regenerate `VerificationGuid`, send the
+      confirmation to the **new** address, and reuse the existing FND-5
+      `/auth/job-seeker/verify/{userId}/{guid}` flow. Maintain
+      `NormalizedEmail`/`NormalizedUserName` (Identity uses `ToUpperInvariant()`); legacy relied
+      on Identity recomputing these, so we must set them explicitly.
+- [ ] Change password: **current password required** (legacy behaviour), rehash via the FND-5
+      hasher (bcrypt/argon2, never MD5), and regenerate `SecurityStamp`.
+- [ ] **`JobSeekerChangeLog` audit rows.** Legacy writes **one summary row per save**, not one
+      per field — `Field`/`OldValue`/`NewValue` are comma-joined lists
+      (`JobSeekerRepository.cs:532-565`). `Field` holds human sentences (`"First name edited"`,
+      `"Email edited"`), **not** column names, and Country/Province/City log their **display
+      labels** (`Country.Name`, `Province.Name`, `Location.Label`), not IDs.
+      `ModifiedByAdminUserId` is **null for self-edits**, set when an admin acts via
+      impersonation. Follow the existing shape in `JobAlertsService::writeAuditRow()`.
+- [ ] **Password changes also write an audit row** (decision 2026-08-04 — legacy writes none).
+      `Field = 'Password changed'`, `OldValue`/`NewValue` = `'-'`; **never** log the password,
+      old or new.
 - [ ] a11y: labelled inputs, error messaging via ARIA live.
-- [ ] Tests: profile update + audit row; password change rehashes; validation.
+- [ ] Tests: profile update + summary audit row; province≠BC clears city/location; email change
+      requires re-verification and blocks duplicates; password change requires the current
+      password, rehashes, and writes an audit row without the secret; max-length validation.
 
-**Docs:** `ADR-003`, `data-model.md` (AspNetUsers, JobSeekerChangeLog). **Depends on:** ACCT-1, FND-5.
+**Build brief (verified against the .NET source, 2026-08-04):**
+- Legacy endpoint `PUT /api/users/update-personal-settings` → `UsersController.cs:291-314` →
+  `UserService.cs:189-235` → `JobSeekerRepository::UpdateJobSeekerAsync` (`:107`) /
+  `ApplyJobSeekerChanges` (`:255`).
+- Email **is** seeker-editable in legacy (`personal-settings.component.ts:60-68`), and
+  `UserName` tracks `Email` (`register.model.ts:31-33`) — keep that coupling.
+- `VerificationGuid` is **dead code in .NET** but live here: FND-5 built the register→verify
+  flow, so the re-verification decision above reuses working code rather than new plumbing.
+- No PII in logs (FOIPPA, constraint #8) — the audit table is not "logs", but never write a
+  password or security answer into it.
+
+**Docs:** `ADR-003`, `ADR-007` (hashing), `data-model.md` (AspNetUsers, JobSeekerChangeLog).
+**Depends on:** ACCT-1, FND-5.
 
 ---
 
