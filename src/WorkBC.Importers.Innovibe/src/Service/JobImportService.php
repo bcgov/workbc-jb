@@ -101,7 +101,7 @@ final class JobImportService
      * Returns false when the job's wage is below the minimum-wage threshold.
      *
      * The value is normalised to an hourly rate using salaryUnitText (HOUR /
-     * DAY / WEEK / MONTH / YEAR) and compared against 90% of the admin minimum wage —
+     * DAY / WEEK / BIWEEKLY / MONTH / YEAR) and compared against 90% of the admin minimum wage —
      * matching the 0.9 * minWage hourly rule the Federal importer applies. The
      * lowest advertised figure (salaryMin, else salaryValue, else salaryMax) is
      * used so a range is judged by its floor. Jobs with no usable/positive
@@ -118,6 +118,7 @@ final class JobImportService
             'HOUR'  => (float) $salary,
             'DAY'   => (float) $salary / self::DAILY_WORK_HOURS,
             'WEEK'  => (float) $salary / self::WEEKLY_WORK_HOURS,
+            'BIWEEKLY' => (float) $salary / (2 * self::WEEKLY_WORK_HOURS),
             'MONTH' => (float) $salary * 12 / (self::WEEKLY_WORK_HOURS * self::WEEKS_PER_YEAR),
             'YEAR'  => (float) $salary / (self::WEEKLY_WORK_HOURS * self::WEEKS_PER_YEAR),
             default => (float) $salary / (self::WEEKLY_WORK_HOURS * self::WEEKS_PER_YEAR),
@@ -136,7 +137,7 @@ final class JobImportService
         $pageNum  = 0;
         $pageJob  = 0;
 
-        $chk     = $this->db->prepare('SELECT "ApiDate" FROM "ImportedJobsWanted" WHERE "JobId" = ?');
+        $chk     = $this->db->prepare('SELECT "ApiDate", "HashId" FROM "ImportedJobsWanted" WHERE "JobId" = ?');
         $del     = $this->db->prepare('SELECT 1 FROM "DeletedJobs" WHERE "JobId" = ? LIMIT 1');
         $hashChk = $this->db->prepare('SELECT "JobId" FROM "ImportedJobsWanted" WHERE "HashId" = ? LIMIT 1');
         // If a previously-expired job re-appears in the API, drop its stale
@@ -226,7 +227,10 @@ final class JobImportService
             }
 
             if ($row) {
-                if (($row['ApiDate'] ?? '') !== $apiDate) {
+                // Innovibe sometimes edits a job (e.g. correcting salaryUnitText)
+                // without bumping updatedAt, so ApiDate alone misses changes —
+                // also compare the content hash.
+                if (($row['ApiDate'] ?? '') !== $apiDate || (string) ($row['HashId'] ?? '') !== (string) $hashId) {
                     if ($hashTaken) {
                         // Overwrite the content but keep the row's existing
                         // HashId — the new hash is taken by another row.
@@ -602,6 +606,7 @@ final class JobImportService
             'HOUR'  => 2080,   // 40 hrs/week × 52 weeks
             'DAY'   => 260,    // 5 days/week × 52 weeks
             'WEEK'  => 52,
+            'BIWEEKLY' => 26,
             'MONTH' => 12,
             default => 1,      // YEAR or unknown
         };
