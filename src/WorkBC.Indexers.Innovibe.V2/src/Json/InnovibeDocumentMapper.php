@@ -211,6 +211,7 @@ final class InnovibeDocumentMapper
                 'HOUR' => 2080.0,
                 'DAY' => 260.0,
                 'WEEK' => 52.0,
+                'BIWEEKLY' => 26.0,
                 'MONTH' => 12.0,
                 default => 1.0,
             };
