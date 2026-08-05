@@ -178,7 +178,9 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                     decimal multiplier = salaryUnit.ToUpper() switch
                     {
                         "HOUR" => 2080m,   // 40 hrs/week × 52 weeks
+                        "DAY" => 260m,     // 5 days/week × 52 weeks
                         "WEEK" => 52m,
+                        "BIWEEKLY" => 26m,
                         "MONTH" => 12m,
                         _ => 1m            // YEAR or unknown
                     };
