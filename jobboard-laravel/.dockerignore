@@ -1,0 +1,30 @@
+# Keeps the build context small and stops local artefacts reaching the image.
+# Composer and Vite regenerate vendor/ and public/build inside the build.
+
+.git
+.github
+node_modules
+vendor
+public/build
+public/hot
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+bootstrap/cache/*
+
+# Never bake secrets or the local-only dev login into an image. Both are
+# gitignored already; this is defence in depth, and deploy:verify fails the
+# deploy if dev-preview.php is ever present.
+.env
+.env.*
+!.env.example
+routes/dev-preview.php
+
+# Not needed at runtime.
+tests
+phpunit.xml
+.pa11yci.json
+compose.yaml
+docs
+README.md
