@@ -23,7 +23,21 @@ profile-save endpoints as server-to-server (they are not) and cited untracked fi
 |---|---|---|---|
 | **prod** | `www.workbc.ca` | `api-jobboard.workbc.ca` | `admin-jobboard.workbc.ca` |
 | **test** | `test.workbc.ca` | `test-api-jobboard.workbc.ca` | `test-admin-jobboard.workbc.ca` |
-| **dev** | `dev2.workbc.ca` | `dev2-api-jobboard.workbc.ca` | `dev2-admin-jobboard.workbc.ca` |
+| **dev** | `dev2.workbc.ca` | `workbc-jb2.a55eb5-dev.stratus.cloud.gov.bc.ca` ⚠️ | `dev2-admin-jobboard.workbc.ca` |
+
+> ⚠️ **dev is NOT `dev2-api-jobboard.workbc.ca`** — corrected 2026-08-05. That hostname **does not
+> resolve** (`ERR_NAME_NOT_RESOLVED` in-browser), despite an earlier row here claiming it was
+> DNS-verified. Note that WSL `nslookup` returns a CloudFront CNAME for it, which is misleading;
+> trust the browser. Ground truth is view-source on
+> `dev2.workbc.ca/search-and-prepare-job/find-jobs`, which shows
+> `<app-root api="https://workbc-jb2.a55eb5-dev.stratus.cloud.gov.bc.ca/">`.
+>
+> Two consequences. **(a)** The k8s deployment `jb2` is dev2's *live* job-board backend, not a spare
+> environment — replacing its `web` container replaces dev2's job board. **(b)** dev is the one
+> environment that is **cross-site**: everywhere else the app sits under `workbc.ca` alongside the
+> Drupal parent, but the Stratus hostname does not. So on dev2, ADR-009 session auth will not work
+> and the referrer-restricted Google Maps key is rejected. Framing does not help — an iframe sends
+> its own origin as the referrer. Only a real `workbc.ca` hostname for `jb2` fixes either.
 
 Each job-board host is its own CloudFront distribution, and **each Drupal environment currently
 points at its matching Stratus origin** (`a55eb5-{prod,test,dev}`) — so the repoint in §7 is a

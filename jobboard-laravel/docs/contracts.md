@@ -225,6 +225,37 @@ casing as potentially having a caller.
 `GET /api/career-profiles/topjobs/{noc}` exists but is **not called** by Drupal (it uses §2.1).
 Removable in the rewrite.
 
+### 2.6 Build info — the availability probe (**load-bearing**)
+`GET /api/SystemSettings/BuildInfo` → `{ "SHA": "...", "RunNumber": "...", "BuildDate": "..." }`
+
+> **Added 2026-08-05.** This endpoint was missed in the original contract survey, and §2 previously
+> stated there were only three server-to-server calls. **There are four.**
+
+This is **not** a diagnostics endpoint — it gates the entire Drupal job-board region.
+`workbc_jobboard.module` calls it before rendering **both** the Find Jobs and the Account page:
+
+```php
+function jbTestConnection() {
+  try {
+    $client = new Client();
+    $response = $client->get(config('jobboard_api_url_backend') . '/api/SystemSettings/BuildInfo');
+    return !empty($response);
+  } catch (...) { return FALSE; }
+}
+// template: {% if jobboard_connection %} "The Job Board is currently unavailable." {% else %} …app… {% endif %}
+```
+
+Guzzle throws on a 404, so **a missing route takes both Drupal pages down** — observed on dev2 the
+moment the Laravel image replaced WorkBC.Web. Drupal only checks the response is non-empty, so the
+body barely matters, but the keys mirror WorkBC.Web's anonymous object.
+
+Values come from `config/build.php`, populated by the Dockerfile's `COMMIT_SHA` / `RUN_NUMBER` /
+`BUILD_DATE` build args. They are `"unknown"` in local builds — deliberately still a 200, because a
+500 here would blank the Drupal pages.
+
+**Do not delete this route** because it looks unused from inside this codebase. `BuildInfoApiTest`
+exists to make that failure loud.
+
 ---
 
 ## 3. Contract change rules

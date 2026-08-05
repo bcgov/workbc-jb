@@ -30,9 +30,13 @@ what `contracts.md` and `drupal-embed.md` previously asserted.
    `statusIndustryProfile` branches — including `Authorization` forwarding — but **nothing calls
    them**. It is dead code, superseded by (2). This is the origin of the incorrect
    "Drupal forwards the job seeker's Authorization header" claim in `contracts.md §2.4`.
-5. Genuine server-to-server calls from Drupal PHP are only three: `api/Search/JobSearch`
-   (Recent Jobs block), `api/Search/gettotaljobs` (sitewide count), `api/location/cities`
-   (autocomplete on Drupal's own form).
+5. Genuine server-to-server calls from Drupal PHP are **four**: `api/Search/JobSearch`
+   (Recent Jobs block), `api/Search/GetTotalJobs` (sitewide count), `api/Location/cities`
+   (autocomplete on Drupal's own form), and `api/SystemSettings/BuildInfo` — the availability
+   probe `jbTestConnection()` runs before rendering the Find Jobs and Account pages.
+   **Corrected 2026-08-05:** this list previously said "only three" and omitted the probe, whose
+   absence blanks both Drupal pages with "The Job Board is currently unavailable." The casings
+   above are the ones real callers use; see contracts.md §2.3.1.
 
 **Production infrastructure (verified)**
 

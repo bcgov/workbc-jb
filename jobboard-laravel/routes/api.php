@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\LocationApiController;
 use App\Http\Controllers\Api\SearchApiController;
+use App\Http\Controllers\Api\SystemSettingsApiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,8 +25,8 @@ use Illuminate\Support\Facades\Route;
  * read end-to-end (its repo is separate — see docs/integration/drupal-embed.md),
  * assume any documented casing may have a caller.
  *
- * These three are the ONLY genuine server-to-server endpoints. The career /
- * industry profile routes are NOT here: they are called from the browser and
+ * These FOUR are the genuine server-to-server endpoints. The career / industry
+ * profile routes are NOT here: they are called from the browser and
  * authenticate with the seeker's session, so they live in web.php to pick up
  * the session/cookie/CSRF middleware (ACCT-6, ADR-009).
  */
@@ -51,3 +52,11 @@ foreach (['Location', 'location'] as $locationPrefix) {
     Route::get("{$locationPrefix}/cities/{cityName}/{includeRegion}", [LocationApiController::class, 'cities'])
         ->where('includeRegion', '[A-Za-z]+');
 }
+
+// §2.5 Build info — the Drupal availability probe. DO NOT REMOVE.
+//
+// workbc_jobboard.module's jbTestConnection() GETs this before rendering the
+// Find Jobs and Account pages; on failure it swaps the whole job-board region
+// for "The Job Board is currently unavailable." A missing route here takes both
+// Drupal pages down, so this is infrastructure, not diagnostics.
+Route::get('SystemSettings/BuildInfo', [SystemSettingsApiController::class, 'buildInfo']);

@@ -66,6 +66,18 @@ Built. Path-param style (`.../cities/Surrey/true`), matching the legacy contract
 query string. Backs the location combobox's suggestion list on both the Drupal-proxied
 `/api/getCities` route and (inside the app itself) the search page's own city input.
 
+## 3.5. Build info — `GET /api/SystemSettings/BuildInfo` ⚠️ **gates the Drupal pages**
+
+Built 2026-08-05, after discovering it was missing from the original contract survey.
+
+`workbc_jobboard.module`'s `jbTestConnection()` GETs this before rendering the **Find Jobs** and
+**Account** pages. On failure it substitutes "The Job Board is currently unavailable." for the whole
+job-board region — so without this route neither page renders the app at all, regardless of what
+else works. That is what dev2 showed the moment the Laravel image replaced WorkBC.Web.
+
+Returns `{"SHA","RunNumber","BuildDate"}` from `config/build.php` (Dockerfile build args). Drupal
+only checks for a non-empty response. See contracts.md §2.6; `BuildInfoApiTest` guards it.
+
 ## 4 & 5. Career and industry profile save/status — built (ACCT-6)
 
 Both sets are live and behave identically; the industry endpoints previously did not exist at all.
