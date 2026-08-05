@@ -168,10 +168,36 @@ Consumed server-to-server by the Drupal `workbc_jobboard` module. Base URL = Dru
   fallback). Drupal's "Recent Jobs" widgets depend on both.
 
 ### 2.2 Total jobs
-`GET /api/Search/gettotaljobs` → `{ "count": 37831 }` (active-job count).
+`GET /api/Search/GetTotalJobs` → **`42802`** — a **bare JSON integer**, not an object.
+
+> **Corrected 2026-08-05.** This section previously read `{ "count": 37831 }`. That was wrong.
+> WorkBC.Web's action is `Task<int> GetTotalJobs(...)`, which serialises as a naked number;
+> verified with `curl https://workbc-jb.a55eb5-dev.stratus.cloud.gov.bc.ca/api/Search/GetTotalJobs`
+> → `42802`. Callers coerce the body straight to a number, so the object form rendered
+> **"Search NaN jobs in B.C."** on the WorkBC home page. `TotalJobsApiTest` now pins the bare
+> integer.
+
+Language selection accepts **both** forms, as `.NET` model binding did:
+`GetTotalJobs/fr` (path segment) and `GetTotalJobs?language=fr` (query string).
 
 ### 2.3 City autocomplete
-`GET /api/location/cities/{cityName}/true` → array of strings: `["Surrey", "Surrey, BC", …]`.
+`GET /api/Location/cities/{cityName}/true` → array of strings: `["Surrey", "Surrey, BC", …]`.
+
+### 2.3.1 Path casing — more than one casing is live
+ASP.NET Core matches routes **case-insensitively**; Laravel matches **case-sensitively**. Callers
+therefore standardised on whatever casing they happened to write, and the app answered. Registering
+a single casing in Laravel 404s every other one.
+
+| Endpoint | Casing in real callers (`src/scripts/test/cases.txt`) | Casing this doc used to publish |
+|---|---|---|
+| Total jobs | `/api/Search/GetTotalJobs` | `/api/Search/gettotaljobs` |
+| City autocomplete | `/api/Location/cities/…` | `/api/location/cities/…` |
+| Job search | `/api/Search/JobSearch` | *(same — already matched)* |
+
+`routes/api.php` registers **both** casings for each. When adding an endpoint, check `cases.txt`
+for the casing real callers use rather than assuming this doc's. The Drupal module itself has not
+been read end to end (separate repo — see `integration/drupal-embed.md`), so treat any documented
+casing as potentially having a caller.
 
 ### 2.4 Career / Industry profile — save & status (authenticated)
 

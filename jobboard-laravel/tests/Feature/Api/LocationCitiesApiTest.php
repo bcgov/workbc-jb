@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Concerns\InteractsWithLocationsTable;
 use Tests\TestCase;
 
@@ -40,5 +41,28 @@ class LocationCitiesApiTest extends TestCase
 
         $response->assertOk();
         $response->assertExactJson([]);
+    }
+
+    /**
+     * ASP.NET matched case-insensitively, so the .NET smoke tests call
+     * `/api/Location/cities/...` with a capital L while contracts.md published
+     * the lowercase form. Laravel matches case-sensitively, so both have to be
+     * registered — see the comment in routes/api.php.
+     */
+    #[DataProvider('casingProvider')]
+    public function test_it_accepts_every_path_casing_in_live_use(string $path): void
+    {
+        $response = $this->getJson($path);
+
+        $response->assertOk();
+        $response->assertExactJson(['Surrey', 'Surrey Village']);
+    }
+
+    public static function casingProvider(): array
+    {
+        return [
+            'casing used by real callers (cases.txt)' => ['/api/Location/cities/Sur/true'],
+            'casing published in our contracts.md' => ['/api/location/cities/Sur/true'],
+        ];
     }
 }

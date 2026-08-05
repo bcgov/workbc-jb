@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\JobSearchRequest;
 use App\Services\Search\JobSearchService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * SRCH-10 — the Drupal-facing job-search API (docs/contracts.md §2.1, §2.2).
@@ -34,12 +35,27 @@ final class SearchApiController extends Controller
     }
 
     /**
-     * GET /api/Search/gettotaljobs(/{language}) — contracts.md §2.2.
+     * GET /api/Search/GetTotalJobs(/{language}) — contracts.md §2.2.
+     *
+     * Returns a BARE INTEGER, not an object. WorkBC.Web's action is
+     * `Task<int> GetTotalJobs(...)`, so ASP.NET serialises the body as `42802`
+     * — verified against the .NET dev origin on 2026-08-05. Consumers coerce
+     * the body straight to a number, so wrapping it as `{"count": n}` yields
+     * NaN downstream; that is what produced "Search NaN jobs in B.C." on the
+     * WorkBC home page. Do not "improve" this into an object.
      */
-    public function totalJobs(string $language = ''): JsonResponse
+    public function totalJobs(Request $request, string $language = ''): JsonResponse
     {
+        // .NET bound `language` from the route segment OR the query string —
+        // cases.txt exercises `GetTotalJobs/fr` and `GetTotalJobs?language=fr`
+        // alike. Without the query-string fallback, `?language=fr` silently
+        // returned the ENGLISH count rather than failing visibly.
+        if ($language === '') {
+            $language = (string) $request->query('language', '');
+        }
+
         app()->setLocale($language === 'fr' ? 'fr' : 'en');
 
-        return response()->json(['count' => $this->service->activeJobCount()]);
+        return response()->json($this->service->activeJobCount());
     }
 }

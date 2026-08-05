@@ -50,13 +50,17 @@ Confirmed working, including the two behavioral contracts Drupal's widgets depen
 `SearchNocField`), industry pages (send `SearchIndustry`), region/city pages (send
 `SearchLocations`) — all via the same endpoint, just a different filter subset in the request body.
 
-## 2. Total jobs — `GET /api/Search/gettotaljobs`
+## 2. Total jobs — `GET /api/Search/GetTotalJobs`
 
 Built. Backs Drupal's `hook_cron` → `state('jobboard_total_jobs')`, which is the "Search N jobs"
 count shown sitewide (not just on the job board pages). Confirmed it counts active jobs only and
 doesn't fetch hit documents (count-only query, no per-request index scan cost).
 
-## 3. City autocomplete — `GET /api/location/cities/{name}/{includeRegion}`
+**Returns a bare integer** (`42802`), not `{"count": n}` — see contracts.md §2.2 for why this was
+recorded incorrectly and how it surfaced as "Search NaN jobs in B.C.". Accepts the language as
+either a path segment or `?language=`, and answers to both `GetTotalJobs` and `gettotaljobs`.
+
+## 3. City autocomplete — `GET /api/Location/cities/{name}/{includeRegion}`
 
 Built. Path-param style (`.../cities/Surrey/true`), matching the legacy contract exactly — not a
 query string. Backs the location combobox's suggestion list on both the Drupal-proxied
