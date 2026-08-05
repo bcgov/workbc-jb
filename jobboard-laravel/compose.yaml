@@ -1,0 +1,117 @@
+services:
+    laravel.test:
+        build:
+            context: './vendor/laravel/sail/runtimes/8.3'
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        image: 'sail-8.3/app'
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        ports:
+            - '${APP_PORT:-80}:80'
+            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+        environment:
+            WWWUSER: '${WWWUSER}'
+            LARAVEL_SAIL: 1
+            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+            IGNITION_LOCAL_SITES_PATH: '${PWD}'
+        volumes:
+            - '.:/var/www/html'
+            # Heavy, non-edited trees live in fast Docker-managed volumes instead of the
+            # slow Windows bind mount (vendor is ~10k files read every request). This also
+            # fixes storage/bootstrap-cache being root-owned on the Windows mount.
+            - 'sail-vendor:/var/www/html/vendor'
+            - 'sail-storage:/var/www/html/storage'
+            - 'sail-bootstrap-cache:/var/www/html/bootstrap/cache'
+        networks:
+            - sail
+        depends_on:
+            - pgsql
+            - redis
+            - opensearch
+    pgsql:
+        image: 'postgres:15-alpine'
+        ports:
+            - '${FORWARD_DB_PORT:-5432}:5432'
+        environment:
+            PGPASSWORD: '${DB_PASSWORD:-secret}'
+            POSTGRES_DB: '${DB_DATABASE}'
+            POSTGRES_USER: '${DB_USERNAME}'
+            POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+        volumes:
+            - 'sail-pgsql:/var/lib/postgresql'
+            - './vendor/laravel/sail/database/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
+        networks:
+            - sail
+        healthcheck:
+            test:
+                - CMD
+                - pg_isready
+                - '-q'
+                - '-d'
+                - '${DB_DATABASE}'
+                - '-U'
+                - '${DB_USERNAME}'
+            retries: 3
+            timeout: 5s
+    redis:
+        image: 'redis:alpine'
+        ports:
+            - '${FORWARD_REDIS_PORT:-6379}:6379'
+        volumes:
+            - 'sail-redis:/data'
+        networks:
+            - sail
+        healthcheck:
+            test:
+                - CMD
+                - redis-cli
+                - ping
+            retries: 3
+            timeout: 5s
+    opensearch:
+        image: 'opensearchproject/opensearch:2.11.1'
+        environment:
+            - 'discovery.type=single-node'
+            - 'plugins.security.disabled=true'
+            - 'bootstrap.memory_lock=true'
+            - 'OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m'
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+            nofile:
+                soft: 65536
+                hard: 65536
+        ports:
+            - '${FORWARD_OPENSEARCH_PORT:-9200}:9200'
+        volumes:
+            - 'sail-opensearch:/usr/share/opensearch/data'
+        networks:
+            - sail
+        healthcheck:
+            test:
+                - CMD-SHELL
+                - 'curl -sf http://localhost:9200/_cluster/health || exit 1'
+            retries: 5
+            timeout: 10s
+            interval: 15s
+            start_period: 30s
+networks:
+    sail:
+        driver: bridge
+volumes:
+    sail-pgsql:
+        driver: local
+    sail-redis:
+        driver: local
+    sail-opensearch:
+        driver: local
+    sail-vendor:
+        driver: local
+    sail-storage:
+        driver: local
+    sail-bootstrap-cache:
+        driver: local

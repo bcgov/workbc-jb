@@ -6,20 +6,27 @@ services:
         build:
             context: .
             dockerfile: ./dotnet-build.Dockerfile
+    # The web tier is the Laravel rewrite (jobboard-laravel/), not WorkBC.Web.
+    # The service name MUST stay `web` — the CI step tags `src_web:latest` as
+    # <ecr>/jb:<sha>, and Deploy-Dev2 sets that image on deployment/jb2's `web`
+    # container. Rename this and the whole chain breaks silently.
+    #
+    # The .NET app is still in src/WorkBC.Web and still builds if pointed at
+    # again; only this build target changed.
     web:
         container_name: web
         build:
-            context: .
-            dockerfile: ./WorkBC.Web/Dockerfile
+            # Relative to THIS file's directory (src/), so this is repo-root
+            # jobboard-laravel/. Scoped to the app rather than the repo root so
+            # the build context stays small and its .dockerignore applies.
+            context: ../jobboard-laravel
+            dockerfile: Dockerfile
             args:
                 COMMIT_SHA: ${COMMIT_SHA}
                 RUN_NUMBER: ${RUN_NUMBER}
                 BUILD_DATE: ${BUILD_DATE}
         ports:
             - "8081:8081"
-        environment:
-            - ASPNETCORE_URLS=http://*:8081
-            - ASPNETCORE_ENVIRONMENT=Development
         env_file:
             - .env
     admin:
