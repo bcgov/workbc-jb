@@ -166,32 +166,23 @@ namespace WorkBC.ElasticSearch.Indexing.Services
 
                 #region Salary
 
-                decimal? salaryMin = j.Value<decimal?>("salaryMin");
-                decimal? salaryMax = j.Value<decimal?>("salaryMax");
-                decimal? salaryValue = j.Value<decimal?>("salaryValue");
-                string salaryUnit = j.Value<string>("salaryUnitText") ?? "";
+                // Annual figures come pre-calculated from the API
+                // (calculatedSalaries.YEAR — Innovibe derives them from the
+                // job's advertised salary and working hours; no local
+                // HOUR×2080-style conversion here). Cents are dropped — the
+                // site shows whole-dollar amounts only.
+                JToken calcYear = j["calculatedSalaries"]?["YEAR"];
+                decimal? annualMin = FloorPositive(calcYear?.Value<decimal?>("min"));
+                decimal? annualMax = FloorPositive(calcYear?.Value<decimal?>("max"));
+                decimal? annualValue = FloorPositive(calcYear?.Value<decimal?>("value"));
 
-                decimal? salary = salaryMin ?? salaryValue ?? salaryMax;
-                if (salary.HasValue && salary.Value >= 0.01m)
+                decimal? annualSalary = annualMin ?? annualValue ?? annualMax;
+                if (annualSalary.HasValue)
                 {
-                    // Convert to annual equivalent
-                    decimal multiplier = salaryUnit.ToUpper() switch
-                    {
-                        "HOUR" => 2080m,   // 40 hrs/week × 52 weeks
-                        "DAY" => 260m,     // 5 days/week × 52 weeks
-                        "WEEK" => 52m,
-                        "BIWEEKLY" => 26m,
-                        "MONTH" => 12m,
-                        _ => 1m            // YEAR or unknown
-                    };
-
-                    decimal annualSalary = salary.Value * multiplier;
                     job.Salary = annualSalary;
 
-                    if (salaryMin.HasValue && salaryMax.HasValue && salaryMin != salaryMax)
+                    if (annualMin.HasValue && annualMax.HasValue && annualMin != annualMax)
                     {
-                        decimal annualMin = salaryMin.Value * multiplier;
-                        decimal annualMax = salaryMax.Value * multiplier;
                         job.SalarySummary = $"${annualMin:#,##0} - ${annualMax:#,##0} annually";
                     }
                     else
@@ -787,6 +778,20 @@ namespace WorkBC.ElasticSearch.Indexing.Services
             }
 
             return job;
+        }
+
+        /// <summary>
+        ///     Floors an API-calculated salary figure to whole dollars.
+        ///     Null when absent or non-positive.
+        /// </summary>
+        private static decimal? FloorPositive(decimal? value)
+        {
+            if (!value.HasValue || value.Value < 0.01m)
+            {
+                return null;
+            }
+
+            return decimal.Floor(value.Value);
         }
 
         /// <summary>

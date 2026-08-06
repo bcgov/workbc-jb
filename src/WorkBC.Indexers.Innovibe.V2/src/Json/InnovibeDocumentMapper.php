@@ -200,32 +200,20 @@ final class InnovibeDocumentMapper
         $job['EmployerName'] = $this->filterEmployerName($employerName);
 
         // ── Salary ────────────────────────────────────────────────────
-        $salaryMin = $this->parseDecimal($j['salaryMin'] ?? null);
-        $salaryMax = $this->parseDecimal($j['salaryMax'] ?? null);
-        $salaryValue = $this->parseDecimal($j['salaryValue'] ?? null);
-        $salaryUnit = strtoupper((string) ($j['salaryUnitText'] ?? ''));
-        $salary = $salaryMin ?? $salaryValue ?? $salaryMax;
+        // Annual figures come pre-calculated from the API
+        // (calculatedSalaries.YEAR — Innovibe derives them from the job's
+        // advertised salary and working hours; no local HOUR×2080-style
+        // conversion here). Cents are dropped — the site shows whole-dollar
+        // amounts only.
+        $annualMin = $this->calculatedAnnual($j, 'min');
+        $annualMax = $this->calculatedAnnual($j, 'max');
+        $annualValue = $this->calculatedAnnual($j, 'value');
+        $annualSalary = $annualMin ?? $annualValue ?? $annualMax;
 
-        if ($salary !== null && $salary >= 0.01) {
-            $multiplier = match ($salaryUnit) {
-                'HOUR' => 2080.0,
-                'DAY' => 260.0,
-                'WEEK' => 52.0,
-                'BIWEEKLY' => 26.0,
-                'MONTH' => 12.0,
-                default => 1.0,
-            };
-            // C# computes salary in `decimal` (exact). Innovibe salary fields
-            // carry up to 4 decimal places and the multiplier is an integer, so
-            // the true annual value has at most 4 decimals. Rounding there
-            // reproduces the decimal output while removing PHP float noise
-            // (e.g. 84275.15199999999 → 84275.152).
-            $annualSalary = $salary * $multiplier;
-            $job['Salary'] = round($annualSalary, 4);
+        if ($annualSalary !== null) {
+            $job['Salary'] = $annualSalary;
 
-            if ($salaryMin !== null && $salaryMax !== null && $salaryMin != $salaryMax) {
-                $annualMin = $salaryMin * $multiplier;
-                $annualMax = $salaryMax * $multiplier;
+            if ($annualMin !== null && $annualMax !== null && $annualMin != $annualMax) {
                 $job['SalarySummary'] = '$' . number_format($annualMin) . ' - $' . number_format($annualMax) . ' annually';
             } else {
                 $job['SalarySummary'] = '$' . number_format($annualSalary) . ' annually';
@@ -686,6 +674,19 @@ final class InnovibeDocumentMapper
     private function formatNaive(\DateTimeImmutable $dt): string
     {
         return $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s');
+    }
+
+    /**
+     * One figure (min / max / value) from the API's calculatedSalaries.YEAR
+     * block, floored to whole dollars. Null when absent or non-positive.
+     */
+    private function calculatedAnnual(array $j, string $field): ?float
+    {
+        $v = $this->parseDecimal($j['calculatedSalaries']['YEAR'][$field] ?? null);
+        if ($v === null || $v < 0.01) {
+            return null;
+        }
+        return floor($v);
     }
 
     private function parseDecimal(mixed $raw): ?float
