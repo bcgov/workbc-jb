@@ -4,7 +4,6 @@ using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Serilog.Core;
 using WorkBC.Data;
-using WorkBC.ElasticSearch.Indexing.Services;
 using WorkBC.Shared.Services;
 
 namespace EFMigrationRunner

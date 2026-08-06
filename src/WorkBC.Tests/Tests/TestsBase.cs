@@ -64,14 +64,12 @@ namespace WorkBC.Tests.Tests
             List<SystemSetting> systemSettings = SystemSettingsFixture.systemSetting;
 
             var xmlServiceFederal = new XmlParsingServiceFederal(duplicateCities, uniqueCities, lstNocs, lstNocs2021, GeocodingService, systemSettings);
-            var xmlServiceWanted = new XmlParsingServiceWanted(duplicateCities, uniqueCities, lstNocs, lstNocs2021, systemSettings);
 
             ElasticService = new ElasticSearchSetupHelpers(
                 Configuration,
-                connectionSettings, 
-                indexSettings, 
-                xmlServiceFederal, 
-                xmlServiceWanted);
+                connectionSettings,
+                indexSettings,
+                xmlServiceFederal);
 
             #endregion
 
