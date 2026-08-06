@@ -11,9 +11,10 @@ use PDO;
  * Converts an Innovibe job JSON payload into the Elasticsearch document
  * (the PascalCase shape defined by ElasticSearchJob.cs + jobs_index.json).
  *
- * Faithful port of the JSON branch of
+ * Originally a faithful port of the JSON branch of
  * WorkBC.ElasticSearch.Indexing.Services.XmlParsingServiceWanted
- * (ConvertJsonToElasticJob) plus the shared XmlParsingServiceBase helpers.
+ * (ConvertJsonToElasticJob — since removed from the C# lib; this mapper is
+ * now the only implementation) plus the shared XmlParsingServiceBase helpers.
  *
  * Innovibe is the only source of external (Wanted) jobs and its payloads are
  * always JSON — the legacy TalentNeuron XML branch is intentionally not ported.
