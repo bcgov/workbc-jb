@@ -5,7 +5,6 @@ namespace WorkBC.Shared.Constants
         public const string SystemSettingsTimestampCacheKey = "SETTINGS_DT";
 
         public const int CacheMinutes = 60;
-        public const int DefaultWantedJobExpiryDays = 90;
 
         //Elastic search index names
         public const string EnglishIndex = "jobs_en";

@@ -1,0 +1,75 @@
+{
+  "JobId": "6178210923",
+  "Title": "Digital Marketing Specialist - Bilingual",
+  "DatePosted": "2019-10-03T08:00:00+00:00",
+  "EduLevel": "University",
+  "EmployerName": "ABSOLUTE RESULTS",
+  "Lang": "en",
+  "Location": [
+    {
+      "Lat": "49.10810089111328",
+      "Lon": "-122.7969970703125"
+    }
+  ],
+  "City": [
+    "Surrey"
+  ],
+  "Province": "BC",
+  "Region": [
+    "Mainland / Southwest"
+  ],
+  "HoursOfWork": {
+    "Description": [
+      "Full-time"
+    ]
+  },
+  "PeriodOfEmployment": {
+    "Description": [
+      "Permanent"
+    ]
+  },
+  "EmploymentTerms": {},
+  "LocationGeo": [
+    "49.10810089111328,-122.7969970703125"
+  ],
+  "EmployerTypeId": 0,
+  "WorkHours": 0.0,
+  "IsStudent": false,
+  "IsYouth": false,
+  "IsApprentice": false,
+  "IsDisability": false,
+  "IsAboriginal": false,
+  "IsNewcomer": false,
+  "IsVeteran": false,
+  "IsVismin": false,
+  "IsFederalJob": false,
+  "IsMatureWorker": false,
+  "SkillCategories": [],
+  "Noc": 1111,
+  "Noc2021": 11100,
+  "NocGroup": "01111",
+  "NocJobTitle": "Accountant",
+  "IsVariousLocation": false,
+  "SalarySummary": "N/A",
+  "SalarySort": {
+    "Ascending": 99999999.0,
+    "Descending": -99999999.0
+  },
+  "Industry": "Other Management Consulting Services",
+  "JobDescription": "Bilingual (French/English) Digital Marketing Specialist WE NEED Absolute Results is looking for a Bilingual Digital Marketing Specialist to join our fast-growing team in Surrey, BC. Reporting to the Senior Digital Marketing Lead, you will manage...",
+  "Occupation": "Accountant",
+  "Function": "Marketing / PR",
+  "ExternalSource": {
+    "Source": [
+      {
+        "Url": "https://absoluteresults.bamboohr.com/jobs/view.php?id=30",
+        "Source": "ABSOLUTE RESULTS"
+      }
+    ]
+  },
+  "LastUpdated": "2019-10-03T08:00:00+00:00",
+  "PositionsAvailable": 1,
+  "ApplyEmailAddress": "",
+  "ApplyPhoneNumber": "",
+  "ApplyWebsite": ""
+}

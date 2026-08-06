@@ -1,0 +1,73 @@
+{
+  "JobId": "6111613763",
+  "Title": "BAND 4 - Director, Employee Health & Safety",
+  "DatePosted": "2024-02-22T08:00:00+00:00",
+  "EduLevel": "University",
+  "EmployerName": "Province of British Columbia",
+  "Lang": "en",
+  "Location": [
+    {
+      "Lat": "49.24610137939453",
+      "Lon": "-122.96600341796875"
+    }
+  ],
+  "City": [
+    "Burnaby"
+  ],
+  "Province": "BC",
+  "Region": [
+    "Mainland / Southwest"
+  ],
+  "HoursOfWork": {
+    "Description": [
+      "Full-time"
+    ]
+  },
+  "PeriodOfEmployment": {
+    "Description": [
+      "Permanent",
+      "Temporary"
+    ]
+  },
+  "EmploymentTerms": {},
+  "LocationGeo": [
+    "49.24610137939453,-122.96600341796875"
+  ],
+  "EmployerTypeId": 0,
+  "WorkHours": 0.0,
+  "Salary": 136700.0,
+  "IsStudent": false,
+  "IsYouth": false,
+  "IsApprentice": false,
+  "IsDisability": false,
+  "IsAboriginal": false,
+  "IsNewcomer": false,
+  "IsVeteran": false,
+  "IsVismin": false,
+  "IsFederalJob": false,
+  "IsMatureWorker": false,
+  "SkillCategories": [],
+  "IsVariousLocation": false,
+  "SalarySummary": "$136,700 annually",
+  "SalarySort": {
+    "Ascending": 136700.0,
+    "Descending": 136700.0
+  },
+  "Industry": "Unspecified",
+  "JobDescription": "Posting Title BAND 4 - Director, Employee Health & Safety Position Classification Band 4 Union N/A Work Options Location Burnaby, BC V3J 1N3 CA (Primary) Salary Range $102,900.00 - $136,700.11 per annum Close Date 3/21/2024 Job Type Regular Full...",
+  "Occupation": "",
+  "Function": "Medical / Health",
+  "ExternalSource": {
+    "Source": [
+      {
+        "Url": "https://bcpublicservice.hua.hrsmart.com/hr/ats/Posting/view/110653",
+        "Source": "Province of British Columbia"
+      }
+    ]
+  },
+  "LastUpdated": "2024-02-22T08:00:00+00:00",
+  "PositionsAvailable": 1,
+  "ApplyEmailAddress": "",
+  "ApplyPhoneNumber": "",
+  "ApplyWebsite": ""
+}

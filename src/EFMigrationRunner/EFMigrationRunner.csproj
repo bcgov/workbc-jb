@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\WorkBC.Data\WorkBC.Data.csproj" />
-    <ProjectReference Include="..\..\src\WorkBC.ElasticSearch.Indexing\WorkBC.ElasticSearch.Indexing.csproj" />
     <ProjectReference Include="..\..\src\WorkBC.Shared\WorkBC.Shared.csproj" />
   </ItemGroup>
 
