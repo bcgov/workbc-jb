@@ -4,11 +4,13 @@ name: CI-AMS
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
+  # Triggers the workflow on push events for the "ams" branch
   push:
     branches: [ "ams" ]
-#  pull_request:
-#    branches: [ "master" ]
+  # PRs targeting ams run the test suite only (the build job is skipped for
+  # pull_request events — see the job-level `if` below)
+  pull_request:
+    branches: [ "ams" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -48,7 +50,10 @@ jobs:
 
   # This workflow contains a single job called "build"
   build:
-    needs: test  
+    needs: test
+    # PRs only run the test job — building/pushing ECR images needs AWS OIDC
+    # credentials and must only happen on pushes to ams (or manual dispatch)
+    if: ${{ github.event_name != 'pull_request' }}
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 

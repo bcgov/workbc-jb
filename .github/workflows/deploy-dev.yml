@@ -39,7 +39,9 @@ jobs:
   cd:
     name: cd
     runs-on: ubuntu-22.04
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # head_branch guard: CI-AMS also completes for PR test runs now — only a
+    # successful run of the ams branch itself may deploy to dev
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'ams' }}
 
     steps:
       - name: Check out the repo
