@@ -1,12 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using WorkBC.Data;
-using WorkBC.Data.Migrations;
 using WorkBC.Data.Model.JobBoard;
 using WorkBC.ElasticSearch.Indexing.XmlParsingHelpers;
 using WorkBC.Shared.Constants;
@@ -27,16 +24,8 @@ namespace WorkBC.ElasticSearch.Indexing.Services
         private readonly IGeocodingService _geocodingService;
         //NOC-387-Special case scenario fix for NOC 2021 codes 00011 to 00015
         private List<int> specialNocs = new List<int>() { 00011, 00012, 00013, 00014, 00015 };
-        private readonly JobBoardContext _jobBoardContext;
 
-
-
-        public XmlParsingServiceFederal(IConfiguration configuration) : base(configuration)
-        {
-            _geocodingService = new GeocodingService(JobBoardContext, configuration);         
-        }
-
-        public XmlParsingServiceFederal(List<Data.Model.JobBoard.Location> duplicateCities, 
+        public XmlParsingServiceFederal(List<Data.Model.JobBoard.Location> duplicateCities,
             Dictionary<string, string> uniqueCities, List<NocCode> nocCodes, List<NocCode2021> nocCodes2021, IGeocodingService geocodingService, List<SystemSetting> systemSettings) : base(duplicateCities, uniqueCities, nocCodes, nocCodes2021, systemSettings)
         {
             this._geocodingService = geocodingService;
