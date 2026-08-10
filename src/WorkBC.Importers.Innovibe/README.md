@@ -64,13 +64,9 @@ duplicate-hash check on `JobPostEnglish` makes re-runs safe.
    - `postedFrom=<yesterday>` (skipped when `--bulk`)
    - `includeExpired=false`
    - `includeNocUnmatched=<INCLUDE_NOC_UNMATCHED env, default false>`
-2. **Filter** — skip jobs with no salary information at all (no usable
-   figure in the API-provided `calculatedSalaries` block). Jobs without a
-   salary cannot be shown on the public board because of provincial
-   legislation. Also skip jobs whose `calculatedSalaries.HOUR` rate is below
-   90% of the admin-configured minimum wage (`W` marker). All per-unit
-   figures come pre-converted from the API — no local HOUR/DAY/WEEK/…
-   conversion is performed.
+2. **Filter** — skip jobs with no salary information at all (`salaryMin`,
+   `salaryMax`, `salaryValue` all empty). Jobs without a salary cannot be
+   shown on the public board because of provincial legislation.
 3. **Upsert** — insert new jobs into `"ImportedJobsWanted"`; for existing
    rows, only update if the JSON payload hash differs (`H` marker = duplicate
    hash skip, `U` = updated, `I` = inserted, `S` = skipped).

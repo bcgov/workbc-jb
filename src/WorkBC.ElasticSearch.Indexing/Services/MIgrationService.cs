@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using WorkBC.Data;
 
-namespace EFMigrationRunner
+namespace WorkBC.ElasticSearch.Indexing.Services
 {
     public class MigrationService
     {

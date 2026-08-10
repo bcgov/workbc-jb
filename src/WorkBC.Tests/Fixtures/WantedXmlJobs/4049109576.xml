@@ -1,0 +1,32 @@
+<job id="4049109576" hash="2204234120" refnumber="" isstaffing="false" isanonymous="false" isthirdparty="false"
+     isinappropriate="false" isbulk="false" isaggregator="false" isfree="false" isclassifiedoccupation="true"
+     isclassifiedindustry="true" iscurrent="true">
+  <dates firstseen="2019-10-03" posted="2019-10-03" refreshed="2019-10-03" />
+  <title value="Graphic Designer - Bilingual" titleid="10609486" cleantitleid="12078446" semicleantitleid="1501123" />
+  <description
+    value="JOB PURPOSE Absolute Results, Canada’s largest automotive marketing company is the industry leader in database marketing, salesperson training and Private Sale’s events. We dream big, think bigger and produce successful events across North America,..." />
+  <occupation>
+    <noc code="5241" label="Graphic designers and illustrators" revision="2011" />
+  </occupation>
+  <industry code="541618" label="Other Management Consulting Services" /><function id="3" label="Creative / Talent" />
+  <employer id="1015954" name="ABSOLUTE RESULTS" superaliasid="1015954" superalias="ABSOLUTE RESULTS" />
+  <education id="5" label="Bachelor's degree" />
+  <locations>
+    <location>
+      <city code="5915004" label="Surrey" /><state code="59" label="BC" />
+      <county code="5915" label="Greater Vancouver County" /><wib id="0" code="00000" label="Unavailable" />
+      <msa code="59933" label="Vancouver" /><position latitude="49.10810089111328" longitude="-122.7969970703125" />
+    </location>
+  </locations>
+  <salaries>
+    <salary id="2" type="Modeled" value="42000" />
+  </salaries>
+  <jobtypes>
+    <jobtype id="4" label="Full-Time" /><jobtype id="1" label="Permanent" />
+  </jobtypes>
+  <tags />
+  <sources>
+    <source id="1572" jobid="4049109576" tags="" type="Corporate" name="ABSOLUTE RESULTS"
+            url="https://absoluteresults.bamboohr.com/jobs/view.php?id=27" validlink="true" />
+  </sources>
+</job>

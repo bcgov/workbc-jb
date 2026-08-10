@@ -81,9 +81,8 @@ A normal run, mirroring the legacy `WorkBC.Indexers.Wanted/Program.cs`:
 
 `InnovibeDocumentMapper` ports the JSON branch of the legacy
 `XmlParsingServiceWanted`: BC-preferred location + city/region disambiguation;
-annual salary taken from the API-provided `calculatedSalaries.YEAR` block
-(floored to whole dollars, min–max range summary — no local HOUR×2080-style
-conversion); `employmentType` → HoursOfWork / PeriodOfEmployment; 3-strategy education
+salary annual conversion (HOUR×2080 / WEEK×52 / MONTH×12) with min–max range
+summary; `employmentType` → HoursOfWork / PeriodOfEmployment; 3-strategy education
 mapping; NOC 2021 from the highest-scored `nocMatches` (validated against
 `"NocCodes2021"`); title cleanup (strip U+200B, all-caps → lowercase,
 `\bpt\b`→PT / `\bft\b`→FT); `ExternalSource`; and `SalarySort`.

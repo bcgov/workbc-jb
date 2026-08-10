@@ -17,13 +17,15 @@ final class JobImportService
 {
     private const JOB_SOURCE = 2;
 
-    // Salary sanity bounds and the minimum-wage fallback. All per-unit salary
-    // figures come pre-converted from the Innovibe API ("calculatedSalaries",
-    // derived from the job's advertised salary and working hours) — no local
-    // HOUR/DAY/WEEK/... conversion is performed here. A job is rejected when
-    // its API-calculated hourly wage is below 90% of the admin-configured
-    // minimum wage (shared.settings.minimumWage).
+    // Salary sanity bounds and the minimum-wage fallback, mirroring the Federal
+    // importer (WorkBC.Importers.Federal.V2 XmlJobMapper) so both sources apply
+    // the same rules. A job is rejected when its hourly-equivalent wage is below
+    // 90% of the admin-configured minimum wage (shared.settings.minimumWage).
+    private const WEEKLY_WORK_HOURS     = 40.0;
+    private const DAILY_WORK_HOURS      = 8.0;
+    private const WEEKS_PER_YEAR        = 52;
     private const MAX_HOURLY_RATE       = 2500.0;
+    private const MAX_YEARLY_SALARY     = 5000000.0;
     // B.C. general minimum wage effective June 1, 2026.
     private const MINIMUM_WAGE_FALLBACK = 18.25;
 
@@ -96,38 +98,31 @@ final class JobImportService
     }
 
     /**
-     * Extracts [min, max, value] for one unit (HOUR / YEAR / ...) from the
-     * API-provided "calculatedSalaries" block. Non-numeric or non-positive
-     * figures come back as null.
-     */
-    private static function apiSalary(array $job, string $unit): array
-    {
-        $u = $job['calculatedSalaries'][$unit] ?? [];
-        $pick = static fn($v): ?float => is_numeric($v) && (float) $v > 0 ? (float) $v : null;
-        return [
-            $pick($u['min'] ?? null),
-            $pick($u['max'] ?? null),
-            $pick($u['value'] ?? null),
-        ];
-    }
-
-    /**
      * Returns false when the job's wage is below the minimum-wage threshold.
      *
-     * The hourly rate is taken straight from the API's calculatedSalaries.HOUR
-     * block and compared against 90% of the admin minimum wage — matching the
-     * 0.9 * minWage hourly rule the Federal importer applies. The lowest
-     * available figure (min, else value, else max) is used so a range is
-     * judged by its floor. Jobs with no usable/positive figure are left to
-     * the caller's existing no-salary handling (returns true).
+     * The value is normalised to an hourly rate using salaryUnitText (HOUR /
+     * DAY / WEEK / BIWEEKLY / MONTH / YEAR) and compared against 90% of the admin minimum wage —
+     * matching the 0.9 * minWage hourly rule the Federal importer applies. The
+     * lowest advertised figure (salaryMin, else salaryValue, else salaryMax) is
+     * used so a range is judged by its floor. Jobs with no usable/positive
+     * figure are left to the caller's existing no-salary handling (returns true).
      */
     private function passesMinimumWage(array $job): bool
     {
-        [$min, $max, $value] = self::apiSalary($job, 'HOUR');
-        $hourly = $min ?? $value ?? $max;
-        if ($hourly === null) {
+        $salary = $job['salaryMin'] ?? $job['salaryValue'] ?? $job['salaryMax'] ?? null;
+        if ($salary === null || !is_numeric($salary) || (float) $salary <= 0) {
             return true;
         }
+
+        $hourly = match (strtoupper((string) ($job['salaryUnitText'] ?? ''))) {
+            'HOUR'  => (float) $salary,
+            'DAY'   => (float) $salary / self::DAILY_WORK_HOURS,
+            'WEEK'  => (float) $salary / self::WEEKLY_WORK_HOURS,
+            'BIWEEKLY' => (float) $salary / (2 * self::WEEKLY_WORK_HOURS),
+            'MONTH' => (float) $salary * 12 / (self::WEEKLY_WORK_HOURS * self::WEEKS_PER_YEAR),
+            'YEAR'  => (float) $salary / (self::WEEKLY_WORK_HOURS * self::WEEKS_PER_YEAR),
+            default => (float) $salary / (self::WEEKLY_WORK_HOURS * self::WEEKS_PER_YEAR),
+        };
 
         // Reject wages under 90% of minimum, or implausibly high outliers.
         return $hourly >= 0.9 * $this->getMinimumWage() && $hourly < self::MAX_HOURLY_RATE;
@@ -189,10 +184,8 @@ final class JobImportService
                 continue;
             }
 
-            // Skip jobs with no salary (the API provides calculatedSalaries
-            // only when the job has usable salary figures)
-            [$yMin, $yMax, $yValue] = self::apiSalary($job, 'YEAR');
-            if (($yMin ?? $yValue ?? $yMax) === null) {
+            // Skip jobs with no salary
+            if (empty($job['salaryMin']) && empty($job['salaryMax']) && empty($job['salaryValue'])) {
                 $this->skipped++;
                 $progress .= 'S';
                 continue;
@@ -603,14 +596,25 @@ final class JobImportService
             }
         }
 
-        // Salary: annual figures come pre-calculated from the API
-        // (calculatedSalaries.YEAR). Cents are dropped — the site shows
-        // whole-dollar amounts only.
-        [$annualMin, $annualMax, $annualValue] = self::apiSalary($j, 'YEAR');
-        $annualMin    = $annualMin   !== null ? floor($annualMin) : null;
-        $annualMax    = $annualMax   !== null ? floor($annualMax) : null;
-        $annualValue  = $annualValue !== null ? floor($annualValue) : null;
-        $annualSalary = $annualMin ?? $annualValue ?? $annualMax;
+        // Salary: convert everything to annual and format as "$XX,XXX annually"
+        $salaryMin = $j['salaryMin'] ?? null;
+        $salaryMax = $j['salaryMax'] ?? null;
+        $salary    = $salaryMin ?? $j['salaryValue'] ?? $salaryMax;
+
+        $salaryUnit = strtoupper($j['salaryUnitText'] ?? '');
+        $annualMultiplier = match ($salaryUnit) {
+            'HOUR'  => 2080,   // 40 hrs/week × 52 weeks
+            'DAY'   => 260,    // 5 days/week × 52 weeks
+            'WEEK'  => 52,
+            'BIWEEKLY' => 26,
+            'MONTH' => 12,
+            default => 1,      // YEAR or unknown
+        };
+
+        // Convert to annual
+        $annualSalary = $salary !== null ? (float) $salary * $annualMultiplier : null;
+        $annualMin    = $salaryMin !== null ? (float) $salaryMin * $annualMultiplier : null;
+        $annualMax    = $salaryMax !== null ? (float) $salaryMax * $annualMultiplier : null;
 
         if ($annualMin !== null && $annualMax !== null && $annualMin != $annualMax) {
             $salarySummary = '$' . number_format($annualMin) . ' - $' . number_format($annualMax) . ' annually';
@@ -668,7 +672,7 @@ final class JobImportService
             'datePosted'       => $datePosted,
             'actualDatePosted' => $actualDatePosted,
             'locationId'    => $this->getBestAvailableLocationId($city),
-            'salary'        => $annualSalary,
+            'salary'        => $salary,
             'salarySummary' => mb_substr($salarySummary ?? '', 0, 60),
             'nocCode2021'   => $nocCode2021,
             'expireDate'    => $expireDate,

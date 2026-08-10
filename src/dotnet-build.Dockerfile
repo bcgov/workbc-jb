@@ -9,9 +9,12 @@ WORKDIR /src
 COPY ["WorkBC.ElasticSearch.Models/", "WorkBC.ElasticSearch.Models/"]
 COPY ["WorkBC.Data/", "WorkBC.Data/"]
 COPY ["WorkBC.Shared/", "WorkBC.Shared/"]
+COPY ["WorkBC.ElasticSearch.Indexing/", "WorkBC.ElasticSearch.Indexing/"]
 COPY ["WorkBC.ElasticSearch.Search/", "WorkBC.ElasticSearch.Search/"]
 
-# only one project needs to be restored & built because it references the other three
+# only two project needs to be restored & built because they have references to the other three
+RUN dotnet restore "WorkBC.ElasticSearch.Indexing/WorkBC.ElasticSearch.Indexing.csproj"
 RUN dotnet restore "WorkBC.ElasticSearch.Search/WorkBC.ElasticSearch.Search.csproj"
 
+RUN dotnet build "WorkBC.ElasticSearch.Indexing/WorkBC.ElasticSearch.Indexing.csproj" -c Release --no-restore
 RUN dotnet build "WorkBC.ElasticSearch.Search/WorkBC.ElasticSearch.Search.csproj" -c Release --no-restore

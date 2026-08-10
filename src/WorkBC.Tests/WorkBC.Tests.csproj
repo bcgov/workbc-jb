@@ -27,24 +27,15 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.7" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Indexing\Resources\jobs_index.json" />
-    <None Remove="Indexing\Resources\synonym_file.json" />
-    <None Remove="Indexing\Resources\synonym_predefined.json" />
+    <Folder Include="Fixtures\WantedXmlJobs\" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Indexing\Resources\jobs_index.json" />
-    <EmbeddedResource Include="Indexing\Resources\synonym_file.json" />
-    <EmbeddedResource Include="Indexing\Resources\synonym_predefined.json" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\WorkBC.ElasticSearch.Indexing\WorkBC.ElasticSearch.Indexing.csproj" />
     <ProjectReference Include="..\WorkBC.ElasticSearch.Models\WorkBC.ElasticSearch.Models.csproj" />
     <ProjectReference Include="..\WorkBC.ElasticSearch.Search\WorkBC.ElasticSearch.Search.csproj" />
   </ItemGroup>
@@ -101,7 +92,31 @@
     <None Update="Fixtures\FederalXmlJobs\40387120.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Fixtures\WantedJobs\*.json">
+    <None Update="Fixtures\WantedXmlJobs\4049109571.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\WantedXmlJobs\4049109576.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\WantedXmlJobs\4049816178.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\WantedXmlJobs\6178058670.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\WantedXmlJobs\6178210923.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\WantedXmlJobs\6111648176.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\WantedXmlJobs\6111613763.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\WantedXmlJobs\6178414387.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\WantedXmlJobs\6178453995.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

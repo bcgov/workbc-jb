@@ -2,7 +2,6 @@
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using WorkBC.ElasticSearch.Indexing;
 using WorkBC.ElasticSearch.Indexing.Services;
 using WorkBC.ElasticSearch.Indexing.Settings;
@@ -16,15 +15,17 @@ namespace WorkBC.Tests.Helpers
         private readonly ConnectionSettings _connectionSettings;
         private readonly IndexSettings _indexSettings;
         private readonly XmlParsingServiceFederal _xmlServiceFederal;
+        private readonly XmlParsingServiceWanted _xmlServiceWanted;
         private readonly IConfiguration _configuration;
 
-        public ElasticSearchSetupHelpers(IConfiguration configuration, ConnectionSettings connectionSettings,
-            IndexSettings indexSettings, XmlParsingServiceFederal xmlServiceFederal)
+        public ElasticSearchSetupHelpers(IConfiguration configuration, ConnectionSettings connectionSettings, 
+            IndexSettings indexSettings, XmlParsingServiceFederal xmlServiceFederal, XmlParsingServiceWanted xmlServiceWanted)
         {
             _configuration = configuration;
             _indexSettings = indexSettings;
             _connectionSettings = connectionSettings;
             _xmlServiceFederal = xmlServiceFederal;
+            _xmlServiceWanted = xmlServiceWanted;
         }
 
         /// <summary>
@@ -85,22 +86,34 @@ namespace WorkBC.Tests.Helpers
                             }
 
                             break;
-                        case "wantedjobs":
+                        case "wantedxmljobs":
 
-                            // Pre-built ES documents (JSON). These were generated once from
-                            // the legacy TalentNeuron XML fixtures via the (since removed)
-                            // XmlParsingServiceWanted; wanted/Innovibe jobs are indexed by
-                            // the PHP indexer in production, so no C# parser exists anymore.
-                            foreach (FileInfo wantedJob in folder.GetFiles("*.json"))
+                            //get jobs for wanted
+                            foreach (FileInfo wantedJob in folder.GetFiles())
                             {
-                                JObject doc = JObject.Parse(File.ReadAllText(wantedJob.FullName));
+                                //job xml as string
+                                string jobXml = File.ReadAllText(wantedJob.FullName);
+
+                                //index each job
+                                ElasticSearchJob esj = _xmlServiceWanted.ConvertToElasticJob(jobXml);
 
                                 //set the expiry date to a future date
-                                doc["ExpireDate"] = DateTime.Now.AddDays(2);
+                                esj.ExpireDate = DateTime.Now.AddDays(2);
+
+                                if (esj.JobId == null)
+                                {
+                                    continue;
+                                }
+
+                                //process model to JSON object
+                                string jsonWantedJob = JsonConvert.SerializeObject(esj, new JsonSerializerSettings
+                                {
+                                    NullValueHandling = NullValueHandling.Ignore
+                                });
 
                                 //POST JSON to ElasticSearch
                                 string jobId = wantedJob.Name.Split('.')[0];
-                                PostToElasticSearch(doc.ToString(), jobId, "PUT", _indexSettings.DefaultIndex);
+                                PostToElasticSearch(jsonWantedJob, jobId, "PUT", _indexSettings.DefaultIndex);
                             }
 
                             break;
