@@ -134,18 +134,15 @@ final class JobImportService
         return $hourly >= 0.9 * $this->getMinimumWage() && $hourly < self::MAX_HOURLY_RATE;
     }
 
-    /** Lazily-prepared statements for removeIfPreviouslyImported(). */
     private ?\PDOStatement $removeChk = null;
     private ?\PDOStatement $removeDel = null;
     private ?\PDOStatement $removeDeact = null;
 
     /**
-     * A previously-imported job whose current payload no longer passes the
-     * salary gates (advertised salary removed, or wage dropped below the
-     * minimum) must come off the board instead of lingering with its stale
-     * imported salary: delete the staging row and deactivate the Jobs row.
-     * The wanted indexer's orphan sweep then deletes the ES document.
-     * Returns true when an existing row was removed.
+     * Takes a previously-imported job off the board when it no longer passes
+     * the salary gates (e.g. the employer removed the salary): deletes the
+     * staging row and deactivates the Jobs row; the indexer's orphan sweep
+     * then deletes the ES document. Returns true when a row was removed.
      */
     private function removeIfPreviouslyImported(string $id): bool
     {
@@ -222,11 +219,8 @@ final class JobImportService
                 continue;
             }
 
-            // Skip jobs with no salary: require an advertised figure
-            // (salaryMin/salaryValue/salaryMax) AND a usable API-calculated
-            // annual figure. An employer can remove the salary from a posting
-            // after we imported it — in that case the job must come off the
-            // board, not linger with the stale salary (removeIfPreviouslyImported).
+            // Skip jobs with no salary — an advertised figure AND a usable
+            // calculated annual figure are both required.
             [$yMin, $yMax, $yValue] = self::apiSalary($job, 'YEAR');
             $hasAdvertised = !empty($job['salaryMin']) || !empty($job['salaryValue']) || !empty($job['salaryMax']);
             if (!$hasAdvertised || ($yMin ?? $yValue ?? $yMax) === null) {
