@@ -316,6 +316,12 @@ final class FederalDocumentMapper
         $salaryString = $this->nodeTextOrNull($xpath, 'salary/string', $job);
         $doc['Salary'] = $this->calculateSalary($hourly, $weekly, $yearly, $salaryString);
 
+        // Advertised per-unit figures, verbatim — the search filters compare
+        // per-hour/week input against these fields. The federal feed does not
+        // advertise biweekly/monthly rates, so those fields stay absent.
+        $doc['SalaryHourly'] = $hourly !== null && $hourly >= 0.01 ? $hourly : null;
+        $doc['SalaryWeekly'] = $weekly !== null && $weekly >= 0.01 ? $weekly : null;
+
         // ── Salary conditions (string list) ────────────────────────
         foreach ($xpath->query('salary_conditions/string', $job) as $condition) {
             $doc['SalaryConditions']['Description'][] = $this->capitalize((string) $condition->textContent);

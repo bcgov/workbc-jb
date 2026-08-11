@@ -224,6 +224,14 @@ final class InnovibeDocumentMapper
             $job['SalarySummary'] = 'N/A';
         }
 
+        // Per-unit figures straight from the API's calculatedSalaries block —
+        // the search filters compare per-hour/week/biweekly/month input
+        // against these fields verbatim (no conversion anywhere).
+        $job['SalaryHourly'] = $this->calculatedUnit($j, 'HOUR');
+        $job['SalaryWeekly'] = $this->calculatedUnit($j, 'WEEK');
+        $job['SalaryBiweekly'] = $this->calculatedUnit($j, 'BIWEEKLY');
+        $job['SalaryMonthly'] = $this->calculatedUnit($j, 'MONTH');
+
         // ── Hours of work ─────────────────────────────────────────────
         $hours = [];
         if (str_contains($empTypeStr, 'full')) {
@@ -688,6 +696,22 @@ final class InnovibeDocumentMapper
             return null;
         }
         return floor($v);
+    }
+
+    /**
+     * Lowest usable figure (min, else value, else max) for one unit of the
+     * API's calculatedSalaries block, verbatim. Null when absent.
+     */
+    private function calculatedUnit(array $j, string $unit): ?float
+    {
+        $u = $j['calculatedSalaries'][$unit] ?? [];
+        foreach (['min', 'value', 'max'] as $k) {
+            $v = $this->parseDecimal($u[$k] ?? null);
+            if ($v !== null && $v >= 0.01) {
+                return $v;
+            }
+        }
+        return null;
     }
 
     private function parseDecimal(mixed $raw): ?float

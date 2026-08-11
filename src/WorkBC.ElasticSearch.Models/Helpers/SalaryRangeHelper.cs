@@ -90,10 +90,15 @@ namespace WorkBC.ElasticSearch.Models.Helpers
             }
         }
 
-        public static KeyValuePair<string, string> GetAnnualRange(SalaryType salaryType, int bracket)
+        /// <summary>
+        ///     Returns the bracket bounds in the unit the user selected — no
+        ///     conversion. The search queries the matching per-unit salary field
+        ///     (SalaryHourly / SalaryWeekly / ... / Salary), whose values come
+        ///     straight from the source data.
+        /// </summary>
+        public static KeyValuePair<string, string> GetRange(SalaryType salaryType, int bracket)
         {
             SalaryRange range;
-            int multiplier;
 
             if (bracket > 5 || bracket < 1)
             {
@@ -103,35 +108,30 @@ namespace WorkBC.ElasticSearch.Models.Helpers
             switch (salaryType)
             {
                 case SalaryType.HOURLY:
-                    multiplier = 2080;
                     range = Hourly[bracket - 1];
                     break;
 
                 case SalaryType.WEEKLY:
-                    multiplier = 52;
                     range = Weekly[bracket - 1];
                     break;
 
                 case SalaryType.BI_WEEKLY:
-                    multiplier = 26;
                     range = Biweekly[bracket - 1];
                     break;
 
                 case SalaryType.MONTHLY:
-                    multiplier = 12;
                     range = Monthly[bracket - 1];
                     break;
 
                 default:
-                    multiplier = 1;
                     range = Annually[bracket - 1];
                     break;
             }
 
             return new KeyValuePair<string, string>
             (
-                (multiplier * range.Minimum).ToString("0.00"),
-                (multiplier * range.Maximum -0.01m).ToString("0.00")
+                range.Minimum.ToString("0.00"),
+                range.Maximum.ToString("0.00")
             );
         }
 
