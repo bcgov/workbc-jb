@@ -60,36 +60,37 @@ final class SalaryRangeHelper
         ],
     ];
 
-    private const MULTIPLIERS = [
-        self::HOURLY => 2080,
-        self::WEEKLY => 52,
-        self::BI_WEEKLY => 26,
-        self::MONTHLY => 12,
-    ];
-
     /**
-     * Returns [minAnnual, maxAnnual] as "0.00"-formatted strings, matching
-     * the C# KeyValuePair<string,string> exactly.
+     * Returns the bracket bounds [min, max] in the unit the user selected —
+     * no conversion. The search queries the matching per-unit salary field.
+     * Mirrors the C# SalaryRangeHelper.GetRange ("0.00" / "0.00####").
      *
      * @return array{0: string, 1: string}
      */
-    public static function getAnnualRange(int $salaryType, int $bracket): array
+    public static function getRange(int $salaryType, int $bracket): array
     {
         if ($bracket > 5 || $bracket < 1) {
             throw new \OutOfRangeException('Salary bracket must be between 1 and 5');
         }
 
-        // Unknown/NONE/ANNUALLY all fall back to the annual table with
-        // multiplier 1, matching the C# switch default.
-        $multiplier = self::MULTIPLIERS[$salaryType] ?? 1;
         $ranges = self::RANGES[$salaryType] ?? self::RANGES[self::ANNUALLY];
         [$minMicro, $maxMicro] = $ranges[$bracket - 1];
 
-        // maxAnnual = multiplier * max - 0.01 (0.01 dollars = 10,000 millionths)
         return [
-            self::microToMoney($multiplier * $minMicro),
-            self::microToMoney($multiplier * $maxMicro - 10000),
+            self::microToMoney($minMicro),
+            self::microToMoney6($maxMicro),
         ];
+    }
+
+    /**
+     * Millionths of a dollar → string with 2..6 decimals (C# "0.00####") so
+     * the .999999 upper bounds stay exact instead of rounding up.
+     */
+    private static function microToMoney6(int $micro): string
+    {
+        $s = rtrim(number_format($micro / 1000000, 6, '.', ''), '0');
+        $decimals = strlen($s) - strpos($s, '.') - 1;
+        return $decimals >= 2 ? $s : $s . str_repeat('0', 2 - $decimals);
     }
 
     /** Millionths of a dollar → "0.00" string (round half away from zero, like decimal.ToString). */
