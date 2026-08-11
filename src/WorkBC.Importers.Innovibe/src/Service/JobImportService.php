@@ -31,6 +31,7 @@ final class JobImportService
     private int $inserted = 0;
     private int $updated  = 0;
     private int $skipped  = 0;
+    private int $removed  = 0;
 
     /** Cached admin minimum wage (shared.settings.minimumWage), lazily loaded. */
     private ?float $minimumWage = null;
@@ -46,7 +47,7 @@ final class JobImportService
     {
         $this->log->info('IMPORTER STARTED');
         $this->log->info('Importing JSON data');
-        $this->log->info('I = Inserted  U = Updated  S = Skipped  H = Duplicate hash  W = Below minimum wage');
+        $this->log->info('I = Inserted  U = Updated  S = Skipped  H = Duplicate hash  W = Below minimum wage  R = Removed (previously imported, no longer passes salary gates)');
 
         $seen = $this->importFromApi();
         $this->markSeen($seen);
@@ -60,7 +61,7 @@ final class JobImportService
         $this->log->info('Updating Jobs table...');
         $this->updateExistingJobs();
 
-        $this->log->info("IMPORTER FINISHED — fetched={$this->fetched} inserted={$this->inserted} updated={$this->updated} skipped={$this->skipped}");
+        $this->log->info("IMPORTER FINISHED — fetched={$this->fetched} inserted={$this->inserted} updated={$this->updated} skipped={$this->skipped} removed={$this->removed}");
     }
 
     // ── helpers ────────────────────────────────────────────────────
@@ -133,6 +134,35 @@ final class JobImportService
         return $hourly >= 0.9 * $this->getMinimumWage() && $hourly < self::MAX_HOURLY_RATE;
     }
 
+    private ?\PDOStatement $removeChk = null;
+    private ?\PDOStatement $removeDel = null;
+    private ?\PDOStatement $removeDeact = null;
+
+    /**
+     * Takes a previously-imported job off the board when it no longer passes
+     * the salary gates (e.g. the employer removed the salary): deletes the
+     * staging row and deactivates the Jobs row; the indexer's orphan sweep
+     * then deletes the ES document. Returns true when a row was removed.
+     */
+    private function removeIfPreviouslyImported(string $id): bool
+    {
+        $this->removeChk ??= $this->db->prepare('SELECT 1 FROM "ImportedJobsWanted" WHERE "JobId" = ?');
+        $this->removeChk->execute([$id]);
+        if (!$this->removeChk->fetchColumn()) {
+            return false;
+        }
+
+        $this->removeDel ??= $this->db->prepare('DELETE FROM "ImportedJobsWanted" WHERE "JobId" = ?');
+        $this->removeDeact ??= $this->db->prepare('
+            UPDATE "Jobs" SET "IsActive" = FALSE, "LastUpdated" = NOW()
+            WHERE "JobId" = ? AND "IsActive" = TRUE
+        ');
+        $this->removeDel->execute([$id]);
+        $this->removeDeact->execute([$id]);
+        $this->removed++;
+        return true;
+    }
+
     // ── 1. API → "ImportedJobsWanted" ──────────────────────────────
 
     private function importFromApi(): array
@@ -189,19 +219,19 @@ final class JobImportService
                 continue;
             }
 
-            // Skip jobs with no salary (the API provides calculatedSalaries
-            // only when the job has usable salary figures)
-            [$yMin, $yMax, $yValue] = self::apiSalary($job, 'YEAR');
-            if (($yMin ?? $yValue ?? $yMax) === null) {
+            // Import only jobs with a usable calculatedSalaries block;
+            // otherwise skip (and remove any previously-imported copy).
+            [$hMin, $hMax, $hValue] = self::apiSalary($job, 'HOUR');
+            if (($hMin ?? $hValue ?? $hMax) === null) {
                 $this->skipped++;
-                $progress .= 'S';
+                $progress .= $this->removeIfPreviouslyImported($id) ? 'R' : 'S';
                 continue;
             }
 
             // Skip jobs paying below the minimum-wage threshold (parity with Federal).
             if (!$this->passesMinimumWage($job)) {
                 $this->skipped++;
-                $progress .= 'W';
+                $progress .= $this->removeIfPreviouslyImported($id) ? 'R' : 'W';
                 continue;
             }
 

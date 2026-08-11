@@ -123,6 +123,8 @@ namespace WorkBC.ElasticSearch.Indexing.Services
                         xmlJobNode["salary_weekly"],
                         xmlJobNode["salary_yearly"],
                         xmlJobNode.SelectSingleNode("salary/string")),
+                    SalaryHourly = ParseAdvertisedRate(xmlJobNode["salary_hourly"]),
+                    SalaryWeekly = ParseAdvertisedRate(xmlJobNode["salary_weekly"]),
                     WorkHours = xmlJobNode["work_hours"] != null
                         ? decimal.Parse(xmlJobNode["work_hours"].InnerText, culture)
                         : 0,
@@ -864,6 +866,19 @@ namespace WorkBC.ElasticSearch.Indexing.Services
         ///     Hourly - hourly rate is multiplied by 2080 (approximate number of work hours in a year)
         ///     Weekly - weekly rate is multiplied by 52 (number of weeks in a year)
         /// </summary>
+        /// <summary>
+        ///     Advertised per-unit rate, verbatim. Null when absent or non-positive.
+        /// </summary>
+        private static decimal? ParseAdvertisedRate(XmlElement el)
+        {
+            if (el == null || !decimal.TryParse(el.InnerText, NumberStyles.Any, new CultureInfo("en-US"), out decimal value))
+            {
+                return null;
+            }
+
+            return value >= 0.01m ? value : (decimal?) null;
+        }
+
         private decimal? CalculateSalary(XmlElement hourlyEl, XmlElement weeklyEl, XmlElement yearlyEl, XmlNode salaryStringEl)
         {
             decimal hourlyRate = 0;
