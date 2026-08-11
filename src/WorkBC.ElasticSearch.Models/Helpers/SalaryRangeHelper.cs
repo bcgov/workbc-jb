@@ -128,13 +128,10 @@ namespace WorkBC.ElasticSearch.Models.Helpers
                     break;
             }
 
-            // "0.00####" keeps the .999999 upper bounds exact — plain "0.00"
-            // would round 19.999999 up to "20.00" and leak exactly-$20 jobs
-            // into the "Under $20" bracket.
             return new KeyValuePair<string, string>
             (
                 range.Minimum.ToString("0.00"),
-                range.Maximum.ToString("0.00####")
+                range.Maximum.ToString("0.00")
             );
         }
 
