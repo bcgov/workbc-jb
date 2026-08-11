@@ -67,7 +67,7 @@ A normal run, mirroring the legacy `WorkBC.Indexers.Wanted/Program.cs`:
 1. **Index** — `SELECT` every `"ImportedJobsWanted"` row where
    `"ReIndexNeeded" = TRUE AND "IsFederalOrWorkBc" = FALSE`; for each, build the
    document from the Innovibe JSON and `PUT {ELASTIC_URL}/jobs_en/_doc/{JobId}`.
-   - **Publishable gate** — a job missing a Title, EmployerName, valid Noc2021, or
+   - **Publishable gate** — a job missing a usable Salary, Title, EmployerName, valid Noc2021, or
      City is *not* indexed. It is parked: upserted into `"ExpiredJobs"` and flipped
      `"IsActive" = FALSE` in `"Jobs"` so admin counts stop tracking it.
    - On a transport error a single retry runs after `RETRY_DELAY_MS`; a persistent

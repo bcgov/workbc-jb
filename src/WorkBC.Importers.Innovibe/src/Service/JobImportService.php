@@ -219,11 +219,10 @@ final class JobImportService
                 continue;
             }
 
-            // Skip jobs with no salary — an advertised figure AND a usable
-            // calculated annual figure are both required.
-            [$yMin, $yMax, $yValue] = self::apiSalary($job, 'YEAR');
-            $hasAdvertised = !empty($job['salaryMin']) || !empty($job['salaryValue']) || !empty($job['salaryMax']);
-            if (!$hasAdvertised || ($yMin ?? $yValue ?? $yMax) === null) {
+            // Import only jobs with a usable calculatedSalaries block;
+            // otherwise skip (and remove any previously-imported copy).
+            [$hMin, $hMax, $hValue] = self::apiSalary($job, 'HOUR');
+            if (($hMin ?? $hValue ?? $hMax) === null) {
                 $this->skipped++;
                 $progress .= $this->removeIfPreviouslyImported($id) ? 'R' : 'S';
                 continue;

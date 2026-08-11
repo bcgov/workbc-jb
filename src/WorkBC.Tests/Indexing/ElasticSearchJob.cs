@@ -33,6 +33,10 @@ namespace WorkBC.ElasticSearch.Indexing
         public string PostalCode { get; set; }
         public decimal WorkHours { get; set; }
         public decimal? Salary { get; set; }
+        public decimal? SalaryHourly { get; set; }
+        public decimal? SalaryWeekly { get; set; }
+        public decimal? SalaryBiweekly { get; set; }
+        public decimal? SalaryMonthly { get; set; }
         public bool IsStudent { get; set; }
         public bool IsYouth { get; set; }
         public bool IsApprentice { get; set; }

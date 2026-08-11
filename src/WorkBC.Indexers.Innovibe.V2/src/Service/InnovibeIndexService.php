@@ -115,14 +115,20 @@ final class InnovibeIndexService
     }
 
     /**
-     * Data-quality gate. Mirrors WantedIndexService.IsPublishable: a job must
-     * have a Title, an EmployerName, a valid Noc2021, and a non-empty City[0].
+     * Data-quality gate. A job must have a Title, an EmployerName, a valid
+     * Noc2021, a non-empty City[0], and a usable Salary.
      *
      * @param array<string,mixed> $doc
      */
     private function isPublishable(array $doc): bool
     {
         if (trim((string) ($doc['Title'] ?? '')) === '') {
+            return false;
+        }
+        // Provincial pay-transparency: never publish a wanted job without a
+        // usable salary. Stale staging rows (JSON predating calculatedSalaries)
+        // map to Salary null / "N/A" and must be flushed, not displayed.
+        if ((float) ($doc['Salary'] ?? 0) < 0.01) {
             return false;
         }
         if (trim((string) ($doc['EmployerName'] ?? '')) === '') {
