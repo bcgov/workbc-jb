@@ -62,8 +62,8 @@ final class SalaryRangeHelper
 
     /**
      * Returns the bracket bounds [min, max] in the unit the user selected —
-     * no conversion. The search queries the matching per-unit salary field.
-     * Mirrors the C# SalaryRangeHelper.GetRange ("0.00" / "0.00####").
+     * no conversion. Mirrors the C# SalaryRangeHelper.GetRange exactly
+     * (both bounds "0.00"-formatted).
      *
      * @return array{0: string, 1: string}
      */
@@ -78,19 +78,8 @@ final class SalaryRangeHelper
 
         return [
             self::microToMoney($minMicro),
-            self::microToMoney6($maxMicro),
+            self::microToMoney($maxMicro),
         ];
-    }
-
-    /**
-     * Millionths of a dollar → string with 2..6 decimals (C# "0.00####") so
-     * the .999999 upper bounds stay exact instead of rounding up.
-     */
-    private static function microToMoney6(int $micro): string
-    {
-        $s = rtrim(number_format($micro / 1000000, 6, '.', ''), '0');
-        $decimals = strlen($s) - strpos($s, '.') - 1;
-        return $decimals >= 2 ? $s : $s . str_repeat('0', 2 - $decimals);
     }
 
     /** Millionths of a dollar → "0.00" string (round half away from zero, like decimal.ToString). */
