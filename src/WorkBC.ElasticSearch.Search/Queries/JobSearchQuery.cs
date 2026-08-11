@@ -184,6 +184,17 @@ namespace WorkBC.ElasticSearch.Search.Queries
             {
                 var jsonSalaryFilter = "";
 
+                // Per-unit fields hold the source-provided figures for that unit
+                // (Innovibe calculatedSalaries / federal advertised rates).
+                string salaryField = SalarySearchType switch
+                {
+                    SalaryType.HOURLY => "SalaryHourly",
+                    SalaryType.WEEKLY => "SalaryWeekly",
+                    SalaryType.BI_WEEKLY => "SalaryBiweekly",
+                    SalaryType.MONTHLY => "SalaryMonthly",
+                    _ => "Salary"
+                };
+
                 var k = 0;
                 foreach (KeyValuePair<string, string> salaryRange in SalaryRanges)
                 {
@@ -199,13 +210,13 @@ namespace WorkBC.ElasticSearch.Search.Queries
                     if (maxSalary > 0)
                     {
                         //option 1 - 5 where we have ranges with definate values
-                        jsonSalaryFilter += "{ \"range\": { \"Salary\": { \"gte\": " + minSalary + ", \"lte\": " + maxSalary + " } } }";
+                        jsonSalaryFilter += "{ \"range\": { \"" + salaryField + "\": { \"gte\": " + minSalary + ", \"lte\": " + maxSalary + " } } }";
                     }
                     else
                     {
                         //If the user used "unlimited" the max salary will not have a valid numeric value, 
                         //so then we only use the min salary value
-                        jsonSalaryFilter += "{ \"range\": { \"Salary\": { \"gte\": " + minSalary + " } } }";
+                        jsonSalaryFilter += "{ \"range\": { \"" + salaryField + "\": { \"gte\": " + minSalary + " } } }";
                     }
 
                     k++;
@@ -892,32 +903,32 @@ namespace WorkBC.ElasticSearch.Search.Queries
             if (_filters.SalaryBracket1)
             {
                 //Under $40,000
-                SalaryRanges.Add(SalaryRangeHelper.GetAnnualRange((SalaryType) _filters.SalaryType, 1));
+                SalaryRanges.Add(SalaryRangeHelper.GetRange((SalaryType) _filters.SalaryType, 1));
             }
 
             if (_filters.SalaryBracket2)
             {
                 //$40,000 - $59,999
-                SalaryRanges.Add(SalaryRangeHelper.GetAnnualRange((SalaryType) _filters.SalaryType, 2));
+                SalaryRanges.Add(SalaryRangeHelper.GetRange((SalaryType) _filters.SalaryType, 2));
             }
 
             if (_filters.SalaryBracket3)
             {
                 //$60,000 - $79,999
-                SalaryRanges.Add(SalaryRangeHelper.GetAnnualRange((SalaryType) _filters.SalaryType, 3));
+                SalaryRanges.Add(SalaryRangeHelper.GetRange((SalaryType) _filters.SalaryType, 3));
             }
 
             if (_filters.SalaryBracket4)
             {
                 //$80,000 - $99,999
-                SalaryRanges.Add(SalaryRangeHelper.GetAnnualRange((SalaryType) _filters.SalaryType, 4));
+                SalaryRanges.Add(SalaryRangeHelper.GetRange((SalaryType) _filters.SalaryType, 4));
             }
 
             if (_filters.SalaryBracket5)
             {
                 //$100,000+
                 //$100,000 - $100,000,000
-                SalaryRanges.Add(SalaryRangeHelper.GetAnnualRange((SalaryType) _filters.SalaryType, 5));
+                SalaryRanges.Add(SalaryRangeHelper.GetRange((SalaryType) _filters.SalaryType, 5));
             }
 
             if (_filters.SalaryBracket6)
@@ -928,31 +939,11 @@ namespace WorkBC.ElasticSearch.Search.Queries
                     decimal.TryParse(_filters.SalaryMin, out decimal salaryMin);
                     decimal.TryParse(_filters.SalaryMax, out decimal salaryMax);
 
-                    if (_filters.SalaryType == (int) SalaryType.HOURLY)
-                    {
-                        salaryMin = salaryMin * 2080;
-                        salaryMax = salaryMax * 2080;
-                    }
-                    else if (_filters.SalaryType == (int) SalaryType.WEEKLY)
-                    {
-                        salaryMin = salaryMin * 52;
-                        salaryMax = salaryMax * 52;
-                    }
-                    else if (_filters.SalaryType == (int) SalaryType.BI_WEEKLY)
-                    {
-                        salaryMin = salaryMin * 26;
-                        salaryMax = salaryMax * 26;
-                    }
-
-                    if (_filters.SalaryType == (int) SalaryType.MONTHLY)
-                    {
-                        salaryMin = salaryMin * 12;
-                        salaryMax = salaryMax * 12;
-                    }
-
+                    // No unit conversion — the range is queried against the
+                    // per-unit salary field matching the selected SalaryType.
                     SalaryRanges.Add(new KeyValuePair<string, string>(
-                        $"{decimal.Round(salaryMin, 0)}",
-                        $"{decimal.Round(salaryMax, 0)}")
+                        $"{decimal.Round(salaryMin, 2)}",
+                        $"{decimal.Round(salaryMax, 2)}")
                     );
                 }
             }

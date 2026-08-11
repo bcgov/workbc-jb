@@ -248,6 +248,18 @@
       "Salary": {
         "type": "float"
       },
+      "SalaryHourly": {
+        "type": "float"
+      },
+      "SalaryWeekly": {
+        "type": "float"
+      },
+      "SalaryBiweekly": {
+        "type": "float"
+      },
+      "SalaryMonthly": {
+        "type": "float"
+      },
 
       "Noc2021": {
         "type": "float"
