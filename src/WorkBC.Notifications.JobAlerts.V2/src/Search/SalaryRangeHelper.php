@@ -60,35 +60,25 @@ final class SalaryRangeHelper
         ],
     ];
 
-    private const MULTIPLIERS = [
-        self::HOURLY => 2080,
-        self::WEEKLY => 52,
-        self::BI_WEEKLY => 26,
-        self::MONTHLY => 12,
-    ];
-
     /**
-     * Returns [minAnnual, maxAnnual] as "0.00"-formatted strings, matching
-     * the C# KeyValuePair<string,string> exactly.
+     * Returns the bracket bounds [min, max] in the unit the user selected —
+     * no conversion. Mirrors the C# SalaryRangeHelper.GetRange exactly
+     * (both bounds "0.00"-formatted).
      *
      * @return array{0: string, 1: string}
      */
-    public static function getAnnualRange(int $salaryType, int $bracket): array
+    public static function getRange(int $salaryType, int $bracket): array
     {
         if ($bracket > 5 || $bracket < 1) {
             throw new \OutOfRangeException('Salary bracket must be between 1 and 5');
         }
 
-        // Unknown/NONE/ANNUALLY all fall back to the annual table with
-        // multiplier 1, matching the C# switch default.
-        $multiplier = self::MULTIPLIERS[$salaryType] ?? 1;
         $ranges = self::RANGES[$salaryType] ?? self::RANGES[self::ANNUALLY];
         [$minMicro, $maxMicro] = $ranges[$bracket - 1];
 
-        // maxAnnual = multiplier * max - 0.01 (0.01 dollars = 10,000 millionths)
         return [
-            self::microToMoney($multiplier * $minMicro),
-            self::microToMoney($multiplier * $maxMicro - 10000),
+            self::microToMoney($minMicro),
+            self::microToMoney($maxMicro),
         ];
     }
 

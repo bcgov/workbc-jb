@@ -83,6 +83,16 @@ final class JobSearchQuery
             || ($this->salarySearchType !== SalaryRangeHelper::NONE && count($this->salaryRanges) > 0)) {
             $jsonSalaryFilter = '';
 
+            // Per-unit fields hold the source-provided figures for that unit
+            // (Innovibe calculatedSalaries / federal advertised rates).
+            $salaryField = match ($this->salarySearchType) {
+                SalaryRangeHelper::HOURLY => 'SalaryHourly',
+                SalaryRangeHelper::WEEKLY => 'SalaryWeekly',
+                SalaryRangeHelper::BI_WEEKLY => 'SalaryBiweekly',
+                SalaryRangeHelper::MONTHLY => 'SalaryMonthly',
+                default => 'Salary',
+            };
+
             $k = 0;
             foreach ($this->salaryRanges as [$minSalary, $maxSalary]) {
                 if ($k > 0) {
@@ -90,10 +100,10 @@ final class JobSearchQuery
                 }
 
                 if ((float) $maxSalary > 0) {
-                    $jsonSalaryFilter .= '{ "range": { "Salary": { "gte": ' . $minSalary . ', "lte": ' . $maxSalary . ' } } }';
+                    $jsonSalaryFilter .= '{ "range": { "' . $salaryField . '": { "gte": ' . $minSalary . ', "lte": ' . $maxSalary . ' } } }';
                 } else {
                     // "unlimited" max — only use the min salary value
-                    $jsonSalaryFilter .= '{ "range": { "Salary": { "gte": ' . $minSalary . ' } } }';
+                    $jsonSalaryFilter .= '{ "range": { "' . $salaryField . '": { "gte": ' . $minSalary . ' } } }';
                 }
 
                 $k++;
@@ -618,7 +628,7 @@ final class JobSearchQuery
         foreach ([1 => $f->salaryBracket1, 2 => $f->salaryBracket2, 3 => $f->salaryBracket3,
                   4 => $f->salaryBracket4, 5 => $f->salaryBracket5] as $bracket => $selected) {
             if ($selected) {
-                $this->salaryRanges[] = SalaryRangeHelper::getAnnualRange($f->salaryType, $bracket);
+                $this->salaryRanges[] = SalaryRangeHelper::getRange($f->salaryType, $bracket);
             }
         }
 
@@ -627,27 +637,14 @@ final class JobSearchQuery
             $salaryMin = self::parseDecimal($f->salaryMin);
             $salaryMax = self::parseDecimal($f->salaryMax ?? '');
 
-            if ($f->salaryType === SalaryRangeHelper::HOURLY) {
-                $salaryMin *= 2080;
-                $salaryMax *= 2080;
-            } elseif ($f->salaryType === SalaryRangeHelper::WEEKLY) {
-                $salaryMin *= 52;
-                $salaryMax *= 52;
-            } elseif ($f->salaryType === SalaryRangeHelper::BI_WEEKLY) {
-                $salaryMin *= 26;
-                $salaryMax *= 26;
-            }
-
-            if ($f->salaryType === SalaryRangeHelper::MONTHLY) {
-                $salaryMin *= 12;
-                $salaryMax *= 12;
-            }
-
-            // decimal.Round defaults to banker's rounding
-            $this->salaryRanges[] = [
-                number_format(round($salaryMin, 0, PHP_ROUND_HALF_EVEN), 0, '.', ''),
-                number_format(round($salaryMax, 0, PHP_ROUND_HALF_EVEN), 0, '.', ''),
-            ];
+            // No unit conversion — the range is queried against the per-unit
+            // salary field matching the selected type. Mirrors the C#
+            // decimal.Round(v, 2) (banker's rounding, trailing zeros trimmed).
+            $fmt = static function (float $v): string {
+                $s = number_format(round($v, 2, PHP_ROUND_HALF_EVEN), 2, '.', '');
+                return rtrim(rtrim($s, '0'), '.') ?: '0';
+            };
+            $this->salaryRanges[] = [$fmt($salaryMin), $fmt($salaryMax)];
         }
 
         $this->salarySearchType = match ($f->salaryType) {
