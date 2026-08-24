@@ -23,9 +23,19 @@ final class SesEmailSender implements EmailSenderInterface
         private readonly AppConfig $config,
         private readonly Logger $log,
     ) {
+        // The C# sender built a fresh client (and TLS connection) per email,
+        // which kept it under the SES max send rate by accident. This client
+        // is reused with keep-alive, so bursts hit Throttling errors —
+        // adaptive retry adds a client-side rate limiter that backs off to
+        // the accepted rate instead of dropping the email after the default
+        // three attempts.
         $this->client = new SesClient([
             'version' => '2010-12-01',
             'region' => $config->emailSesRegion,
+            'retries' => [
+                'mode' => 'adaptive',
+                'max_attempts' => 10,
+            ],
         ]);
     }
 
