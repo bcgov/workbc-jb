@@ -86,6 +86,14 @@ final class JobAlertSenderService
 
         // get the job alerts out into their email format
         foreach ($jobAlerts as $jobAlert) {
+            // Some legacy rows store a blank JobSearchFilters column; the
+            // alert cannot be evaluated, so skip it quietly instead of
+            // logging a stack trace on every run.
+            if (trim((string) $jobAlert['JobSearchFilters']) === '') {
+                $this->log->warning("Skipping job alert id: {$jobAlert['Id']} - JobSearchFilters is empty");
+                continue;
+            }
+
             try {
                 $resultCount = $this->searchService->getJobAlertSearchResultCount(
                     (string) $jobAlert['JobSearchFilters'],
