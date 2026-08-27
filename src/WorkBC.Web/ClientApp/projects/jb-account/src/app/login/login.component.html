@@ -73,7 +73,10 @@
             <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
             <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
           </div>
-          <label for="staySignedIn">Stay signed in</label>
+          <!-- aria-hidden: the input's aria-label already carries this text; exposing the
+               label too gives speech-control software a second selectable target per box.
+               The label stays mouse/touch-clickable via for="". -->
+          <label for="staySignedIn" aria-hidden="true">Stay signed in</label>
         </div>
 
         <div class="form-group">
