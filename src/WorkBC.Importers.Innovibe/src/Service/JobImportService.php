@@ -610,9 +610,15 @@ final class JobImportService
     private function map(array $j): array
     {
         $t                = strtolower(implode(' ', $j['employmentType'] ?? []));
+        // Innovibe bumps updatedAt on every scrape cycle (several times a
+        // day), so it must never feed DatePosted — that field drives the
+        // "New" badge on the board and the JobVersions diff. updatedAt only
+        // anchors ExpireDate, which has to keep rolling forward while the
+        // job is still being re-scraped.
         $actualDatePosted = date('Y-m-d H:i:s', strtotime($j['postedDate'] ?? $j['createdAt'] ?? 'now'));
-        $datePosted       = date('Y-m-d H:i:s', strtotime($j['updatedAt'] ?? $j['postedDate'] ?? $j['createdAt'] ?? 'now'));
-        $expireDate       = date('Y-m-d H:i:s', strtotime($datePosted . ' +90 days'));
+        $datePosted       = $actualDatePosted;
+        $refreshDate      = date('Y-m-d H:i:s', strtotime($j['updatedAt'] ?? $j['postedDate'] ?? $j['createdAt'] ?? 'now'));
+        $expireDate       = date('Y-m-d H:i:s', strtotime($refreshDate . ' +90 days'));
 
         // Location: prefer a British Columbia location from the array
         $city = '';

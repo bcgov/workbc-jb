@@ -161,7 +161,11 @@ final class InnovibeDocumentMapper
 
         $job = [
             'JobId' => $jobId,
-            'DatePosted' => $this->formatNaive($refreshedDate),
+            // True posting date — never $refreshedDate: updatedAt is bumped
+            // on every scrape cycle and would keep the job flagged "New".
+            // ExpireDate below stays on $refreshedDate so a still-scraped
+            // job keeps rolling forward instead of expiring.
+            'DatePosted' => $this->formatNaive($postedDate),
             'LastUpdated' => $this->formatNaive($refreshedDate),
             'Lang' => 'en',
             'SkillCategories' => [],
