@@ -69,7 +69,11 @@ duplicate-hash check on `JobPostEnglish` makes re-runs safe.
    salary cannot be shown on the public board because of provincial
    legislation. Jobs whose `calculatedSalaries.HOUR` rate is below 90% of
    the admin-configured minimum wage are also skipped (`W`). No local salary
-   conversion is performed — all figures come from the API.
+   conversion is performed — all figures come from the API. `Jobs.SalarySummary`
+   is the annual `calculatedSalaries.YEAR` figure, except for a posting whose
+   `employmentType` is `PART_TIME` only **and** whose `workingHours` is null:
+   the API's YEAR for those assumes full-time hours, so the summary shows the
+   `calculatedSalaries.HOUR` rate instead (`Jobs.Salary` stays annual).
    **Removal (`R`):** if a skipped job was previously imported (e.g. the
    employer removed the salary from the posting), its staging row is deleted
    and the `Jobs` row deactivated; the indexer's orphan sweep then deletes
