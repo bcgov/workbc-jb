@@ -89,10 +89,20 @@
           margin-bottom: 25px;
           font-size: 0.875rem;
 
-
           @media(min-width: 768px) {
             padding-right: 4px;
             margin-bottom: 0;
+          }
+
+          // Keep the nine identity checkboxes far enough apart that voice-control
+          // overlays can pin one target number on each box. The 16px inputs sat
+          // on an 18px row pitch; Android Voice Access draws ~26px number
+          // bubbles, so it had to shove them apart and the numbers no longer
+          // lined up with their options (QA, Galaxy Tab). A 32px pitch also
+          // meets WCAG 2.2 SC 2.5.8 target spacing (24px circles must not
+          // intersect) for the undersized 16px targets.
+          .check-group + .check-group {
+            margin-top: 14px;
           }
         }
 
