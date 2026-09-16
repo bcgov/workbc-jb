@@ -1,6 +1,8 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/runtime:6.0
+# Debian 11 (bullseye) left LTS on 2026-08-31 and its security pool is being purged from
+# deb.debian.org (apt-get install 404s), so this image must track the bookworm variant.
+FROM mcr.microsoft.com/dotnet/runtime:6.0-bookworm-slim
 
 # Install prerequisites
 RUN apt-get update && apt-get install -y \
@@ -10,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     gnupg \
     lsb-release \
+    tzdata \
     && rm -rf /var/lib/apt/lists/*
 
 # Add PostgreSQL apt repo and install psql client v16
