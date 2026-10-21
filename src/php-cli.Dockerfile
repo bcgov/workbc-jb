@@ -54,6 +54,13 @@ RUN apk add --no-cache bash postgresql-client postgresql-libs libxml2 tzdata \
     && cp /usr/share/zoneinfo/America/Vancouver /etc/localtime \
     && echo "America/Vancouver" > /etc/timezone \
     && rm -rf /var/cache/apk/* /tmp/*
+# PHP ignores the OS tzdata and ships its own copy; every 8.3.x release bundles 2026a,
+# which predates B.C.'s move to permanent UTC-7 (tzdata 2026b, effective 2026-11-01 02:00).
+# The PECL timezonedb extension replaces the bundled copy so America/Vancouver stays -07.
+RUN apk add --no-cache --virtual .tzdb-build $PHPIZE_DEPS \
+    && pecl install timezonedb-2026.5 \
+    && docker-php-ext-enable timezonedb \
+    && apk del .tzdb-build
 ENV TZ=America/Vancouver
 
 COPY --from=federal-app          /app /app/workbc-importers-federal-v2
