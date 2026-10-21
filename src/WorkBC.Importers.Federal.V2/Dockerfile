@@ -20,6 +20,7 @@ RUN apk add --no-cache postgresql-libs libxml2 tzdata \
     && apk del .bd \
     && cp /usr/share/zoneinfo/America/Vancouver /etc/localtime \
     && echo "America/Vancouver" > /etc/timezone
+ENV TZ=America/Vancouver
 
 WORKDIR /app
 COPY --from=build /app/vendor vendor/
