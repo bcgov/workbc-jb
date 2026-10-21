@@ -54,6 +54,7 @@ RUN apk add --no-cache bash postgresql-client postgresql-libs libxml2 tzdata \
     && cp /usr/share/zoneinfo/America/Vancouver /etc/localtime \
     && echo "America/Vancouver" > /etc/timezone \
     && rm -rf /var/cache/apk/* /tmp/*
+ENV TZ=America/Vancouver
 
 COPY --from=federal-app          /app /app/workbc-importers-federal-v2
 COPY --from=innovibe-app         /app /app/workbc-importers-innovibe
