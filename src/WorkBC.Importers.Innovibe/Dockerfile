@@ -1,5 +1,5 @@
 # ── Build stage ──────────────────────────────────────────────────
-FROM php:8.3-cli-alpine AS build
+FROM php:8.3.36-cli-alpine AS build
 
 RUN apk add --no-cache postgresql-dev autoconf gcc g++ make unzip \
     && docker-php-ext-install pdo_pgsql
@@ -12,7 +12,7 @@ RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-di
 COPY src/ src/
 
 # ── Runtime stage ────────────────────────────────────────────────
-FROM php:8.3-cli-alpine
+FROM php:8.3.36-cli-alpine
 
 RUN apk add --no-cache postgresql-libs tzdata \
     && apk add --no-cache --virtual .bd postgresql-dev \
