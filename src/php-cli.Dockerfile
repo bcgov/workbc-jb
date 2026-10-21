@@ -1,4 +1,4 @@
-FROM php:8.3-cli-alpine AS federal-app
+FROM php:8.3.36-cli-alpine AS federal-app
 RUN apk add --no-cache postgresql-dev libxml2-dev autoconf gcc g++ make unzip \
     && docker-php-ext-install pdo_pgsql dom simplexml
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -7,7 +7,7 @@ COPY WorkBC.Importers.Federal.V2/composer.json ./
 RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-dist
 COPY WorkBC.Importers.Federal.V2/src/ src/
 
-FROM php:8.3-cli-alpine AS innovibe-app
+FROM php:8.3.36-cli-alpine AS innovibe-app
 RUN apk add --no-cache postgresql-dev autoconf gcc g++ make unzip \
     && docker-php-ext-install pdo_pgsql
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -16,7 +16,7 @@ COPY WorkBC.Importers.Innovibe/composer.json ./
 RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-dist
 COPY WorkBC.Importers.Innovibe/src/ src/
 
-FROM php:8.3-cli-alpine AS federal-indexer-app
+FROM php:8.3.36-cli-alpine AS federal-indexer-app
 RUN apk add --no-cache postgresql-dev libxml2-dev autoconf gcc g++ make unzip \
     && docker-php-ext-install pdo_pgsql dom simplexml
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -26,7 +26,7 @@ RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-di
 COPY WorkBC.Indexers.Federal.V2/src/ src/
 COPY WorkBC.Indexers.Federal.V2/resources/ resources/
 
-FROM php:8.3-cli-alpine AS innovibe-indexer-app
+FROM php:8.3.36-cli-alpine AS innovibe-indexer-app
 RUN apk add --no-cache postgresql-dev libxml2-dev autoconf gcc g++ make unzip \
     && docker-php-ext-install pdo_pgsql dom simplexml
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -36,7 +36,7 @@ RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-di
 COPY WorkBC.Indexers.Innovibe.V2/src/ src/
 COPY WorkBC.Indexers.Innovibe.V2/resources/ resources/
 
-FROM php:8.3-cli-alpine AS jobalert-notifier-app
+FROM php:8.3.36-cli-alpine AS jobalert-notifier-app
 RUN apk add --no-cache postgresql-dev libxml2-dev autoconf gcc g++ make unzip \
     && docker-php-ext-install pdo_pgsql dom simplexml
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -46,7 +46,7 @@ RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-di
 COPY WorkBC.Notifications.JobAlerts.V2/src/ src/
 COPY WorkBC.Notifications.JobAlerts.V2/resources/ resources/
 
-FROM php:8.3-cli-alpine
+FROM php:8.3.36-cli-alpine
 RUN apk add --no-cache bash postgresql-client postgresql-libs libxml2 tzdata \
     && apk add --no-cache --virtual .bd postgresql-dev libxml2-dev autoconf gcc g++ make \
     && docker-php-ext-install pdo_pgsql dom simplexml \

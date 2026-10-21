@@ -1,5 +1,5 @@
 # ── Build stage ──────────────────────────────────────────────────
-FROM php:8.3-cli-alpine AS build
+FROM php:8.3.36-cli-alpine AS build
 
 RUN apk add --no-cache postgresql-dev libxml2-dev autoconf gcc g++ make unzip \
     && docker-php-ext-install pdo_pgsql dom simplexml
@@ -13,7 +13,7 @@ COPY src/ src/
 COPY resources/ resources/
 
 # ── Runtime stage ────────────────────────────────────────────────
-FROM php:8.3-cli-alpine
+FROM php:8.3.36-cli-alpine
 
 RUN apk add --no-cache postgresql-libs libxml2 tzdata \
     && apk add --no-cache --virtual .bd postgresql-dev libxml2-dev \
