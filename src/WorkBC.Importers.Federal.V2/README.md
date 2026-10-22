@@ -145,7 +145,8 @@ cp .env.example .env
 | `PROXY_IGNORE_SSL_ERRORS` | `true` | Disable cert verification for the proxy chain. |
 | `MAX_JOBS` | `20000` | Cap on inserts + updates per run. Overridden by the `--maxjobs` CLI flag. |
 | `MAX_ERRORS` | `25` | If insert/update errors exceed this, the affected stage aborts. |
-| `HTTP_TIMEOUT` | `30` | Per-request Guzzle timeout in seconds. |
+| `HTTP_TIMEOUT` | `30` | Whole-request Guzzle timeout in seconds (cURL 28 "Operation timed out"). |
+| `HTTP_CONNECT_TIMEOUT` | `10` | TCP/TLS connect timeout in seconds (cURL 28 "Connection timed out"). Independent of `HTTP_TIMEOUT`. |
 | `RETRY_DELAY_MS` | `5000` | Pause before the single retry on transport failure. |
 | `LOG_LEVEL` | `INFO` | `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
 

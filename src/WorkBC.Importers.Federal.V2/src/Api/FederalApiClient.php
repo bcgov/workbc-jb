@@ -59,8 +59,10 @@ final class FederalApiClient
 
         $clientOptions = [
             'base_uri'        => $cfg->federalXmlRoot . '/',
+            // HTTP_TIMEOUT: whole request (cURL 28 "Operation timed out").
+            // HTTP_CONNECT_TIMEOUT: TCP/TLS handshake only (cURL 28 "Connection timed out").
             'timeout'         => $cfg->httpTimeout,
-            'connect_timeout' => max(5, (int) ($cfg->httpTimeout / 3)),
+            'connect_timeout' => $cfg->httpConnectTimeout,
             'headers'         => $headers,
             'http_errors'     => true,
             'decode_content'  => true,

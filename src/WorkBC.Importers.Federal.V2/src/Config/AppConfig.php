@@ -32,6 +32,7 @@ final class AppConfig
     public readonly int $maxJobs;
     public readonly int $maxErrors;
     public readonly int $httpTimeout;
+    public readonly int $httpConnectTimeout;
     public readonly int $retryDelayMs;
 
     public readonly string $logLevel;
@@ -64,6 +65,7 @@ final class AppConfig
         $this->maxJobs = max(1, (int) $this->env('MAX_JOBS', '20000'));
         $this->maxErrors = max(1, (int) $this->env('MAX_ERRORS', '25'));
         $this->httpTimeout = max(5, (int) $this->env('HTTP_TIMEOUT', '30'));
+        $this->httpConnectTimeout = max(1, (int) $this->env('HTTP_CONNECT_TIMEOUT', '10'));
         $this->retryDelayMs = max(0, (int) $this->env('RETRY_DELAY_MS', '5000'));
 
         $this->effectiveMaxJobs = $this->maxJobs;
