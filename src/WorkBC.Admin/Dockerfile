@@ -27,7 +27,8 @@ WORKDIR "/src/WorkBC.Admin"
 RUN dotnet publish "WorkBC.Admin.csproj" -c Release -o /app/publish --no-restore --no-dependencies
 
 # Copy both build outputs to the runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+# Debian 12 (bookworm) variant: bullseye left LTS on 2026-08-31 (see dotnet-cli.Dockerfile).
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-bookworm-slim
 WORKDIR /app
 RUN cp /usr/share/zoneinfo/America/Vancouver /etc/localtime && \
     echo "America/Vancouver" > /etc/timezone

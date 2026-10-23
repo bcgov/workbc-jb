@@ -2,7 +2,8 @@
 
 #This is an intermediate base image to speed up other container builds
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0
+# Debian 12 (bookworm) variant: bullseye left LTS on 2026-08-31 (see dotnet-cli.Dockerfile).
+FROM mcr.microsoft.com/dotnet/sdk:6.0-bookworm-slim
 
 WORKDIR /src
 

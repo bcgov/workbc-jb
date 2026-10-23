@@ -161,7 +161,11 @@ final class InnovibeDocumentMapper
 
         $job = [
             'JobId' => $jobId,
-            'DatePosted' => $this->formatNaive($refreshedDate),
+            // True posting date — never $refreshedDate: updatedAt is bumped
+            // on every scrape cycle and would keep the job flagged "New".
+            // ExpireDate below stays on $refreshedDate so a still-scraped
+            // job keeps rolling forward instead of expiring.
+            'DatePosted' => $this->formatNaive($postedDate),
             'LastUpdated' => $this->formatNaive($refreshedDate),
             'Lang' => 'en',
             'SkillCategories' => [],
@@ -218,6 +222,17 @@ final class InnovibeDocumentMapper
                 $job['SalarySummary'] = '$' . number_format($annualMin) . ' - $' . number_format($annualMax) . ' annually';
             } else {
                 $job['SalarySummary'] = '$' . number_format($annualSalary) . ' annually';
+            }
+
+            // Innovibe falls back to full-time hours (40 × 52) when a posting
+            // does not state workingHours, so for a PART_TIME-only posting the
+            // YEAR figure overstates the pay. Show the advertised hourly rate
+            // instead (WBCAMS-2121 follow-up). Salary itself stays annual: the
+            // salary sort and the annual-range filter key off it, exactly as
+            // they do for federal hourly postings. Mirrors the importer's
+            // JobImportService::map().
+            if ($this->isPartTimeWithUnknownHours($j, $employmentTypes)) {
+                $job['SalarySummary'] = $this->hourlySummary($j) ?? $job['SalarySummary'];
             }
         } else {
             $job['Salary'] = null;
@@ -712,6 +727,54 @@ final class InnovibeDocumentMapper
             }
         }
         return null;
+    }
+
+    /**
+     * True when the posting is PART_TIME and nothing else, and does not state
+     * its working hours — the case where the API's YEAR figure is a full-time
+     * assumption rather than a calculation. Any other employmentType mix
+     * (e.g. PART_TIME + FULL_TIME) keeps the annual summary.
+     *
+     * @param array<string,mixed> $j
+     * @param list<mixed> $employmentTypes
+     */
+    private function isPartTimeWithUnknownHours(array $j, array $employmentTypes): bool
+    {
+        $hours = $j['workingHours'] ?? null;
+        if ($hours !== null && $hours !== '') {
+            return false;
+        }
+        $types = array_unique(array_map(
+            static fn($t): string => strtoupper(str_replace(['-', ' '], '_', trim((string) $t))),
+            $employmentTypes
+        ));
+        return count($types) === 1 && reset($types) === 'PART_TIME';
+    }
+
+    /**
+     * "$19.53 hourly" or "$19.53 - $22.00 hourly" from the API's
+     * calculatedSalaries.HOUR block (min–max range when they differ, else the
+     * single min / value / max figure). Null when no usable hourly figure exists.
+     *
+     * @param array<string,mixed> $j
+     */
+    private function hourlySummary(array $j): ?string
+    {
+        $u = $j['calculatedSalaries']['HOUR'] ?? [];
+        $pick = function (mixed $raw): ?float {
+            $v = $this->parseDecimal($raw);
+            return $v !== null && $v >= 0.01 ? $v : null;
+        };
+        $min = $pick($u['min'] ?? null);
+        $max = $pick($u['max'] ?? null);
+        $hourly = $min ?? $pick($u['value'] ?? null) ?? $max;
+        if ($hourly === null) {
+            return null;
+        }
+        if ($min !== null && $max !== null && $min != $max) {
+            return '$' . number_format($min, 2) . ' - $' . number_format($max, 2) . ' hourly';
+        }
+        return '$' . number_format($hourly, 2) . ' hourly';
     }
 
     private function parseDecimal(mixed $raw): ?float

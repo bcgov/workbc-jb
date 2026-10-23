@@ -892,13 +892,33 @@ final class JobImportService
         return $posted < $cap ? date('Y-m-d H:i:s', $cap) : $datePosted;
     }
 
+    /**
+     * Compares two date strings as instants. Zone-less strings are read as UTC.
+     *
+     * The feed's <file_update_date> is UTC with a "Z" suffix, but
+     * ImportedJobsFederal.ApiDate is `timestamp without time zone`, so Postgres
+     * strips the zone on write and hands back a bare "YYYY-MM-DD HH:MM:SS" that is
+     * really UTC. The previous strtotime() comparison parsed that bare value in
+     * the pod's local zone (TZ=America/Vancouver), putting it 7-8 h off the feed
+     * value, so every existing job was flagged "changed" on every run and the
+     * importer re-fetched all ~10.8k EN+FR postings each time (10783/10783 on dev,
+     * 2026-10-22; ~250 when compared as UTC).
+     *
+     * The Jobs-table call sites compare two zone-less local strings, which stay
+     * equal under any single consistent zone, so they are unaffected.
+     */
     private function datesEqual(string $a, string $b): bool
     {
         if ($a === $b) {
             return true;
         }
-        $tsA = strtotime($a);
-        $tsB = strtotime($b);
-        return $tsA !== false && $tsB !== false && $tsA === $tsB;
+        try {
+            $utc = new \DateTimeZone('UTC');
+            $tsA = (new \DateTimeImmutable($a, $utc))->getTimestamp();
+            $tsB = (new \DateTimeImmutable($b, $utc))->getTimestamp();
+        } catch (\Exception) {
+            return false;
+        }
+        return $tsA === $tsB;
     }
 }

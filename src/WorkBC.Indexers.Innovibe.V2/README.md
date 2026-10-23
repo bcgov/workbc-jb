@@ -83,7 +83,11 @@ A normal run, mirroring the legacy `WorkBC.Indexers.Wanted/Program.cs`:
 `XmlParsingServiceWanted`: BC-preferred location + city/region disambiguation;
 annual salary taken from the API-provided `calculatedSalaries.YEAR` block
 (floored to whole dollars, min–max range summary — no local HOUR×2080-style
-conversion); `employmentType` → HoursOfWork / PeriodOfEmployment; 3-strategy education
+conversion; a posting whose `employmentType` is `PART_TIME` only **and** whose
+`workingHours` is null gets an hourly `SalarySummary` from
+`calculatedSalaries.HOUR` instead, because the API's YEAR figure for those
+assumes full-time hours — `Salary` stays annual for sort/filter);
+`employmentType` → HoursOfWork / PeriodOfEmployment; 3-strategy education
 mapping; NOC 2021 from the highest-scored `nocMatches` (validated against
 `"NocCodes2021"`); title cleanup (strip U+200B, all-caps → lowercase,
 `\bpt\b`→PT / `\bft\b`→FT); `ExternalSource`; and `SalarySort`.

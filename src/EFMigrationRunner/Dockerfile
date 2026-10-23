@@ -7,7 +7,8 @@ RUN dotnet restore "EFMigrationRunner/EFMigrationRunner.csproj"
 WORKDIR "/src/EFMigrationRunner"
 RUN dotnet publish "EFMigrationRunner.csproj" -c Release -o /app/publish --no-restore --no-dependencies
 
-FROM mcr.microsoft.com/dotnet/runtime:6.0
+# Debian 12 (bookworm) variant: bullseye left LTS on 2026-08-31 (see dotnet-cli.Dockerfile).
+FROM mcr.microsoft.com/dotnet/runtime:6.0-bookworm-slim
 WORKDIR /app
 COPY --from=dotnet-build /app/publish .
 ENV Serilog__FileLoggingEnabled "false"
