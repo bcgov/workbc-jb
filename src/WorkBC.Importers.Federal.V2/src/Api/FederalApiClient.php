@@ -133,7 +133,7 @@ final class FederalApiClient
     }
 
     /**
-     * Fetches the EN + FR XML for a single job in parallel.
+     * Fetches the EN + FR XML for a single job.
      *
      * @return array{english:?string, french:?string}
      */
@@ -144,45 +144,12 @@ final class FederalApiClient
             return ['english' => null, 'french' => null];
         }
 
-        $requests = [
-            'english' => new Request('GET', 'en/' . rawurlencode($jobId) . '.xml'),
-            'french'  => new Request('GET', 'fr/' . rawurlencode($jobId) . '.xml'),
-        ];
-
-        $results = ['english' => null, 'french' => null];
-
-        $pool = new Pool($this->http, $requests, [
-            'concurrency' => 2,
-            'fulfilled' => function (ResponseInterface $resp, string $key) use (&$results): void {
-                $results[$key] = (string) $resp->getBody();
-            },
-            'rejected' => function (\Throwable $reason, string $key) use ($jobId): void {
-                $this->log->warning("Failed to fetch {$key} XML for job {$jobId}: " . $reason->getMessage());
-            },
-        ]);
-        $pool->promise()->wait();
-
-        // Retry whichever leg failed (mirrors C# 5-second wait + single retry)
-        foreach ($results as $key => $value) {
-            if ($value !== null) {
-                continue;
-            }
-            if ($this->cfg->retryDelayMs > 0) {
-                usleep($this->cfg->retryDelayMs * 1000);
-            }
-            $lang = $key === 'english' ? 'en' : 'fr';
-            $body = $this->getWithRetry($lang . '/' . rawurlencode($jobId) . '.xml', false);
-            $results[$key] = $body;
+        $results = [];
+        foreach (['english' => 'en', 'french' => 'fr'] as $key => $lang) {
+            $body = $this->getWithRetry($lang . '/' . rawurlencode($jobId) . '.xml');
+            // A 502 / HTML error page must not be persisted.
+            $results[$key] = ($body !== null && $this->isWellFormedJobXml($body)) ? $body : null;
         }
-
-        // Validate XML — a 502 / HTML error page must not be persisted.
-        if ($results['english'] !== null && !$this->isWellFormedJobXml($results['english'])) {
-            $results['english'] = null;
-        }
-        if ($results['french'] !== null && !$this->isWellFormedJobXml($results['french'])) {
-            $results['french'] = null;
-        }
-
         return $results;
     }
 
