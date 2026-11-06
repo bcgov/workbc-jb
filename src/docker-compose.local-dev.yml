@@ -23,7 +23,7 @@ services:
       elasticsearch:
         condition: service_healthy
   postgres:
-    image: postgres:15.5-bookworm
+    image: postgres:16-bookworm
     ports:
       - "5432:5432"
     environment:
