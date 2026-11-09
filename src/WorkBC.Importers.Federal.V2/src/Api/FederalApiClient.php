@@ -65,6 +65,12 @@ final class FederalApiClient
             'http_errors'     => true,
             'decode_content'  => true,
             'handler'         => HandlerStack::create(),
+
+            // jobbank.gc.ca sits behind a FortiWeb that only negotiates P-256 and intermittently
+            // drops the 2-segment hybrid-PQ ClientHello that OpenSSL >= 3.5 sends by default.
+            // Offering classic groups only (P-256 first, so no HelloRetryRequest) keeps the
+            // handshake in a single segment. CURLOPT_SSL_EC_CURVES requires PHP >= 8.2 / libcurl >= 7.73.
+            'curl' => [CURLOPT_SSL_EC_CURVES => 'P-256:X25519:P-384'],
         ];
 
         if ($cfg->proxyUse && $cfg->proxyHost !== '' && $cfg->proxyPort > 0) {
