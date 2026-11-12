@@ -9,7 +9,7 @@ Running Job Board locally using Docker Compose.
 cd src
 alias docker-compose-jb='docker-compose -f docker-compose.yml -f docker-compose.linux-dev.yml'
 docker-compose-jb build
-docker-compose-jb run postgres
+docker-compose-jb run -p 5432:5432 postgres
 ```
 - In a separate window, import an initial snapshot of the `jobboard` database because it cannot be rebuilt from original migrations (which were written for MSSQL Server)
 ```bash
@@ -67,5 +67,7 @@ You can try building each service individually to avoid race conditions:
 docker-compose-jb build jb-dotnet-build
 docker-compose-jb build web
 docker-compose-jb build admin
+docker-compose-jb build migration-runner
+docker-compose-jb build
 ...
 ```

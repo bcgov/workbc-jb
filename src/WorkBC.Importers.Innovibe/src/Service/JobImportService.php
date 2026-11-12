@@ -113,6 +113,44 @@ final class JobImportService
     }
 
     /**
+     * True when the posting is PART_TIME and nothing else, and does not state
+     * its working hours — the case where the API's YEAR figure is a full-time
+     * assumption rather than a calculation. Any other employmentType mix
+     * (e.g. PART_TIME + FULL_TIME) keeps the annual summary.
+     */
+    private static function isPartTimeWithUnknownHours(array $job): bool
+    {
+        $hours = $job['workingHours'] ?? null;
+        if ($hours !== null && $hours !== '') {
+            return false;
+        }
+        $types = is_array($job['employmentType'] ?? null) ? $job['employmentType'] : [];
+        $types = array_unique(array_map(
+            static fn($t): string => strtoupper(str_replace(['-', ' '], '_', trim((string) $t))),
+            $types
+        ));
+        return count($types) === 1 && reset($types) === 'PART_TIME';
+    }
+
+    /**
+     * "$19.53 hourly" or "$19.53 - $22.00 hourly" from the API's
+     * calculatedSalaries.HOUR block (min–max range when they differ, else the
+     * single min / value / max figure). Null when no usable hourly figure exists.
+     */
+    private static function hourlySummary(array $job): ?string
+    {
+        [$min, $max, $value] = self::apiSalary($job, 'HOUR');
+        $hourly = $min ?? $value ?? $max;
+        if ($hourly === null) {
+            return null;
+        }
+        if ($min !== null && $max !== null && $min != $max) {
+            return '$' . number_format($min, 2) . ' - $' . number_format($max, 2) . ' hourly';
+        }
+        return '$' . number_format($hourly, 2) . ' hourly';
+    }
+
+    /**
      * Returns false when the job's wage is below the minimum-wage threshold.
      *
      * The hourly rate is taken straight from the API's calculatedSalaries.HOUR
@@ -610,9 +648,15 @@ final class JobImportService
     private function map(array $j): array
     {
         $t                = strtolower(implode(' ', $j['employmentType'] ?? []));
+        // Innovibe bumps updatedAt on every scrape cycle (several times a
+        // day), so it must never feed DatePosted — that field drives the
+        // "New" badge on the board and the JobVersions diff. updatedAt only
+        // anchors ExpireDate, which has to keep rolling forward while the
+        // job is still being re-scraped.
         $actualDatePosted = date('Y-m-d H:i:s', strtotime($j['postedDate'] ?? $j['createdAt'] ?? 'now'));
-        $datePosted       = date('Y-m-d H:i:s', strtotime($j['updatedAt'] ?? $j['postedDate'] ?? $j['createdAt'] ?? 'now'));
-        $expireDate       = date('Y-m-d H:i:s', strtotime($datePosted . ' +90 days'));
+        $datePosted       = $actualDatePosted;
+        $refreshDate      = date('Y-m-d H:i:s', strtotime($j['updatedAt'] ?? $j['postedDate'] ?? $j['createdAt'] ?? 'now'));
+        $expireDate       = date('Y-m-d H:i:s', strtotime($refreshDate . ' +90 days'));
 
         // Location: prefer a British Columbia location from the array
         $city = '';
@@ -648,6 +692,16 @@ final class JobImportService
             $salarySummary = '$' . number_format($annualSalary) . ' annually';
         } else {
             $salarySummary = 'N/A';
+        }
+
+        // Innovibe falls back to full-time hours (40 × 52) when a posting does
+        // not state workingHours, so for a PART_TIME-only posting the YEAR
+        // figure overstates the pay. Jobs.SalarySummary (shown on the saved
+        // jobs list) carries the advertised hourly rate instead; Jobs.Salary
+        // stays annual (WBCAMS-2121 follow-up). Mirrors
+        // InnovibeDocumentMapper in the Innovibe indexer.
+        if ($annualSalary !== null && self::isPartTimeWithUnknownHours($j)) {
+            $salarySummary = self::hourlySummary($j) ?? $salarySummary;
         }
 
         // NOC 2021: pick the highest-scored match, validate against NocCodes2021

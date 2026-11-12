@@ -20,7 +20,8 @@ WORKDIR "/src/WorkBC.Web"
 RUN dotnet publish "WorkBC.Web.csproj" -c Release -o /app/publish --no-restore --no-dependencies
 
 # Copy both build outputs to the runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+# Debian 12 (bookworm) variant: bullseye left LTS on 2026-08-31 (see dotnet-cli.Dockerfile).
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-bookworm-slim
 ARG COMMIT_SHA
 ARG RUN_NUMBER
 ARG BUILD_DATE

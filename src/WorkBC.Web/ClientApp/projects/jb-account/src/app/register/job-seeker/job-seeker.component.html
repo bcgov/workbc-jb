@@ -93,6 +93,9 @@
 
         <div class="identity-row mt-5">
           <span id="identityGroupLabel" class="identity-label w-180">How do you identify? (optional):</span>
+          <!-- Labels below are aria-hidden: each input's aria-label already carries the
+               text; exposing the label too gives speech-control software a second
+               selectable target per box. Labels stay mouse/touch-clickable via for="". -->
           <div class="identity-list" role="group" aria-labelledby="identityGroupLabel">
             <div class="check-group">
               <input type="checkbox" name="JobSeekerIsApprenticeship" id="JobSeekerIsApprenticeship"
@@ -101,7 +104,7 @@
                 <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
                 <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
               </div>
-              <label class="form-check-label" for="JobSeekerIsApprenticeship">Apprentice</label>
+              <label class="form-check-label" for="JobSeekerIsApprenticeship" aria-hidden="true">Apprentice</label>
             </div>
             <div class="check-group">
               <input type="checkbox" name="JobSeekerIndigenousPerson" id="JobSeekerIndigenousPerson"
@@ -110,7 +113,7 @@
                 <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
                 <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
               </div>
-              <label class="form-check-label" for="JobSeekerIndigenousPerson">Indigenous</label>
+              <label class="form-check-label" for="JobSeekerIndigenousPerson" aria-hidden="true">Indigenous</label>
             </div>
             <div class="check-group">
               <input type="checkbox" name="JobSeekerMatureWorker" id="JobSeekerMatureWorker"
@@ -119,7 +122,7 @@
                 <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
                 <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
               </div>
-              <label class="form-check-label" for="JobSeekerMatureWorker">Mature</label>
+              <label class="form-check-label" for="JobSeekerMatureWorker" aria-hidden="true">Mature</label>
             </div>
             <div class="check-group">
               <input type="checkbox" id="isNewImmigrant" formControlName="isNewImmigrant" aria-label="Newcomer to B.C.">
@@ -127,7 +130,7 @@
                 <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
                 <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
               </div>
-              <label class="form-check-label" for="isNewImmigrant">Newcomer to B.C.</label>
+              <label class="form-check-label" for="isNewImmigrant" aria-hidden="true">Newcomer to B.C.</label>
             </div>
             <div class="check-group">
               <input type="checkbox" name="JobSeekerDisabledPerson" id="JobSeekerDisabledPerson"
@@ -136,7 +139,7 @@
                 <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
                 <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
               </div>
-              <label class="form-check-label" for="JobSeekerDisabledPerson">Person with a disability</label>
+              <label class="form-check-label" for="JobSeekerDisabledPerson" aria-hidden="true">Person with a disability</label>
             </div>
             <div class="check-group">
               <input type="checkbox" id="isStudent" formControlName="isStudent" aria-label="Student">
@@ -144,7 +147,7 @@
                 <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
                 <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
               </div>
-              <label class="form-check-label" for="isStudent">Student</label>
+              <label class="form-check-label" for="isStudent" aria-hidden="true">Student</label>
             </div>
             <div class="check-group">
               <input type="checkbox" id="isVeteran" formControlName="isVeteran" aria-label="Veteran of the Canadian Armed Forces">
@@ -152,7 +155,7 @@
                 <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
                 <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
               </div>
-              <label class="form-check-label" for="isVeteran">Veteran of the Canadian Armed Forces</label>
+              <label class="form-check-label" for="isVeteran" aria-hidden="true">Veteran of the Canadian Armed Forces</label>
             </div>
             <div class="check-group">
               <input type="checkbox" id="isVisibleMinority" formControlName="isVisibleMinority" aria-label="Visible minority">
@@ -160,7 +163,7 @@
                 <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
                 <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
               </div>
-              <label class="form-check-label" for="isVisibleMinority">Visible minority</label>
+              <label class="form-check-label" for="isVisibleMinority" aria-hidden="true">Visible minority</label>
             </div>
             <div class="check-group">
               <input type="checkbox" id="isYouth" formControlName="isYouth" aria-label="Youth">
@@ -168,7 +171,7 @@
                 <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
                 <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
               </div>
-              <label class="form-check-label" for="isYouth" title="">Youth</label>
+              <label class="form-check-label" for="isYouth" title="" aria-hidden="true">Youth</label>
             </div>
           </div>
           <div class="identity-infobox" [innerHTML]="whyIdentify">
@@ -288,7 +291,7 @@
             <lib-svg-icon icon="checkbox" width="16px" height="16px" class="checkbox"></lib-svg-icon>
             <lib-svg-icon icon="checkbox-checked" width="16px" height="16px" class="checkbox"></lib-svg-icon>
           </div>
-          <label class="form-check-label" for="JobSeekerTerms">
+          <label class="form-check-label" for="JobSeekerTerms" aria-hidden="true">
             I agree to the WorkBC.ca
           </label>
           <a href="#" (click)="showTermsOfUse($event)">
