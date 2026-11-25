@@ -1,24 +1,31 @@
-FROM php:8.3.36-cli-alpine AS federal-app
-RUN apk upgrade --no-cache && apk add --no-cache postgresql-dev libxml2-dev autoconf gcc g++ make unzip \
-    && docker-php-ext-install pdo_pgsql dom simplexml
+# dom/simplexml/xml are compiled into the official image; only pdo_pgsql needs building.
+FROM php:8.3.37-cli-bookworm AS federal-app
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libpq-dev unzip \
+    && docker-php-ext-install pdo_pgsql \
+    && rm -rf /var/lib/apt/lists/*
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 COPY WorkBC.Importers.Federal.V2/composer.json ./
 RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-dist
 COPY WorkBC.Importers.Federal.V2/src/ src/
 
-FROM php:8.3.36-cli-alpine AS innovibe-app
-RUN apk upgrade --no-cache && apk add --no-cache postgresql-dev autoconf gcc g++ make unzip \
-    && docker-php-ext-install pdo_pgsql
+FROM php:8.3.37-cli-bookworm AS innovibe-app
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libpq-dev unzip \
+    && docker-php-ext-install pdo_pgsql \
+    && rm -rf /var/lib/apt/lists/*
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 COPY WorkBC.Importers.Innovibe/composer.json ./
 RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-dist
 COPY WorkBC.Importers.Innovibe/src/ src/
 
-FROM php:8.3.36-cli-alpine AS federal-indexer-app
-RUN apk upgrade --no-cache && apk add --no-cache postgresql-dev libxml2-dev autoconf gcc g++ make unzip \
-    && docker-php-ext-install pdo_pgsql dom simplexml
+FROM php:8.3.37-cli-bookworm AS federal-indexer-app
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libpq-dev unzip \
+    && docker-php-ext-install pdo_pgsql \
+    && rm -rf /var/lib/apt/lists/*
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 COPY WorkBC.Indexers.Federal.V2/composer.json ./
@@ -26,9 +33,11 @@ RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-di
 COPY WorkBC.Indexers.Federal.V2/src/ src/
 COPY WorkBC.Indexers.Federal.V2/resources/ resources/
 
-FROM php:8.3.36-cli-alpine AS innovibe-indexer-app
-RUN apk upgrade --no-cache && apk add --no-cache postgresql-dev libxml2-dev autoconf gcc g++ make unzip \
-    && docker-php-ext-install pdo_pgsql dom simplexml
+FROM php:8.3.37-cli-bookworm AS innovibe-indexer-app
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libpq-dev unzip \
+    && docker-php-ext-install pdo_pgsql \
+    && rm -rf /var/lib/apt/lists/*
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 COPY WorkBC.Indexers.Innovibe.V2/composer.json ./
@@ -36,9 +45,11 @@ RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-di
 COPY WorkBC.Indexers.Innovibe.V2/src/ src/
 COPY WorkBC.Indexers.Innovibe.V2/resources/ resources/
 
-FROM php:8.3.36-cli-alpine AS jobalert-notifier-app
-RUN apk upgrade --no-cache && apk add --no-cache postgresql-dev libxml2-dev autoconf gcc g++ make unzip \
-    && docker-php-ext-install pdo_pgsql dom simplexml
+FROM php:8.3.37-cli-bookworm AS jobalert-notifier-app
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libpq-dev unzip \
+    && docker-php-ext-install pdo_pgsql \
+    && rm -rf /var/lib/apt/lists/*
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 COPY WorkBC.Notifications.JobAlerts.V2/composer.json ./
@@ -46,21 +57,32 @@ RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-di
 COPY WorkBC.Notifications.JobAlerts.V2/src/ src/
 COPY WorkBC.Notifications.JobAlerts.V2/resources/ resources/
 
-FROM php:8.3.36-cli-alpine
-RUN apk upgrade --no-cache && apk add --no-cache bash postgresql-client postgresql-libs libxml2 tzdata \
-    && apk add --no-cache --virtual .bd postgresql-dev libxml2-dev autoconf gcc g++ make \
-    && docker-php-ext-install pdo_pgsql dom simplexml \
-    && apk del .bd \
-    && cp /usr/share/zoneinfo/America/Vancouver /etc/localtime \
-    && echo "America/Vancouver" > /etc/timezone \
-    && rm -rf /var/cache/apk/* /tmp/*
-# PHP ignores the OS tzdata and ships its own copy; every 8.3.x release bundles 2026a,
-# which predates B.C.'s move to permanent UTC-7 (tzdata 2026b, effective 2026-11-01 02:00).
-# The PECL timezonedb extension replaces the bundled copy so America/Vancouver stays -07.
-RUN apk add --no-cache --virtual .tzdb-build $PHPIZE_DEPS \
-    && pecl install timezonedb-2026.5 \
+FROM php:8.3.37-cli-bookworm
+# psql comes from apt.postgresql.org (client 16, same repo and major as dotnet-cli.Dockerfile)
+# because bookworm itself only packages PostgreSQL 15. The pgdg repo is added before
+# libpq-dev so the headers pdo_pgsql compiles against and the runtime libpq5 are the same
+# build. libpq5 is named explicitly so it survives the --auto-remove of libpq-dev.
+# tzdata is (re)installed so the OS zoneinfo is bookworm's 2026b-0+deb12u1 or newer;
+# 2026b is the release that encodes B.C.'s permanent UTC-7 from 2026-11-01.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends tzdata \
+    && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc -o /etc/apt/trusted.gpg.d/postgresql.asc \
+    && echo "deb http://apt.postgresql.org/pub/repos/apt $(. /etc/os-release && echo "$VERSION_CODENAME")-pgdg main" \
+       > /etc/apt/sources.list.d/pgdg.list \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends libpq5 libpq-dev postgresql-client-16 \
+    && docker-php-ext-install pdo_pgsql \
+    && apt-get purge -y --auto-remove libpq-dev \
+    && rm -rf /var/lib/apt/lists/* /tmp/* \
+    && ln -snf /usr/share/zoneinfo/America/Vancouver /etc/localtime \
+    && echo "America/Vancouver" > /etc/timezone
+# PHP ignores the OS tzdata and ships its own copy; every 8.3.x release (8.3.37 included)
+# bundles 2026a, which predates B.C.'s move to permanent UTC-7 (tzdata 2026b, effective
+# 2026-11-01 02:00). The PECL timezonedb extension replaces the bundled copy so
+# America/Vancouver stays -07. 2026.6 = tzdata 2026f.
+RUN pecl install timezonedb-2026.6 \
     && docker-php-ext-enable timezonedb \
-    && apk del .tzdb-build
+    && rm -rf /tmp/pear
 ENV TZ=America/Vancouver
 
 COPY --from=federal-app          /app /app/workbc-importers-federal-v2
