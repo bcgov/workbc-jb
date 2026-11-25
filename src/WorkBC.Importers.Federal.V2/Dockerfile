@@ -1,8 +1,11 @@
 # ── Build stage ──────────────────────────────────────────────────
-FROM php:8.3.36-cli-alpine AS build
+# dom/simplexml/xml are compiled into the official image; only pdo_pgsql needs building.
+FROM php:8.3.37-cli-bookworm AS build
 
-RUN apk upgrade --no-cache && apk add --no-cache postgresql-dev libxml2-dev autoconf gcc g++ make unzip \
-    && docker-php-ext-install pdo_pgsql dom simplexml
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libpq-dev unzip \
+    && docker-php-ext-install pdo_pgsql \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -12,21 +15,25 @@ RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-di
 COPY src/ src/
 
 # ── Runtime stage ────────────────────────────────────────────────
-FROM php:8.3.36-cli-alpine
+FROM php:8.3.37-cli-bookworm
 
-RUN apk upgrade --no-cache && apk add --no-cache postgresql-libs libxml2 tzdata \
-    && apk add --no-cache --virtual .bd postgresql-dev libxml2-dev \
-    && docker-php-ext-install pdo_pgsql dom simplexml \
-    && apk del .bd \
-    && cp /usr/share/zoneinfo/America/Vancouver /etc/localtime \
+# libpq5 is named explicitly so it survives the --auto-remove of libpq-dev.
+# tzdata is (re)installed so the OS zoneinfo is bookworm's 2026b-0+deb12u1 or newer;
+# 2026b is the release that encodes B.C.'s permanent UTC-7 from 2026-11-01.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libpq5 libpq-dev tzdata \
+    && docker-php-ext-install pdo_pgsql \
+    && apt-get purge -y --auto-remove libpq-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && ln -snf /usr/share/zoneinfo/America/Vancouver /etc/localtime \
     && echo "America/Vancouver" > /etc/timezone
-# PHP ignores the OS tzdata and ships its own copy; every 8.3.x release bundles 2026a,
-# which predates B.C.'s move to permanent UTC-7 (tzdata 2026b, effective 2026-11-01 02:00).
-# The PECL timezonedb extension replaces the bundled copy so America/Vancouver stays -07.
-RUN apk add --no-cache --virtual .tzdb-build $PHPIZE_DEPS \
-    && pecl install timezonedb-2026.5 \
+# PHP ignores the OS tzdata and ships its own copy; every 8.3.x release (8.3.37 included)
+# bundles 2026a, which predates B.C.'s move to permanent UTC-7 (tzdata 2026b, effective
+# 2026-11-01 02:00). The PECL timezonedb extension replaces the bundled copy so
+# America/Vancouver stays -07. 2026.6 = tzdata 2026f.
+RUN pecl install timezonedb-2026.6 \
     && docker-php-ext-enable timezonedb \
-    && apk del .tzdb-build
+    && rm -rf /tmp/pear
 ENV TZ=America/Vancouver
 
 WORKDIR /app
